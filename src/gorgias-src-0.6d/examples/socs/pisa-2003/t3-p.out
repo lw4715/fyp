@@ -1,0 +1,29 @@
+Attack:[nott(pr2(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr2(AE, PI, AE, reduce(survival), 1), f(4, 2), f(3, 2, survival), f(0, 2, urgent(survival)), self1]
+Attack:[nott(pr2(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr2(AE, PI, AE, reduce(survival), 1), f(4, 2), f(3, 2, survival), f(0, 2, urgent(survival)), self1]
+Attack:[nott(pr2(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr2(AE, PI, AE, reduce(survival), 1), f(4, 2), f(3, 2, survival), f(0, 2, urgent(survival)), self1]
+Attack:[nott(pr2(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr2(AE, PI, AE, reduce(survival), 1), f(4, 2), f(3, 2, survival), f(0, 2, urgent(survival)), self1]
+Attack:[nott(pr2(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr2(AE, PI, AE, reduce(survival), 1), f(4, 2), f(3, 2, survival), f(0, 2, urgent(survival)), self1]
+Attack:[nott(pr2(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr2(AE, PI, AE, reduce(survival), 1), f(4, 2), f(3, 2, survival), f(0, 2, urgent(survival)), self1]
+Defence:[nott(pr1(AE, AE, PI, do(avoid), 1)), r(AE, AE, do(avoid), 1), ec(AE, AE, do(avoid), 1), f(0, 1), pr1(AE, AE, PI, do(avoid), 1), f(5, 1), f(0, 3, urgent2(avoid)), self1]
+Attack:[nott(pr2(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr2(AE, PI, AE, reduce(survival), 1), f(4, 2), f(3, 2, survival), f(0, 2, urgent(survival)), self1]
+Defence:[nott(pr1(AE, AE, PI, do(avoid), 1)), r(AE, AE, do(avoid), 1), ec(AE, AE, do(avoid), 1), f(0, 1), pr1(AE, AE, PI, do(avoid), 1), f(5, 1), f(0, 3, urgent2(avoid)), self1]
+==========
+Solution:
+==========
+
+nott(pr1(AE, AE, PI, do(avoid), 1))
+
+pr1(AE, AE, PI, do(avoid), 1)
+
+f(5, 1)
+
+f(0, 3, urgent2(avoid))
+
+self1
+
+ec(AE, AE, do(avoid), 1)
+
+f(0, 1)
+
+r(AE, AE, do(avoid), 1)
+1 ?- 

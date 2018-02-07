@@ -1,0 +1,74 @@
+@title SOCS: Prolog Implementation of the "Leaving San Vincenzo" Scenario
+
+@author Neophytos Demetriou (nkd@ucy.ac.cy)
+
+==Summary==
+
+This document is a step-by-step guide to writing cycle theories for intelligent
+computees. It uses the "Leaving San Vincenzo" scenario to expose the basic
+artifacts involved in the design of a computee as laid out in the SOCS
+Deliverable D7.
+
+
+==Enabling Conditions==
+
+Enabling conditions determine when a cycle step from one transition
+to another is allowed or enabled. There exist two predicates for defining
+enabling conditions:
+
+o ec/2
+
+  Denotes general conditions for a transition to be triggered. Moreover, it
+  fills the transition input with reasonable values.
+
+o ec_user_p/2
+
+  Denotes when a cycle step from one transition to another is allowed or 
+  enabled.
+
+
+==Interrupt Component==
+
+Any of the transitions 'GI', 'RE' or 'GR' can follow after a 'PO' transition.
+In addition, there exist some criteria that specify which one is more preferred
+based on the nature of the 'PO' information introduced in the previous 
+transition. For example, we prefer an 'RE' transition if the passive 
+observations included a communication request.
+
+
+==Testing==
+
+Results are presented for all known behaviours (i.e. same scenario, different
+behaviour). Some test cases include transition executions, e.g. reactivity,etc.
+In that case we present several results using assumptions to demonstrate the
+adaptability of the framework. For example, in test0, we present the following
+results for reactivity: 
+
+	
+
+
+==OTHER==
+
+o Car Rental
+
+o Hotel
+
+o Airfare
+
+o Restaurant
+
+o Tourist Info
+
+o Weather
+
+o Real-time traffic and travel information
+
+o Bus Service
+
+==Preferences for GD==
+
+o Max Budget
+
+o Preferred Car Rental Agency, Hotel, Airlines, Cuisine
+
+o Make a journey quicker, more comfortable, less stressful, and safer.

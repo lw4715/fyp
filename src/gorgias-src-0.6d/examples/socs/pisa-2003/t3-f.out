@@ -1,0 +1,31 @@
+Attack:[nott(pr6(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr6(AE, PI, AE, reduce(survival), 1), f(3, 2, survival), self1]
+Attack:[nott(pr6(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr6(AE, PI, AE, reduce(survival), 1), f(3, 2, survival), self1]
+Defence:[nott(pr5(AE, AE, PI, do(assist), 1)), r(AE, AE, do(assist), 1), ec(AE, AE, do(assist), 1), f(0, 1), pr5(AE, AE, PI, do(assist), 1), f(3, 1, assist), self1]
+Attack:[nott(pr6(AE, PI, AE, reduce(survival), 1)), r(AE, PI, reduce(survival), 1), ec(AE, PI, reduce(survival), 1), f(0, 1), pr6(AE, PI, AE, reduce(survival), 1), f(3, 2, survival), self1]
+Defence:[nott(pr5(AE, AE, PI, do(assist), 1)), r(AE, AE, do(assist), 1), ec(AE, AE, do(assist), 1), f(0, 1), pr5(AE, AE, PI, do(assist), 1), f(3, 1, assist), self1]
+Attack:[nott(pr6(AE, PI, AE, reduce(graduate), 1)), r(AE, PI, reduce(graduate), 1), ec(AE, PI, reduce(graduate), 1), f(0, 1), pr6(AE, PI, AE, reduce(graduate), 1), f(3, 2, graduate), self1]
+Defence:[nott(pr5(AE, AE, PI, do(assist), 1)), r(AE, AE, do(assist), 1), ec(AE, AE, do(assist), 1), f(0, 1), pr5(AE, AE, PI, do(assist), 1), f(3, 1, assist), self1]
+Attack:[nott(pr6(AE, PI, AE, reduce(community_service), 1)), r(AE, PI, reduce(community_service), 1), ec(AE, PI, reduce(community_service), 1), f(0, 1), pr6(AE, PI, AE, reduce(community_service), 1), f(3, 2, community_service), self1]
+Defence:[nott(pr5(AE, AE, PI, do(assist), 1)), r(AE, AE, do(assist), 1), ec(AE, AE, do(assist), 1), f(0, 1), pr5(AE, AE, PI, do(assist), 1), f(3, 1, assist), self1]
+Attack:[nott(pr6(AE, PI, AE, reduce(graduate), 1)), r(AE, PI, reduce(graduate), 1), ec(AE, PI, reduce(graduate), 1), f(0, 1), pr6(AE, PI, AE, reduce(graduate), 1), f(3, 2, graduate), self1]
+Defence:[nott(pr5(AE, AE, PI, do(assist), 1)), r(AE, AE, do(assist), 1), ec(AE, AE, do(assist), 1), f(0, 1), pr5(AE, AE, PI, do(assist), 1), f(3, 1, assist), self1]
+Attack:[nott(pr6(AE, PI, AE, reduce(community_service), 1)), r(AE, PI, reduce(community_service), 1), ec(AE, PI, reduce(community_service), 1), f(0, 1), pr6(AE, PI, AE, reduce(community_service), 1), f(3, 2, community_service), self1]
+Defence:[nott(pr5(AE, AE, PI, do(assist), 1)), r(AE, AE, do(assist), 1), ec(AE, AE, do(assist), 1), f(0, 1), pr5(AE, AE, PI, do(assist), 1), f(3, 1, assist), self1]
+==========
+Solution:
+==========
+
+nott(pr5(AE, AE, PI, do(assist), 1))
+
+pr5(AE, AE, PI, do(assist), 1)
+
+f(3, 1, assist)
+
+self1
+
+ec(AE, AE, do(assist), 1)
+
+f(0, 1)
+
+r(AE, AE, do(assist), 1)
+1 ?- 

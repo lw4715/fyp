@@ -1,0 +1,71 @@
+==London, July 28, 2003 - August 4, 2003==
+
+Computees:
+
+* Francisco's
+
+* Taxi
+
+* Hotel
+
+
+
+
+
+
+
+==Example 1: Checkout Process Failure==
+
+* Francisco realizes that his personal computee has initiated the checkout
+  process (GI, PI, AE, AE).
+
+  - GI = "checkoutFromHotel"
+
+  - PI = "checkoutFromHotel" 
+
+         >> [electronicPayment, callTaxi]
+
+  - AE = "electronicPayment"
+
+  - Postconditions: 
+
+    o electronicPayment => receipt (before Francisco enters the taxi)
+
+
+* At this point the taxi computee informs Francisco's computee that the taxi
+  is outside the hotel's entrance (PO)
+
+_____
+
+
+* Features: 
+
+  o Careful vs non-careful behaviour: 
+
+	When the user is ready to leave the hotel, he is notified that the 
+	electronic payment failed. (PR)
+
+  o Punctual vs non-punctual behaviour: 
+
+	Discussion: [GI, PI, AE, AE, PO] vs [GI, PI, GI, PI, GI, PI, AE, ...]
+
+  o Cautious vs non-cautious behaviour: 
+
+______
+
+
+
+
+
+
+
+==TODO==
+
+* Ask IC to provide more information about the nature of the Temporal 
+  Constraints.
+
+* Ask City University to provide ancestor methods for the computee's goals and plans.
+
+* Use Sicstus object-oriented features for the behaviour types.
+
+* REFINEMENT transition. Have toplevel goals. If planning a toplevel goal fails, then try to refine the toplevel goal to subgoals and then 

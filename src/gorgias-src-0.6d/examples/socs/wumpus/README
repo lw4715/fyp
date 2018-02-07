@@ -1,0 +1,258 @@
+[THIS IS ONLY A DRAFT -- NOT COMPLETELY FINISHED YET]
+
+==Problem Description==
+
+Wumpus was an early computer game, based on an agent who explores a cave 
+consisting of rooms connected by passageways. Lurking somewhere in the cave is
+the wumpus, a beast that eats anyone who enters its room. To make matters
+worse, some rooms contain bottomless pits that will trap anyone who wanders
+into these rooms (exept for the wumpus, who is too big too fall in). The only
+mitigating feature of living in this environment is the occasional heap of
+gold.
+
+[Stuart Russel and Peter Norvig, "Artificial Intelligence, A modern approach", pp. 153-157.]
+
+
+==The Environment==
+
+Wumpus world characterisation:
+
+* Is the world deterministic? 
+
+  Yes - outcome exactly specified.
+
+* Is the world fully accessible? 
+
+  No - only local perception.
+
+* Is the world static?    
+
+  Yes - Wumpus and pits do not move.
+
+* Is the world discrete? 
+
+  Yes.
+
+
+To specify the agent's task, we specify its percepts, actions, and goals. In
+the wumpus world, these are as follows:
+
+* In the square containing the wumpus and in the directly (not diagonally)
+adjacent squares the agent will perceive a stench.
+
+* In the squares directly adjacent to a pit, the agent will perceive a breeze.
+
+* In the square where the gold is, the agent will perceive a glitter.
+
+* When an agent walks into a wall, it will perceive a bump.
+
+* When the wumpus is killed, it gives out a woeful scream that can be perceived
+  anywhere in the cave.
+
+* The percepts will be given to the agent in the form of a list of five 
+  symbols; for example if there is a stench, a breeze, and a glitter but no
+  bump and no scream, the agent will receive the percept ''[Stench, Breeze,
+  Glitter, None, None]''. The agent *cannot* perceive its own location.
+
+* There are actions to go forward, turn right, turn left, and turn left. In
+  addition the action ''Grab'' can be used to pick up an object that is in
+  the same square as the agent. The action ''Shoot'' can be used to fire an
+  arrow in a straight line in the direction the agent is facing. The arrow
+  continues until it either hits and kills the wumpus or hits the wall. The
+  agent only has one arrow, so only the first ''Shoot'' action has any effect.
+  Finally, the action ''Climb'' is used to leave the cave; it is effective only
+  when the agent is in the start square.
+
+* The agent dies a miserable death if it enters a square containing a pit or a
+  live wumpus. It is safe (but smelly) to enter a square with a dead wumpus.
+
+* The agent's goal is to find the gold and bring it back to the start as 
+  quickly as possible, without getting killed. To be precise, 1000 points are
+  awarded for climbing out of the cave while carrying the gold, but there is a
+  1-point penalty for each action taken, and a 10000-point penalty for getting
+  killed.
+
+
+
+==Using Gorgias and Cycle Theories==
+
+* Note: The current representation of the Wumpus World using Gorgias and Cycle 
+  Theories does not reflect the "procedural" definitions of transitions in
+  deliverable D4. Instead, it demonstrates how the various capabilities, i.e.
+  planning, goal decision, temporal reasoning, etc., can be synthesized 
+  together in an autonomous computational entity. 
+
+* Our representation of the Wumpus world in Gorgias can be viewed as two
+  agents interacting together: (a) the *player* and (b) the *environment*. For
+  ease of representation, the environment agent is not implemented separately
+  (however, it can be done easily -- We tried to avoid further complexities, 
+  like communication, etc.) For the rest of this section, we will mostly
+  discuss the player's representation together with some guidelines for the 
+  testing.
+
+* The world is not fully accessible to the agent. Moreover, the agent has
+  no knowledge that we are playing on a 4x4 grid.
+
+* There are a couple of changes in this distribution (in particular the files 
+  ''resolver2.pl'', ''gorgias2.pl'', and ''lpwnf2.pl'' are enhanced versions
+  of their predecessors).
+
+* We do not allow concurrent actions but there can be a sequence of transitions
+  in each timepoint (it's a bit non-intuitive but it helped as with the demo)
+  as long as the transitions are not action executions. In other words, the 
+  computee's clock changes every time it executes an action. 
+
+* Here's a sample info screen from the examples::
+
+
+       	+++
+      	Telling...breeze                         <<<<---- PASSIVE OBSERVATIONS
+      	+++
+      
+	======================================================================
+	Timepoint 5:                                <<<<---- CURRENT TIMEPOINT
+	----------------------------------------------------------------------
+	 [] U U U                        
+	 [] U U U                      <<<<---- THE PLAYER'S VIEW OF THE WORLD
+	 [glitter, breeze] U U U
+	 [][*, breeze] U U
+	----------------------------------------------------------------------
+	Agent believes that s/he is at position xy(3, 1) 
+
+	Agent believes that s/he does not have the gold.
+
+	Agent believes that s/he has the arrow.         <<<<- BELIEFS USING TR
+
+	Agent believes that Wumpus is alive.
+
+	TODO: [dummy, add(p_goal(at(self, xy(3, -1)))), 
+	add(p_goal(at(self, xy(4, 0)))), add(p_goal(at(self, xy(2, 0)))), 
+	add(p_goal(at(self, xy(4, 1))))]
+
+	DONE: [happens(walk(south), 0), happens(walk(south), 1), 
+	happens(walk(south), 2), happens(walk(south), 3), 
+	happens(walk(east), 4)]
+	======================================================================
+	Press q to halt. Any other key to continue...
+
+
+* As shown above, the agent keeps a list of TODO items. These items can be:
+  
+  o Positive or negative goals for introduction, denoted by ''add(p_goal(_))'' 
+    and ''add(n_goal(_)'', respectively.
+
+  o Planned actions, denoted by ''happens(Action,TimeOfAction)''
+
+  o Executed actions.
+
+
+* Eventhough, both the player's and the environment's knowledge bases are 
+  encoded in the same PROLOG files, the player's beliefs are the result
+  of temporal reasoning, passive observations, and it's incomplete
+  knowledge of the world.
+
+* Loosely speaking, the agent has three goals:
+
+  o To Explore the World and/or
+
+  o Kill the Wumpus and/or
+
+  o Win the Game
+
+* Actions, i.e. ''happens(Action,TimeOfAction)'' are abducible predicates 
+  during planning. The resolver has been extended to support dynamic 
+  configuration for resolving the goals. For example, ''Delta'' in
+  ''prove([g_check(holds(at(self,xy(1,0)),3))],Delta).'' is an argument for
+  the player's position that includes no abducible predicates while in
+  ''prove([holds(at(self,xy(1,0)),3)],Delta)'' it includes abducibles. 
+  Similarly, prove_with/3 and resolve_with/3 accept a list of the allowed 
+  "resolutions": the default is ['RES', 'NAF', 'ABD', 'BUILT_IN'] where 
+  'RES' is the  normal rule-based resolution, 'NAF' is for Negation As Failure,
+  'ABD' for  generation of hypotheses on abducible predicated and 'BUILT_IN' 
+  for SWI-Prolog's built in predicates.
+
+* We have deliberately left the '''PI''' transition before '''AE'' so that 
+  the selection rule would first choose '''PI''' and thus different types of 
+  behavior will be able to choose among various actions in order to 
+  demonstrate how preference rules affect the cycle theories of the computee.
+
+* We have injected a simplistic model into the computee for the executing the 
+  transitions in a way similar to the specifications in D4.
+
+* Here's a brief synopsis of the files:
+
+  o wumpus.basic.pl -- Implements the basic part of the computee's theory.
+
+  o wumpus.behaviour.pl -- Behaviour component
+
+  o wumpus.eres.pl -- Initiation/Termination knowledge for Actions/Fluents
+
+  o wumpus.gd.pl -- Goal Decision. I have commented out an example here that
+    it is not included below.
+
+  o wumpus.pl -- Miscelaneous stuff to setup the board, assert the percepts,
+    and execute the actions.
+
+  o test[0-4].pl -- The examples.
+
+
+
+==Testing==
+
+* Our goal is to evaluate the player's actions based on:
+
+  o Same Scenario, Different Behaviour
+
+  o Different Scenario, Same Behaviour
+
+
+* [FAILED ACTIONS] Consult the file ''test0.pl'' and submit ''start'' to begin.
+  No behavior is enabled in this test. It's purpose is to demonstrate failed 
+  actions. Just proceed until Timepoint 4 and notice that the agent is able
+  to realize  that the action execution ''walk(south)'' failed at timepoint 3.
+
+  In this example, the player can only walk into any of the four directions, 
+  i.e. south,east,west,north.
+
+* [TR] In this example, the player can also grab the gold in addition to the
+  movement actions. Consult the file ''test1.pl'' and submit ''start'' to 
+  begin. Note that after timepoint 2,i.e. at timepoint 3, the player is aware 
+  that s/he has the gold.
+
+
+* [CAREFUL] Consult the file ''test2.pl'' and submit ''start'' to begin.
+   This is the first example of the computee employing a behavioral
+   preference policy. Notice the Plan Revision transition as soon as the 
+   first action is executed, i.e.''Plan Revision'' is the first transition of 
+   Timepoint 1. In this representation the computee retracts all todo items
+   and available plans whenever the ''PI'' transition is executed.
+
+   In this case the ''PI'' transition is preferred since there are timed-out
+   actions in the TODO list.
+
+* [PUNCTUAL] Consult the file ''test3.pl'' and submit ''start'' to begin. The
+  computee is punctual. Notice that no longer is there more than one action in
+  the TODO list that is timed-out (contrast that with the previous examples 
+  in which several actions stack up in the TODO List). For example, during 
+  Timepoint 1 of ''test0.pl'' the TODO list looks as follows::
+
+	TODO: [dummy, happens(walk(east), 0), happens(walk(north), 0), 
+	happens(walk(west), 0), add(p_goal(at(self, xy(2, 0)))), 
+	add(p_goal(at(self, xy(1, 1)))), add(p_goal(at(self, xy(0, 0)))), 
+	add(p_goal(at(self, xy(1, -1))))]
+
+* [IMPATIENT] THIS TEST TAKES A WHILE. Consult the file ''test4.pl''.
+  Proceed until Timepoint 4. The idea is that at this timepoint the  
+  computee won't execute 'AE' walk(south) since this
+  is the action that failed in the previous timepoint (see h_fail_As). I've
+  modified the definition of h_fail_As to do a plan revision instead so that
+  you can notice it. [[[!!!! I WAS NOT ABLE TO VERIFY THIS ONE DUE TO TIME
+  CONSTRAINTS!!!!]]]
+
+
+
+==MISC==
+
+* I had planned some tests that did argumentation when the agent was in danger.
+  Unfortunately, I had some trouble with the resolver (Tony: findall/3 and
+  the binding of variables -- my_findall/3 won't do the trick). 

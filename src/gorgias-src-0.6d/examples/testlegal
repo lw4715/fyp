@@ -1,0 +1,30 @@
+Script started on Fri Jul  4 04:20:12 2003
+]0;nkd@localhost:~/my/work/socs/gorgias/examples[nkd@localhost examples]$ [nkd@localhost examples]$ [nkd@localhost examples]$ p[nkd@localhost examples]$ p[nkd@localhost examples]$ pl[nkd@localhost examples]$ pl[nkd@localhost examples]$ pl [nkd@localhost examples]$ pl [nkd@localhost examples]$ pl -[nkd@localhost examples]$ pl -[nkd@localhost examples]$ pl -s[nkd@localhost examples]$ pl -s[nkd@localhost examples]$ pl -s [nkd@localhost examples]$ pl -s [nkd@localhost examples]$ pl -s l[nkd@localhost examples]$ pl -s l[nkd@localhost examples]$ pl -s le[nkd@localhost examples]$ pl -s le[nkd@localhost examples]$ pl -s leg[nkd@localhost examples]$ pl -s leg[nkd@localhost examples]$ pl -s lega[nkd@localhost examples]$ pl -s lega[nkd@localhost examples]$ pl -s legal[nkd@localhost examples]$ pl -s legal[nkd@localhost examples]$ pl -s legal.[nkd@localhost examples]$ pl -s legal.[nkd@localhost examples]$ pl -s legal.p[nkd@localhost examples]$ pl -s legal.p[nkd@localhost examples]$ pl -s legal.pl[nkd@localhost examples]$ pl -s legal.pl
+%   resolver compiled 0.00 sec, 2,044 bytes
+%  ../lib/gorgias compiled 0.00 sec, 6,688 bytes
+%  ../ext/lpwnf compiled 0.00 sec, 2,312 bytes
+% legal.pl compiled 0.00 sec, 53,672 bytes
+Welcome to SWI-Prolog (Version 5.0.6)
+Copyright (c) 1990-2002 University of Amsterdam.
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+Please visit http://www.swi-prolog.org for details.
+
+For help, use ?- help(Topic). or ?- apropos(Word).
+
+?- ?- ?- p?- p?- pr?- pr?- pro?- pro?- prov?- prov?- prove?- prove?- prove(?- prove(?- prove([?- prove([?- prove([X?- prove([X?- prove([X]?- prove([X]?- prove([X],?- prove([X],?- prove([X],D?- prove([X],D?- prove([X],D)?- prove([X],D)?- prove?- prove([X],D)?- prove([X],D).?- prove([X],D).
+
+X = neg(perfected)
+D = [nott(lex_superior(ucc, sma)), lex_superior(ucc, sma), f5, f6, f3, f2, sma] ;
+
+X = neg(perfected)
+D = [nott(prpr), prpr, nott(lex_superior(ucc, sma)), lex_superior(ucc, sma), f5, f6, f3, f2, sma] ;
+
+X = neg(perfected)
+D = [nott(prpr), lex_superior(ucc, sma), f5, f6, prpr, f3, f2, sma] 
+
+Yes
+?- ?- 
+% halt
+]0;nkd@localhost:~/my/work/socs/gorgias/examples[nkd@localhost examples]$ [nkd@localhost examples]$ 
+Script done on Fri Jul  4 04:20:29 2003

@@ -1,0 +1,8 @@
+* We do not remove any goals that have been satisfied based on the results of 
+  the temporal reasoning capability during the execution of the GI transition. 
+  Here is why:
+
+  - The core selection functions will filter out these goals.
+
+  - Failure actions might invalidate earlier beliefs.
+
