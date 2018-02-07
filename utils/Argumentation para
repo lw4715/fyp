@@ -1,0 +1,34 @@
+What is argumentation?
+Firstly, argumentation involves a set of chanined arguments. Each argument has premises and conclusions. Arguments can be linked or convergent. In linked arguments, the premises must all be true in order for the conclusion to follow (logical AND). In convergent arguments, any one of the premises itself is sufficient to prove the conclusion (logical OR), and more premises simply reinforce the conclusion. There are a few ways that one argument can attack another argument. Argument Y can: i) attack the premise of argument X ii) ask critical questions to doubt the acceptability of the argument iii) raise a counter-argument that leads to the opposite conclusion. (Walton, 2009) In the case of a persuasion dialog, argumentation can ultimately disclose the strongest arguments on both sides of the argument.
+
+
+Advantages of argumentation:
+Argumentation captures the fact that we might change our decision if we have more information (i.e. non-monotonic reasoning), since more information might reveal more conflicting arguments. (Ouerdane, 2010) Making decisions using argumentation is similar to how humans naturally make decisions, so the rationale for how the decision is made (which rule overrides which other rules) can be easily accepted by its human users via diagrammatic forms, achieving transparency. Furthermore, argumentation encourages evaluation of the argument, assessing relative importance of various factors when making decisions (Mackay, 2007)
+
+
+Example use cases:
+Examples of argumentation used in real-life includes risk assessment and communication in healthcare. Argumentation is useful is this case to "present information in a manner which engenders confidence and acceptance in their listeners, because the listener is presented with the motivation behind the information"(Mackay, 2007). Another example use case is in analysis and support of experiential learning in early design episodes(SC, 2002). The objective of the study is to understand how designers interact with each other and model the design discourse, ultimately suggesting useful techniques and methods for better design. In this case, argumentation is used since designers naturally tend to fall into persuasive arguments to "explain, predict, justify and warrant their artifacts" to each other. A third example is the use of argumentation in the development of an integrated flexible transport systems platform in rural areas(Nagendra R, 2012). In this case, the negotiation dialog in argumentation is used to "weigh-up the conflicting choices available to both passengers and service providers". (Nagendra R, 2012) Once again, the ability to be visualized easily for debugging purposes was one of the reasons why argumentation was chosen.
+
+
+Our problem: Attribution problem
+
+After a cyber attack has occurred, attribution is the act of determining the person, organization or state responsible for the attack. 
+
+One problem with attribution, according to Jeffrey Carr, president and CEO of Taia Global, is governments potentially making wrong attributions, and inaccurate information from ally nations. Taking the Sony hack in 2014 as example, the FBI released a statement in less than a month that it has "concluded that the North Korean government is responsible". However, in the private sector, the view is not unanimous. Some were suspicious of how quickly the attribution was publicly confirmed after the attack, and later on, other evidence that Russians could have been involved was uncovered, that brings more doubt to the original attribution. Additionally, since the attribution was built on the assumed fact North Korea was responsible for the assault on South Korean banks in 2013, (Altman, 2014) the attribution of the Sony attack is made based on the assumption that previous attributions were correct.
+
+In this case, the transparency provided by argumentation is very advantageous in attribution, since it provides a way to visualize the attribution process to even non-professionals, which could be released in public statements to back up the whole attribution process. As for inaccurate information based on previous attributions, in our argumentation framework, we can add a dependency on the correct-ness of previous attributions and reanalyse to correct-ness of past attributions given present evidence to get an updated analysis on the current attack. This automated process gives an advantage over manual analysis since it could be a very long and arduous process to not only re-evaluate the current case but also any previous cases related to the attack at hand with every piece of new information uncovered.
+
+Furthermore, using argumentation, we could structure the attribution problem as a persuasion dialog, to reveal whether the argument for the proposition (the perpetrator of the attack to be a certain body) or against the proposition. Critical questions can be asked to attempt to critically assess the argument. Hence, if an attribution was strong enough to successfully reply the critical questions and ultimately win, then we can have some level of confidence in the attribution given the current evidence.
+
+
+
+//
+
+Challenges:
+(https://www.csoonline.com/article/2881469/malware-cybercrime/whodunit-in-cybercrime-attribution-is-not-easy.html)
+
+According to McGraw, there is a big difference between identifying a machine and identifying who controls it.
+
+“You can compromise a box where one of those machines is installed, and find out a lot about that machine,” he said. “But the question is: Who is running the machine? There’s no blood or DNA mapping going on. If you’re a nation-state-level attacker and want an adversary to believe that another nation state is doing it, there is nothing that can stop that.”
+
+Taking the Sony hack in 2014 as example, the FBI released a statement in less than a month that it has "concluded that the North Korean government is responsible". However, in the private sector, the view is not unanimous. Some were suspicious of how quickly the attribution was publicly confirmed after the attack, and later on, other evidence that Russians could have been involved was uncovered, that brings more doubt to the original attribution. Additionally, since the attribution was built on the assumed fact North Korea was responsible for the assault on South Korean banks in 2013, (Altman, 2014) the attribution of the Sony attack is made based on the assumption that previous attributions were correct.

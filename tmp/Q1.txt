@@ -1,0 +1,8 @@
+Questions:
+- the paper "introduction to argumentation" mentioned several argumentation schemes (e.g. argumentation for practical inference), are we going to create our own schemes and respective critical questions? are we going to fit our rules into existing schemes? for example, maybe if country A has attacked country B before, then they are likely to be responsible for this attack will fall under the 'argument from precedent' scheme.
+
+- if i understand correctly, will the attribution problem be modelled as a persuasion dialog? 
+
+
+
+

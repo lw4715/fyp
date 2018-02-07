@@ -1,0 +1,40 @@
+level of sophistication may be an indicator of size of organization (Stuxnet, Gauss vs NHS)
+
+if amount of resources (infrastructure and manpower) needed for attack is very large, government might be involved (APT1)
+
+geopolitical context: recent conflicts between countries can be a motive for govenment support for attack (Stuxnet)
+
+target: if geographical location of attack is mainly one or a few countries, possible national attack (Stuxnet)
+
+target: if multiple victims in same industry, possibly espionage from competitors (else, probably not) (APT1)
+
+code: code configured designed to sabotage specific facilites may indicate large organisation with ulterior motive (Stuxnet)
+
+code: similarities in code to other known attackers by an org can indicate that that organisation is responsible (Gauss, NHS)
+<conflict> if malware code is freely available/can be sold (used by multiple different attackers) then negate previous rule 
+
+context: if previous attribution was wrong, then negate previous rule
+
+ip: if attacker's ip addresses are mostly from one geographical location, that could be true origin of attacker (APT1)
+
+language: default language settings might indicate origin of attacks (APT1)
+
+language: words in code that might be in a certain language or is slang in certain languages might indicate origin of attacks (Stuxnet)
+
+individuals: if individual identified to be attacker is involved with government, gov might be involved (APT1)
+
+if an organisation owned up to the attack, they are responsible (US bank hack 2012)
+<conflict> if other evidences point to possibly government level involvement, then negate previous rule
+
+////////
+
+victim is single entity and victim is gov organisation, then target is country
+
+multiple victims but most victims come from one country, then target is country
+
+victim is single corporation, then target is corporation
+
+if target is country, then attacker is country
+
+an corporation from industry A has corporate motive to attack competitors in same industry
+

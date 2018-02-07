@@ -1,0 +1,84 @@
+# Argumentation for Social Good
+
+Proposal: use Argumentation reasoning to make decisions regarding:
+* identify attacker (Attribution Problem)
+* decide regulation rule while using data
+* decide regulation rule while sharing data
+
+Use cases:
+* IOT
+* eldercare
+* AI in healthcare
+* smart cars
+
+Supporting evidence for argumenation reasoning for solving these types of problems:
+* Rule prioritization in other security areas (Bandara et al. 2009)
+* Prototype system for medical data access under EU (http://www.cs.ucy.ac.cy/projects/health-record/login_form.html)
+
+** Abductive reasoning combined with argumentation are the core of the GorgiasB tool(Spanoudakis, Kakas, andMoraitis 2016)
+*** Abductive reasoning: deals with incomplete info
+*** Argumentation: conflicting info (modularity)
+
+_________________________________________
+preference-based argumentation framework
+
+argumentation theory is a pair (\T, \P)
+L←L1, . . . , Ln: (ground literals)
+\T: arguments rule
+\P: priority rules
+L = rule1 > rule2 
+_________________________________________
+
+
+argument (T,P) supports conclusion L when it is derived from T (arguments rule) and supported by P (priority rules)
+
+argumentation good for solving problems underpartial informationas only the arguments whose premisses are satisfied will play a role
+
+
+
+// Attribution Problem
+Main idea of Reasoner:
+Model:
+* reasoning rules: extracted during analysis of attribution forensics examples
+* arguments: reasoning rules
+* conflicting arguments: conflicting evidence (evidence deriving contrary conclusion)
+
+1. build up and categorize evidence [social science technique, called the Q-Model (Rid and Buchanan 2015)]
+	* different layers: Strategic, Operational, Tactical
+2. construct arguments 
+	* reasoning rules --- (construct) --> argument rules + priortiy rules
+	* evidence used as premisses to support argument
+	* conclusion: is this country responsible for attack
+3. Attribution with the reasoning rules
+
+
+EXAMPLES:
+* Stuxnet (Symantec2011)
+* APT1 (Mandiant 2013)
+
+Extensions:
+* automatic collection fo evidence
+* represent quantitative strength of arguments
+* extend rules by inferring used rules (consider symptoms of attacks)
+
+// Data Sharing Problem
+1. data sharing agreement (DSA) (Swarup, Seligman, and Rosenthal 2006) 
+
+Policies: enforces when data is used, identifying if user/app is granted access and level of access
+
+Main idea:
+1. Given policies regulating use/sharing of data
+	* policies: argument rules
+	* conclusion of policy: conclusion of argument rule
+2. find conflicts between arguments
+	* conflict: 2 policies both permit and deny action for same/related preconditions
+3. create hierarchical decision process model
+
+Extensions:
+* policies dealing with data integrity and availability
+* make conflict resolution automatic (introduce general resolution rules)
+* online learning
+
+References:
+* (Pretschner  et  al.  2008;Matteucci, Petrocchi, and Sbodio 2010)
+

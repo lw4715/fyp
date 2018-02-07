@@ -1,0 +1,13 @@
+questions:
+
+how to determine if rules are 'equal level'? have preference for all the rules? or assume that everything is on level 0, then if any preference is added then its level i + 1
+
+
+skeptical: this goal is the unique strongest
+credulous: this goal is as strong as several other goals
+
+
+in autonomous agents paper (last chapter), it mentions how to resolve conflicts, by 
+i) deliberating on the negation of the goal to weaken a skeptical conclusion, 
+ii) deliberate on the goal to find supporting info to strengthen a credulous conclusion
+using Gorgias, do we need to explicitly write sth to encode this behaviour? Or is this part of what Gorgias does to resolve conflicting rules?

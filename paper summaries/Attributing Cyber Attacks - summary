@@ -1,0 +1,107 @@
+Q Model:
+	I: 		Concept
+	II: 	Practice
+	III:	Communication
+	* 3 levels:
+		1. Tactical/Technical: art (i.e. no fixed way) 
+			Goal: how
+		2. Operational: nuanced process 
+			Goal: what (high-level architecture/attacker profile)
+		3. Strategical: function of what is at stake politically 
+			Goal: who/why
+		(4. Communication)
+
+General features of attribution:
+	* too large and complex for single person
+	* require division of labour
+	* incremental procession
+
+Current (limited) assumptions on attribution:
+	* intractable due technical architecture and geography of Internet
+		=> only a technical redesign of the Internet can fully fix the attribution problem
+	* binary view, either solvable or un-solvable
+	* attribution evidence is readily comprehensible
+
+Attribution process:
+1. Indicators of compromise (IOC) found
+2. Technical questions raised
+3. Facts gathered
+4. More questions
+	Note: Non-forensics sources of intelligence/geopolitical context/intuition can also start attribution process
+
+Part I (Concept)
+	Insights:
+		* Aperture: scope of sources (high aperture more likely to solve)
+			e.g. MOONLIGHT MAZE 
+		* Individuals can be very significant
+			e.g. CrowdStrike's Putter Panda
+		* Perception (bias)
+			e.g. Study of intelligence failures (1978)
+
+Part II (Practice)
+	1. Technical layer:
+		- broad-based automated scanning/reports of aberrant computer behaviour
+		- 3 types of IOCs: atomic, behavioual, computed
+		- Entry via spear-phishing, USB
+		
+		* Targeting (what) 
+			e.g. Epic Turla Operation
+		* Targeting analysis (how) 
+		* Infrastructure 
+			e.g. US indictment of five PLA officers
+		* Modularity (signature and hallmarks in malicious code)
+			e.g. Operation Poisoned Hurricane, Stuxnet and Duqu
+		* Pattern-of-life (schedules)
+			e.g. US indictment of five PLA officers
+		* Language indicators (var names, config settings)
+			e.g. Careto malware
+		* Mistakes (reveal name/file/IP/email)
+			e.g. Silk Road operator username, Hector Xavier 'Sabu' Monsegur (Anonymous) IP
+		* Stealth (anti-forensic activity e.g. data encryption, modify timestamp in log files)
+		* Signs of lega restriction
+			e.g. Stuxnet
+
+	2. Operational layer:
+		- Synthesize info from disparate sources (tech, non-tech, geopolitical)
+		- develop hypotheses
+
+		* Analysis of ability required by perpetuators 
+		(target-specific info/ target reconnaissance/ payload testing capabilities)
+			e.g. Stuxnet
+		* Scope of offenses (Advanced Persistent Threats)
+			e.g. APT1/Comment Crew, The Elderwood Project
+		* Piecing together multiple stages
+			e.g. RSA SecurID hack 2011, DigiNotar 'Comodohacker'
+		* Evolution of intrusions
+			e.g. Stuxnet
+		* Geopolitical context
+			e.g. DDoS attacks in Estonia 2007, Georgia War 2008, Gauss campaign 2012
+		* Employees/contractors (insider)
+			e.g. Verizon review 2013, Shamoon attack at Saudi Aramco, Maroochy Water Breach in Queensland 2000, pipline incident at Gazprom 2000
+
+	3. Strategic layer:
+		- Aggregating answers to operational questions to draw meaningful conclusions (adversary's motivation)
+
+		* Form of damage revealing attacker's intent
+			i.	direct and immediate	e.g. Shamoon attack on Saudi Aramco 2012
+			ii. direct and delayed		e.g. Stuxnet
+			iii.indirect and immediate	e.g. eBay breach
+			iv.	indirect and delayed	e.g. demise of Nortel
+			Note: Damange assessment to consider divergence between indended and actual damage
+		* Analysing precedents 
+
+Part III (Communication)
+	Preparing and managing portion of attribution process visible to leadership, technical experts, public
+	
+	- Arguments for more openness/publicity:
+		* bolster credibility
+		* improve attribution 
+		* improve collective defences
+		* affect publicized (malicious) activity
+
+Key limitations of attribution:
+	* skill and capabilities
+	* time
+	* sophistication of adversary
+
+https://imperialcollegelondon.app.box.com/file/244863696111

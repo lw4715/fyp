@@ -1,0 +1,35 @@
+APT1
+(https://www.fireeye.com/content/dam/fireeye-www/services/pdfs/mandiant-apt1-report.pdf)
+
+KEY FINDINGS:
+
+Which organisation/Who?
+APT1 is believed to be Unit 61398.
+	Technical evidence:
+	- APT1 used IP addresses registered in Shanghai (98% China)
+	- systems set to use the Simplified Chinese language (configured automatically based on selected language on client system)
+	- “HUC Packet Transmit Tool” or HTRAN attack infrastructure registered in China
+
+	Analysis of ability:
+	- size of APT1’s infrastructure -> potentially hundreds of human operators.
+	- Given the volume, duration and type of attack activity we have observed, APT1 operators would need to be directly supported by linguists, open source researchers, malware authors, industry experts who translate task requests from requestors to the operators, and people who then transmit stolen information to the requestors.
+
+	Individuals in organisation:
+	- "UglyGorilla": public expression of interest in China's "cyber troops"
+	- "DOTA": email accounts used to conduct social engineering and spear phishing attacks in support of APT1 campaigns. Shanghai phone number used
+	- "SuperHard": disclosed location to be the Pudong New Area of Shanghai.
+
+
+What?
+APT1 has systematically stolen hundreds of terabytes of data from at least 141 organizations, and has demonstrated the capability and intent to steal from dozens of organizations simultaneously.
+
+Why are they doing it? (possible motive)
+APT1 focuses on compromising organizations across a broad range of industries in English-speaking
+countries.
+	- The industries APT1 targets match industries that China has identified as strategic to their growth, including four of
+	the seven strategic emerging industries that China identified in its 12th Five Year Plan. 
+
+How?
+APT1 maintains an extensive infrastructure of computer systems around the world.
+	Technical evidence:
+	- In the last two years we have observed APT1 establish a minimum of 937 Command and Control (C2) servers hosted on 849 distinct IP addresses in 13 countries. The majority of these 849 unique IP addresses were registered to organizations in China (709), followed by the U.S. (109). 

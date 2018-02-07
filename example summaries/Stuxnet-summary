@@ -1,0 +1,110 @@
+Stuxnet
+https://www.wired.com/2011/07/how-digital-detectives-deciphered-stuxnet/
+
+"Zero-days" exploit: They exploit vulnerabilities in software that are yet unknown to the software maker or antivirus vendors. 
+
+Spread via USB
+
+Evidences:
+1. 
+(technical)
+valid signed certificates stolen from RealTek Semiconductor and JMicron Technology (Taiwan)
+
+(operational)
+“We rarely see such professional operations,” wrote ESET, a security firm that found one of the certificates, on its blog. “This shows [the attackers] have significant resources.”
+
+
+2. 
+(technical)
+virus was designed to target Simatic WinCC Step7 software, an industrial control system made by the German conglomerate Siemens that was used to program controllers that drive motors, valves and switches in everything from food factories and automobile assembly lines to gas pipelines and water treatment plants.
+
+(operational)
+routine and unambitious in its aims, no obvious financial gain
+looked like just another case of industrial espionage.
+
+3. 
+(technical)
+Several layers of masking obscured the zero-day exploit inside, requiring work to reach it, and the malware was huge — 500k bytes, as opposed to the usual 10k to 15k. There was no image in Stuxnet, and no extraneous fat either. The code appeared to be a dense and efficient orchestra of data and commands.
+
+4. 
+(technical)
+Stuxnet stored its decrypted malicious DLL file only in memory as a kind of virtual file with a specially crafted name. It then reprogrammed the Windows API — the interface between the operating system and the programs that run on top of it — so that every time a program tried to load a function from a library with that specially crafted name, it would pull it from memory instead of the hard drive. Stuxnet was essentially creating an entirely new breed of ghost file that would not be stored on the hard drive at all, and hence would be almost impossible to find.
+
+(op)
+Stuxnet was highly professional
+
+5a. 
+(technical)
+each time Stuxnet infected a system, it “phoned home” to one of two domains — www.mypremierfutbol.com and www.todaysfutbol.com hosted on servers in Malaysia and Denmark. The DNS providers for the two domains had already dead-lettered the incoming traffic to prevent it from reaching the attackers
+
+5b. 
+(technical)
+The company contacted the providers and persuaded them to reroute any traffic to a sinkhole — in this case, a computer dedicated to receiving hostile traffic — that Symantec controlled. 
+
+6. 
+(technical)
+geographical location of the infections, a strange pattern emerged. Out of the initial 38,000 infections, about 22,000 were in Iran
+
+(op)
+South Korea and the United States were always at the top of charts in massive outbreaks, which wasn’t a surprise since they had the highest numbers of internet users.
+
+(strategic)
+sophistication of the code + fraudulent certificates + Iran => word of a government cyberarmy
+
+7. 
+(technical)
+none of Stuxnet’s exploits leveraged the internet; they all spread via local area networks
+
+(op)
+attackers were targeting systems they knew were not connected to the internet. And given that they were using four zero-days to do it, the targets had to be high-value. 
+
+8. 
+(technical)
+every sample of the worm contained the domain name and time stamp of every system it infected. This allowed them to trace every infection back to the original infected computer from which it started: five organizations in Iran that they believed would be gateways to the target
+
+9. 
+(technical)
+configuration file – found an end-date — June 24, 2012. Presumably this was the time frame by which Stuxnet was expected to have achieved all of its goals.
+
+10. 
+(technical)
+injecting commands into the PLC (hijacking the Programmable Logic Controller in a Siemens control system) and masking that it was doing so
+
+(op)
+Stuxnet was designed, not for espionage as everyone had believed, but for physical sabotage.
+
+11. 
+(technical)
+Embedded in Stuxnet’s code was a dossier detailing the specific technical configuration of the facility it sought. Any system that didn’t match precisely this configuration would go unharmed: Stuxnet would shut itself down and move on to the next system until it found its victim
+
+(op)
+Stuxnet wasn’t just aimed at attacking a specific type of Siemens controller, it was a precision weapon bent on sabotaging a specific facility.
+
+12.
+(non-tech evidence)
+a month after Stuxnet is believed to have been launched — the secret-spilling site WikiLeaks made an intriguing announcement. WikiLeaks said that an anonymous source claimed that a “serious” nuclear incident had recently occurred at Natanz. The site also pointed out that the head of Iran’s Atomic Energy Organization had recently resigned for unknown reasons.
+
+13.
+(tech)
+Stuxnet was soughting after two numbers — 9500h and 7050h
+
+(op)
+They were product IDs for two types of frequency converters made in Finland and Iran
+
+Stuxnet was targeting a facility that had 33 or more of the frequency converter drives installed, all operating at between 807Hz and 1,210Hz.
+
+(strategic)
+malware had been aimed at Iran’s nuclear program
+
+14.
+(tech)
+“inoculation value”: 19790509
+the word “myrtus” that appeared in a file path
+
+(non-tech evidence)
+resembled a date – May 9, 1979 — and suggested it might refer to the day an Iranian Jewish businessman named Habib Elghanian was executed by firing squad in Tehran.
+
+Myrtus is the genus of a family of plants that includes the guava, so it was possible the attackers had a love of botany. Or Myrtus could conceivably mean MyRTUs — RTUs, or remote terminal units, operate similarly to PLCs.
+
+(strategic)
+Suspicions were growing that Israel and the U.S. were behind Stuxnet and had used the malware as a devious alternative to bombing Iran’s nuclear plant.

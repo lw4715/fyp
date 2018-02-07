@@ -1,0 +1,6 @@
+Evaluation plan:
+ 
+1. get some real evidence from a past case to input into reasoner
+2. create sample evidences for past cases using anecdotal information about the information analysts were working with
+3. create sample evidences (use mixture of techniques used by hackers in the past) for a new case to see what the reasoner says
+4. compare with insights from using analytic forensic tools/social analytics

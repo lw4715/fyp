@@ -1,0 +1,74 @@
+% % %%%%%%%%%%%%%%%%%
+% \subsection{Project summary}
+% The main goal of this project is to construct a reasoner based on argumentation that, given various pieces of evidence gathered, reason whether or not a specific organization was supporting a cyber attack. \\
+
+% The first stage of the project involves studying past forensics investigations, specifically the various decisions or conclusions drawn by the investigators, and produce corresponding logical rules that specifies hierarchies between different pieces of evidences and the conclusion drawn from them. \\
+
+% The second stage involves building the framework using argumentation to collect and categorize the evidences and reason about the conclusion. We will use Thomas Rid\'s Q-Model \cite{Rid2015AttributingAttacks} to categorize the various pieces of evidence. The evidences will be encoded as premises to the argument, for example, "Country A is behind the attack". From the rules constructed from the previous step, the conflicting ones will be structured as critical questions. According to Walton, these critical questions represents "standard ways of critically probing into an argument to find aspects of it that are open to criticism" \cite{Walton2009ArgumentationIntroduction}. For example, if we found out that the IP address of the attacker's server belongs to country X, the initial argument will be that the attack is from country X. One critical question could be "Is there evidence to prove that the IP address is spoofed". The reasoning back-end will be built using GorgiasB, an argumentation tool. \\
+
+% The third stage involves examining the framework by testing it with either real-world data or dummy data. Based on the results of the tests, we will then go through further iteration of the previous two stages, incorporating different kinds of evidence and rules to improve the reasoner.
+
+
+% \subsection{What is argumentation?}
+% Argumentation involves a set of chained arguments. Each argument has premises and conclusions. Arguments can be linked or convergent. In linked arguments, the premises must all be true in order for the conclusion to follow (logical AND). In convergent arguments, any one of the premises itself is sufficient to prove the conclusion (logical OR), and more premises simply reinforce the conclusion. \\
+
+% There are a few ways that one argument can attack another argument. 
+% Argument Y can: 
+% \begin{enumerate}
+% \item attack the premise of argument X 
+% \item ask critical questions to doubt the acceptability of the argument 
+% \item raise a counter-argument that leads to the opposite conclusion. (Walton, 2009)
+% \end{enumerate}
+
+% In the case of a persuasion dialog, argumentation can ultimately disclose the strongest arguments on both sides of the argument.\\
+
+% These attacks can ultimately either cause the original argument to be rejected, or stimulate responses from the party giving original argument to strengthen and support their argument. If all the critical questions are responded to appropriately and the proponent manages to discharge the burden of proof set out initially, then the argument is strong enough, and wins. To discharge one's burden of proof means to propose a strong argument with a chain of sub-arguments which all contain accepted arguments.
+
+% \subsection{Advantages of argumentation}
+% Argumentation captures the fact that we might change our decision if we have more information (i.e. non-monotonic reasoning), since more information might reveal more conflicting arguments. \cite{Ouerdane2010ArgumentationAiding} Making decisions using argumentation is similar to how humans naturally make decisions, so the rationale for how the decision is made (which rule overrides which other rules) can be easily accepted by its human users via diagrammatic forms, achieving transparency. Furthermore, argumentation encourages evaluation of the argument, assessing relative importance of various factors when making decisions \cite{Mackay2007OnlineTheory}.
+
+
+% \subsection{Real-world use cases}
+% Examples of argumentation used in real-life includes risk assessment and communication in health care. Argumentation is useful is this case to "present information in a manner which engenders confidence and acceptance in their listeners, because the listener is presented with the motivation behind the information" \cite{Mackay2007OnlineTheory}.\\
+
+% Another example use case is in analysis and support of experiential learning in early design episodes \cite{S.C.StumpfandJ.T.McDonnell2002TalkingEpisodes}. The objective of the study is to understand how designers interact with each other and model the design discourse, ultimately suggesting useful techniques and methods for better design. In this case, argumentation is used since designers naturally tend to fall into persuasive arguments to "explain, predict, justify and warrant their artifacts" to each other.\\
+
+% A third example is the use of argumentation in the development of an integrated flexible transport systems platform in rural areas \cite{Velaga2012DevelopmentTheory}. In this case, the negotiation dialog in argumentation is used to "weigh-up the conflicting choices available to both passengers and service providers" \cite{Velaga2012DevelopmentTheory}. Once again, the ability to be visualized easily for debugging purposes was one of the reasons why argumentation was chosen.
+
+
+% \section{The Attribution problem}
+% \subsection{Overview}
+% After a cyber attack has occurred, attribution is the act of determining the person, organization or state responsible for the attack. \\
+
+% One problem with attribution, according to Jeffrey Carr, president and CEO of Taia Global, is governments potentially making wrong attributions, and inaccurate information from ally nations. Taking the Sony hack in 2014 as example, the FBI released a statement in less than a month that it has "concluded that the North Korean government is responsible"\cite{Armerding2015WhodunitEasy}. However, in the private sector, the view is not unanimous. Some were suspicious of how quickly the attribution was publicly confirmed after the attack, and later on, other evidence that Russians could have been involved was uncovered, that brings more doubt to the original attribution. Additionally, since the attribution was built on the assumed fact North Korea was responsible for the assault on South Korean banks in 2013, \cite{Altman2014SonyInterview} the attribution of the Sony attack is made based on the assumption that previous attributions were correct.\\
+
+% \subsection{Using argumentation in attribution}
+% In this case, the transparency provided by argumentation is very advantageous in attribution, since it provides a way to visualize the attribution process to even non-professionals, which could be released in public statements to back up the whole attribution process. As for inaccurate information based on previous attributions, in our argumentation framework, we can add a dependency on the correctness of previous attributions and re-analyze to correctness of past attributions given present evidence to get an updated analysis on the current attack. This automated process gives an advantage over manual analysis since it could be a very long and arduous process to not only re-evaluate the current case but also any previous cases related to the attack at hand with every piece of new information uncovered.\\
+
+% Furthermore, using argumentation, we could structure the attribution problem as a persuasion dialog, to reveal whether the argument for the proposition (the perpetrator of the attack to be a certain body) or against the proposition. Critical questions can be asked to attempt to critically assess the argument. \cite{Rid2015AttributingAttacks} Hence, if an attribution was strong enough to successfully reply the critical questions and ultimately win, then we can have some level of confidence in the attribution given the current evidence.
+
+% \section{Case Studies}
+% \subsection{Stuxnet}
+% Stuxnet is one of the first large-scale cyber attacks, even dubbed the "World's First Digital Weapon" \cite{Zetter2014CountdownWeapon}. Stuxnet was first discovered in 2010 at the uranium enrichment plant outside Natanz in central Iran.\\
+
+% It's code was found to be incredibly complex and sophisticated, using four zero-day vulnerabilities, which was the first clue to investigators that a larger organization was behind this attack. A multitude of other technical evidence including the presence of two fraudulent certificates has also pointed to the direction that a large organization with substantial resources was responsible. The large proportion of infected machines that were in Iran sparked suspicions that the attack could have been a state-sponsored cyber attack\cite{Zetter2011HowWIRED}. \\
+
+% Reports that the Iranian President Mahmoud Ahmadinejad was using the nuclear program to build a nuclear weapon serves as a motivation for other nation-states to attack the power plants as an act of sabotage to Iran's uranium enrichment program. The United States and Israel has been allegedly responsible for the attack.
+
+% \subsection{DoS attacks on U.S. Banks}
+
+% Iran was blamed for the 2012 denial of service attacks on U.S. banks, causing websites of many banks to suffered day-long slowdowns and even unreachable for many customers \cite{Goldman2012MajorHistory}. Experts said that attackers were "crafting their own private clouds, either by creating networks of individual machines or by stealing resources wholesale from poorly maintained corporate clouds" \cite{NicolePerlroth2013OnlineSay}. These web hosting services were infected by a malware called Itsoknoproblembro. While botnets can usually be traced back to a specific control center, the way that Itsoknoproblembro was engineered made it hard to trace. The skills required to carry out such a large-scale attack indicated that the attack being backed up by a large organization with sufficiently large capability and resources. \\
+
+% Furthermore, economic sanctions and online attacks (Flame, Duqu and Stuxnet) by the United States against Iran constitutes a strong motive for Iran to carry out the attack. Consequently, despite hacker group, Izz ad-Din al-Qassam Cyber Fighters, claiming responsibility for the attacks, investigators believed that the claim was a disguise for Iran. \cite{NicolePerlroth2013OnlineSay}
+
+% \subsection{APT1 espionage campaign}
+% Since 2004, computer security breaches at hundreds of organizations around the world were attributed to advanced threat actors referred to as the “Advanced Persistent Threat” (APT). One of the largest APT groups have been found to be more than 20 APT groups with origins in China. APT1 is believed to be the 2nd Bureau of the People’s Liberation Army General Staff Department’s 3rd Department, which is most commonly known as Unit 61398\cite{Mandiant2013ExposingUnits}.\\
+
+% APT1 has stolen hundreds of terabytes of data from at least 141 organizations, and has "demonstrated the capability and intent to steal from dozens of organizations simultaneously" \cite{Mandiant2013ExposingUnits}. This exhibits a abundance of resources of the perpetrator of this attack. Furthermore, the industries were non-coincidentally found to match industries that China has identified as strategic, "including four of the seven strategic emerging industries that China identified in its 12th Five Year Plan" \cite{Mandiant2013ExposingUnits}. \\
+
+% On top of that, technical evidences point to Chinese involvement, since 98\% of the IP addresses used by APT1 was registered in China, Shanghai. The client systems were also found be set to use Simplified Chinese language. Moreover, one of the tools used in the attack, "HUC Packet Transmit Tool", was found to be registered in China.
+
+% \subsection{WannaCry}
+% The recent NHS ransomware attack has also been attributed to a nation state. The UK home office "we can be as sure as possible" and "it is widely believed in the community and across a number of countries that North Korea had taken this role" \cite{Knapton2017HomeAttack}. Prior to the NHS incident, there have been reports of hackers from capital of North Korea, Pyongyang, using malicious software to extort Bitcoin \cite{Browne2017NorthSanctions}. Investigators have also discovered that the WannaCry code shares connections to previous attacks attributed to Lazarus Group, a North-Korean-linked group. \cite{skynews2017StrongCyberattack} \\ 
+
+% Despite this, some experts say that the lack of sophistication of WannaCry indicates a lack of structure thus "Rather than being a nation-state campaign, it said, it looked more like a 'typical' cyber-crime campaign that sought to enrich its operators" \cite{BBC-News2017MoreHackers}.
