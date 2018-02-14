@@ -49,11 +49,16 @@ prefer(S5, S4).
 % evidences
 sophisticatedMalware(gauss).
 malwareUsedInAttack(gauss, attack).
+% TODO: how to resolve a chain of complicated relations e.g. Flame, Duqu, Stuxnet, Gauss
 similar(gauss, stuxnet).
 malwareUsedInAttack(stuxnet, stuxnetattack).
 isCulprit(israel, stuxnetattack).
 isCulprit(us, stuxnetattack).
+% TODO attack targetting an entire region/many countries
 target(middleEast, attack).
+target(israel, attack).
+target(lebanon, attack).
+target(palestine, attack).
 target(iran, stuxnetattack).
 infectionMethod(usb, gauss).
 controlAndCommandEasilyFingerprinted(gauss).
