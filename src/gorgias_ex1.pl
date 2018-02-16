@@ -1,5 +1,5 @@
-:- compile('/homes/lw4715/Computing/FYP/fyp/src/gorgias-src-0.6d/lib/gorgias.pl').
-:- compile('/homes/lw4715/Computing/FYP/fyp/src/gorgias-src-0.6d/ext/lpwnf.pl').
+:- compile('gorgias-src-0.6d/lib/gorgias.pl').
+:- compile('gorgias-src-0.6d/ext/lpwnf.pl').
 % ex 1 - US bank hack
 
 % tech
