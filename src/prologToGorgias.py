@@ -11,26 +11,29 @@ def convertRulesFile(filename):
 def convertPrefFile(filename):
         f = open(filename + ".pl", 'r')
         r = ""
+        counter = 0
         for line in f:
-            r += convertPref(line) + "\n"
+            r += convertPref(line, counter) + "\n"
+            counter += 1
         f_w = open(filename + "gorgias_pref.pl", 'w')
         f_w.write(r)
 
 def convertRules(prolog_r):
     if prolog_r[0] == "%" or prolog_r[0] == "\n":
         return ""
-    prolog_r = prolog_r.replace(" ", "")
-    prolog_r = prolog_r.replace(".", "")
-    prolog_r = prolog_r.replace("\n", "")
-    prolog_r = prolog_r.split("%")[0]
+    prolog_r = clean(prolog_r)
     print prolog_r
     rule = prolog_r.split(":-")
     print(rule)
     head = rule[0]
     body = rule[1]
     return "rule(, " + head + ", [" + body + "])."
-def convertPref(pseudo_r):
-    return "rule(p, " + pseudo_r + ", [])."
+
+def convertPref(pseudo_r, count):
+    return "rule(p" + str(count) + ", " + clean(pseudo_r) + ", [])."
+
+def clean(prolog):
+    return prolog.replace(" ", "").replace(".", "").replace("\n", "").split("%")[0]
 
 if __name__ == "__main__":
     rules = sys.argv[1]
