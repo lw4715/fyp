@@ -5,7 +5,7 @@ def convertRulesFile(filename):
     r = ""
     for line in f:
         r += convertRules(line) + "\n"
-    f_w = open(filename + "gorgias.pl", 'w')
+    f_w = open("tmp/" + filename + "gorgias.pl", 'w')
     f_w.write(r)
 
 def convertPrefFile(filename):
@@ -15,7 +15,7 @@ def convertPrefFile(filename):
         for line in f:
             r += convertPref(line, counter) + "\n"
             counter += 1
-        f_w = open(filename + "gorgias_pref.pl", 'w')
+        f_w = open("tmp/" + filename + "gorgias_pref.pl", 'w')
         f_w.write(r)
 
 def convertRules(prolog_r):
@@ -26,7 +26,10 @@ def convertRules(prolog_r):
     rule = prolog_r.split(":-")
     print(rule)
     head = rule[0]
-    body = rule[1]
+    if len(rule) > 1:
+        body = rule[1]
+    else:
+        body = ""
     return "rule(, " + head + ", [" + body + "])."
 
 def convertPref(pseudo_r, count):
