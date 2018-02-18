@@ -10,7 +10,8 @@ rule(t5, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, A
 rule(t6, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 rule(t7, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(t8, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),\+(forBlackMarketUse(M1)),\+(forBlackMarketUse(M2))]).
-rule(t9, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandEasilyFingerprinted(M))]).
+rule(t9, not(forBlackMarketUse(M)), []).
+rule(t10, forBlackMarketUse(M), [not(infectionMethod(usb,M)),not(controlAndCommandEasilyFingerprinted(M))]).
 rule(t11, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 
 rule(o1, requireHighResource(Att), [highLevelSkill(Att)]).
@@ -42,6 +43,7 @@ rule(p2, prefer(s4,s3), []).
 rule(p3, prefer(s5,s4), []).
 % ex3
 rule(p4, prefer(t8, s4), []).
+rule(p5, prefer(t10, t9), []).
 
 % evidences
 rule(f1, sophisticatedMalware(gauss), []).
