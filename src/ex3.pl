@@ -1,7 +1,7 @@
 :- compile('gorgias-src-0.6d/lib/gorgias.pl').
 :- compile('gorgias-src-0.6d/ext/lpwnf.pl').
 
-% ex 2 - US bank hack
+% ex 3 - Gauss (US bank hack)
 rule(t1, culpritIsFrom(X, Att), [majorityIpOrigin(X, Att)]).
 rule(t2, not(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
 rule(t3, culpritIsFrom(X, Att), [firstLanguage(L, X), sysLanguage(L, Att)]).
@@ -9,10 +9,8 @@ rule(t4, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(t5, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 rule(t6, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 rule(t7, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
-rule(t8a, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2)]).
-rule(t8b, not(isCulprit(X, A1)), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),(forBlackMarketUse(M1);forBlackMarketUse(M2))]).
-rule(t9, not(forBlackMarketUse(M)), [infectionMethod(usb,M)]).
-rule(t10, not(forBlackMarketUse(M)), [controlAndCommandEasilyFingerprinted(M)]).
+rule(t8, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),\+(forBlackMarketUse(M1)),\+(forBlackMarketUse(M2))]).
+rule(t9, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandEasilyFingerprinted(M))]).
 rule(t11, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 
 rule(o1, requireHighResource(Att), [highLevelSkill(Att)]).
@@ -32,6 +30,7 @@ rule(s3, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
 rule(s4, not(isCulprit(C,Att)), [culpritIsFrom(C,Att),nothasCapability(C,Att)]).
 rule(s5, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 rule(s6, not(isCulprit(C,Att)), [not(highLevelSkill(Att)),isCountry(C)]).
+rule(s7, hasResources(X), [isCulprit(X, _)]).
 
 rule(c, not(isCulprit(X,Att)), [isCulprit(Y,Att), not(X==Y)]).
 
@@ -42,7 +41,7 @@ rule(p1, prefer(t2,t1), []).
 rule(p2, prefer(s4,s3), []).
 rule(p3, prefer(s5,s4), []).
 % ex3
-rule(p4, prefer(t8b,t8a), []).
+rule(p4, prefer(t8, s4), []).
 
 % evidences
 rule(f1, sophisticatedMalware(gauss), []).
