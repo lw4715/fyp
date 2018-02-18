@@ -1,15 +1,15 @@
 import sys
 
-def convertRulesFile(filename):
-    f = open(filename + ".pl", 'r')
+def convertRulesFile(filename="tmp"):
+    f = open("tmp/" + filename + ".pl", 'r')
     r = ""
     for line in f:
         r += convertRules(line) + "\n"
     f_w = open("tmp/" + filename + "gorgias.pl", 'w')
     f_w.write(r)
 
-def convertPrefFile(filename):
-        f = open(filename + ".pl", 'r')
+def convertPrefFile(filename="tmp1"):
+        f = open("tmp/" + filename + ".pl", 'r')
         r = ""
         counter = 0
         for line in f:
@@ -39,10 +39,12 @@ def clean(prolog):
     return prolog.replace(" ", "").replace(".", "").replace("\n", "").split("%")[0]
 
 if __name__ == "__main__":
-    rules = sys.argv[1]
-    pref = sys.argv[2]
+    #rules = sys.argv[1]
+    #pref = sys.argv[2]
 
-    if rules:
-        convertRulesFile(rules)
-    if pref:
-        convertPrefFile(pref)
+    #if rules:
+    #    convertRulesFile(rules)
+    #if pref:
+    #    convertPrefFile(pref)
+    convertRulesFile()
+    convertPrefFile()

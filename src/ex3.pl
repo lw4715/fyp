@@ -7,19 +7,20 @@ rule(t2, not(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCo
 rule(t3, culpritIsFrom(X, Att), [firstLanguage(L, X), sysLanguage(L, Att)]).
 rule(t4, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(t5, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(t6(X), culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
-rule(t7(X), culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
-rule(t8(X), isCulprit(X), [similar(M1,M2),malwareUsedInAttack(M1,Att),malwareUsedInAttack(M2,A2),target(T,A2),target(T,A1),isCulprit(X,A2)]).
-rule(t9(M), not(forBlackMarketUse(M)), [infectionMethod(usb,M)]).
-rule(t10(M), not(forBlackMarketUse(M)), [controlAndCommandEasilyFingerprinted(M)]).
+rule(t6, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
+rule(t7, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
+rule(t8a, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2)]).
+rule(t8b, not(isCulprit(X, A1)), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),(forBlackMarketUse(M1);forBlackMarketUse(M2))]).
+rule(t9, not(forBlackMarketUse(M)), [infectionMethod(usb,M)]).
+rule(t10, not(forBlackMarketUse(M)), [controlAndCommandEasilyFingerprinted(M)]).
 rule(t11, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 
 rule(o1, requireHighResource(Att), [highLevelSkill(Att)]).
 rule(o2, hasCapability(_, Att), [not(requireHighResource(Att))]).
-rule(o3(C), hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
-rule(o4(C), hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
-rule(o5(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
-rule(o6(C), hasMotive(C, Att), [hasEconomicMotive(C, Industry), industry(Industry, T), target(T, Att)]).
+rule(o3, hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
+rule(o4, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
+rule(o5, hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
+rule(o6, hasMotive(C, Att), [hasEconomicMotive(C, Industry), industry(Industry, T), target(T, Att)]).
 rule(o7, requireHighResource(Att), [highSecurity(T), target(T, Att)]).
 rule(o8, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
 rule(o9(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
@@ -40,7 +41,8 @@ rule(p1, prefer(t2,t1), []).
 % ex2
 rule(p2, prefer(s4,s3), []).
 rule(p3, prefer(s5,s4), []).
-
+% ex3
+rule(p4, prefer(t8b,t8a), []).
 
 % evidences
 rule(f1, sophisticatedMalware(gauss), []).
