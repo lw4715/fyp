@@ -9,10 +9,10 @@ rule(t4, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(t5, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 rule(t6, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 rule(t7, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
-rule(t8, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),\+(forBlackMarketUse(M1)),\+(forBlackMarketUse(M2))]).
 rule(t9, not(forBlackMarketUse(M)), []).
 rule(t10, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandEasilyFingerprinted(M))]).
 rule(t11, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
+rule(t8, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),not(forBlackMarketUse(M1)),not(forBlackMarketUse(M2))]).
 
 rule(o1, requireHighResource(Att), [highLevelSkill(Att)]).
 rule(o2, hasCapability(_, Att), [not(requireHighResource(Att))]).
@@ -32,8 +32,6 @@ rule(s4, not(isCulprit(C,Att)), [culpritIsFrom(C,Att),\+(hasCapability(C,Att))])
 rule(s5, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 rule(s6, not(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
 rule(s7, hasResources(X), [isCulprit(X, _)]).
-
-rule(c, not(isCulprit(X,Att)), [isCulprit(Y,Att), not(X==Y)]).
 
 % preferences
 rule(p0, prefer(s2,s1), []).
