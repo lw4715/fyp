@@ -1,7 +1,9 @@
-:- compile('gorgias-src-0.6d/lib/gorgias.pl').
-:- compile('gorgias-src-0.6d/ext/lpwnf.pl').
+%% :- compile('gorgias-src-0.6d/lib/gorgias.pl').
+%% :- compile('gorgias-src-0.6d/ext/lpwnf.pl').
 
-?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
+%% ?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
+
+:- compile('utils.pl').
 
 % ex 3 - Gauss 
 % Tech
@@ -19,8 +21,12 @@ rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra
 rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(similarMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),not(forBlackMarketUse(M1)),not(forBlackMarketUse(M2))]).
 rule(bmDefault, not(forBlackMarketUse(M)), []).
-rule(bm, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandEasilyFingerprinted(M))]). %TODO
+rule(bm, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandEasilyFingerprinted(M))]). %TODO when do we know its not for black market?
 rule(highSkill5, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
+rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
+rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,Name,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
+rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T)]). %TODO when do we know if its not similar?
+
 
 % Op
 rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
@@ -66,16 +72,22 @@ rule(p6, prefer(bm, bmDefault), []).
 % evidences
 rule(f1, sophisticatedMalware(gauss), []).
 rule(f2, malwareUsedInAttack(gauss,attack), []).
-rule(f3, similar(gauss,stuxnet), []).
-rule(f4, malwareUsedInAttack(stuxnet,stuxnetattack), []).
-rule(f5, isCulprit(israel,stuxnetattack), []).
-rule(f6, isCulprit(us,stuxnetattack), []).
+%% rule(f3, similar(gauss,stuxnet), []).
+rule(f4, malwareUsedInAttack(flame,flameattack), []).
+rule(f6, isCulprit(equationGroup,flameattack), []).
 rule(f7, target(middleEast,attack), []).
 rule(f8, target(israel,attack), []).
 rule(f9, target(lebanon,attack), []).
 rule(f10, target(palestine,attack), []).
-rule(f11, target(iran,stuxnetattack), []).
+rule(f11, target(middleeast,flameattack), []).
 rule(f12, infectionMethod(usb,gauss), []).
 rule(f13, controlAndCommandEasilyFingerprinted(gauss), []).
 rule(f14, hasPoliticalMotive(us,iran), []).
 rule(f15, hasPoliticalMotive(israel,iran), []).
+rule(f16, ccServer(gowin7, gauss), []).
+rule(f17, ccServer(secuurity, gauss), []).
+rule(f18, domainRegisteredDetails(gowin7, "adolph dybevek", "prinsen gate 6"), []).
+rule(f19, domainRegisteredDetails(secuurity, "adolph dybevek", "prinsen gate 6"), []).
+rule(f20, addressType("prinsen gate 6", hotel), []).
+rule(f21, ccServer(gowin7, flame), []).
+rule(f22, ccServer(secuurity, flame), []).

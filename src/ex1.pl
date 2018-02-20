@@ -33,8 +33,8 @@ rule(nafCap, prefer(noCapability, hasCapability), []).
 
 % evidences
 rule(f1, hasResources(iran), []).
-rule(f2, target(us, attack), []).
-rule(f3, imposedSanctions(us, iran), []).
+rule(f2, target(usa, attack), []).
+rule(f3, imposedSanctions(usa, iran), []).
 rule(f4, hijackCorporateClouds(attack), []).
 rule(f5, sophisticatedMalware(itsoknoproblem), []).
 rule(f6, malwareUsedInAttack(itsoknoproblem, attack), []).
