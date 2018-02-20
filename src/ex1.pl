@@ -6,13 +6,15 @@
 % ex 1 - US bank hack
 
 % Tech
+rule(highSkillDefault, not(highLevelSkill(Att)), []).
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 
 % Op
 rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
-rule(noCapbabilityRequired, hasCapability(_, Att), [not(requireHighResource(Att))]).
-rule(hasCapability, hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
+rule(highResource0, not(requireHighResource(Att)), [not(highLevelSkill(Att))]).
+rule(hasCapability, hasCapability(C, Att), []).
+rule(noCapability, not(hasCapability(X, Att)), [requireHighResource(Att), not(hasResources(X))]).
 rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
 rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
 
@@ -23,6 +25,11 @@ rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)])
 % preferences
 rule(p0, prefer(hasMotiveAndCap,claimedResponsibility), []).
 rule(p1, prefer(spoofedSrcIp,srcIP), []).
+rule(nafSkill1, prefer(highSkill1, highSkillDefault), []).
+rule(nafSkill2, prefer(highSkill2, highSkillDefault), []).
+rule(nafRes, prefer(highResource1, highResource0), []).
+rule(nafCap, prefer(noCapability, hasCapability), []).
+
 
 % evidences
 rule(f1, hasResources(iran), []).
