@@ -1,5 +1,8 @@
 :- compile('gorgias-src-0.6d/lib/gorgias.pl').
 :- compile('gorgias-src-0.6d/ext/lpwnf.pl').
+
+?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
+
 % ex 1 - US bank hack
 
 % Tech
@@ -8,7 +11,7 @@ rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAtt
 
 % Op
 rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
-rule(noCapbabilityRequired, hasCapability(_, Att), [\+(requireHighResource(Att))]).
+rule(noCapbabilityRequired, hasCapability(_, Att), [not(requireHighResource(Att))]).
 rule(hasCapability, hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
 rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
 rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
