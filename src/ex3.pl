@@ -1,8 +1,3 @@
-%% :- compile('gorgias-src-0.6d/lib/gorgias.pl').
-%% :- compile('gorgias-src-0.6d/ext/lpwnf.pl').
-
-%% ?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
-
 :- compile('utils.pl').
 
 % ex 3 - Gauss 
@@ -25,7 +20,7 @@ rule(bm, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandE
 rule(highSkill5, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
 rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,Name,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
-rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T)]). %TODO when do we know if its not similar?
+rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T),not(M1==M2)]). %TODO when do we know if its not similar?
 
 
 % Op
@@ -72,7 +67,6 @@ rule(p6, prefer(bm, bmDefault), []).
 % evidences
 rule(f1, sophisticatedMalware(gauss), []).
 rule(f2, malwareUsedInAttack(gauss,attack), []).
-%% rule(f3, similar(gauss,stuxnet), []).
 rule(f4, malwareUsedInAttack(flame,flameattack), []).
 rule(f6, isCulprit(equationGroup,flameattack), []).
 rule(f7, target(middleEast,attack), []).
