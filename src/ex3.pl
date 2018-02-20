@@ -20,7 +20,8 @@ rule(bm, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandE
 rule(highSkill5, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
 rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,Name,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
-rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T),not(M1==M2)]). %TODO when do we know if its not similar?
+rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T),(M1\==M2)]). %TODO when do we know if its not similar?
+
 
 
 % Op
@@ -65,6 +66,7 @@ rule(p5, prefer(similarMalware, noCap), []).
 rule(p6, prefer(bm, bmDefault), []).
 
 % evidences
+%rule(f0, similar(gauss, flame), []).
 rule(f1, sophisticatedMalware(gauss), []).
 rule(f2, malwareUsedInAttack(gauss,attack), []).
 rule(f4, malwareUsedInAttack(flame,flameattack), []).
