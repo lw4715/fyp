@@ -1,7 +1,7 @@
 :- compile('gorgias-src-0.6d/lib/gorgias.pl').
 :- compile('gorgias-src-0.6d/ext/lpwnf.pl').
 
-% ex 3 - Gauss (US bank hack)
+% ex 3 - Gauss 
 rule(t1, culpritIsFrom(X, Att), [majorityIpOrigin(X, Att)]).
 rule(t2, not(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
 rule(t3, culpritIsFrom(X, Att), [firstLanguage(L, X), sysLanguage(L, Att)]).
