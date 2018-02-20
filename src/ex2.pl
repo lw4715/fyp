@@ -2,39 +2,48 @@
 :- compile('gorgias-src-0.6d/ext/lpwnf.pl').
 
 % ex 2 - APT1
-rule(t1, culpritIsFrom(X, Att), [majorityIpOrigin(X, Att)]).
-rule(t2, not(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
-rule(t3, culpritIsFrom(X, Att), [firstLanguage(L, X), sysLanguage(L, Att)]).
-rule(t4, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
-rule(t5, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(t6(X), culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
+% Tech
+rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
+rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 
-rule(o1, requireHighResource(Att), [highLevelSkill(Att)]).
-rule(o2, hasCapability(_, Att), [not(requireHighResource(Att))]).
-rule(o3(C), hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
-rule(o4(C), hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
-rule(o5(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
-rule(o6(C), hasMotive(C, Att), [hasEconomicMotive(C, Industry), industry(Industry, T), target(T, Att)]).
-rule(o7, requireHighResource(Att), [highSecurity(T), target(T, Att)]).
-rule(o8, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
-rule(o9(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
-rule(o10(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
-
-rule(s1, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
-rule(s2, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
-rule(s3, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
-rule(s4, not(isCulprit(C,Att)), [culpritIsFrom(C,Att),nothasCapability(C,Att)]).
-rule(s5, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
+rule(srcIP, culpritIsFrom(X, Att), [ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
+rule(spoofedSrcIp, not(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
+rule(lang1, culpritIsFrom(X, Att), [firstLanguage(L, X), sysLanguage(L, Att)]).
+rule(highSkill3, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
+rule(highSkill4, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
+rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 
 
-rule(c, not(isCulprit(X,Att)), [isCulprit(Y,Att), not(X==Y)]).
+% Op
+rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
+rule(noCapbabilityRequired, hasCapability(_, Att), [\+(requireHighResource(Att))]).
+rule(hasCapability, hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
+rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
+rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
+
+rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att)]).
+rule(highResource2, requireHighResource(Att), [highSecurity(T), target(T, Att)]).
+rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
+rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
+rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
+
+
+% Strategic
+rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
+rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
+
+rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
+rule(noCap, not(isCulprit(C,Att)), [culpritIsFrom(C,Att),\+(hasCapability(C,Att))]).
+rule(social3, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
+
 
 % preferences
-rule(p0, prefer(s2,s1), []).
-rule(p1, prefer(t2,t1), []).
+rule(p0, prefer(hasMotiveAndCap,claimedResponsibility), []).
+rule(p1, prefer(spoofedSrcIp,srcIP), []).
 % ex2
-rule(p2, prefer(s4,s3), []).
-rule(p3, prefer(s5,s4), []).
+rule(p2, prefer(hasMotiveAndLoc,claimedResponsibility), []).
+rule(p3, prefer(noCap,hasMotiveAndLoc), []).
+rule(p4, prefer(social3,noCap), []).
 
 
 % evidences

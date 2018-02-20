@@ -2,24 +2,24 @@
 :- compile('gorgias-src-0.6d/ext/lpwnf.pl').
 % ex 1 - US bank hack
 
-% tech
-rule(t1(Att), highLevelSkill(Att), [hijackCorporateClouds(Att)]).
-rule(t2(Att), highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
+% Tech
+rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
+rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 
-% op
-rule(o1(Att), requireHighResource(Att), [highLevelSkill(Att)]).
-rule(o2(Att), hasCapability(_, Att), [not(requireHighResource(Att))]).
-rule(o3(C, Att), hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
-rule(o4(Att), hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
-rule(o5(C, T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
+% Op
+rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
+rule(noCapbabilityRequired, hasCapability(_, Att), [\+(requireHighResource(Att))]).
+rule(hasCapability, hasCapability(C, Att), [requireHighResource(Att), hasResources(C)]).
+rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
+rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
 
-% strategic
-rule(s1(G, Att), isCulprit(G, Att), [claimedResponsibility(G, Att)]).
-rule(s2(C, Att), isCulprit(C, Att), [hasMotive(C, Att), hasCapability(C, Att)]).
-
+% Strategic
+rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
+rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
 
 % preferences
-rule(p1(Att), prefer(s2(Att), s1(Att)), []).
+rule(p0, prefer(hasMotiveAndCap,claimedResponsibility), []).
+rule(p1, prefer(spoofedSrcIp,srcIP), []).
 
 % evidences
 rule(f1, hasResources(iran), []).
