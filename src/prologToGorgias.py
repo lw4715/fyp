@@ -51,7 +51,7 @@ def convertPredicateToOutputRule(predicates):
         delta = "D" + str(cnt)
         delta_pred = addDelta(p, delta)
         rules += "{} :- prove([{}], {}).\n".format(delta_pred, p, delta)
-        goal += "\n  ({}, write({}); \+ {}, write(neg({}))), nl,".format(delta_pred, p, delta_pred, p)
+        goal += "\n  ({}, writeToFile({}, {}); \+ {}, write(neg({}))), nl,".format(delta_pred, p, cnt, delta_pred, p)
     list_goal = list(goal)
     list_goal[-1] = '.'
     goal = ''.join(list_goal)

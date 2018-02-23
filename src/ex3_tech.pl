@@ -63,15 +63,15 @@ malwareUsedInAttack(gauss,attack).
 % requireHighResource/1
 % culpritIsFrom/2 (strat)
 % forBlackMarketUse/1 (strat)
-writeToFile(X) :- 
+writeToFile(X, N) :- 
   open('tech.pl',write, Stream),
-  write(Stream, X), write(Stream, '.\n'),
+  write(Stream, 'rule(t'), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
 
 goal(A, M, X, D1, D2, D3) :-
-  (requireHighResource(A, D1), writeToFile(requireHighResource(A)); \+ requireHighResource(A, D1), write(neg(requireHighResource(A)))), nl,
-  (culpritIsFrom(X, A, D2), writeToFilerite(culpritIsFrom(X, A)); \+ culpritIsFrom(X, A, D2), write(neg(culpritIsFrom(X, A)))), nl,
-  (forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M)); \+ forBlackMarketUse(M, D3), write(neg(forBlackMarketUse(M)))).
+  (requireHighResource(A, D1), writeToFile(requireHighResource(A), 1); \+ requireHighResource(A, D1), write(neg(requireHighResource(A)))), nl,
+  (culpritIsFrom(X, A, D2), writeToFilerite(culpritIsFrom(X, A), 2); \+ culpritIsFrom(X, A, D2), write(neg(culpritIsFrom(X, A)))), nl,
+  (forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M), 3); \+ forBlackMarketUse(M, D3), write(neg(forBlackMarketUse(M)))).
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
