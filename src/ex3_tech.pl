@@ -64,7 +64,7 @@ malwareUsedInAttack(gauss,attack).
 % culpritIsFrom/2 (strat)
 % forBlackMarketUse/1 (strat)
 writeToFile(X, N) :- 
-  open('tech.pl',write, Stream),
+  open('tech.pl',append, Stream),
   write(Stream, 'rule(t'), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
 
