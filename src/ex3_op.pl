@@ -1,4 +1,5 @@
-% :- compile('utils.pl').
+:- compile('utils.pl').
+:- multifile rule/3.
 
 % input from tech:
 % hasResources/1
@@ -16,8 +17,9 @@
 % input (background):
 % industry/1
 
-rule(hasCapability, hasCapability(_, _), []).
-rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
+rule(noCapability, neg(hasCapability(_, _)), []).
+rule(hasCapability1, hasCapability(X, Att), [neg(requireHighResource(Att))]).
+rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
 rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att)]).
 rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
 rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
@@ -25,7 +27,8 @@ rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
 rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 
 % prefer
-rule(nafCap, prefer(noCapability, hasCapability), []).
+rule(nafCap, prefer(hasCapability1, noCapability), []).
+rule(nafCap, prefer(hasCapability2, noCapability), []).
 
 % evidences
 rule(f7, target(middleEast,attack), []).

@@ -1,4 +1,5 @@
-% :- compile('utils.pl').
+:- compile('utils.pl').
+:- multifile rule/3.
 
 % input (from op/tech):
 % hasCapability/2
