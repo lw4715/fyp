@@ -63,7 +63,11 @@ malwareUsedInAttack(gauss,attack).
 % requireHighResource/1
 % culpritIsFrom/2 (strat)
 % forBlackMarketUse/1 (strat)
-goal(A, M, X, D1, D2, D3) :- requireHighResource(A, D1); culpritIsFrom(X, A, D2); forBlackMarketUse(M, D3).
+goal(A, M, X, D1, D2, D3) :-
+  (requireHighResource(A, D1), write(requireHighResource(A)); \+ requireHighResource(A, D1), write(neg(requireHighResource(A)))), nl,
+  (culpritIsFrom(X, A, D2), write(culpritIsFrom(X, A)); \+ culpritIsFrom(X, A, D2), write(neg(culpritIsFrom(X, A)))), nl,
+  (forBlackMarketUse(M, D3), write(forBlackMarketUse(M)); \+ forBlackMarketUse(M, D3), write(neg(forBlackMarketUse(M)))).
+
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
 forBlackMarketUse(M, D) :- prove([forBlackMarketUse(M)], D).

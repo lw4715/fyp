@@ -8,7 +8,7 @@
 % culpritIsFrom/2 (tech)
 
 % input (evidence):
-% claimedResponsibility2
+% claimedResponsibility/2
 % identifiedIndividualInAttack/2
 % malwareUsedInAttack/2 (current)
 % target/2

@@ -16,11 +16,6 @@
 % input (background):
 % industry/1
 
-% output:
-% hasCapability/2
-% hasMotive/2
-% governmentLinked/2
-
 rule(hasCapability, hasCapability(_, _), []).
 rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
 rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att)]).
@@ -39,3 +34,16 @@ rule(f9, target(lebanon,attack), []).
 rule(f10, target(palestine,attack), []).
 rule(f14, hasPoliticalMotive(us,iran), []).
 rule(f15, hasPoliticalMotive(israel,iran), []).
+
+% output:
+% hasCapability/2
+% hasMotive/2
+% governmentLinked/2
+hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
+hasMotive(X,T,D1) :- prove([hasMotive(X,T)], D1).
+governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).
+
+goal(A, M, X, D0, D1, D2) :-
+  (hasCapability(X,A,D0), write(hasCapability(X,A)); \+ hasCapability(X,A,D0), write(neg(hasCapability(X,A)))), nl,
+  (hasMotive(X,T,D1), write(hasMotive(X,T)); \+ hasMotive(X,T,D1), write(neg(hasMotive(X,T)))), nl,
+  (governmentLinked(P,X,D2), write(governmentLinked(P,X)); \+ governmentLinked(P,X,D2), write(neg(governmentLinked(P,X)))), nl.
