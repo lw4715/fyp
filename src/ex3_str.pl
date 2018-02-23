@@ -1,4 +1,4 @@
-:- compile('utils.pl').
+% :- compile('utils.pl').
 
 % input (from op/tech):
 % hasCapability/2
@@ -19,15 +19,15 @@
 % malwareUsedInAttack/2 (past)
 
 
-rule(similarMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),not(forBlackMarketUse(M1)),not(forBlackMarketUse(M2))]).
+rule(similarMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
 rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
 rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
 
 rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
-rule(noCap, not(isCulprit(C,Att)), [culpritIsFrom(C,Att),not(hasCapability(C,Att))]).
+rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
 rule(social3, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 
-rule(weakAttack, not(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
+rule(weakAttack, neg(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
 rule(hasPrecedenceOfAttack, hasResources(X), [isCulprit(X, _)]).
 
 % pref

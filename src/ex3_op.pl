@@ -1,4 +1,4 @@
-:- compile('utils.pl').
+% :- compile('utils.pl').
 
 % input from tech:
 % hasResources/1
@@ -22,7 +22,7 @@
 % governmentLinked/2
 
 rule(hasCapability, hasCapability(_, _), []).
-rule(noCapability, not(hasCapability(X, Att)), [requireHighResource(Att), not(hasResources(X))]).
+rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
 rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att)]).
 rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
 rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).

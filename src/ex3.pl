@@ -2,33 +2,31 @@
 
 % ex 3 - Gauss
 % Tech
-rule(highSkillDefault, not(highLevelSkill(_)), []).
+rule(highSkillDefault, neg(highLevelSkill(_)), []).
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 
 rule(srcIP, culpritIsFrom(X, Att), [ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
-rule(spoofedSrcIp, not(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
+rule(spoofedSrcIp, neg(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
 rule(lang1, culpritIsFrom(X, Att), [firstLanguage(L, X), sysLanguage(L, Att)]).
 rule(highSkill3, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill4, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 
 rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
-rule(similarMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),not(forBlackMarketUse(M1)),not(forBlackMarketUse(M2))]).
-rule(bmDefault, not(forBlackMarketUse(M)), []).
+rule(similarMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),isCulprit(X,A2),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
+rule(bmDefault, neg(forBlackMarketUse(_)), []).
 rule(bm, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandEasilyFingerprinted(M))]). %TODO when do we know its not for black market?
-rule(highSkill5, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
+rule(highSkill5, neg(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
-rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,Name,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
+rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
 %rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T),(M1\==M2)]). %TODO when do we know if its not similar?
-
-
 
 % Op
 rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
-rule(highResource0, not(requireHighResource(Att)), [not(highLevelSkill(Att))]).
-rule(hasCapability, hasCapability(C, Att), []).
-rule(noCapability, not(hasCapability(X, Att)), [requireHighResource(Att), not(hasResources(X))]).
+rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+rule(hasCapability, hasCapability(_, _), []).
+rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
 rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
 rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
 
@@ -43,10 +41,10 @@ rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
 rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
 
 rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
-rule(noCap, not(isCulprit(C,Att)), [culpritIsFrom(C,Att),not(hasCapability(C,Att))]).
+rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
 rule(social3, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 
-rule(weakAttack, not(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
+rule(weakAttack, neg(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
 rule(hasPrecedenceOfAttack, hasResources(X), [isCulprit(X, _)]).
 
 % preferences
@@ -66,7 +64,7 @@ rule(p4, prefer(similarMalware, noCap), []).
 rule(isBM, prefer(bm, bmDefault), []).
 
 % evidences
-% rule(f0, similar(gauss, flame), []).
+rule(f0, similar(gauss, flame), []).
 rule(f1, sophisticatedMalware(gauss), []).
 rule(f2, malwareUsedInAttack(gauss,attack), []).
 rule(f4, malwareUsedInAttack(flame,flameattack), []).

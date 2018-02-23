@@ -35,8 +35,8 @@ country(dragonfly, eastEurope).
 pastAttackMethods(dragonfly, [spamEmail, wateringHole, customMalware]).
 pastTargets(dragonfly, [defense, aerospace, energy]).
 pastMotives(dragonfly, [cyberespionage, spy, sabotage]).
-
 %% ?
+
 prominentGroup(govRAT).
 pastAttackMethods(govRAT, [clientSideExploits]).
 pastTargets(govRAT, [govOfficials, militaryOfficials, enterprises]).
@@ -53,6 +53,18 @@ pastTargets(waterbug, [govInstitutions, embassies, education, research]).
 pastMotives(waterbug, [cyberespionage, spy, intelligenceGathering]).
 
 %% Background
-%% isCountry(X) 
-%% industry(X)
+listCountries = [china, israel, iran, usa, uk, northkorea, southkorea].
+listIndustries = [infocomm].
+listChineseCountries = [china].
+listEnglishCountries = [usa, uk].
 
+isCountry(X) :- member(X, listCountries).
+industry(X) :- member(X, listIndustries).
+
+firstLanguage(chinese, X) :- member(X, listChineseCountries).
+firstLanguage(english, X) :- member(X, listEnglishCountries).
+% firstLanguage(french, X) :- member(X, listFrenchCountries).
+% firstLanguage(arabic, X) :- member(X, listArabicCountries).
+
+isCulprit(equationGroup, flameattack).
+malwareUsedInAttack(flame, flameattack).
