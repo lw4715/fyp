@@ -36,14 +36,19 @@ rule(f14, hasPoliticalMotive(us,iran), []).
 rule(f15, hasPoliticalMotive(israel,iran), []).
 
 % output:
-% hasCapability/2
-% hasMotive/2
-% governmentLinked/2
+%% hasCapability(X,A)
+%% hasMotive(X,A)
+%% governmentLinked(P,X)
+writeToFile(X, N) :- 
+  open('tech.pl',append, Stream),
+  write(Stream, 'rule(t'), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
+  close(Stream).
+  
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
-hasMotive(X,T,D1) :- prove([hasMotive(X,T)], D1).
+hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
 governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).
 
-goal(A, M, X, D0, D1, D2) :-
-  (hasCapability(X,A,D0), write(hasCapability(X,A)); \+ hasCapability(X,A,D0), write(neg(hasCapability(X,A)))), nl,
-  (hasMotive(X,T,D1), write(hasMotive(X,T)); \+ hasMotive(X,T,D1), write(neg(hasMotive(X,T)))), nl,
-  (governmentLinked(P,X,D2), write(governmentLinked(P,X)); \+ governmentLinked(P,X,D2), write(neg(governmentLinked(P,X)))), nl.
+goal(A, M, X, D0, D1, D2) :- 
+  (hasCapability(X,A,D0), writeToFile(hasCapability(X,A), 0); \+ hasCapability(X,A,D0), write(neg(hasCapability(X,A)))), nl,
+  (hasMotive(X,A,D1), writeToFile(hasMotive(X,A), 1); \+ hasMotive(X,A,D1), write(neg(hasMotive(X,A)))), nl,
+  (governmentLinked(P,X,D2), writeToFile(governmentLinked(P,X), 2); \+ governmentLinked(P,X,D2), write(neg(governmentLinked(P,X)))), nl.
