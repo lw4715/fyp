@@ -40,10 +40,10 @@ rule(f15, hasPoliticalMotive(israel,iran), []).
 %% hasMotive(X,A)
 %% governmentLinked(P,X)
 writeToFile(X, N) :- 
-  open('tech.pl',append, Stream),
+  open('op.pl',append, Stream),
   write(Stream, 'rule(t'), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
-  
+
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
 governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).
