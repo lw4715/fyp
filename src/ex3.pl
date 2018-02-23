@@ -1,8 +1,8 @@
 :- compile('utils.pl').
 
-% ex 3 - Gauss 
+% ex 3 - Gauss
 % Tech
-rule(highSkillDefault, not(highLevelSkill(Att)), []).
+rule(highSkillDefault, not(highLevelSkill(_)), []).
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 
@@ -20,7 +20,7 @@ rule(bm, forBlackMarketUse(M), [\+(infectionMethod(usb,M)),\+(controlAndCommandE
 rule(highSkill5, not(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
 rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,Name,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
-rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T),(M1\==M2)]). %TODO when do we know if its not similar?
+%rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T),(M1\==M2)]). %TODO when do we know if its not similar?
 
 
 
@@ -51,22 +51,22 @@ rule(hasPrecedenceOfAttack, hasResources(X), [isCulprit(X, _)]).
 
 % preferences
 rule(p0, prefer(hasMotiveAndCap,claimedResponsibility), []).
-rule(p1, prefer(spoofedSrcIp,srcIP), []).
+rule(spoofedIp, prefer(spoofedSrcIp,srcIP), []).
 rule(nafSkill1, prefer(highSkill1, highSkillDefault), []).
 rule(nafSkill2, prefer(highSkill2, highSkillDefault), []).
 rule(nafRes, prefer(highResource1, highResource0), []).
 rule(nafCap, prefer(noCapability, hasCapability), []).
 
 % ex2
-rule(p2, prefer(hasMotiveAndLoc,claimedResponsibility), []).
-rule(p3, prefer(noCap,hasMotiveAndLoc), []).
-rule(p4, prefer(social3,noCap), []).
+rule(p1, prefer(hasMotiveAndLoc,claimedResponsibility), []).
+rule(p2, prefer(noCap,hasMotiveAndLoc), []).
+rule(p3, prefer(social3,noCap), []).
 % ex3
-rule(p5, prefer(similarMalware, noCap), []).
-rule(p6, prefer(bm, bmDefault), []).
+rule(p4, prefer(similarMalware, noCap), []).
+rule(isBM, prefer(bm, bmDefault), []).
 
 % evidences
-%rule(f0, similar(gauss, flame), []).
+% rule(f0, similar(gauss, flame), []).
 rule(f1, sophisticatedMalware(gauss), []).
 rule(f2, malwareUsedInAttack(gauss,attack), []).
 rule(f4, malwareUsedInAttack(flame,flameattack), []).
