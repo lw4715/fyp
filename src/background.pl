@@ -68,3 +68,14 @@ firstLanguage(english, X) :- member(X, listEnglishCountries).
 
 isCulprit(equationGroup, flameattack).
 malwareUsedInAttack(flame, flameattack).
+
+isInfrastructure(nuclear).
+isInfrastructure(electricity).
+isInfrastructure(water).
+informationRich(banking).
+informationRich(infocomm).
+informationRich(consumer).
+
+possibleMotive(sabotage, Att) :- isInfrastructure(Ind), industry(Ind, V), target(V, Att).
+possibleMotive(espionage, Att) :- informationRich(Ind), industry(Ind, V), target(V, Att).
+

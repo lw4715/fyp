@@ -74,12 +74,12 @@ def convertPrefFile(filename="preds"):
 
 if __name__ == "__main__":
     # convertPredicateToOutputRule(["requireHighResource(A)", "culpritIsFrom(X, A)", "forBlackMarketUse(M)"])
-    # convertPrefFile()
+    convertPrefFile()
     #rules = sys.argv[1]
     #pref = sys.argv[2]
 
     #if rules:
-    convertRulesFile("../background", "bg")
+    # convertRulesFile("../background", "bg")
     #if pref:
     #    convertPrefFile(pref)
     # convertRulesFile()
