@@ -49,8 +49,6 @@ rule(nafRes, prefer(highResource1, highResource0), []).
 
 % evidences
 
-write("Input evidence file").
-
 % output:
 % requireHighResource/1
 % culpritIsFrom/2 (strat)

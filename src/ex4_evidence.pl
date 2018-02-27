@@ -1,3 +1,5 @@
+:- multifile rule/3.
+
 rule(f0, industry(nuclear,v), []).
 rule(f1, target(v,attack), []).
 rule(f2, infectionMethod(usb,attack), []).
