@@ -1,4 +1,5 @@
 :- compile('utils.pl').
+:- compile('tech.pl').
 :- multifile rule/3.
 
 % input from tech:

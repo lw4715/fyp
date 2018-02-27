@@ -11,14 +11,14 @@ def convertRulesFile(filename="tmp", prefix=""):
     f_w.write(r)
 
 def convertPrefFile(filename="tmp1"):
-        f = open("tmp/" + filename + ".pl", 'r')
-        r = ""
-        counter = 0
-        for line in f:
-            r += convertPref(line, counter) + "\n"
-            counter += 1
-        f_w = open("tmp/" + filename + "gorgias_pref.pl", 'w')
-        f_w.write(r)
+    f = open("tmp/" + filename + ".pl", 'r')
+    r = ""
+    counter = 0
+    for line in f:
+        r += convertPref(line, counter) + "\n"
+        counter += 1
+    f_w = open("tmp/" + filename + "gorgias_pref.pl", 'w')
+    f_w.write(r)
 
 def convertRules(prolog_r, prefix, count):
     if prolog_r[0] == "%" or prolog_r[0] == "\n":
@@ -58,13 +58,13 @@ def convertPredicateToOutputRule(predicates):
     # print(rules)
     # print(goal)
     rules += "\n" + goal
-    print(rules)
+    # print(rules)
     return rules
 
 def addDelta(pred, delta):
     return pred[:-1] + "," + delta + pred[-1]
 
-def convertPrefFile(filename="preds"):
+def convertPredFile(filename="preds"):
     f = open("tmp/" + filename, 'r')
     preds = []
     for line in f:
@@ -74,7 +74,7 @@ def convertPrefFile(filename="preds"):
 
 if __name__ == "__main__":
     # convertPredicateToOutputRule(["requireHighResource(A)", "culpritIsFrom(X, A)", "forBlackMarketUse(M)"])
-    convertPrefFile()
+    # convertPrefFile()
     #rules = sys.argv[1]
     #pref = sys.argv[2]
 
@@ -83,4 +83,4 @@ if __name__ == "__main__":
     #if pref:
     #    convertPrefFile(pref)
     # convertRulesFile()
-    # convertPrefFile()
+    convertPrefFile()

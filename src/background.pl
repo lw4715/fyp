@@ -79,3 +79,10 @@ informationRich(consumer).
 possibleMotive(sabotage, Att) :- isInfrastructure(Ind), industry(Ind, V), target(V, Att).
 possibleMotive(espionage, Att) :- informationRich(Ind), industry(Ind, V), target(V, Att).
 
+%% past cases
+%% flame
+%% rule(f6, isCulprit(equationGroup,flameattack), []).
+rule(f6, isCulprit([usa,israel],flameattack), []).
+rule(f11, target(middleeast,flameattack), []).
+rule(f4, malwareUsedInAttack(flame,flameattack), []).
+
