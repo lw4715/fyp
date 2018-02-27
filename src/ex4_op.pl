@@ -1,6 +1,6 @@
+:- multifile rule/3.
 :- compile('utils.pl').
 :- compile('tech.pl').
-:- multifile rule/3.
 
 % input from tech:
 % hasResources/1
@@ -34,10 +34,10 @@ rule(nafCap, prefer(hasCapability1, noCapability), []).
 rule(nafCap, prefer(hasCapability2, noCapability), []).
 
 % evidences
-rule(f6, target(iran,attack), []).
-rule(f8, recentNewsInYear(nuclearProgram,iran, 2010), []).
-rule(f9, countriesAgainstTargetForReason([usa, israel], iran, nuclearProgram), []).
-rule(f10, attackYear(attack, 2010), []).
+%% rule(f6, target(iran,attack), []).
+%% rule(f8, recentNewsInYear(nuclearProgram,iran, 2010), []).
+%% rule(f9, countriesAgainstTargetForReason([usa, israel], iran, nuclearProgram), []).
+%% rule(f10, attackYear(attack, 2010), []).
 
 
 % output:

@@ -1,7 +1,7 @@
+:- multifile rule/3.
 :- compile('utils.pl').
 :- compile('background.pl').
 :- compile('op.pl').
-:- multifile rule/3.
 
 % input (from op/tech):
 % hasCapability/2
@@ -40,9 +40,5 @@ rule(p2, prefer(noCap,hasMotiveAndLoc), []).
 rule(p3, prefer(social3,noCap), []).
 rule(p4, prefer(similarMalware, noCap), []).
 
-% evidences
-%% rule(f6, isCulprit(equationGroup,flameattack), []).
-%% rule(f11, target(middleeast,flameattack), []).
-%% rule(f4, malwareUsedInAttack(flame,flameattack), []).
 
 goal(X, D) :- prove([isCulprit(X, attack)], D).
