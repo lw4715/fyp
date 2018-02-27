@@ -1,6 +1,6 @@
-:- multifile rule/3.
 :- compile('utils.pl').
 :- compile('evidence.pl').
+:- multifile rule/3.
 
 % input (bg):
 % geolocInCountry/2
@@ -34,9 +34,9 @@ rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrTy
 rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
 
 % rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
-rule(0, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
-rule(1, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
-rule(2, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
+rule(highSkill6, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
+rule(specificTarget, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
+rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
 
 
@@ -54,7 +54,7 @@ rule(nafRes, prefer(highResource1, highResource0), []).
 % requireHighResource/1
 % culpritIsFrom/2 (strat)
 % forBlackMarketUse/1 (strat)
-writeToFile(X, N) :- 
+writeToFile(X, N) :-
   open('tech.pl',append, Stream),
   write(Stream, 'rule(t'), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).

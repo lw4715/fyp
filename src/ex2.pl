@@ -7,7 +7,7 @@
 % Tech
 rule(highSkillDefault, not(highLevelSkill(Att)), []).
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
-rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
+rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInapt1(M, Att)]).
 
 rule(srcIP, culpritIsFrom(X, Att), [ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
 rule(spoofedSrcIp, not(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
@@ -55,18 +55,18 @@ rule(p4, prefer(social3,noCap), []).
 
 
 % evidences
-rule(f1, majorityIpOrigin(china,attack), []).
-rule(f2, sysLanguage(chinese,attack), []).
+rule(f1, majorityIpOrigin(china,apt1), []).
+rule(f2, sysLanguage(chinese,apt1), []).
 rule(f3, firstLanguage(chinese,china), []).
 rule(f4, infraRegisteredIn(china,infra), []).
-rule(f5, infraUsed(infra,attack), []).
+rule(f5, infraUsed(infra,apt1), []).
 rule(f6, hasEconomicMotive(china,infocomm), []).
 rule(f7, industry(infocomm,victim), []).
-rule(f8, target(victim,attack), []).
-rule(f9, largeNumberOfVictims(attack), []).
-rule(f10, highVolumeAttack(attack), []).
-rule(f11, longDurationAttack(attack), []).
+rule(f8, target(victim,apt1), []).
+rule(f9, largeNumberOfVictims(apt1), []).
+rule(f10, highVolumeAttack(apt1), []).
+rule(f11, longDurationAttack(apt1), []).
 rule(f12, geolocatedInGovFacility(superhard,china), []).
 rule(f13, publicCommentsRelatedToGov(dota,china), []).
-rule(f14, identifiedIndividualInAttack(superhard,attack), []).
-rule(f15, identifiedIndividualInAttack(dota,attack), []).
+rule(f14, identifiedIndividualInAttack(superhard,apt1), []).
+rule(f15, identifiedIndividualInAttack(dota,apt1), []).

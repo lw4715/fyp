@@ -7,8 +7,6 @@
 % How to detect TOR connections??
 
 % helper functions
-% concatenate([], L, [46|L]).
-% concatenate([X|L1], L2, [X|L3]) :- concatenate(L1, L2, L3).
 split([46|S], L, S).
 split([X|S], [X|L], R) :- split(S, L, R).
 
@@ -19,15 +17,19 @@ isInternalIP(IP) :- (split(IP, "192", T), split(T, "168", IP));
 
 similarIPSubnet(IP1, IP2) :- concatenate(A1, A2, H1), concatenate(A1, A2, H2), concatenate(H1, _, IP1), concatenate(H2, _, IP2).
 
-% malwareInstallationSource(IP, M), spoofedIp(IP, Att), malwareUsedInAttack(M, Att).
 
-% isCulprit(TG, Att) :- malwareUsedInAttack(M, Att), iocMatched(M, IOC), iocThreatGroup(IOC, TG).
-% motive(C, Att) :- malwareUsedInAttack(M, Att), iocMatched(M, IOC), iocThreatCategory(IOC, Cat).
-% not isCulprit(X, Att) :- attackIncludes(X, Att).
-%
+isCulprit(TG, Att) :- malwareUsedInAttack(M, Att), iocMatched(M, IOC), iocThreatGroup(IOC, TG).
+motive(C, Att) :- malwareUsedInAttack(M, Att), iocMatched(M, IOC), iocThreatCategory(IOC, Cat).
+not isCulprit(X, Att) :- attackIncludes(X, Att).
 
-% similarStrategy(A1, A2) :- useZeroDayVul(A1), useZeroDayVul(A1).
+
+similarStrategy(A1, A2) :- useZeroDayVul(A1), useZeroDayVul(A1).
 % strategy: target, zeroday or not, social engineering, iocs
 
+
+notes:
 % public iocs
 % https://github.com/fireeye/iocs
+
+
+% malwareInstallationSource(IP, M), spoofedIp(IP, Att), malwareUsedInAttack(M, Att).

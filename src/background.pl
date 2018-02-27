@@ -1,3 +1,4 @@
+:- multifile rule/3.
 %% countries
 
 %% prominent players (APT)
@@ -53,16 +54,16 @@ pastTargets(waterbug, [govInstitutions, embassies, education, research]).
 pastMotives(waterbug, [cyberespionage, spy, intelligenceGathering]).
 
 %% Background
-listCountries = [china, israel, iran, usa, uk, northkorea, southkorea].
-listIndustries = [infocomm].
-listChineseCountries = [china].
-listEnglishCountries = [usa, uk].
+listCountries([china, israel, iran, usa, uk, northkorea, southkorea]).
+listIndustries([infocomm]).
+listChineseCountries([china]).
+listEnglishCountries([usa, uk]).
 
-isCountry(X) :- member(X, listCountries).
-industry(X) :- member(X, listIndustries).
+isCountry(X) :- listCountries(L), member(X, L).
+industry(X) :- listIndustries(L), member(X, L).
 
-firstLanguage(chinese, X) :- member(X, listChineseCountries).
-firstLanguage(english, X) :- member(X, listEnglishCountries).
+firstLanguage(chinese, X) :- listChineseCountries(L), member(X, L).
+firstLanguage(english, X) :- listEnglishCountries(L), member(X, L).
 % firstLanguage(french, X) :- member(X, listFrenchCountries).
 % firstLanguage(arabic, X) :- member(X, listArabicCountries).
 
@@ -85,4 +86,3 @@ possibleMotive(espionage, Att) :- informationRich(Ind), industry(Ind, V), target
 rule(f6, isCulprit([usa,israel],flameattack), []).
 rule(f11, target(middleeast,flameattack), []).
 rule(f4, malwareUsedInAttack(flame,flameattack), []).
-

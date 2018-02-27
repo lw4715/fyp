@@ -41,4 +41,4 @@ rule(p3, prefer(social3,noCap), []).
 rule(p4, prefer(similarMalware, noCap), []).
 
 
-goal(X, D) :- prove([isCulprit(X, attack)], D).
+goal(A, X, D) :- write(X), write('is culprit for '), write(A), prove([isCulprit(X, A)], D).

@@ -1,5 +1,6 @@
 :- compile('utils.pl').
-% :- multifile rule/3.
+:- compile('evidence.pl').
+:- multifile rule/3.
 
 % input (bg):
 % geolocInCountry/2
@@ -33,6 +34,11 @@ rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrTy
 rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
 
 % rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
+rule(highSkill6, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
+rule(specificTarget, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
+rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
+
+
 
 % pref
 rule(spoofedIp, prefer(spoofedSrcIp,srcIP), []).
@@ -43,36 +49,23 @@ rule(nafRes, prefer(highResource1, highResource0), []).
 
 
 % evidences
-rule(f1, sophisticatedMalware(gauss), []).
-rule(f2, malwareUsedInAttack(gauss,attack), []).
-rule(f7, target(middleEast,attack), []).
-rule(f8, target(israel,attack), []).
-rule(f9, target(lebanon,attack), []).
-rule(f10, target(palestine,attack), []).
-rule(f12, infectionMethod(usb,gauss), []).
-rule(f13, controlAndCommandEasilyFingerprinted(gauss), []).
-rule(f16, ccServer(gowin7, gauss), []).
-rule(f17, ccServer(secuurity, gauss), []).
-rule(f18, domainRegisteredDetails(gowin7, "adolph dybevek", "prinsen gate 6"), []).
-rule(f19, domainRegisteredDetails(secuurity, "adolph dybevek", "prinsen gate 6"), []).
-rule(f20, addressType("prinsen gate 6", hotel), []).
-rule(f21, ccServer(gowin7, flame), []).
-rule(f22, ccServer(secuurity, flame), []).
-malwareUsedInAttack(gauss,attack).
 
 % output:
 % requireHighResource/1
 % culpritIsFrom/2 (strat)
 % forBlackMarketUse/1 (strat)
-writeToFile(X, N) :-
-  open('tech.pl',append, Stream),
-  write(Stream, 'rule(t'), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
-  close(Stream).
 
+writeToFile(X, A, N) :-
+  open('tech.pl',append, Stream),
+  % write(Stream, ':- multifile rule/3.\n'),
+  write(Stream, 'rule(t_'), write(Stream, A), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
+  close(Stream).
+  
 goal(A, M, X, D1, D2, D3) :-
-  (requireHighResource(A, D1), writeToFile(requireHighResource(A), 1); \+ requireHighResource(A, D1), write(neg(requireHighResource(A)))), nl,
-  (culpritIsFrom(X, A, D2), writeToFilerite(culpritIsFrom(X, A), 2); \+ culpritIsFrom(X, A, D2), write(neg(culpritIsFrom(X, A)))), nl,
-  (forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M), 3); \+ forBlackMarketUse(M, D3), write(neg(forBlackMarketUse(M)))).
+  initFile('tech.pl'),
+  (requireHighResource(A, D1), writeToFile(requireHighResource(A), A, 1); \+ requireHighResource(A, D1), write(neg(requireHighResource(A)))), nl,
+  (culpritIsFrom(X, A, D2), writeToFilerite(culpritIsFrom(X, A), A, 2); \+ culpritIsFrom(X, A, D2), write(neg(culpritIsFrom(X, A)))), nl,
+  (forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M), A, 3); \+ forBlackMarketUse(M, D3), write(neg(forBlackMarketUse(M)))).
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
