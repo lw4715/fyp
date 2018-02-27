@@ -1,5 +1,6 @@
 :- multifile rule/3.
 :- compile('utils.pl').
+:- compile('evidence.pl').
 
 % input (bg):
 % geolocInCountry/2
