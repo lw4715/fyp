@@ -26,7 +26,7 @@ rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
 rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 
-rule(sabotage(R), hasMotive(C, Att), [target(T, Att), attackYear(Att, Y) recentNewsInYear(R, T, Y), countriesAgainstTargetForReason(C, T, R)]).
+rule(sabotage(R), hasMotive(C, Att), [target(T, Att), attackYear(Att, Y), recentNewsInYear(R, T, Y), countriesAgainstTargetForReason(C, T, R)]).
 
 % prefer
 rule(nafCap, prefer(hasCapability1, noCapability), []).
