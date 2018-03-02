@@ -21,13 +21,15 @@
 rule(noCapability, neg(hasCapability(_, _)), []).
 rule(hasCapability1, hasCapability(X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
-rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att)]).
-rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att)]).
+rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att), specificTarget(Att)]).
+rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att), specificTarget(Att)]).
 rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
 rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 
-rule(sabotage(R), hasMotive(C, Att), [target(T, Att), attackYear(Att, Y), recentNewsInYear(R, T, Y), countriesAgainstTargetForReason(C, T, R)]).
+rule(sabotage(R), hasMotive(C, Att), [target(T, Att), attackYear(Att, Y), recentNewsInYear(R, T, Y), countriesAgainstTargetForReason(C, T, R), specificTarget(Att)]).
+
+abducible(specificTarget(Att), []).
 
 % prefer
 rule(nafCap, prefer(hasCapability1, noCapability), []).

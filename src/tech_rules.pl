@@ -30,11 +30,13 @@ rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra
 rule(bmDefault, forBlackMarketUse(_), []).
 rule(bm, neg(forBlackMarketUse(M)), [(infectionMethod(usb,M)),(controlAndCommandEasilyFingerprinted(M))]). %TODO when do we know its not for black market?
 
-rule(similarMalware1(T), similar(M1, M2), [ccServerAddrType(M1,T),ccServerAddrType(M2,T),(M1\==M2)]). %TODO when do we know if its not similar?
-rule(ccServerAddrType(Type), ccServerAddrType(M, Type), [ccServer(Server,M),domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
+rule(similar, similar(M1, M2), [similarCCServer(M1, M2), \+ M1 = M2]). %TODO when do we know if its not similar?
+rule(simCC, similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
+rule(simCC(T), similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), ccServerAddrType(S1,T),ccServerAddrType(S2,T), \+ (S1=S2)]).
+rule(ccServerAddrType(Type), ccServerAddrType(Server, Type), [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
 
-% rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
 rule(highSkill6, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
+% rule(isTargetted, targettedAttack(Att), [customizedCommandsToTarget(T,M),malwareUsedInAttack(M,Att),target(T,Att)]).
 rule(specificTarget, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
 rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
@@ -54,19 +56,25 @@ rule(nafRes, prefer(highResource1, highResource0), []).
 % requireHighResource/1
 % culpritIsFrom/2 (strat)
 % forBlackMarketUse/1 (strat)
+% similar/2 (strat)
 
 writeToFile(X, A, N) :-
   open('tech.pl',append, Stream),
   % write(Stream, ':- multifile rule/3.\n'),
   write(Stream, 'rule(t_'), write(Stream, A), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
-  
-goal(A, M, X, D1, D2, D3) :-
-  initFile('tech.pl'),
-  (requireHighResource(A, D1), writeToFile(requireHighResource(A), A, 1); \+ requireHighResource(A, D1), write(neg(requireHighResource(A)))), nl,
-  (culpritIsFrom(X, A, D2), writeToFilerite(culpritIsFrom(X, A), A, 2); \+ culpritIsFrom(X, A, D2), write(neg(culpritIsFrom(X, A)))), nl,
-  (forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M), A, 3); \+ forBlackMarketUse(M, D3), write(neg(forBlackMarketUse(M)))).
+
+% TODO fix neg cases
+goal(A, M, X, D1, D2, D3, D4) :-
+  initFile('tech.pl'), case(A),
+  (requireHighResource(A, D1), writeToFile(requireHighResource(A), A, 1)); (\+ requireHighResource(A, D1), writeToFile('neg(requireHighResource(X))', A, 1)), nl,
+  (culpritIsFrom(X, A, D2), writeToFile(culpritIsFrom(X, A), A, 2)); (\+ culpritIsFrom(X, A, D2), writeToFile('neg(culpritIsFrom(X, A)))', A, 2)), nl,
+  (forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M), A, 3)); (\+ forBlackMarketUse(M, D3), writeToFile('neg(forBlackMarketUse(M))', A, 3)), nl,
+  (specificTarget(A, D4), writeToFile(specificConfigInMalware(A), A, 4)); (\+ specificTarget(A, D4), writeToFile('neg(specificTarget(A))', A, 4)), nl,
+  (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2), A, 5)); (\+ similar(M, M2, D5), writeToFile('neg(similar(M, M2))', A, 5)).
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
 forBlackMarketUse(M, D) :- prove([forBlackMarketUse(M)], D).
+similar(M1, M2, D) :- prove([similar(M1, M2)], D).
+specificTarget(A, D) :- prove([specificTarget(A)], D).

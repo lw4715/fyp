@@ -55,13 +55,14 @@ pastMotives(waterbug, [cyberespionage, spy, intelligenceGathering]).
 
 %% Background
 listCountries([china, israel, iran, usa, uk, northkorea, southkorea]).
+listHasResources([china, israel, iran, usa, northkorea]).
 listIndustries([infocomm]).
 listChineseCountries([china]).
 listEnglishCountries([usa, uk]).
 
 isCountry(X) :- listCountries(L), member(X, L).
 industry(X) :- listIndustries(L), member(X, L).
-
+hasResources(X) :- listHasResources(L), member(X, L).
 firstLanguage(chinese, X) :- listChineseCountries(L), member(X, L).
 firstLanguage(english, X) :- listEnglishCountries(L), member(X, L).
 % firstLanguage(french, X) :- member(X, listFrenchCountries).
@@ -83,6 +84,11 @@ possibleMotive(espionage, Att) :- informationRich(Ind), industry(Ind, V), target
 %% past cases
 %% flame
 %% rule(f6, isCulprit(equationGroup,flameattack), []).
-rule(f6, isCulprit([usa,israel],flameattack), []).
-rule(f11, target(middleeast,flameattack), []).
-rule(f4, malwareUsedInAttack(flame,flameattack), []).
+isCulprit([usa,israel],flameattack).
+target(middleeast,flameattack).
+malwareUsedInAttack(flame,flameattack).
+ccServer(gowin7, flame).
+ccServer(secuurity, flame).
+domainRegisteredDetails(gowin7, "adolph dybevek", "prinsen gate 6").
+domainRegisteredDetails(secuurity, "adolph dybevek", "prinsen gate 6").
+addressType("prinsen gate 6", hotel).
