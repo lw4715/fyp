@@ -112,7 +112,7 @@ similarLoaderFiles(M1, M2, P) :- setof(X, M1^(loaderFileArtifactMalware(X, M1)),
 proportionSimilar(0, [], S2).
 proportionSimilar(P, [X | S1], S2) :- loaderFileArtifact(FN, PATH, MD5, X), (sameFilename(FN, S2); sameMD5(MD5, S2)), 
 	proportionSimilar(P0, S1, S2), P is (P0 + 1).
-proportionSimilar(P, [X | S1], S2) :- loaderFileArtifact(FN, PATH, MD5, X), \+ sameFilename(FN, S2), \+ sameMD5(MD5, S2)), proportionSimilar(P, S1, S2).
+proportionSimilar(P, [X | S1], S2) :- loaderFileArtifact(FN, PATH, MD5, X), \+ sameFilename(FN, S2), \+ sameMD5(MD5, S2), proportionSimilar(P, S1, S2).
 									
 neg(sameFilename(FN, [])).
 sameFilename(FN, [X|S]) :- loaderFileArtifact(FN, _, _, X); sameFilename(FN, S).
