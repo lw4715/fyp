@@ -1,3 +1,5 @@
+?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
+
 %% 'Filename', 'MD5 Hash', 'Size (bytes)', 'Compile Time', 'Description', 'Filetype', malware 
 fileCharaMalware(wannacry_filechara1, wannacry).
 fileChara('mssecsvc.exe', 'db349b97c37d22f5ea1d1841e3c89eb4', '3723264', '2010-11-20T09:03:08Z', 'Loader + Worm Component', 'EXE', wannacry_filechara1).
@@ -105,4 +107,14 @@ similarMalware(M1, M2) :- similarDecryptorFiles(M1, M2).
 similarMalware(M1, M2) :- similarNetworkSignatures(M1, M2).
 similarMalware(M1, M2) :- similarFileChara(M1, M2).
 
-%% setof(X, wannacry^(loaderFileArtifactMalware(X,wannacry)), S).
+
+similarLoaderFiles(M1, M2) :- setof(X, M1^(loaderFileArtifactMalware(X, M1)), S1), setof(Y, M2^(loaderFileArtifactMalware(Y, M2)), S2), proportionSimilar(P, S1, S2), P > 70. % percentage of total files
+proportionSimilar(P, [], S2).
+proportionSimilar(P, [X | S1], S2) :- loaderFileArtifact(FN, PATH, MD5, X), proportionSimilar(P0, S1, S2),
+									(sameFilename(FN, S2), P is P0 + 1);
+									(sameMD5(MD5, S2), P is P0 + 1);
+									(\+ (sameFilename(FN, S2)), \+ (sameMD5(MD5, S2)), P is P0).
+neg(sameFilename(FN, [])).
+sameFilename(FN, [X|S]) :- loaderFileArtifact(FN, _, _, X); sameFilename(FN, S).
+neg(sameMD5(MD5, [])).
+sameMD5(MD5, [X|S]) :- loaderFileArtifact(_, _, MD5, X) ; sameMD5(MD5, S).
