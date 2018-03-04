@@ -89,9 +89,9 @@ encryptorFileArtifact('00000000.dky', wannacry).
 
 % filename, path, MD5, malware 
 decryptorFileArtifactMalware(wannacry_decryptorfileArt0, wannacry).
-decryptorFileArtifact('taskhsvc.exe', 'TaskData\Tor\', '', wannacry_decryptorfileArt0).
+decryptorFileArtifact('taskhsvc.exe', 'TaskData\Tor\', '-', wannacry_decryptorfileArt0).
 decryptorFileArtifactMalware(wannacry_decryptorfileArt1, wannacry).
-decryptorFileArtifact('mssecsvc.exe', 'C:\WINDOWS\', db349b97c37d22f5ea1d1841e3c89eb4, wannacry_decryptorfileArt1). 
+decryptorFileArtifact('mssecsvc.exe', 'C:\WINDOWS\', 'db349b97c37d22f5ea1d1841e3c89eb4', wannacry_decryptorfileArt1). 
 
 dnsSignature('www.iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com', wannacry).
 connections(IP, 445, wannacry). %% ip address, port, malware 
