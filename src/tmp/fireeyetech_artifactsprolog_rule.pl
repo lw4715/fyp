@@ -108,11 +108,11 @@ similarMalware(M1, M2) :- similarNetworkSignatures(M1, M2).
 similarMalware(M1, M2) :- similarFileChara(M1, M2).
 
 
-similarLoaderFiles(M1, M2) :- setof(X, M1^(loaderFileArtifactMalware(X, M1)), S1), setof(Y, M2^(loaderFileArtifactMalware(Y, M2)), S2), proportionSimilar(P, S1, S2), P > 70. % percentage of total files
+similarLoaderFiles(M1, M2, P) :- setof(X, M1^(loaderFileArtifactMalware(X, M1)), S1), setof(Y, M2^(loaderFileArtifactMalware(Y, M2)), S2), proportionSimilar(P, S1, S2), P > 70. % percentage of total files
 proportionSimilar(P, [], S2).
 proportionSimilar(P, [X | S1], S2) :- loaderFileArtifact(FN, PATH, MD5, X), proportionSimilar(P0, S1, S2),
-									(sameFilename(FN, S2), P is P0 + 1);
-									(sameMD5(MD5, S2), P is P0 + 1);
+									(sameFilename(FN, S2), P == (P0 + 1));
+									(sameMD5(MD5, S2), P == (P0 + 1));
 									(\+ (sameFilename(FN, S2)), \+ (sameMD5(MD5, S2)), P is P0).
 neg(sameFilename(FN, [])).
 sameFilename(FN, [X|S]) :- loaderFileArtifact(FN, _, _, X); sameFilename(FN, S).
