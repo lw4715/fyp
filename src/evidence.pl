@@ -56,8 +56,17 @@ rule(case4_f3, spreadingMechanism(localNetwork,stuxnetattack), []).
 rule(case4_f4, stolenValidSignedCertificates(stuxnetattack), []).
 rule(case4_f6, target(iran,stuxnetattack), []).
 rule(case4_f7, usesZeroDayVulnerabilities(stuxnet), []).
-rule(case4_f8, recentNewsInYear(nuclearProgram,iran, 2010), []).
-rule(case4_f9, countriesAgainstTargetForReason([usa, israel], iran, nuclearProgram), []).
+rule(case4_f8, recentNewsInYear(nuclearProgram, iran, 2010), []).
+rule(case4_f9, causeOfConflict([usa, israel], iran, nuclearProgram), []).
 rule(case4_f10, attackYear(stuxnetattack, 2010), []).
 rule(case4_f11, malwareUsedInAttack(stuxnet, stuxnetattack), []).
 rule(case4_f12, specificConfigInMalware(stuxnet), []).
+
+% sony
+rule(case5_f1, claimedResponsibility(guardiansOfPeace, sonyhack), []).
+rule(case5_f2, target(sony, sonyhack), []).
+rule(case5_f3, recentNewsInYear(theInterview, sony, 2014), []).
+rule(case5_f4, attackYear(sonyhack, 2014), []).
+rule(case5_f5, causeOfConflict(northkorea, sony, theInterview), []).
+rule(case5_f6, majorityIpOrigin(northkorea, sonyhack), []).
+%rule(case5_f7, similar(sonyhack), []).
