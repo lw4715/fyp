@@ -40,7 +40,7 @@ rule(highSkill6, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
 rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
 rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
-
+abducible(specificTarget, []).
 
 % pref
 rule(spoofedIp, prefer(spoofedSrcIp,srcIP), []).
@@ -59,17 +59,12 @@ rule(nafRes, prefer(highResource1, highResource0), []).
 % similar/2 (strat)
 
 writeToFile(X, A, N) :-
-  open('op.pl',append, Stream), \+ atom(X),
-  write(Stream, 'rule(op_Att'), write(Stream, N), write(Stream, ', X ,[]).\n'),
-  close(Stream).
-
-writeToFile(X, A, N) :-
-  open('tech.pl',append, Stream), atom(X),
+  open('tech.pl',append, Stream),
   write(Stream, 'rule(t_'), write(Stream, A), write(Stream, N), write(Stream, ', '), write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
 
 % TODO fix neg cases
-goal(A, M, X, D1, D2, D3, D4) :-
+goal(A, X, D1, D2, D3, D4) :-
   initFile('tech.pl'), case(A),
   (requireHighResource(A, D1), writeToFile(requireHighResource(A), A, 1)); (\+ requireHighResource(A, D1), writeToFile('neg(requireHighResource(A))', A, 1)), nl,
   (culpritIsFrom(X, A, D2), writeToFile(culpritIsFrom(X, A), A, 2)); (\+ culpritIsFrom(X, A, D2), writeToFile('neg(culpritIsFrom(X, A))', A, 2)), nl,

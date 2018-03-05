@@ -20,24 +20,22 @@
 % industry/1
 
 rule(noCapability, neg(hasCapability(_, _)), []).
-rule(hasCapability1, hasCapability(X, Att), [neg(requireHighResource(Att))]).
+rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
 
 rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att), specificTarget(Att)]).
 rule(pMotive, hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att), specificTarget(Att)]).
 rule(pMotive(C,T), hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
-rule(conflict, hasMotive(C, Att), [attackYear(Att, Y), recentNewsInYear(N, T, Y), causeOfConflict(X, N), specificTarget(Att)]).
+rule(conflict, hasMotive(X, Att), [attackYear(Att, Y), target(T, Att), recentNewsInYear(N, T, Y), causeOfConflict(X, N), specificTarget(Att)]).
 
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
 rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 
-rule(sabotage(R), hasMotive(C, Att), [target(T, Att), attackYear(Att, Y),
-  recentNewsInYear(R, T, Y), causeOfConflict(C, T, R), specificTarget(Att)
-  , dummy(Att)
+rule(sabotage(R), hasMotive(X, Att), [target(T, Att), attackYear(Att, Y),
+  recentNewsInYear(R, T, Y), causeOfConflict(X, T, R), specificTarget(Att)
   ]).
 
-abducible(specificTarget(Att), []).
-abducible(dummy(Att), []).
+abducible(specificTarget(_Att), []).
 % prefer
 rule(nafCap, prefer(hasCapability1, noCapability), []).
 rule(nafCap, prefer(hasCapability2, noCapability), []).
@@ -53,36 +51,20 @@ rule(nafCap, prefer(hasCapability2, noCapability), []).
 %% hasCapability(X,A)
 %% hasMotive(X,A)
 %% governmentLinked(P,X)
-writeArgs(_, [], _).
-writeArgs(Stream, [X], _) :- atom(X), write(Stream, X).
-writeArgs(Stream, [X], C) :- \+ atom(X), write(Stream, 'X'), write(Stream, C).
-writeArgs(Stream, [X|Args], C) :- atom(X), write(Stream, X), write(Stream, ','),
-  writeArgs(Stream, Args, C).
-writeArgs(Stream, [X|Args], C) :- \+ atom(X), write(Stream, 'X'), write(Stream, C),
-  write(Stream, ', '), C1 is C + 1, writeArgs(Stream, Args, C1).
-
-writeToFile(Pred, [], A, N) :-
+writeToFile(X, A, N) :-
   open('op.pl',append, Stream),
-  write(Stream, 'rule(op_'), write(Stream, A), write(Stream, N), write(Stream, ', '),
-  write(Stream, Pred), write(Stream, ' ,[]).\n'),
-  close(Stream).
-
-
-writeToFile(Pred, Args, A, N) :-
-  open('op.pl',append, Stream),
-  write(Stream, 'rule(op_'), write(Stream, A), write(Stream, N), write(Stream, ', '),
-  write(Stream, Pred), write(Stream, '('), writeArgs(Stream, Args, 0) , write(Stream, ') ,[]).\n'),
+  write(Stream, 'rule(op_'), write(Stream, A), write(Stream, N), write(Stream, ', '), 
+  write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
 
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
 governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).
 
-goal(A, M, X, D0, D1, D2) :-
+goal(A, X, D0, D1, D2) :-
   initFile('op.pl'),
-  (hasCapability(X,A,D0), atom(X), atom(A), writeToFile(hasCapability,[X,A], A, 0);
-    \+ hasCapability(X,A,D0), writeToFile('neg(hasCapability(X, A)))', [], A, 0)), nl,
-  (hasMotive(X,A,D1), writeToFile(hasMotive, [X,A], A, 1);
-    \+ hasMotive(X,A,D1), writeToFile('neg(hasMotive(X, A)))', [], A, 1)), nl,
-  (governmentLinked(P,X,D2), writeToFile(governmentLinked, [P,X], A, 2);
-    \+ governmentLinked(P,X,D2), writeToFile('neg(governmentLinked(P, X)))', [], A, 1)), nl.
+  (hasCapability(X,A,D0), writeToFile(hasCapability(X,A), A, 0); \+ hasCapability(X,A,D0), write(neg(hasCapability(X,A)))), nl,
+      (hasMotive(X,A,D1), writeToFile(hasMotive(X,A), A, 1); \+ hasMotive(X,A,D1), write(neg(hasMotive(X,A)))), nl,
+	  (governmentLinked(P,X,D2), writeToFile(governmentLinked(P,X), A, 2); \+ governmentLinked(P,X,D2), write(neg(governmentLinked(P,X)))), nl.
+
+  
