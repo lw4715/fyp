@@ -21,3 +21,6 @@ To query for a specific group/country, replace `Culprit` with a country (all low
 * str_rules.pl : strategic rules
 * tech.pl : written by tech_rules.pl, used by both op_rules.pl and str_rules.pl
 * op.pl : written by op_rules.pl, used by str_rules.pl
+
+#Link to report
+[Report on overleaf](https://www.overleaf.com/read/ytjpcsksccny)
