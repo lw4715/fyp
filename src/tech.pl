@@ -1,4 +1,6 @@
 :- multifile rule/3.
-rule(t_sonyhack1, neg(requireHighResource(A)),[]).
-rule(t_sonyhack2, neg(culpritIsFrom(X, A)),[]).
-rule(t_sonyhack3, neg(forBlackMarketUse(M)),[]).
+rule(t_wannacryattack1, neg(requireHighResource(wannacryattack)),[]).
+rule(t_wannacryattack2, neg(culpritIsFrom(_875,wannacryattack)),[]).
+rule(t_wannacryattack3, neg(forBlackMarketUse(_1783)),[]).
+rule(t_wannacryattack5, similar(wannacry,backdoorCantopee),[]).
+rule(t_wannacryattack5, similar(trojanAlphanc,backdoorDuuzer),[]).

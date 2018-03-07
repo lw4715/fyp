@@ -79,8 +79,8 @@ if __name__ == "__main__":
     #pref = sys.argv[2]
 
     #if rules:
-    # convertRulesFile("../background", "bg")
+    convertRulesFile("../background", "bg")
     #if pref:
     #    convertPrefFile(pref)
     # convertRulesFile()
-    convertPrefFile()
+    # convertPrefFile()

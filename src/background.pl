@@ -5,6 +5,14 @@
 %% https://www.fireeye.com/current-threats/apt-groups.html
 %% https://www.darkreading.com/endpoint/8-active-apt-groups-to-watch/d/d-id/1325161?image_number=1
 
+% North Korea
+prominentGroup(lazarusGrp).
+country(lazarusGrp, northkorea).
+malwareLinkedTo('Backdoor.Duuzer', lazarusGrp).
+malwareLinkedTo('Backdoor.Destover', lazarusGrp).
+malwareLinkedTo('Infostealer.Fakepude', lazarusGrp).
+malwareLinkedTo('Backdoor.Contopee', lazarusGrp).
+
 % USA
 prominentGroup(equationGrp).
 country(equationGrp, usa).
