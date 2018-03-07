@@ -15,12 +15,12 @@ To query for a specific group/country, replace `Culprit` with a country (all low
 ?- [str_rules].
 ?- prove([isCulprit(Culprit, attack)], D).
 ```
-#Main files in src folder:
+# Main files in src folder:
 * tech_rules.pl : technical rules
 * op_rules.pl : operational rules
 * str_rules.pl : strategic rules
 * tech.pl : written by tech_rules.pl, used by both op_rules.pl and str_rules.pl
 * op.pl : written by op_rules.pl, used by str_rules.pl
 
-#Link to report
+# Link to report
 [Report on overleaf](https://www.overleaf.com/read/ytjpcsksccny)
