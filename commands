@@ -1,6 +1,6 @@
 [tech_rules].
-goal(wannacryattack, X, D0, D1, D2, D3, D4).
+goal(wannacryattack, X, D1, D2, D3, D4, D5).
 [op_rules].
-goal(wannacryattack, X, D0, D1, D2).
+goal(wannacryattack, X, D1, D2, D2).
 [str_rules].
 prove([isCulprit(X, wannacryattack)], D).
