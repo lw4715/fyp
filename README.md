@@ -1,7 +1,8 @@
+# Execute a query
 Start SICStus:
 ```sh
 $ cd src
-sicstus
+$ sicstus
 ```
 To query for culprit for an attack, replace `attack` with one of the following: `us_bank_hack, apt1, gaussattack, stuxnetattack, sonyhack, wannacryattack`
 
@@ -14,7 +15,7 @@ To query for a specific group/country, replace `Culprit` with a country (all low
 ?- [str_rules].
 ?- prove([isCulprit(Culprit, attack)], D).
 ```
-Main files in src folder:
+#Main files in src folder:
 * tech_rules.pl : technical rules
 * op_rules.pl : operational rules
 * str_rules.pl : strategic rules
