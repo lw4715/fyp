@@ -1,3 +1,6 @@
+Start SICStus:
+```sh
+$ cd src
 sicstus
 ```
 To query for culprit for an attack, replace `attack` with one of the following: `us_bank_hack, apt1, gaussattack, stuxnetattack, sonyhack, wannacryattack`
