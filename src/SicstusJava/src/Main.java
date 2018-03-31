@@ -3,10 +3,12 @@ import se.sics.jasper.SPPredicate;
 import se.sics.jasper.SPQuery;
 import se.sics.jasper.SPTerm;
 
+import static java.lang.System.currentTimeMillis;
+
 //import se.sics.jasper.*;
 
 public class Main {
-    String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
+    static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
 
     public static void main(String argv[]) {
         String option = argv[0];
@@ -50,14 +52,17 @@ public class Main {
                     System.out.println("here");
                     prologFile = "../Prolog_files/str_rules.pl";
                     sp.load(prologFile);
-                    pred = new SPPredicate(sp, "goal", 3, "");
-                    attack = new SPTerm(sp).putVariable();
+                    pred = new SPPredicate(sp, "goal_with_timeout", 3, "");
+                    attack = new SPTerm(sp, cases[0]);
+
+//                    attack = new SPTerm(sp).putVariable();
                     culprit = new SPTerm(sp).putVariable();
                     d1 = new SPTerm(sp).putVariable();
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, d1 });
                     break;
                 default:
                     attack = null;
+                    culprit = null;
                     query = null;
                     System.out.println("Wrong argv: input [\"tech\",\"op\", \"str\"]");
                     System.exit(-1);
@@ -76,11 +81,11 @@ public class Main {
 //            d5 = new SPTerm(sp).putVariable();
 
 //            query = sp.openQuery(pred, new SPTerm[] { attack, culprit, d1, d2, d3, d4, d5 });
-
-            while (query.nextSolution())
-            {
-                System.out.println("la");
+            float startTime = currentTimeMillis();
+            while (currentTimeMillis() - startTime < 5*1000 && query.nextSolution()) {
                 System.out.println(attack.toString());
+                System.out.println(culprit.toString());
+                startTime = currentTimeMillis();
             }
             System.out.println("Finished");
         }
