@@ -1,5 +1,5 @@
 :- compile('utils.pl').
-:- compile('tech.pl').
+:- compile('../SicstusJava/tech.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
 

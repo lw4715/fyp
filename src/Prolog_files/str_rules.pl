@@ -1,6 +1,6 @@
 :- compile('utils.pl').
-:- compile('op.pl').
-:- compile('tech.pl').
+:- compile('../SicstusJava/op.pl').
+:- compile('../SicstusJava/tech.pl').
 :- multifile rule/3.
 
 % input (from op/tech):

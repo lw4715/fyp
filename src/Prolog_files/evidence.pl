@@ -1,6 +1,5 @@
 :- multifile rule/3.
 :- multifile hasResources/1.
-:- multifile malwareUsedInAttack/2.
 :- multifile target/2.
 
 
