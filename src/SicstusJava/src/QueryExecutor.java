@@ -22,7 +22,7 @@ public class QueryExecutor {
     1 : op
     2 : str
     */
-    void executeQuery(int mode, String[] argv, boolean verbose) {
+    void executeQuery(int mode, String[] args, boolean verbose) {
         String prologFile;
 
         SICStus sp;
@@ -35,7 +35,7 @@ public class QueryExecutor {
 
         try
         {
-            sp = new SICStus(argv,null);
+            sp = new SICStus(new String[] {},null);
             SPCanonicalAtom TIMEOUT = new SPCanonicalAtom(sp, "time_out");
             r = new SPTerm(sp, "success");
             SPTerm[] ds;
@@ -77,7 +77,7 @@ public class QueryExecutor {
                     prologFile = "../Prolog_files/str_rules.pl";
                     sp.load(prologFile);
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
-                    attack = new SPTerm(sp, argv[0]);
+                    attack = new SPTerm(sp, args[0]);
                     culprit = new SPTerm(sp).putVariable();
                     ds = new SPTerm[1];
                     ds[0] = new SPTerm(sp).putVariable();
@@ -89,8 +89,10 @@ public class QueryExecutor {
                     return;
             }
 
-            while (query.nextSolution()) {
+            int count = 0;
+            while (query.nextSolution() && count < 30) {
                 if (!TIMEOUT.toString().equals(r.toString())) {
+                    count++;
                     for (int i = 0; i < ds.length; i++) {
                         SPTerm d = ds[i];
                         if (d.toString().charAt(0) != '_') System.out.println(d);
@@ -161,18 +163,20 @@ public class QueryExecutor {
 
     public static void main(String argv[]) {
         boolean verbose = false;
-        System.out.println("Case name: " + argv[0]);
 //        for (String caseName : cases) {
-//            argv[0] = caseName;
+//        static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
+        String caseName = "wannacryattack";
+        String[] args = new String[] {caseName};
+            System.out.println("Case name: " + args[0]);
             QueryExecutor qe = new QueryExecutor();
-            qe.executeQuery(0, argv, verbose);
-            qe.executeQuery(1, argv, verbose);
-            qe.executeQuery(2, argv, verbose);
+            qe.executeQuery(0, args, verbose);
+            qe.executeQuery(1, args, verbose);
+            qe.executeQuery(2, args, verbose);
             System.out.println("--------- \nBreakdown");
             System.out.println(qe.techMap);
             System.out.println(qe.opMap);
             System.out.println(qe.strMap);
-        }
-//    }
+//        }
+    }
 
 }
