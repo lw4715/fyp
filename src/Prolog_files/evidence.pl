@@ -1,6 +1,6 @@
 :- multifile rule/3.
-:- multifile hasResources/1.
-:- multifile target/2.
+%% :- multifile hasResources/1.
+%% :- multifile target/2.
 
 
 listCases(['us_bank_hack', 'apt1', 'gaussattack', 'stuxnetattack', 'sonyhack', 'wannacryattack']).

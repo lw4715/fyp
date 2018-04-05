@@ -9,12 +9,11 @@
 % misc:
 % addressType/2 (gMaps integration??)
 
-% rule(highSkillDefault, neg(highLevelSkill(_)), []).
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(highSkill3, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
-rule(highSkill4, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(highSkill5, neg(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
+rule(highSkill3, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
+rule(highSkill4, neg(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
+rule(highSkill5, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
 
 rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
@@ -25,41 +24,40 @@ rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDuratio
 rule(srcIP, culpritIsFrom(X, Att), [ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
 rule(spoofedSrcIp, neg(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP),
   geolocInCountry(G, X), attackSourceIP(IP, Att)]).
-rule(lang1, culpritIsFrom(X, Att), [firstLanguage(L, X), sysLanguage(L, Att)]).
+rule(lang1, culpritIsFrom(X, Att), [sysLanguage(L, Att), firstLanguage(L, X)]).
 rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 
-rule(bmDefault, forBlackMarketUse(_M), []).
-rule(bm, neg(forBlackMarketUse(M)), [(infectionMethod(usb,M)),(controlAndCommandEasilyFingerprinted(M))]). %TODO when do we know its not for black market?
+%% rule(bmDefault, forBlackMarketUse(_M), []).
+rule(bm, neg(forBlackMarketUse(M)), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). %TODO when do we know its not for black market?
 
-rule(similarDefault, neg(similar(_M1, _M2)), []).
+%% rule(similarDefault, neg(similar(_M1, _M2)), []).
 rule(similar, similar(M1, M2), [similarCCServer(M1, M2), \+ M1 = M2]).
 rule(simCC, similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
-rule(simCC(T), similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2),
+rule(simCC, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2),
   ccServerAddrType(S1,T),ccServerAddrType(S2,T), \+ (S1=S2)]).
-rule(ccServerAddrType(Type), ccServerAddrType(Server, Type),
+rule(ccServerAddrType, ccServerAddrType(Server, Type),
   [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
 rule(similar1, similar(M1, M2), [simlarCodeObfuscation(M1, M2)]).
 rule(similar2, similar(M1, M2), [sharedCode(M1, M2)]).
 rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 
-rule(highSkill6, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
-rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
-rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
+rule(targetted(1), specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
+rule(zeroday(1), sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
 abducible(specificTarget, []).
 
 % pref
-rule(nafSkill1, prefer(highSkill1, highSkillDefault), []).
-rule(nafSkill2, prefer(highSkill2, highSkillDefault), []).
-rule(isNotBM, prefer(bm, bmDefault), []).
+%% rule(nafSkill1, prefer(highSkill1, highSkillDefault), []).
+%% rule(nafSkill2, prefer(highSkill2, highSkillDefault), []).
+%% rule(isNotBM, prefer(bm, bmDefault), []).
 % rule(nafRes, prefer(highResource1, highResource0), []).
 % rule(nafSim, prefer(similar, similarDefault), []).
 % rule(nafSim1, prefer(similar1, similarDefault), []).
 % rule(nafSim2, prefer(similar2, similarDefault), []).
 % rule(nafSim3, prefer(similar3, similarDefault), []).
 
-rule(spoofedIp, prefer(spoofedSrcIp,srcIP), []).
+rule(spoofedIp, prefer(spoofedSrcIp(2),srcIP(1)), []).
 
 % evidences
 

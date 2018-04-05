@@ -23,8 +23,9 @@
 % malwareUsedInAttack/2 (past)
 
 
-rule(similarMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),
-  malwareUsedInAttack(M2,A2),isCulprit(X,A2),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
+rule(similarMalware, isCulprit(X, A1), 
+	[malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),similar(M1,M2),
+	isCulprit(X,A2),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
 rule(linkedMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),
   malwareLinkedTo(M2,X),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).

@@ -1,7 +1,7 @@
 :- multifile rule/3.
-:- multifile hasResources/1.
-:- multifile malwareUsedInAttack/2.
-:- multifile target/2.
+%% :- multifile hasResources/1.
+%% :- multifile malwareUsedInAttack/2.
+%% :- multifile target/2.
 
 rule(bg8, prominentGroup(lazarusGrp), []).
 rule(bg9, country(lazarusGrp,northkorea), []).
