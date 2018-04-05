@@ -1,30 +1,29 @@
-import se.sics.jasper.SICStus;
-import se.sics.jasper.SPPredicate;
-import se.sics.jasper.SPQuery;
-import se.sics.jasper.SPTerm;
-
-import static java.lang.System.currentTimeMillis;
-
-//import se.sics.jasper.*;
+import se.sics.jasper.*;//import se.sics.jasper.*;
 
 public class Main {
-    static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
+//    static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
 
-    public static void main(String argv[]) {
-        String option = argv[0];
+    /*
+    mode 0 = tech
+    mode 1 = op
+    mode 2 = str
+    */
+    static void executeQuery(int mode, String[] argv) {
         String prologFile;
 
         SICStus sp;
         SPPredicate pred;
-        SPTerm attack, culprit, d1, d2, d3, d4, d5;
+        SPTerm attack, culprit, d1, d2, d3, d4, d5, r;
         SPQuery query;
 
         try
         {
             sp = new SICStus(argv,null);
+            SPCanonicalAtom TIMEOUT = new SPCanonicalAtom(sp, "time_out");
+            r = new SPTerm(sp, "success");
 
-            switch(option) {
-                case "tech":
+            switch(mode) {
+                case 0:
                     prologFile = "../Prolog_files/tech_rules.pl";
                     sp.load(prologFile);
                     pred = new SPPredicate(sp, "goal", 7, "");
@@ -37,7 +36,7 @@ public class Main {
                     d5 = new SPTerm(sp).putVariable();
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, d1, d2, d3, d4, d5 });
                     break;
-                case "op":
+                case 1:
                     prologFile = "../Prolog_files/op_rules.pl";
                     sp.load(prologFile);
                     pred = new SPPredicate(sp, "goal", 5, "");
@@ -48,44 +47,31 @@ public class Main {
                     d3 = new SPTerm(sp).putVariable();
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, d1, d2, d3 });
                     break;
-                case "str":
-                    System.out.println("here");
+                case 2:
                     prologFile = "../Prolog_files/str_rules.pl";
                     sp.load(prologFile);
-                    pred = new SPPredicate(sp, "goal_with_timeout", 3, "");
-                    attack = new SPTerm(sp, cases[0]);
-
+                    pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
+                    attack = new SPTerm(sp, argv[0]);
 //                    attack = new SPTerm(sp).putVariable();
                     culprit = new SPTerm(sp).putVariable();
                     d1 = new SPTerm(sp).putVariable();
-                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, d1 });
+                    r = new SPTerm(sp).putVariable();
+                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, d1, r });
                     break;
                 default:
                     attack = null;
                     culprit = null;
                     query = null;
-                    System.out.println("Wrong argv: input [\"tech\",\"op\", \"str\"]");
+                    System.out.println("ERROR");
                     System.exit(-1);
             }
 
-
-
-//            pred = new SPPredicate(sp, "goal", 7, "");
-////            attack = new SPTerm(sp, cases[0]);
-//            attack = new SPTerm(sp).putVariable();
-//            culprit = new SPTerm(sp).putVariable();
-//            d1 = new SPTerm(sp).putVariable();
-//            d2 = new SPTerm(sp).putVariable();
-//            d3 = new SPTerm(sp).putVariable();
-//            d4 = new SPTerm(sp).putVariable();
-//            d5 = new SPTerm(sp).putVariable();
-
-//            query = sp.openQuery(pred, new SPTerm[] { attack, culprit, d1, d2, d3, d4, d5 });
-            float startTime = currentTimeMillis();
-            while (currentTimeMillis() - startTime < 5*1000 && query.nextSolution()) {
-                System.out.println(attack.toString());
-                System.out.println(culprit.toString());
-                startTime = currentTimeMillis();
+            while (query.nextSolution()) {
+                if (!(TIMEOUT.toString()).equals(r.toString())) {
+//                    System.out.println(r);
+//                    System.out.println(attack.toString());
+                    System.out.println(culprit.toString());
+                }
             }
             System.out.println("Finished");
         }
@@ -93,6 +79,13 @@ public class Main {
         {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String argv[]) {
+        System.out.println("Case name: " + argv[0]);
+        executeQuery(0, argv);
+        executeQuery(1, argv);
+        executeQuery(2, argv);
     }
 
 }

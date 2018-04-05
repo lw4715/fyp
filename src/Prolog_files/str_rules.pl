@@ -57,4 +57,4 @@ writeToFile(X, A, D) :-
   close(Stream).
 
 goal(A, X, D) :- prove([isCulprit(X, A)], D), writeToFile(X, A, D).
-goal_with_timeout(A, X, D) :- time_out(goal(A, X, D), 2000, Result).
+goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 2000, Result).
