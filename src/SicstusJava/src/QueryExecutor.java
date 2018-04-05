@@ -165,7 +165,7 @@ public class QueryExecutor {
         boolean verbose = false;
 //        for (String caseName : cases) {
 //        static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-        String caseName = "wannacryattack";
+        String caseName = "apt1";
         String[] args = new String[] {caseName};
             System.out.println("Case name: " + args[0]);
             QueryExecutor qe = new QueryExecutor();

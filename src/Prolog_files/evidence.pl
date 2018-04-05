@@ -75,7 +75,7 @@ rule(case5_f8, malwareUsedInAttack('Backdoor.Destover', 'sonyhack'), []).
 % 'wannacry'
 rule(case6_f1, malwareUsedInAttack('wannacry', 'wannacryattack'), []).
 rule(case6_f2, malwareUsedInAttack('Trojan.Alphanc', 'wannacryattack'), []).
-rule(case6_f3, malwareModifiedFrom('Trojan.Alphanc', backdoorDuuzer), []).
+rule(case6_f3, malwareModifiedFrom('Trojan.Alphanc', 'Backdoor.Duuzer'), []).
 rule(case6_f5, malwareUsedInAttack('Trojan.Bravonc', 'wannacryattack'), []).
 rule(case6_f6, similarCodeObfuscation('Backdoor.Bravonc', 'infostealerFakepude'), []).
 rule(case6_f7, sharedCode('wannacry', 'Backdoor.Cantopee'), []).

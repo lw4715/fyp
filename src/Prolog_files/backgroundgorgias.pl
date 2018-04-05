@@ -44,7 +44,7 @@ rule(bg45, pastMotives('dragonfly',['cyberespionage','spy','sabotage']), []).
 
 
 rule(bg48, prominentGroup('govRAT'), []).
-rule(bg49, pastAttackMethods('govRAT',[clientSideExploits']), []).
+rule(bg49, pastAttackMethods('govRAT',['clientSideExploits']), []).
 rule(bg50, pastTargets('govRAT',['govOfficials','militaryOfficials','enterprises']), []).
 rule(bg51, pastMotives('govRAT',['cyberespionage']), []).
 
