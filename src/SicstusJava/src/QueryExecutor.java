@@ -42,6 +42,7 @@ public class QueryExecutor {
 
             switch(mode) {
                 case 0:
+                    System.out.println("TECHNICAL");
                     label = "t";
                     acc = techMap;
                     prologFile = "../Prolog_files/tech_rules.pl";
@@ -58,6 +59,7 @@ public class QueryExecutor {
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], ds[1], ds[2], ds[3], ds[4] });
                     break;
                 case 1:
+                    System.out.println("OPERATIONAL");
                     label = "op";
                     acc = opMap;
                     prologFile = "../Prolog_files/op_rules.pl";
@@ -72,6 +74,7 @@ public class QueryExecutor {
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], ds[1], ds[2] });
                     break;
                 case 2:
+                    System.out.println("STRATEGIC");
                     label = "str";
                     acc = strMap;
                     prologFile = "../Prolog_files/str_rules.pl";
@@ -90,12 +93,14 @@ public class QueryExecutor {
             }
 
             int count = 0;
-            while (query.nextSolution() && count < 30) {
+            while (query.nextSolution() && count < 50) {
+                System.out.println("Q: " + query);
+                System.out.println("count: " + count);
                 if (!TIMEOUT.toString().equals(r.toString())) {
                     count++;
                     for (int i = 0; i < ds.length; i++) {
                         SPTerm d = ds[i];
-                        if (d.toString().charAt(0) != '_') System.out.println(d);
+
                         if (d.isList()) {
                             // array of rule names corresponding to ith meta evidence
                             SPTerm[] dArray = d.toTermArray();
@@ -103,11 +108,12 @@ public class QueryExecutor {
                             for (SPTerm delta : dArray) {
                                 res += getScore(delta, mode);
                             }
-                            String ruleName = String.format("%s_%s%d", label, attack, i);
-//                            System.out.println(ruleName);
+                            String ruleName = String.format("%s_%s%d", label, attack, i+1);
                             if (acc.get(ruleName) == null || res > acc.get(ruleName)) {
                                 acc.put(ruleName, res);
                             }
+                        } else {
+                            System.out.println("HERE");
                         }
                     }
                     if (verbose) {
@@ -130,7 +136,7 @@ public class QueryExecutor {
         String prefix;
         Map<String, Integer> map;
 //        System.out.println("m: " + mode);
-//        System.out.println("dString: " + deltaString);
+        System.out.println("dString: " + deltaString);
         if (mode != 0) {
             switch(mode) {
                 case 1:
@@ -157,7 +163,7 @@ public class QueryExecutor {
         } else if (deltaString.contains("bg")) {
             acc += 1;
         }
-
+        System.out.println("Score: " + acc);
         return acc;
     }
 
@@ -165,7 +171,7 @@ public class QueryExecutor {
         boolean verbose = false;
 //        for (String caseName : cases) {
 //        static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-        String caseName = "apt1";
+        String caseName = "wannacryattack";
         String[] args = new String[] {caseName};
             System.out.println("Case name: " + args[0]);
             QueryExecutor qe = new QueryExecutor();
