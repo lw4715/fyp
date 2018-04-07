@@ -10,18 +10,14 @@ rule(bg11, malwareLinkedTo( backdoorDestover , lazarusGrp ), []).
 rule(bg12, malwareLinkedTo( infostealerFakepude , lazarusGrp ), []).
 rule(bg13, malwareLinkedTo( backdoorContopee , lazarusGrp ), []).
 
-
 rule(bg16, prominentGroup( equationGrp ), []).
 rule(bg17, country( equationGrp , usa ), []).
 rule(bg18, pastTargets( equationGrp ,[ iran , russia , pakistan , afghanistan , india , syria , mali ]), []).
-
-
 
 rule(bg22, prominentGroup( anglerEK ), []).
 rule(bg23, country( anglerEK , ussr ), []).
 rule(bg24, pastAttackMethods( anglerEK ,[ driveByDownloads ]), []).
 rule(bg25, pastMotives( anglerEK ,[ undergroundBusiness ]), []).
-
 
 rule(bg28, prominentGroup( blackVine ), []).
 rule(bg29, country( blackVine , china ), []).
@@ -34,7 +30,6 @@ rule(bg35, country( butterfly , china ), []).
 rule(bg36, pastAttackMethods( butterfly ,[ zeroday , customMalware ]), []).
 rule(bg37, pastTargets( butterfly ,[ twitter , facebook , apple , microsoft , pharmaceutical , technology , law , oil , preciousMetalMining ]), []).
 rule(bg38, pastMotives( butterfly ,[ cyberespionage , undergroundBusiness ]), []).
-
 
 rule(bg41, prominentGroup( dragonfly ), []).
 rule(bg42, country( dragonfly , eastEurope ), []).
@@ -71,8 +66,6 @@ rule(bg72, hasResources(X), [listHasResources(L),member(X,L)]).
 rule(bg73, firstLanguage(chinese,X), [listChineseCountries(L),member(X,L)]).
 rule(bg74, firstLanguage(english,X), [listEnglishCountries(L),member(X,L)]).
 
-
-
 rule(bg78, isCulprit( equationGroup , flameattack ), []).
 rule(bg79, malwareUsedInAttack( flame , flameattack ), []).
 
@@ -85,9 +78,6 @@ rule(bg86, informationRich( consumer ), []).
 
 rule(bg88, possibleMotive( sabotage ,Att), [isInfrastructure(Ind),industry(Ind,V),target(V,Att)]).
 rule(bg89, possibleMotive( espionage ,Att), [informationRich(Ind),industry(Ind,V),target(V,Att)]).
-
-
-
 
 rule(bg94, isCulprit([ usa , israel ], flameattack ), []).
 rule(bg95, target( middleeast , flameattack ), []).

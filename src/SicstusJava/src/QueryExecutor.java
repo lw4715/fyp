@@ -1,7 +1,6 @@
 import se.sics.jasper.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class QueryExecutor {
     static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
@@ -9,11 +8,13 @@ public class QueryExecutor {
     Map<String, Integer> techMap;
     Map<String, Integer> opMap;
     Map<String, Integer> strMap;
+    Set<String> culprits;
 
     QueryExecutor() {
         techMap = new HashMap<>();
         opMap = new HashMap<>();
         strMap = new HashMap<>();
+        culprits = new HashSet<>();
     }
 
     /*
@@ -94,8 +95,8 @@ public class QueryExecutor {
 
             int count = 0;
             while (query.nextSolution() && count < 50) {
-                System.out.println("R: " + r);
-                System.out.println("count: " + count);
+//                System.out.println("R: " + r);
+//                System.out.println("count: " + count);
                 if (TIMEOUT.toString().equals(r.toString())) {
                     System.out.println("TIMEOUT");
                     continue;
@@ -117,9 +118,9 @@ public class QueryExecutor {
                         }
                     }
                 }
-                if (verbose) {
-                    System.out.println(culprit);
-                }
+                if (verbose) System.out.println(culprit);
+                if (mode == 2) this.culprits.add(culprit.toString());
+
             }
             System.out.println("Finished");
             return;
@@ -161,14 +162,14 @@ public class QueryExecutor {
             acc += 1;
         }
 
-        System.out.println("Score: " + acc);
+//        System.out.println("Score: " + acc);
         return acc;
     }
 
     public static String execute() {
         boolean verbose = false;
 //        {"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-        String caseName = "wannacryattack";
+        String caseName = "sonyhack";
         String[] args = new String[] {caseName};
         System.out.println("Case name: " + args[0]);
         QueryExecutor qe = new QueryExecutor();
@@ -179,11 +180,12 @@ public class QueryExecutor {
         System.out.println(qe.techMap);
         System.out.println(qe.opMap);
         System.out.println(qe.strMap);
-        return String.format("Tech: %s\n Op: %s\n Str: %s\n", qe.techMap, qe.opMap, qe.strMap);
+        return String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
+                qe.culprits, qe.techMap, qe.opMap, qe.strMap);
     }
 
     public static void main(String[] args) {
-        execute();
+        System.out.println(execute());
     }
 
 }
