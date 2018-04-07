@@ -11,9 +11,9 @@ public class QueryExecutor {
     Map<String, Integer> strMap;
 
     QueryExecutor() {
-        this.techMap = new HashMap<>();
-        this.opMap = new HashMap<>();
-        this.strMap = new HashMap<>();
+        techMap = new HashMap<>();
+        opMap = new HashMap<>();
+        strMap = new HashMap<>();
     }
 
     /*
@@ -94,39 +94,40 @@ public class QueryExecutor {
 
             int count = 0;
             while (query.nextSolution() && count < 50) {
-                System.out.println("Q: " + query);
+                System.out.println("R: " + r);
                 System.out.println("count: " + count);
-                if (!TIMEOUT.toString().equals(r.toString())) {
-                    count++;
-                    for (int i = 0; i < ds.length; i++) {
-                        SPTerm d = ds[i];
+                if (TIMEOUT.toString().equals(r.toString())) {
+                    System.out.println("TIMEOUT");
+                    continue;
+                }
+                count++;
+                for (int i = 0; i < ds.length; i++) {
+                    SPTerm d = ds[i];
 
-                        if (d.isList()) {
-                            // array of rule names corresponding to ith meta evidence
-                            SPTerm[] dArray = d.toTermArray();
-                            res = 0;
-                            for (SPTerm delta : dArray) {
-                                res += getScore(delta, mode);
-                            }
-                            String ruleName = String.format("%s_%s%d", label, attack, i+1);
-                            if (acc.get(ruleName) == null || res > acc.get(ruleName)) {
-                                acc.put(ruleName, res);
-                            }
-                        } else {
-                            System.out.println("HERE");
+                    if (d.isList()) {
+                        // array of rule names corresponding to ith meta evidence
+                        SPTerm[] dArray = d.toTermArray();
+                        res = 0;
+                        for (SPTerm delta : dArray) {
+                            res += getScore(delta, mode);
+                        }
+                        String ruleName = String.format("%s_%s%d", label, attack, i+1);
+                        if (acc.get(ruleName) == null || res > acc.get(ruleName)) {
+                            acc.put(ruleName, res);
                         }
                     }
-                    if (verbose) {
-                        System.out.println(culprit);
-                    }
-
+                }
+                if (verbose) {
+                    System.out.println(culprit);
                 }
             }
             System.out.println("Finished");
+            return;
         }
         catch ( Exception e )
         {
             e.printStackTrace();
+            return;
         }
     }
 
@@ -135,8 +136,7 @@ public class QueryExecutor {
         String deltaString = delta.toString();
         String prefix;
         Map<String, Integer> map;
-//        System.out.println("m: " + mode);
-        System.out.println("dString: " + deltaString);
+//        System.out.println("dString: " + deltaString);
         if (mode != 0) {
             switch(mode) {
                 case 1:
@@ -150,11 +150,8 @@ public class QueryExecutor {
                 default:
                     return 0;
             }
-            if (deltaString.contains(prefix)) {
-                if (map.containsKey(deltaString)) {
-//                    System.out.println("Retuning " + map.get(deltaString));
-                    acc = map.get(deltaString);
-                }
+            if (deltaString.contains(prefix) && map.containsKey(deltaString)) {
+                acc = map.get(deltaString);
             }
         }
 
@@ -163,26 +160,30 @@ public class QueryExecutor {
         } else if (deltaString.contains("bg")) {
             acc += 1;
         }
+
         System.out.println("Score: " + acc);
         return acc;
     }
 
-    public static void main(String argv[]) {
+    public static String execute() {
         boolean verbose = false;
-//        for (String caseName : cases) {
-//        static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
+//        {"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
         String caseName = "wannacryattack";
         String[] args = new String[] {caseName};
-            System.out.println("Case name: " + args[0]);
-            QueryExecutor qe = new QueryExecutor();
-            qe.executeQuery(0, args, verbose);
-            qe.executeQuery(1, args, verbose);
-            qe.executeQuery(2, args, verbose);
-            System.out.println("--------- \nBreakdown");
-            System.out.println(qe.techMap);
-            System.out.println(qe.opMap);
-            System.out.println(qe.strMap);
-//        }
+        System.out.println("Case name: " + args[0]);
+        QueryExecutor qe = new QueryExecutor();
+        qe.executeQuery(0, args, verbose);
+        qe.executeQuery(1, args, verbose);
+        qe.executeQuery(2, args, verbose);
+        System.out.println("--------- \nBreakdown");
+        System.out.println(qe.techMap);
+        System.out.println(qe.opMap);
+        System.out.println(qe.strMap);
+        return String.format("Tech: %s\n Op: %s\n Str: %s\n", qe.techMap, qe.opMap, qe.strMap);
+    }
+
+    public static void main(String[] args) {
+        execute();
     }
 
 }

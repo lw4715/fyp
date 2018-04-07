@@ -48,15 +48,6 @@ rule(zeroday(1), sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 abducible(specificTarget, []).
 
 % pref
-%% rule(nafSkill1, prefer(highSkill1, highSkillDefault), []).
-%% rule(nafSkill2, prefer(highSkill2, highSkillDefault), []).
-%% rule(isNotBM, prefer(bm, bmDefault), []).
-% rule(nafRes, prefer(highResource1, highResource0), []).
-% rule(nafSim, prefer(similar, similarDefault), []).
-% rule(nafSim1, prefer(similar1, similarDefault), []).
-% rule(nafSim2, prefer(similar2, similarDefault), []).
-% rule(nafSim3, prefer(similar3, similarDefault), []).
-
 rule(spoofedIp, prefer(spoofedSrcIp(2),srcIP(1)), []).
 
 % evidences
