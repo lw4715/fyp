@@ -42,13 +42,13 @@ rule(similar1, similar(M1, M2), [simlarCodeObfuscation(M1, M2)]).
 rule(similar2, similar(M1, M2), [sharedCode(M1, M2)]).
 rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 
-rule(targetted(1), specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
-rule(zeroday(1), sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
+rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
+rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
 abducible(specificTarget, []).
 
 % pref
-rule(spoofedIp, prefer(spoofedSrcIp(2),srcIP(1)), []).
+rule(spoofedIp, prefer(spoofedSrcIp,srcIP, []).
 
 % evidences
 
