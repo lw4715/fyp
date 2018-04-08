@@ -1,0 +1,1 @@
+:- multifile rule/3.
