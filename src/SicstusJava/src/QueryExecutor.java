@@ -2,10 +2,11 @@ import se.sics.jasper.*;
 
 import java.util.*;
 
+import static java.lang.Math.pow;
+
 @SuppressWarnings("ALL")
 public class QueryExecutor {
-//    static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-    // TODO: update to absolute filepath of prolog files
+    // TODO: update to relative filepath of prolog files
     static String FILEPATH = "";
     Map<String, Integer> techMap;
     Map<String, Integer> opMap;
@@ -59,7 +60,6 @@ public class QueryExecutor {
                     accMap = techMap;
                     sp.load(FILEPATH + "tech_rules.pl");
                     pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
-//                    attack = new SPTerm(sp).putVariable();
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
                     ds = new SPTerm[numDeltas];
@@ -75,7 +75,6 @@ public class QueryExecutor {
                     accMap = opMap;
                     sp.load(FILEPATH + "op_rules.pl");
                     pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
-//                    attack = new SPTerm(sp).putVariable();
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
                     ds = new SPTerm[numDeltas];
@@ -105,8 +104,6 @@ public class QueryExecutor {
             int count = 0;
 
             while (query.nextSolution() && count < 50) {
-//                System.out.println("R: " + r);
-//                System.out.println("count: " + count);
                 if (TIMEOUT.toString().equals(r.toString())) {
                     System.out.println("TIMEOUT");
                     continue;
@@ -174,24 +171,33 @@ public class QueryExecutor {
         return acc;
     }
 
-    public static String execute() {
+    public static String execute(String caseName) {
         boolean verbose = true;
-//        {"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-        String caseName = "wannacryattack";
         QueryExecutor qe = new QueryExecutor();
+        double time = System.nanoTime();
+        System.out.println("Start time: " + time);
         qe.executeQuery(0, caseName, verbose);
+        double techTime = (System.nanoTime() - time)/pow(10,9);
+        time = System.nanoTime();
+        System.out.println("Time taken for tech layer: " + techTime + "s");
         qe.executeQuery(1, caseName, verbose);
+        double opTime = (System.nanoTime() - time)/pow(10,9);
+        time = System.nanoTime();
+        System.out.println("Time taken for op layer: " + opTime + "s");
+        time = System.currentTimeMillis();
         qe.executeQuery(2, caseName, verbose);
-        System.out.println("--------- \nBreakdown");
-        System.out.println(qe.techMap);
-        System.out.println(qe.opMap);
-        System.out.println(qe.strMap);
+        double strTime = (System.nanoTime() - time)/pow(10,9);
+        System.out.println("Time taken for str layer: " + strTime + "s");
+        System.out.println("Total time: " + (techTime + opTime + strTime));
         return String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
                 qe.culpritString(), qe.techMap, qe.opMap, qe.strMap);
     }
 
     public static void main(String[] args) {
-        System.out.println(execute());
+        //{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
+        System.out.println(execute("gaussattack"));
+        System.out.println(execute("gaussattack"));
+
     }
 
 }

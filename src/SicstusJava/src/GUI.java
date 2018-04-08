@@ -170,7 +170,7 @@ class GUI {
                     highlightElement(attackName);
                 } else {
                     status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
-                    String executeResult = QueryExecutor.execute();
+                    String executeResult = QueryExecutor.execute(attackName.getText());
                     JOptionPane.showMessageDialog(mainFrame, executeResult, "Execution Result", 1);
                 }
             } else {
