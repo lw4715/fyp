@@ -28,7 +28,7 @@ rule(lang1, culpritIsFrom(X, Att), [sysLanguage(L, Att), firstLanguage(L, X)]).
 rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 
-%% rule(bmDefault, forBlackMarketUse(_M), []).
+rule(bmDefault, neg(forBlackMarketUse(_M)), []).
 rule(bm, neg(forBlackMarketUse(M)), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). %TODO when do we know its not for black market?
 
 %% rule(similarDefault, neg(similar(_M1, _M2)), []).
@@ -48,7 +48,7 @@ rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 abducible(specificTarget, []).
 
 % pref
-rule(spoofedIp, prefer(spoofedSrcIp,srcIP, []).
+rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
 
 % evidences
 
@@ -72,7 +72,7 @@ goal(A, X, D1, D2, D3, D4, D5) :-
     (\+ (culpritIsFrom(X, A, D2)), writeToFile(neg(culpritIsFrom(X, A)), A, 2)), nl,
   (malwareUsedInAttack(M, A), forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M), A, 3));
     (\+ (forBlackMarketUse(M, D3)), writeToFile(neg(forBlackMarketUse(M)), A, 3)), nl,
-  (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2), A, 5));
+  (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2), A, 5), writeToFile(similar(M2, M), A, 5));
     (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)), A, 5)), nl,
   (specificTarget(A, D4), writeToFile(specificConfigInMalware(A), A, 4)); (\+ specificTarget(A, D4)).
 

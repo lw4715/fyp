@@ -8,6 +8,9 @@ import java.awt.event.WindowEvent;
 import java.util.stream.Stream;
 
 class GUI {
+    private static final String SUBMIT = "Submit";
+    private static final String EXECUTE = "Execute";
+    private static final String UPDATE = "Update";
     private final Utils utils;
     private JFrame mainFrame;
     private JLabel status;
@@ -55,7 +58,7 @@ class GUI {
 
     private void prepareGUI() {
         mainFrame = new JFrame("Abduction-based Reasoner");
-        mainFrame.setSize(600,400);
+        mainFrame.setSize(800,400);
 
         mainFrame.setLayout(new GridLayout(0, 1));
 
@@ -63,19 +66,20 @@ class GUI {
         status.setAutoscrolls(true);
 
         dropdown = new JComboBox(
-                Stream.of(techPredicates, opPredicates, bgPredicates)
+                Stream.of(placeholderItem, techPredicates, opPredicates, bgPredicates)
                         .flatMap(Stream::of)
                         .toArray(String[]::new));
         dropdown.addItemListener(arg0 -> {
-            status.setText("Selected: " + dropdown.getSelectedItem());
+            resetColours();
+            status.setText("\t\tSelected: " + dropdown.getSelectedItem());
             evidence.setText(formatPredicate(dropdown.getSelectedItem().toString()));
 
         });
 
-        evidence = new JTextField();
-        evidence.setColumns(20);
-        attackName = new JTextField();
-        attackName.setColumns(10);
+        evidence = new JTextField(placeholderItem[0]);
+        evidence.setColumns(35);
+        attackName = new JTextField(JTextField.LEFT);
+        attackName.setColumns(15);
 
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -97,17 +101,19 @@ class GUI {
 
         currentEvidences = new JTextArea();
 
-        mainFrame.add(new JLabel("Input evidence: ", JLabel.LEFT));
+        mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         panel1.add(dropdown);
         panel1.add(evidence);
 
-        panel2.add(new JLabel("Name of attack (No spaces or '.'):", JLabel.LEFT));
+//        panel2.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
         panel2.add(attackName);
 
         mainFrame.add(panel1);
+        mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
+//        mainFrame.add(attackName);
         mainFrame.add(panel2);
         mainFrame.add(panel3);
-        mainFrame.add(new JLabel("Evidence so far:", JLabel.LEFT));
+        mainFrame.add(new JLabel("\t\tEvidence so far:", JLabel.LEFT));
         mainFrame.add(currentEvidences);
         mainFrame.add(panel4);
         mainFrame.add(status);
@@ -116,17 +122,23 @@ class GUI {
     }
 
     private String formatPredicate(String s) {
-        return s.split("/")[0] + '(' + ',' + ')';
+        String[] split = s.split("/");
+        StringBuilder sb = new StringBuilder();
+        sb.append("<arg>");
+        for (int i = 1; i < Integer.parseInt(split[1]); i++) {
+            sb.append(", <arg>");
+        }
+        return split[0] + '(' + sb + ')';
     }
 
-    private void showEventDemo(){
-        JButton submitButton = new JButton("Submit");
-        JButton cancelButton = new JButton("Execute");
-        JButton updateButton = new JButton("Update");
+    private void addButtonsToPanel(){
+        JButton submitButton = new JButton(SUBMIT);
+        JButton cancelButton = new JButton(EXECUTE);
+        JButton updateButton = new JButton(UPDATE);
 
-        submitButton.setActionCommand("Submit");
-        cancelButton.setActionCommand("Execute");
-        updateButton.setActionCommand("Update");
+        submitButton.setActionCommand(SUBMIT);
+        cancelButton.setActionCommand(EXECUTE);
+        updateButton.setActionCommand(UPDATE);
 
         submitButton.addActionListener(new ButtonClickListener());
         cancelButton.addActionListener(new ButtonClickListener());
@@ -139,37 +151,47 @@ class GUI {
     }
 
     private class ButtonClickListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             resetColours();
 
-            if( command.equals( "Submit" ) )  {
-                String evidenceText = evidence.getText();
-                status.setText("Submitted: " + evidenceText);
-                utils.addEvidence(evidenceText);
-                currentEvidences.append(evidenceText + "\n");
-            } else if (command.equals("Execute")){
-                if (attackName.getText().length() == 0) {
-                    status.setText("Please input attack name to execute query: isCulprit(<attackName>, X)");
+            if( command.equals(SUBMIT))  {
+                if (checkArgs()) {
+                    String evidenceText = evidence.getText();
+                    status.setText("\t\tSubmitted: " + evidenceText);
+                    utils.addEvidence(evidenceText);
+                    currentEvidences.append(evidenceText + "\n");
+                }
+            } else if (command.equals(EXECUTE)){
+                if (attackName.getText().isEmpty()) {
+                    status.setText("\t\tPlease input attack name to execute query: isCulprit(<attackName>, X)");
                     highlightElement(attackName);
                 } else {
-                    status.setText(String.format("Executing isCulprit(%s, X)", attackName.getText()));
+                    status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
                     String executeResult = QueryExecutor.execute();
-                    status.setText(String.format("Executing isCulprit(%s, X)\nResult:\n%s", attackName.getText(), executeResult));
-//                    output = new JDialog();
-//                    output.add(new JSmartTextArea("TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST"));
                     JOptionPane.showMessageDialog(mainFrame, executeResult, "Execution Result", 1);
                 }
             } else {
-                status.setText(String.format("Updated file: %s", utils.USER_EVIDENCE_FILENAME));
+                status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
                 utils.updateEvidence(currentEvidences.getText());
             }
         }
     }
 
+    private boolean checkArgs() {
+        if (evidence.getText().contains("<") || evidence.getText().contains(">")) {
+            status.setText("\t\tReplace \"<arg>\" with argument");
+            highlightElement(evidence);
+            return false;
+        }
+        return true;
+    }
+
     void resetColours() {
         status.setForeground(Color.darkGray);
+        evidence.setBackground(Color.white);
         attackName.setBackground(Color.white);
     }
 
@@ -180,6 +202,6 @@ class GUI {
 
     public static void main(String args[]){
         GUI awt = new GUI();
-        awt.showEventDemo();
+        awt.addButtonsToPanel();
     }
 }

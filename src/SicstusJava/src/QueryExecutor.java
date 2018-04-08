@@ -2,19 +2,30 @@ import se.sics.jasper.*;
 
 import java.util.*;
 
+@SuppressWarnings("ALL")
 public class QueryExecutor {
-    static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-
+//    static String[] cases = new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
+    // TODO: update to absolute filepath of prolog files
+    static String FILEPATH = "";
     Map<String, Integer> techMap;
     Map<String, Integer> opMap;
     Map<String, Integer> strMap;
-    Set<String> culprits;
+    Map<String, Integer> culprits;
+
 
     QueryExecutor() {
         techMap = new HashMap<>();
         opMap = new HashMap<>();
         strMap = new HashMap<>();
-        culprits = new HashSet<>();
+        culprits = new HashMap<>();
+    }
+
+    public String culpritString() {
+        StringBuilder sb = new StringBuilder();
+        for (String c : culprits.keySet()) {
+            sb.append(String.format("%s [%d]", c, culprits.get(c)));
+        }
+        return sb.toString();
     }
 
     /*
@@ -23,16 +34,15 @@ public class QueryExecutor {
     1 : op
     2 : str
     */
-    void executeQuery(int mode, String[] args, boolean verbose) {
-        String prologFile;
-
+    void executeQuery(int mode, String caseName, boolean verbose) {
         SICStus sp;
         SPPredicate pred;
         SPTerm attack, culprit, r;
         SPQuery query;
-        Map<String, Integer> acc;
+        Map<String, Integer> accMap;
         String label;
         int res;
+        int numDeltas;
 
         try
         {
@@ -43,45 +53,44 @@ public class QueryExecutor {
 
             switch(mode) {
                 case 0:
+                    numDeltas = 5;
                     System.out.println("TECHNICAL");
                     label = "t";
-                    acc = techMap;
-                    prologFile = "../Prolog_files/tech_rules.pl";
-                    sp.load(prologFile);
-                    pred = new SPPredicate(sp, "goal", 7, "");
-                    attack = new SPTerm(sp).putVariable();
+                    accMap = techMap;
+                    sp.load(FILEPATH + "tech_rules.pl");
+                    pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
+//                    attack = new SPTerm(sp).putVariable();
+                    attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
-                    ds = new SPTerm[5];
-                    ds[0] = new SPTerm(sp).putVariable();
-                    ds[1] = new SPTerm(sp).putVariable();
-                    ds[2] = new SPTerm(sp).putVariable();
-                    ds[3] = new SPTerm(sp).putVariable();
-                    ds[4] = new SPTerm(sp).putVariable();
+                    ds = new SPTerm[numDeltas];
+                    for (int i = 0; i < numDeltas; i++) {
+                        ds[i] = new SPTerm(sp).putVariable();
+                    }
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], ds[1], ds[2], ds[3], ds[4] });
                     break;
                 case 1:
+                    numDeltas = 3;
                     System.out.println("OPERATIONAL");
                     label = "op";
-                    acc = opMap;
-                    prologFile = "../Prolog_files/op_rules.pl";
-                    sp.load(prologFile);
-                    pred = new SPPredicate(sp, "goal", 5, "");
-                    attack = new SPTerm(sp).putVariable();
+                    accMap = opMap;
+                    sp.load(FILEPATH + "op_rules.pl");
+                    pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
+//                    attack = new SPTerm(sp).putVariable();
+                    attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
-                    ds = new SPTerm[3];
-                    ds[0] = new SPTerm(sp).putVariable();
-                    ds[1] = new SPTerm(sp).putVariable();
-                    ds[2] = new SPTerm(sp).putVariable();
+                    ds = new SPTerm[numDeltas];
+                    for (int i = 0; i < numDeltas; i++) {
+                        ds[i] = new SPTerm(sp).putVariable();
+                    }
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], ds[1], ds[2] });
                     break;
                 case 2:
                     System.out.println("STRATEGIC");
                     label = "str";
-                    acc = strMap;
-                    prologFile = "../Prolog_files/str_rules.pl";
-                    sp.load(prologFile);
+                    accMap = strMap;
+                    sp.load(FILEPATH + "str_rules.pl");
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
-                    attack = new SPTerm(sp, args[0]);
+                    attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
                     ds = new SPTerm[1];
                     ds[0] = new SPTerm(sp).putVariable();
@@ -94,6 +103,7 @@ public class QueryExecutor {
             }
 
             int count = 0;
+
             while (query.nextSolution() && count < 50) {
 //                System.out.println("R: " + r);
 //                System.out.println("count: " + count);
@@ -104,6 +114,7 @@ public class QueryExecutor {
                 count++;
                 for (int i = 0; i < ds.length; i++) {
                     SPTerm d = ds[i];
+                    if (verbose) System.out.println(d);
 
                     if (d.isList()) {
                         // array of rule names corresponding to ith meta evidence
@@ -113,20 +124,21 @@ public class QueryExecutor {
                             res += getScore(delta, mode);
                         }
                         String ruleName = String.format("%s_%s%d", label, attack, i+1);
-                        if (acc.get(ruleName) == null || res > acc.get(ruleName)) {
-                            acc.put(ruleName, res);
+                        if (accMap.get(ruleName) == null || res > accMap.get(ruleName)) {
+                            accMap.put(ruleName, res);
+                        }
+                        if (mode == 2) {
+                            culprits.put(culprit.toString(), res);
+                            System.out.println(culprits);
                         }
                     }
                 }
-                if (verbose) System.out.println(culprit);
-                if (mode == 2) this.culprits.add(culprit.toString());
-
+//                if (mode == 2) culprits.put(culprit.toString(), res);
             }
+
             System.out.println("Finished");
             return;
-        }
-        catch ( Exception e )
-        {
+        } catch ( Exception e ) {
             e.printStackTrace();
             return;
         }
@@ -137,7 +149,6 @@ public class QueryExecutor {
         String deltaString = delta.toString();
         String prefix;
         Map<String, Integer> map;
-//        System.out.println("dString: " + deltaString);
         if (mode != 0) {
             switch(mode) {
                 case 1:
@@ -155,33 +166,28 @@ public class QueryExecutor {
                 acc = map.get(deltaString);
             }
         }
-
         if (deltaString.contains("case")) {
             acc += 2;
         } else if (deltaString.contains("bg")) {
             acc += 1;
         }
-
-//        System.out.println("Score: " + acc);
         return acc;
     }
 
     public static String execute() {
-        boolean verbose = false;
+        boolean verbose = true;
 //        {"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-        String caseName = "sonyhack";
-        String[] args = new String[] {caseName};
-        System.out.println("Case name: " + args[0]);
+        String caseName = "wannacryattack";
         QueryExecutor qe = new QueryExecutor();
-        qe.executeQuery(0, args, verbose);
-        qe.executeQuery(1, args, verbose);
-        qe.executeQuery(2, args, verbose);
+        qe.executeQuery(0, caseName, verbose);
+        qe.executeQuery(1, caseName, verbose);
+        qe.executeQuery(2, caseName, verbose);
         System.out.println("--------- \nBreakdown");
         System.out.println(qe.techMap);
         System.out.println(qe.opMap);
         System.out.println(qe.strMap);
         return String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
-                qe.culprits, qe.techMap, qe.opMap, qe.strMap);
+                qe.culpritString(), qe.techMap, qe.opMap, qe.strMap);
     }
 
     public static void main(String[] args) {

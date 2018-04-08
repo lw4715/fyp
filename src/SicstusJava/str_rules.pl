@@ -1,7 +1,7 @@
 :- use_module(library(timeout)).
 :- compile('utils.pl').
-:- compile('../SicstusJava/op.pl').
-:- compile('../SicstusJava/tech.pl').
+:- compile('op.pl').
+:- compile('tech.pl').
 :- multifile rule/3.
 
 % input (from op/tech):
@@ -24,7 +24,7 @@
 
 
 rule(similarMalware, isCulprit(X, A1), 
-	[malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),similar(M1,M2),
+	[similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),
 	isCulprit(X,A2),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
 rule(linkedMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),
   malwareLinkedTo(M2,X),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).

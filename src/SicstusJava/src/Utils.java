@@ -1,7 +1,7 @@
 import java.io.*;
 
 public class Utils {
-    static final String USER_EVIDENCE_FILENAME = "../Prolog_files/user_evidence.pl";
+    static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
     int counter;
     Utils() {
         counter = 0;
