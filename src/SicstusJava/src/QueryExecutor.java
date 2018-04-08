@@ -1,7 +1,6 @@
 import se.sics.jasper.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Math.pow;
 
@@ -14,12 +13,14 @@ public class QueryExecutor {
     Map<String, Integer> opMap;
     Map<String, Integer> strMap;
     Map<String, Integer> culprits;
+    Set<String> abduced;
 
     QueryExecutor() {
         techMap = new HashMap<>();
         opMap = new HashMap<>();
         strMap = new HashMap<>();
         culprits = new HashMap<>();
+        abduced = new HashSet<>();
         try {
             sp = new SICStus(new String[] {"redefine_warnings","off"},null);
             SPPredicate pred = new SPPredicate(sp, "prolog_flag",  3, "");
@@ -127,11 +128,11 @@ public class QueryExecutor {
                     if (verbose) System.out.println(d);
 
                     if (d.isList()) {
-                        // array of rule names corresponding to ith meta evidence
                         SPTerm[] dArray = d.toTermArray();
                         res = 0;
                         for (SPTerm delta : dArray) {
-                            res += getScore(delta, mode);
+                            // FIXME: recursive evidences make very large res values
+                            res += getScoreAndProcess(delta, mode);
                         }
                         String ruleName = String.format("%s_%s%d", label, attack, i+1);
                         if (accMap.get(ruleName) == null || res > accMap.get(ruleName)) {
@@ -154,7 +155,7 @@ public class QueryExecutor {
         }
     }
 
-    private int getScore(SPTerm delta, int mode) {
+    private int getScoreAndProcess(SPTerm delta, int mode) {
         int acc = 0;
         String deltaString = delta.toString();
         String prefix;
@@ -174,6 +175,8 @@ public class QueryExecutor {
             }
             if (deltaString.contains(prefix) && map.containsKey(deltaString)) {
                 acc = map.get(deltaString);
+            } else if (delta.toString().contains("ass(")) {
+                abduced.add(delta.toString());
             }
         }
         if (deltaString.contains("case")) {
@@ -186,7 +189,8 @@ public class QueryExecutor {
 
     public String execute(String caseName) {
         culprits = new HashMap<>();
-        boolean verbose = true;
+        boolean verbose = false;
+
         double time = System.nanoTime();
         System.out.println("Start time: " + time);
         this.executeQuery(0, caseName, verbose);
@@ -202,15 +206,16 @@ public class QueryExecutor {
         double strTime = (System.nanoTime() - time)/pow(10,9);
         System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("Total time: " + (techTime + opTime + strTime));
-        return String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
-                this.culpritString(), this.techMap, this.opMap, this.strMap);
+        return String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\nAbduced: %s",
+                this.culpritString(), this.techMap, this.opMap, this.strMap, this.abduced);
     }
 
     public static void main(String[] args) {
         //{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
         QueryExecutor qe = new QueryExecutor();
         System.out.println(qe.execute("gaussattack"));
-        System.out.println(qe.execute("wannacryattack"));
+        System.out.println(qe.abduced);
+//        System.out.println(qe.execute("wannacryattack"));
 
     }
 

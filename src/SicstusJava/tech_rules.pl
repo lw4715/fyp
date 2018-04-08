@@ -12,7 +12,7 @@
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 rule(highSkill3, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(highSkill4, neg(highLevelSkill(Att)), [forBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
+rule(highSkill4, neg(highLevelSkill(Att)), [ notForBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
 rule(highSkill5, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
 
 rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
@@ -28,8 +28,8 @@ rule(lang1, culpritIsFrom(X, Att), [sysLanguage(L, Att), firstLanguage(L, X)]).
 rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 
-rule(bmDefault, neg(forBlackMarketUse(_M)), []).
-rule(bm, neg(forBlackMarketUse(M)), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). %TODO when do we know its not for black market?
+%% rule(bmDefault, neg( notForBlackMarketUse(_M)), []).
+rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). %TODO when do we know its not for black market?
 
 %% rule(similarDefault, neg(similar(_M1, _M2)), []).
 rule(similar, similar(M1, M2), [similarCCServer(M1, M2), \+ M1 = M2]).
@@ -45,7 +45,7 @@ rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
 rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
-abducible(specificTarget, []).
+abducible(specificTarget(_), []).
 
 % pref
 rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
@@ -55,7 +55,7 @@ rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
 % output:
 % requireHighResource/1
 % culpritIsFrom/2 (strat)
-% forBlackMarketUse/1 (strat)
+%  notForBlackMarketUse/1 (strat)
 % similar/2 (strat)
 
 writeToFile(X, A, N) :-
@@ -70,8 +70,9 @@ goal(A, X, D1, D2, D3, D4, D5) :-
     (\+ (requireHighResource(A, D1)), writeToFile(neg(requireHighResource(A)), A, 1)), nl,
   (culpritIsFrom(X, A, D2), writeToFile(culpritIsFrom(X, A), A, 2));
     (\+ (culpritIsFrom(X, A, D2)), writeToFile(neg(culpritIsFrom(X, A)), A, 2)), nl,
-  (malwareUsedInAttack(M, A), forBlackMarketUse(M, D3), writeToFile(forBlackMarketUse(M), A, 3));
-    (\+ (forBlackMarketUse(M, D3)), writeToFile(neg(forBlackMarketUse(M)), A, 3)), nl,
+  (malwareUsedInAttack(M, A), notForBlackMarketUse(M, D3), writeToFile( notForBlackMarketUse(M), A, 3))
+  ; (\+ (notForBlackMarketUse(M, D3)))
+  , nl,
   (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2), A, 5), writeToFile(similar(M2, M), A, 5));
     (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)), A, 5)), nl,
   (specificTarget(A, D4), writeToFile(specificConfigInMalware(A), A, 4)); (\+ specificTarget(A, D4)).
@@ -81,7 +82,7 @@ goal_with_timeout(A, X, D0, D1, D2, D3, D4, Result) :-  time_out(goal(A, X, D0, 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 neg(requireHighResource(A), D) :- prove([neg(requireHighResource(A))], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
-forBlackMarketUse(M, D) :- prove([forBlackMarketUse(M)], D).
+notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
 similar(M1, M2, D) :- prove([similar(M1, M2)], D).
 specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
 malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).

@@ -2,6 +2,7 @@
 :- compile('op.pl').
 :- compile('tech.pl').
 :- multifile rule/3.
+:- multifile abducible/2.
 
 % input (from op/tech):
 % hasCapability/2
@@ -24,9 +25,9 @@
 
 rule(similarMalware, isCulprit(X, A1), 
 	[similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),
-	isCulprit(X,A2),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
+	isCulprit(X,A2),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 rule(linkedMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),
-  malwareLinkedTo(M2,X),neg(forBlackMarketUse(M1)),neg(forBlackMarketUse(M2))]).
+  malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 rule(grpPastTargets, hasMotive(Group, Att), [prominentGroup(Group), pastTargets(Group, Ts),
   target(T, Att), member(T, Ts)]).
@@ -42,6 +43,8 @@ rule(weakAttack, neg(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
 rule(hasPrecedenceOfAttack, hasPrecedence(X, A), [isCulprit(X, A)]).
 rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), country(Group, C), 
   hasMotive(C, Att)]).
+
+abducible(notForBlackMarketUse(_), []).
 
 % pref
 rule(p0, prefer(hasMotiveAndCap,claimedResp), []).
