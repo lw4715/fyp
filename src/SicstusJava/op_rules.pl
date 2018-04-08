@@ -70,6 +70,8 @@ goal(A, X, D0, D1, D2) :-
 	(governmentLinked(P,X,D2), writeToFile(governmentLinked(P,X), A, 2);
     \+ (governmentLinked(P,X,D2))).
 
+goal_with_timeout(A, X, D0, D1, D2, Result) :- time_out(goal(A, X, D0, D1, D2), 3000, Result). 
+
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 % neg(hasCapability(X,A,D0)) :- prove([neg(hasCapability(X,A))], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).

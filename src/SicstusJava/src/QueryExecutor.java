@@ -1,6 +1,8 @@
 import se.sics.jasper.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.FutureTask;
 
 import static java.lang.Math.pow;
 
@@ -8,17 +10,30 @@ import static java.lang.Math.pow;
 public class QueryExecutor {
     // TODO: update to relative filepath of prolog files
     static String FILEPATH = "";
+    private SICStus sp;
     Map<String, Integer> techMap;
     Map<String, Integer> opMap;
     Map<String, Integer> strMap;
     Map<String, Integer> culprits;
-
 
     QueryExecutor() {
         techMap = new HashMap<>();
         opMap = new HashMap<>();
         strMap = new HashMap<>();
         culprits = new HashMap<>();
+        try {
+            sp = new SICStus(new String[] {"redefine_warnings","off"},null);
+            SPPredicate pred = new SPPredicate(sp, "prolog_flag",  3, "");
+            SPTerm redefineFlag = new SPTerm(sp, "redefine_warnings");
+            SPTerm oldVal = new SPTerm(sp, "on");
+            SPTerm newVal = new SPTerm(sp, "off");
+            SPQuery query = sp.openQuery(pred,
+                    new SPTerm[]{redefineFlag, oldVal, newVal});
+            query.nextSolution();
+        } catch (SPException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public String culpritString() {
@@ -36,7 +51,7 @@ public class QueryExecutor {
     2 : str
     */
     void executeQuery(int mode, String caseName, boolean verbose) {
-        SICStus sp;
+//        SICStus sp;
         SPPredicate pred;
         SPTerm attack, culprit, r;
         SPQuery query;
@@ -47,7 +62,6 @@ public class QueryExecutor {
 
         try
         {
-            sp = new SICStus(new String[] {},null);
             SPCanonicalAtom TIMEOUT = new SPCanonicalAtom(sp, "time_out");
             r = new SPTerm(sp, "success");
             SPTerm[] ds;
@@ -124,7 +138,7 @@ public class QueryExecutor {
                         if (accMap.get(ruleName) == null || res > accMap.get(ruleName)) {
                             accMap.put(ruleName, res);
                         }
-                        if (mode == 2) {
+                        if (mode == 2 && caseName.equals(attack.toString())) {
                             culprits.put(culprit.toString(), res);
                             System.out.println(culprits);
                         }
@@ -171,32 +185,33 @@ public class QueryExecutor {
         return acc;
     }
 
-    public static String execute(String caseName) {
+    public String execute(String caseName) {
+        culprits = new HashMap<>();
         boolean verbose = true;
-        QueryExecutor qe = new QueryExecutor();
         double time = System.nanoTime();
         System.out.println("Start time: " + time);
-        qe.executeQuery(0, caseName, verbose);
+        this.executeQuery(0, caseName, verbose);
         double techTime = (System.nanoTime() - time)/pow(10,9);
         time = System.nanoTime();
         System.out.println("Time taken for tech layer: " + techTime + "s");
-        qe.executeQuery(1, caseName, verbose);
+        this.executeQuery(1, caseName, verbose);
         double opTime = (System.nanoTime() - time)/pow(10,9);
         time = System.nanoTime();
         System.out.println("Time taken for op layer: " + opTime + "s");
         time = System.currentTimeMillis();
-        qe.executeQuery(2, caseName, verbose);
+        this.executeQuery(2, caseName, verbose);
         double strTime = (System.nanoTime() - time)/pow(10,9);
         System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("Total time: " + (techTime + opTime + strTime));
         return String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
-                qe.culpritString(), qe.techMap, qe.opMap, qe.strMap);
+                this.culpritString(), this.techMap, this.opMap, this.strMap);
     }
 
     public static void main(String[] args) {
         //{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
-        System.out.println(execute("gaussattack"));
-        System.out.println(execute("gaussattack"));
+        QueryExecutor qe = new QueryExecutor();
+        System.out.println(qe.execute("gaussattack"));
+        System.out.println(qe.execute("wannacryattack"));
 
     }
 

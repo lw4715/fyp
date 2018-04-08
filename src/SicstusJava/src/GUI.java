@@ -22,6 +22,7 @@ class GUI {
     private JTextField evidence;
     private JTextField attackName;
     private JTextArea currentEvidences;
+    private JasperCallable t;
 
     private static final String[] placeholderItem = {"Select from existing predicates"};
 
@@ -170,7 +171,16 @@ class GUI {
                     highlightElement(attackName);
                 } else {
                     status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
-                    String executeResult = QueryExecutor.execute(attackName.getText());
+                    String executeResult = null;
+                    try {
+                        if (t == null) {
+                            t = new JasperCallable();
+                        }
+                        t.setName(attackName.getText());
+                        executeResult = t.call();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                     JOptionPane.showMessageDialog(mainFrame, executeResult, "Execution Result", 1);
                 }
             } else {

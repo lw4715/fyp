@@ -1,4 +1,4 @@
-% :- module(abr, [rule/3, prove/2]).
+:- use_module(library(timeout)).
 %% :- use_module(double_quotes).
 :- compile('../gorgias-src-0.6d/lib/gorgias.pl').
 :- compile('../gorgias-src-0.6d/ext/lpwnf.pl').

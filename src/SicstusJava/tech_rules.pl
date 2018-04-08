@@ -76,6 +76,8 @@ goal(A, X, D1, D2, D3, D4, D5) :-
     (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)), A, 5)), nl,
   (specificTarget(A, D4), writeToFile(specificConfigInMalware(A), A, 4)); (\+ specificTarget(A, D4)).
 
+goal_with_timeout(A, X, D0, D1, D2, D3, D4, Result) :-  time_out(goal(A, X, D0, D1, D2, D3, D4), 3000, Result).
+
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 neg(requireHighResource(A), D) :- prove([neg(requireHighResource(A))], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
