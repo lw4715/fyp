@@ -2,7 +2,6 @@ import se.sics.jasper.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.FutureTask;
 
 import static java.lang.Math.pow;
 
@@ -108,7 +107,7 @@ public class QueryExecutor {
                     ds = new SPTerm[1];
                     ds[0] = new SPTerm(sp).putVariable();
                     r = new SPTerm(sp).putVariable();
-                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], r });
+                    query = sp.openQuery(pred, new SPTerm[] {attack, culprit, ds[0], r});
                     break;
                 default:
                     System.exit(-1);

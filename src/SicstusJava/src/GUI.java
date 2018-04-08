@@ -22,7 +22,7 @@ class GUI {
     private JTextField evidence;
     private JTextField attackName;
     private JTextArea currentEvidences;
-    private JasperCallable t;
+    private JasperCallable jc;
 
     private static final String[] placeholderItem = {"Select from existing predicates"};
 
@@ -53,8 +53,9 @@ class GUI {
 
 
     GUI() {
-        prepareGUI();
         utils = new Utils();
+        prepareGUI();
+        addButtonsToPanel();
     }
 
     private void prepareGUI() {
@@ -100,13 +101,13 @@ class GUI {
         panel4 = new JPanel();
         panel4.setLayout(new FlowLayout());
 
-        currentEvidences = new JTextArea();
+        currentEvidences = new JTextArea(utils.getCurrentEvidence());
 
         mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         panel1.add(dropdown);
         panel1.add(evidence);
 
-//        panel2.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
+//        panel2.add(new JLabel("\jc\tName of attack (No spaces or '.'):", JLabel.LEFT));
         panel2.add(attackName);
 
         mainFrame.add(panel1);
@@ -173,15 +174,21 @@ class GUI {
                     status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
                     String executeResult = null;
                     try {
-                        if (t == null) {
-                            t = new JasperCallable();
+                        if (jc == null) {
+                            jc = new JasperCallable();
                         }
-                        t.setName(attackName.getText());
-                        executeResult = t.call();
+                        jc.setName(attackName.getText());
+                        executeResult = jc.call();
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
-                    JOptionPane.showMessageDialog(mainFrame, executeResult, "Execution Result", 1);
+                    int result = JOptionPane.showConfirmDialog(mainFrame, executeResult, "Execution Result", JOptionPane.DEFAULT_OPTION, 1);
+                    if (result == 0) {
+                        mainFrame.dispose();
+                        prepareGUI();
+                        addButtonsToPanel();
+                    }
+
                 }
             } else {
                 status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
@@ -212,6 +219,5 @@ class GUI {
 
     public static void main(String args[]){
         GUI awt = new GUI();
-        awt.addButtonsToPanel();
     }
 }
