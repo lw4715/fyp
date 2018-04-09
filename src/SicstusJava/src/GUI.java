@@ -88,6 +88,14 @@ class GUI {
         attackName = new JTextField(JTextField.LEFT);
         attackName.setColumns(15);
 
+        JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks", "us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"});
+        existsingAttacks.addItemListener(arg0 -> {
+            resetColours();
+            status.setText("\t\tSelected attack: " + existsingAttacks.getSelectedItem());
+            attackName.setText(existsingAttacks.getSelectedItem().toString());
+
+        });
+
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent){
@@ -117,6 +125,7 @@ class GUI {
         panel1.add(evidence);
 
 //        panel2.add(new JLabel("\jc\tName of attack (No spaces or '.'):", JLabel.LEFT));
+        panel2.add(existsingAttacks);
         panel2.add(attackName);
 
         mainFrame.add(panel1);
@@ -221,8 +230,9 @@ class GUI {
     }
 
     private boolean checkArgs() {
-        if (evidence.getText().contains("<") || evidence.getText().contains(">")) {
-            status.setText("\t\tReplace \"<arg>\" with argument");
+        if (evidence.getText().equals(placeholderItem[0]) ||
+                evidence.getText().contains("<") || evidence.getText().contains(">")) {
+            status.setText("\t\tSelect predicate and replace \"<arg>\" with argument");
             highlightElement(evidence);
             return false;
         }

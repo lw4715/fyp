@@ -44,8 +44,6 @@ rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
 rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
-abducible(specificTarget(_), []).
-
 % pref
 rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
 
