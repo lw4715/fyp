@@ -234,7 +234,7 @@ public class QueryExecutor {
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             br.lines().forEach(line -> {
-                if (line.contains(pred) && line.contains("rule(") && !line.contains("abducible(") && !line.contains("%")) {
+                if (line.contains(pred) && line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%')) {
                     System.out.println(line);
                     r.add(line);
                 }

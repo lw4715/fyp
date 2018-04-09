@@ -159,7 +159,7 @@ class GUI {
             String command = e.getActionCommand();
             resetColours();
 
-            if( command.equals(SUBMIT))  {
+            if (command.equals(SUBMIT))  {
                 if (checkArgs()) {
                     String evidenceText = evidence.getText();
                     status.setText("\t\tSubmitted: " + evidenceText);
@@ -191,11 +191,11 @@ class GUI {
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+            int option = 1;
             if (executeResult.hasAbduced()) {
-                JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result", JOptionPane.DEFAULT_OPTION, 2);
-            } else {
-                JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result", JOptionPane.DEFAULT_OPTION, 1);
+                option = 2;
             }
+            JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result", JOptionPane.DEFAULT_OPTION, option);
             mainFrame.dispose();
             prepareGUI();
             addButtonsToPanel();
