@@ -46,7 +46,7 @@ public class QueryExecutor {
     public String culpritString() {
         StringBuilder sb = new StringBuilder();
         for (String c : culprits.keySet()) {
-            sb.append(String.format("%s [%d]", c, culprits.get(c)));
+            sb.append(String.format("%s [%d], ", c, culprits.get(c)));
         }
         return sb.toString();
     }
