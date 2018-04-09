@@ -146,8 +146,10 @@ public class QueryExecutor {
                             accMap.put(ruleName, res);
                         }
                         if (mode == 2 && caseName.equals(attack.toString())) {
-                            culprits.put(culprit.toString(), res);
-                            System.out.println(culprits);
+                            if (culprits.get(culprit.toString()) == null || res > culprits.get(culprit.toString())) {
+                                culprits.put(culprit.toString(), res);
+                                System.out.println(culprits);
+                            }
                         }
                     }
                 }
@@ -183,6 +185,7 @@ public class QueryExecutor {
                 acc = map.get(deltaString);
             } else if (delta.toString().contains("ass(")) {
                 abduced.add(delta.toString());
+//                acc -= 1;
             }
         }
         if (deltaString.contains("case")) {
