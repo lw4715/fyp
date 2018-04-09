@@ -41,7 +41,7 @@ public class Utils {
         try {
             BufferedReader br = new BufferedReader(new FileReader(USER_EVIDENCE_FILENAME));
             StringBuilder sb = new StringBuilder();
-            br.lines().skip(1).forEach(x -> sb.append("\n" + x));
+            br.lines().skip(1).forEach(x -> sb.append(x + "\n"));
             return sb.toString();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");

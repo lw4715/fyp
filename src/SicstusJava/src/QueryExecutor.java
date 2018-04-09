@@ -151,7 +151,6 @@ public class QueryExecutor {
                         }
                     }
                 }
-//                if (mode == 2) culprits.put(culprit.toString(), res);
             }
 
             System.out.println("Finished");
@@ -195,7 +194,8 @@ public class QueryExecutor {
     }
 
     public Result execute(String caseName) {
-        culprits = new HashMap<>();
+        culprits.clear();
+        abduced.clear();
         boolean verbose = false;
 
         double time = System.nanoTime();
@@ -246,11 +246,13 @@ public class QueryExecutor {
     }
 
     public static void main(String[] args) {
-        //{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"};
         QueryExecutor qe = new QueryExecutor();
-        System.out.println(qe.execute("gaussattack"));
-        System.out.println(qe.abduced);
-//        System.out.println(qe.execute("wannacryattack"));
+//        for (String c : new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"}) {
+//            System.out.println(qe.execute(c));
+//        }
+        System.out.println(qe.execute("us_bank_hack"));
+//        System.out.println(qe.execute("us_bank_hack"));
+//        System.out.println(qe.execute("apt1"));
 
     }
 

@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 class GUI {
@@ -18,11 +20,13 @@ class GUI {
     private JPanel panel2;
     private JPanel panel3;
     private JPanel panel4;
-    private JComboBox dropdown;
+//    private JComboBox dropdown;
     private JTextField evidence;
     private JTextField attackName;
     private JTextArea currentEvidences;
     private JasperCallable jc;
+    private Map<String, Result> accumulatedResults;
+
 
     private static final String[] placeholderItem = {"Select from existing predicates"};
 
@@ -54,20 +58,21 @@ class GUI {
 
     GUI() {
         utils = new Utils();
+        accumulatedResults = new HashMap<>();
         prepareGUI();
         addButtonsToPanel();
     }
 
     private void prepareGUI() {
         mainFrame = new JFrame("Abduction-based Reasoner");
-        mainFrame.setSize(800,400);
+        mainFrame.setSize(800,800);
 
         mainFrame.setLayout(new GridLayout(0, 1));
 
         status = new JLabel("", JLabel.LEFT);
         status.setAutoscrolls(true);
 
-        dropdown = new JComboBox(
+        JComboBox dropdown = new JComboBox(
                 Stream.of(placeholderItem, techPredicates, opPredicates, bgPredicates)
                         .flatMap(Stream::of)
                         .toArray(String[]::new));
@@ -102,6 +107,10 @@ class GUI {
         panel4.setLayout(new FlowLayout());
 
         currentEvidences = new JTextArea(utils.getCurrentEvidence());
+//        JScrollPane scrollPane = new JScrollPane(currentEvidences);
+//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//        scrollPane.setPreferredSize(new Dimension(700, 200));
+//        scrollPane.setVisible(true);
 
         mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         panel1.add(dropdown);
@@ -116,6 +125,7 @@ class GUI {
         mainFrame.add(panel2);
         mainFrame.add(panel3);
         mainFrame.add(new JLabel("\t\tEvidence so far:", JLabel.LEFT));
+//        mainFrame.add(scrollPane);
         mainFrame.add(currentEvidences);
         mainFrame.add(panel4);
         mainFrame.add(status);
@@ -164,13 +174,15 @@ class GUI {
                     String evidenceText = evidence.getText();
                     status.setText("\t\tSubmitted: " + evidenceText);
                     utils.addEvidence(evidenceText);
-                    currentEvidences.append(evidenceText + "\n");
+                    currentEvidences.setText(utils.getCurrentEvidence());
                 }
+                accumulatedResults.clear();
             } else if (command.equals(EXECUTE)){
                 executeQuery();
             } else {
                 status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
                 utils.updateEvidence(currentEvidences.getText());
+                accumulatedResults.clear();
             }
         }
     }
@@ -179,23 +191,29 @@ class GUI {
         if (attackName.getText().isEmpty()) {
             status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
             highlightElement(attackName);
+            return;
         } else {
-            status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
             Result executeResult = null;
-            try {
-                if (jc == null) {
-                    jc = new JasperCallable();
+            if (accumulatedResults.containsKey(attackName.getText())) {
+                executeResult = accumulatedResults.get(attackName.getText());
+            } else {
+                status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
+                try {
+                    if (jc == null) {
+                        jc = new JasperCallable();
+                    }
+                    jc.setName(attackName.getText());
+                    executeResult = jc.call();
+                    accumulatedResults.put(attackName.getText(), executeResult);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
-                jc.setName(attackName.getText());
-                executeResult = jc.call();
-            } catch (Exception e1) {
-                e1.printStackTrace();
             }
             int option = 1;
             if (executeResult.hasAbduced()) {
                 option = 2;
             }
-            JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result", JOptionPane.DEFAULT_OPTION, option);
+            JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result for " + attackName.getText(), JOptionPane.DEFAULT_OPTION, option);
             mainFrame.dispose();
             prepareGUI();
             addButtonsToPanel();
@@ -222,7 +240,7 @@ class GUI {
         component.setBackground(Color.pink);
     }
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         GUI awt = new GUI();
     }
 }
