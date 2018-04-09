@@ -55,10 +55,11 @@ rule(p3, prefer(social3,noCap), []).
 rule(p4, prefer(similarMalware, noCap), []).
 rule(p5, prefer(linkedMalware, noCap), []).
 
-writeToFile(X, A, D) :-
-  open('output.pl',append, Stream), case(A),
-  write(Stream, A), write(Stream, ":"), write(Stream, X), write(Stream, ', derivation: '), write(Stream, D), write(Stream, '\n'),
-  close(Stream).
+%% writeToFile(X, A, D) :-
+%%   open('output.pl',append, Stream), case(A),
+%%   write(Stream, A), write(Stream, ":"), write(Stream, X), write(Stream, ', derivation: '), write(Stream, D), write(Stream, '\n'),
+%%   close(Stream).
 
-goal(A, X, D) :- prove([isCulprit(X, A)], D), writeToFile(X, A, D).
+%% goal(A, X, D) :- prove([isCulprit(X, A)], D), writeToFile(X, A, D).
+goal(A, X, D) :- prove([isCulprit(X, A)], D).
 goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 4000, Result).

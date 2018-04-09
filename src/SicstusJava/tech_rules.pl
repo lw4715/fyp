@@ -20,7 +20,6 @@ rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
 rule(highResource2, requireHighResource(Att), [highSecurity(T), target(T, Att)]).
 rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
 
-% rule(culpritOriginDefault, neg(culpritIsFrom(_X, _Att)), []).
 rule(srcIP, culpritIsFrom(X, Att), [ipGeoloc(G, IP), geolocInCountry(G, X), attackSourceIP(IP, Att)]).
 rule(spoofedSrcIp, neg(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(G, IP),
   geolocInCountry(G, X), attackSourceIP(IP, Att)]).
@@ -29,7 +28,6 @@ rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 
 rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
-%TODO when do we know its not for black market?
 
 %% rule(similarDefault, neg(similar(_M1, _M2)), []).
 rule(similar, similar(M1, M2), [similarCCServer(M1, M2), \+ M1 = M2]).
