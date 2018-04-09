@@ -28,8 +28,8 @@ rule(lang1, culpritIsFrom(X, Att), [sysLanguage(L, Att), firstLanguage(L, X)]).
 rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
 
-%% rule(bmDefault, neg( notForBlackMarketUse(_M)), []).
-rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). %TODO when do we know its not for black market?
+rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
+%TODO when do we know its not for black market?
 
 %% rule(similarDefault, neg(similar(_M1, _M2)), []).
 rule(similar, similar(M1, M2), [similarCCServer(M1, M2), \+ M1 = M2]).
@@ -37,7 +37,8 @@ rule(simCC, similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
 rule(simCC, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2),
   ccServerAddrType(S1,T),ccServerAddrType(S2,T), \+ (S1=S2)]).
 rule(ccServerAddrType, ccServerAddrType(Server, Type),
-  [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). %TODO can link to googlemaps?
+  [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
+%TODO can link to googlemaps?
 rule(similar1, similar(M1, M2), [simlarCodeObfuscation(M1, M2)]).
 rule(similar2, similar(M1, M2), [sharedCode(M1, M2)]).
 rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
@@ -49,8 +50,6 @@ abducible(specificTarget(_), []).
 
 % pref
 rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
-
-% evidences
 
 % output:
 % requireHighResource/1
@@ -76,10 +75,8 @@ goal(A, X, D1, D2, D3, D4, D5) :-
     (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)), A, 5)), nl,
   (specificTarget(A, D4), writeToFile(specificConfigInMalware(A), A, 4)); (\+ specificTarget(A, D4)).
 
-goal_with_timeout(A, X, D0, D1, D2, D3, D4, Result) :-  time_out(goal(A, X, D0, D1, D2, D3, D4), 3000, Result).
-
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
-neg(requireHighResource(A), D) :- prove([neg(requireHighResource(A))], D).
+%% neg(requireHighResource(A), D) :- prove([neg(requireHighResource(A))], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
 notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
 similar(M1, M2, D) :- prove([similar(M1, M2)], D).

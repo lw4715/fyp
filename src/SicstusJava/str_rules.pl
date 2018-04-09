@@ -45,6 +45,7 @@ rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), country(Group,
   hasMotive(C, Att)]).
 
 abducible(notForBlackMarketUse(_), []).
+abducible(hasCapability(_,_), []).
 
 % pref
 rule(p0, prefer(hasMotiveAndCap,claimedResp), []).

@@ -19,11 +19,10 @@
 % input (background):
 % industry/1
 
-% rule(noCapability, neg(hasCapability(_, _)), []).
 rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
+rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
 
-% rule(motiveDefault, neg(hasMotive(_C, _Att)), []).
 rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T),
   target(T, Att), specificTarget(Att)]).
 rule(pMotive,       hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att), specificTarget(Att)]).
@@ -70,11 +69,6 @@ goal(A, X, D0, D1, D2) :-
 	(governmentLinked(P,X,D2), writeToFile(governmentLinked(P,X), A, 2);
     \+ (governmentLinked(P,X,D2))).
 
-goal_with_timeout(A, X, D0, D1, D2, Result) :- time_out(goal(A, X, D0, D1, D2), 3000, Result). 
-
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
-% neg(hasCapability(X,A,D0)) :- prove([neg(hasCapability(X,A))], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
-% neg(hasMotive(X,A,D1)) :- prove([neg(hasMotive(X,A))], D1).
 governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).
-% neg(governmentLinked(P,X,D2)) :- prove([neg(governmentLinked(P,X))], D2).

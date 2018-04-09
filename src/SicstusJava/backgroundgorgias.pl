@@ -56,6 +56,7 @@ rule(bg61, pastMotives( waterbug ,[ cyberespionage , spy , intelligenceGathering
 
 rule(bg64, listCountries([ china , israel , iran , usa , uk , northkorea , southkorea ]), []).
 rule(bg65, listHasResources([ china , israel , iran , usa , northkorea ]), []).
+rule(bg65b, listNegHasResources([ indonesia, saudiarabia, india, southafrica, turkey ]), []).
 rule(bg66, listIndustries([ infocomm ]), []).
 rule(bg67, listChineseCountries([ china ]), []).
 rule(bg68, listEnglishCountries([ usa , uk ]), []).
@@ -63,6 +64,7 @@ rule(bg68, listEnglishCountries([ usa , uk ]), []).
 rule(bg70, isCountry(X), [listCountries(L),member(X,L)]).
 rule(bg71, industry(X), [listIndustries(L),member(X,L)]).
 rule(bg72, hasResources(X), [listHasResources(L),member(X,L)]).
+rule(bg72b, neg(hasResources(X)), [listNegHasResources(L),member(X,L)]).
 rule(bg73, firstLanguage(chinese,X), [listChineseCountries(L),member(X,L)]).
 rule(bg74, firstLanguage(english,X), [listEnglishCountries(L),member(X,L)]).
 
