@@ -1,5 +1,8 @@
 import se.sics.jasper.*;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 
 import static java.lang.Math.pow;
@@ -7,13 +10,17 @@ import static java.lang.Math.pow;
 @SuppressWarnings("ALL")
 public class QueryExecutor {
     // TODO: update to relative filepath of prolog files
-    static String FILEPATH = "";
+    private static String FILEPATH = "";
+    private static final String TECH = FILEPATH + "tech_rules.pl";
+    private static final String OP = FILEPATH + "op_rules.pl";
+    private static final String STR = FILEPATH + "str_rules.pl";
+
     private SICStus sp;
-    Map<String, Integer> techMap;
-    Map<String, Integer> opMap;
-    Map<String, Integer> strMap;
-    Map<String, Integer> culprits;
-    Set<String> abduced;
+    private Map<String, Integer> techMap;
+    private Map<String, Integer> opMap;
+    private Map<String, Integer> strMap;
+    private Map<String, Integer> culprits;
+    private Set<String> abduced;
 
     QueryExecutor() {
         techMap = new HashMap<>();
@@ -72,7 +79,7 @@ public class QueryExecutor {
                     System.out.println("TECHNICAL");
                     label = "t";
                     accMap = techMap;
-                    sp.load(FILEPATH + "tech_rules.pl");
+                    sp.load(TECH);
                     pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -87,7 +94,7 @@ public class QueryExecutor {
                     System.out.println("OPERATIONAL");
                     label = "op";
                     accMap = opMap;
-                    sp.load(FILEPATH + "op_rules.pl");
+                    sp.load(OP);
                     pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -101,7 +108,7 @@ public class QueryExecutor {
                     System.out.println("STRATEGIC");
                     label = "str";
                     accMap = strMap;
-                    sp.load(FILEPATH + "str_rules.pl");
+                    sp.load(STR);
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -187,7 +194,7 @@ public class QueryExecutor {
         return acc;
     }
 
-    public String execute(String caseName) {
+    public Result execute(String caseName) {
         culprits = new HashMap<>();
         boolean verbose = false;
 
@@ -206,8 +213,36 @@ public class QueryExecutor {
         double strTime = (System.nanoTime() - time)/pow(10,9);
         System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("Total time: " + (techTime + opTime + strTime));
-        return String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\nAbduced: %s",
-                this.culpritString(), this.techMap, this.opMap, this.strMap, this.abduced);
+        return new Result(culpritString(), techMap, opMap, strMap, abduced, getAbduciblesMap());
+    }
+
+    private Map<String, List<String>> getAbduciblesMap() {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String pred : this.abduced) {
+            String key = pred.substring(4, pred.length() - 1).split("\\(")[0];
+            List<String> val = new ArrayList<>();
+            val.addAll(scanFileForPredicate(TECH, key));
+            val.addAll(scanFileForPredicate(OP, key));
+            val.addAll(scanFileForPredicate(STR, key));
+            map.put(key, val);
+        }
+        return map;
+    }
+
+    private List<String> scanFileForPredicate(String filename, String pred) {
+        List<String> r = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            br.lines().forEach(line -> {
+                if (line.contains(pred) && line.contains("rule(") && !line.contains("abducible(") && !line.contains("%")) {
+                    System.out.println(line);
+                    r.add(line);
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return r;
     }
 
     public static void main(String[] args) {

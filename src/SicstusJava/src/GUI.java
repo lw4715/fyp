@@ -167,33 +167,38 @@ class GUI {
                     currentEvidences.append(evidenceText + "\n");
                 }
             } else if (command.equals(EXECUTE)){
-                if (attackName.getText().isEmpty()) {
-                    status.setText("\t\tPlease input attack name to execute query: isCulprit(<attackName>, X)");
-                    highlightElement(attackName);
-                } else {
-                    status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
-                    String executeResult = null;
-                    try {
-                        if (jc == null) {
-                            jc = new JasperCallable();
-                        }
-                        jc.setName(attackName.getText());
-                        executeResult = jc.call();
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                    int result = JOptionPane.showConfirmDialog(mainFrame, executeResult, "Execution Result", JOptionPane.DEFAULT_OPTION, 1);
-                    if (result == 0) {
-                        mainFrame.dispose();
-                        prepareGUI();
-                        addButtonsToPanel();
-                    }
-
-                }
+                executeQuery();
             } else {
                 status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
                 utils.updateEvidence(currentEvidences.getText());
             }
+        }
+    }
+
+    private void executeQuery() {
+        if (attackName.getText().isEmpty()) {
+            status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
+            highlightElement(attackName);
+        } else {
+            status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
+            Result executeResult = null;
+            try {
+                if (jc == null) {
+                    jc = new JasperCallable();
+                }
+                jc.setName(attackName.getText());
+                executeResult = jc.call();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            if (executeResult.hasAbduced()) {
+                JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result", JOptionPane.DEFAULT_OPTION, 2);
+            } else {
+                JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result", JOptionPane.DEFAULT_OPTION, 1);
+            }
+            mainFrame.dispose();
+            prepareGUI();
+            addButtonsToPanel();
         }
     }
 
