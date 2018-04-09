@@ -13,6 +13,7 @@ rule(case1_f3, imposedSanctions( usa ,  iran ), []).
 rule(case1_f4, hijackCorporateClouds( us_bank_hack ), []).
 rule(case1_f5, sophisticatedMalware( itsoknoproblem ), []).
 rule(case1_f6, malwareUsedInAttack( itsoknoproblem ,  us_bank_hack ), []).
+rule(case1_f7, attackYear( us_bank_hack , 2012), []).
 
 % APT1
 rule(case2_f1, majorityIpOrigin( china , apt1 ), []).
@@ -79,3 +80,4 @@ rule(case6_f3, malwareModifiedFrom( trojanAlphanc ,  backdoorDuuzer ), []).
 rule(case6_f5, malwareUsedInAttack( trojanBravonc ,  wannacryattack ), []).
 rule(case6_f6, similarCodeObfuscation( backdoorBravonc ,  infostealerFakepude ), []).
 rule(case6_f7, sharedCode( wannacry ,  backdoorCantopee ), []).
+rule(case6_f8, attackYear( wannacryattack , 2017), []).

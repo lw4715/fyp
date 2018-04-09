@@ -12,7 +12,7 @@
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
 rule(highSkill3, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(highSkill4, neg(highLevelSkill(Att)), [ notForBlackMarketUse(M),malwareUsedInAttack(M,Att)]).
+rule(highSkill4, neg(highLevelSkill(Att)), [ neg(notForBlackMarketUse(M)),malwareUsedInAttack(M,Att)]).
 rule(highSkill5, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
 
 rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
@@ -69,10 +69,9 @@ goal(A, X, D1, D2, D3, D4, D5) :-
   (requireHighResource(A, D1), writeToFile(requireHighResource(A), A, 1));
     (\+ (requireHighResource(A, D1)), writeToFile(neg(requireHighResource(A)), A, 1)), nl,
   (culpritIsFrom(X, A, D2), writeToFile(culpritIsFrom(X, A), A, 2));
-    (\+ (culpritIsFrom(X, A, D2)), writeToFile(neg(culpritIsFrom(X, A)), A, 2)), nl,
+    (\+ culpritIsFrom(X, A, D2)), nl,
   (malwareUsedInAttack(M, A), notForBlackMarketUse(M, D3), writeToFile( notForBlackMarketUse(M), A, 3))
-  ; (\+ (notForBlackMarketUse(M, D3)))
-  , nl,
+  ; (\+ notForBlackMarketUse(M, D3)), nl,
   (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2), A, 5), writeToFile(similar(M2, M), A, 5));
     (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)), A, 5)), nl,
   (specificTarget(A, D4), writeToFile(specificConfigInMalware(A), A, 4)); (\+ specificTarget(A, D4)).
