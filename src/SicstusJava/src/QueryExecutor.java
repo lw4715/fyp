@@ -21,6 +21,7 @@ public class QueryExecutor {
     private Map<String, Integer> strMap;
     private Map<String, Integer> culprits;
     private Set<String> abduced;
+    private Map<String, Set<Set<String>>> derivations;
 
     QueryExecutor() {
         techMap = new HashMap<>();
@@ -28,8 +29,9 @@ public class QueryExecutor {
         strMap = new HashMap<>();
         culprits = new HashMap<>();
         abduced = new HashSet<>();
+        derivations = new HashMap<>();
         try {
-            sp = new SICStus(new String[] {"redefine_warnings","off"},null);
+            sp = new SICStus(new String[] {""},null);
             SPPredicate pred = new SPPredicate(sp, "prolog_flag",  3, "");
             SPTerm redefineFlag = new SPTerm(sp, "redefine_warnings");
             SPTerm oldVal = new SPTerm(sp, "on");
@@ -46,7 +48,7 @@ public class QueryExecutor {
     public String culpritString() {
         StringBuilder sb = new StringBuilder();
         for (String c : culprits.keySet()) {
-            sb.append(String.format("%s [%d], ", c, culprits.get(c)));
+            sb.append(String.format("%s [Score: %d, D: %d], ", c, culprits.get(c), derivations.get(c).size()));
         }
         return sb.toString();
     }
@@ -133,6 +135,16 @@ public class QueryExecutor {
                 for (int i = 0; i < ds.length; i++) {
                     SPTerm d = ds[i];
 
+                    Set<Set<String>> culpritSet = derivations.get(culprit.toString());
+                    if (culpritSet == null) {
+                        derivations.put(culprit.toString(), new HashSet<>());
+                        culpritSet = derivations.get(culprit.toString());
+                    }
+                    if (d.toString().charAt(0) == '_' || culpritSet.contains(toSet(d))) {
+                        continue;
+                    }
+
+                    culpritSet.add(toSet(d));
                     if (d.isList()) {
                         res = 0;
                         Set<String> dSet = new HashSet<>();
@@ -143,22 +155,34 @@ public class QueryExecutor {
                         for (String str : dSet) {
                             sb.append(str + ",");
                             res += getScoreAndProcess(str, mode);
+                            if (str.contains("ass(") && count == 1) {
+                                abduced.add(str);
+                            }
+                        }
+                        // only add abducibles that are cautiously entailed
+                        for (String abd : abduced) {
+                            if (!dSet.contains(abd)) {
+                                abduced.remove(abd);
+                                break;
+                            }
                         }
 
-                        if (verbose) System.out.println("Delta:\n" + sb + "}");
+                        if (verbose) System.out.println(sb + "}");
 
-                        String ruleName = String.format("%s_%s%d", label, attack, i+1);
+                        String ruleName = String.format("%s_%s%d", label, attack, i + 1);
                         if (accMap.get(ruleName) == null || res > accMap.get(ruleName)) {
                             accMap.put(ruleName, res);
                         }
                         if (mode == 2 && caseName.equals(attack.toString())) {
-                            if (culprits.get(culprit.toString()) == null || res > culprits.get(culprit.toString())) {
+                            Integer curr = culprits.get(culprit.toString());
+                            if (curr == null || res > curr) {
                                 culprits.put(culprit.toString(), res);
                                 System.out.println(culprits);
                             }
                         }
                     }
                 }
+//                }
             }
 
             System.out.println("Finished");
@@ -167,6 +191,19 @@ public class QueryExecutor {
             e.printStackTrace();
             return;
         }
+    }
+
+    private Set<String> toSet(SPTerm d) throws IllegalTermException, ConversionFailedException {
+        if (!d.isList()) {
+            return new HashSet<>();
+        }
+        Set<String> set = new HashSet<>();
+        for (SPTerm term : d.toTermArray()) {
+            set.add(term.toString());
+        }
+//        System.out.println("Size: " + set.size());
+//        System.out.println(set);
+        return set;
     }
 
     private int getScoreAndProcess(String deltaString, int mode) {
@@ -188,8 +225,6 @@ public class QueryExecutor {
             }
             if (deltaString.contains(prefix) && map.containsKey(deltaString)) {
                 acc = map.get(deltaString);
-            } else if (deltaString.contains("ass(")) {
-                abduced.add(deltaString);
             }
         }
         if (deltaString.contains("case")) { // FIXME: add userevidence DONE: usercase also contains case
@@ -208,6 +243,7 @@ public class QueryExecutor {
     public Result execute(String caseName) {
         culprits.clear();
         abduced.clear();
+        derivations.clear();
         boolean verbose = true;
 
         double time = System.nanoTime();
@@ -220,7 +256,7 @@ public class QueryExecutor {
         double opTime = (System.nanoTime() - time)/pow(10,9);
         time = System.nanoTime();
         System.out.println("Time taken for op layer: " + opTime + "s");
-        time = System.currentTimeMillis();
+        time = System.nanoTime();
         this.executeQuery(2, caseName, verbose);
         double strTime = (System.nanoTime() - time)/pow(10,9);
         System.out.println("Time taken for str layer: " + strTime + "s");
@@ -263,8 +299,8 @@ public class QueryExecutor {
 //            System.out.println(qe.execute(c));
 //        }
 //        System.out.println(qe.execute("us_bank_hack"));
-//        System.out.println(qe.execute("us_bank_hack"));
-        System.out.println(qe.execute("gaussattack"));
+        System.out.println(qe.execute("stuxnetattack"));
+//        System.out.println(qe.execute("gaussattack"));
     }
 
 }

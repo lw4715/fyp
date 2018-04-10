@@ -11,7 +11,9 @@ public class Result {
     private Set<String> abduced;
     private Map<String, List<String>> abducedMap;
 
-    Result(String culpritString, Map<String, Integer> techMap, Map<String, Integer> opMap, Map<String, Integer> strMap, Set<String> abduced, Map<String, List<String>> abducedMap) {
+    Result(String culpritString, Map<String, Integer> techMap, Map<String, Integer> opMap,
+           Map<String, Integer> strMap, Set<String> abduced, Map<String,
+            List<String>> abducedMap) {
         this.culpritString = culpritString;
         this.techMap = techMap;
         this.opMap = opMap;

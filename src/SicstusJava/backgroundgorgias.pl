@@ -70,9 +70,6 @@ rule(bg74, firstLanguage(english,X), [listEnglishCountries(L),member(X,L)]).
 
 %% part of nsa
 %% have support of us gov/ has relations
-rule(bg78, isCulprit( equationGroup , flameattack ), []). 
-rule(bg79, malwareUsedInAttack( flame , flameattack ), []).
-
 rule(bg81, isInfrastructure( nuclear ), []).
 rule(bg82, isInfrastructure( electricity ), []).
 rule(bg83, isInfrastructure( water ), []).
@@ -83,7 +80,8 @@ rule(bg86, informationRich( consumer ), []).
 rule(bg88, possibleMotive( sabotage ,Att), [isInfrastructure(Ind),industry(Ind,V),target(V,Att)]).
 rule(bg89, possibleMotive( espionage ,Att), [informationRich(Ind),industry(Ind,V),target(V,Att)]).
 
-rule(bg94, isCulprit([ usa , israel ], flameattack ), []).
+rule(bg78, isCulprit( equationGroup , flameattack ), []). 
+%% rule(bg94, isCulprit([ usa , israel ], flameattack ), []).
 rule(bg95, target( middleeast , flameattack ), []).
 rule(bg96, malwareUsedInAttack( flame , flameattack ), []).
 rule(bg97, ccServer( gowin7 , flame ), []).

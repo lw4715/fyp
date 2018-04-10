@@ -47,7 +47,7 @@ rule(case3_f16, ccServer( gowin7 ,  gauss ), []).
 rule(case3_f17, ccServer( secuurity ,  gauss ), []).
 rule(case3_f18, domainRegisteredDetails( gowin7 ,  adolph_dybevek ,  prinsen_gate_6 ), []).
 rule(case3_f19, domainRegisteredDetails( secuurity ,  adolph_dybevek ,  prinsen_gate_6 ), []).
-rule(case3_f20, addressType( prinsen_gate_6 ,  hotel ), []).
+%% rule(case3_f20, addressType( prinsen_gate_6 ,  hotel ), []).
 
 %  stuxnet 
 rule(case4_f0, industry( nuclear ,stuxnet_victim), []).
