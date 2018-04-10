@@ -76,7 +76,7 @@ public class QueryExecutor {
             switch(mode) {
                 case 0:
                     numDeltas = 5;
-                    System.out.println("TECHNICAL");
+                    System.out.println("\n-------\nTECHNICAL");
                     label = "t";
                     accMap = techMap;
                     sp.load(TECH);
@@ -91,7 +91,7 @@ public class QueryExecutor {
                     break;
                 case 1:
                     numDeltas = 3;
-                    System.out.println("OPERATIONAL");
+                    System.out.println("\n-------\nOPERATIONAL");
                     label = "op";
                     accMap = opMap;
                     sp.load(OP);
@@ -105,7 +105,7 @@ public class QueryExecutor {
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], ds[1], ds[2] });
                     break;
                 case 2:
-                    System.out.println("STRATEGIC");
+                    System.out.println("\n-------\nSTRATEGIC");
                     label = "str";
                     accMap = strMap;
                     sp.load(STR);
@@ -132,15 +132,24 @@ public class QueryExecutor {
                 count++;
                 for (int i = 0; i < ds.length; i++) {
                     SPTerm d = ds[i];
-                    if (verbose) System.out.println(d);
 
                     if (d.isList()) {
-                        SPTerm[] dArray = d.toTermArray();
                         res = 0;
-                        for (SPTerm delta : dArray) {
-                            // FIXME: recursive evidences make very large res values
-                            res += getScoreAndProcess(delta, mode);
+                        Set<String> dSet = new HashSet<>();
+                        for (SPTerm term : d.toTermArray()) {
+                            dSet.add(term.toString());
                         }
+                        StringBuilder sb = new StringBuilder("{");
+                        for (String str : dSet) {
+                            sb.append(str + ",");
+                            res += getScoreAndProcess(str, mode);
+                        }
+
+                        if (verbose) System.out.println("Delta:\n" + sb + "}");
+
+//                        for (SPTerm delta : dSet) {
+//                             FIXME: recursive evidences make very large res values
+//                        }
                         String ruleName = String.format("%s_%s%d", label, attack, i+1);
                         if (accMap.get(ruleName) == null || res > accMap.get(ruleName)) {
                             accMap.put(ruleName, res);
@@ -163,9 +172,8 @@ public class QueryExecutor {
         }
     }
 
-    private int getScoreAndProcess(SPTerm delta, int mode) {
+    private int getScoreAndProcess(String deltaString, int mode) {
         int acc = 0;
-        String deltaString = delta.toString();
         String prefix;
         Map<String, Integer> map;
         if (mode != 0) {
@@ -183,9 +191,8 @@ public class QueryExecutor {
             }
             if (deltaString.contains(prefix) && map.containsKey(deltaString)) {
                 acc = map.get(deltaString);
-            } else if (delta.toString().contains("ass(")) {
-                abduced.add(delta.toString());
-//                acc -= 1;
+            } else if (deltaString.contains("ass(")) {
+                abduced.add(deltaString);
             }
         }
         if (deltaString.contains("case")) { // FIXME: add userevidence DONE: usercase also contains case
@@ -196,10 +203,15 @@ public class QueryExecutor {
         return acc;
     }
 
+    private int getScoreAndProcess(SPTerm delta, int mode) {
+        String deltaString = delta.toString();
+        return getScoreAndProcess(deltaString, mode);
+    }
+
     public Result execute(String caseName) {
         culprits.clear();
         abduced.clear();
-        boolean verbose = false;
+        boolean verbose = true;
 
         double time = System.nanoTime();
         System.out.println("Start time: " + time);
@@ -253,10 +265,9 @@ public class QueryExecutor {
 //        for (String c : new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"}) {
 //            System.out.println(qe.execute(c));
 //        }
-        System.out.println(qe.execute("us_bank_hack"));
 //        System.out.println(qe.execute("us_bank_hack"));
-//        System.out.println(qe.execute("apt1"));
-
+//        System.out.println(qe.execute("us_bank_hack"));
+        System.out.println(qe.execute("gaussattack"));
     }
 
 }
