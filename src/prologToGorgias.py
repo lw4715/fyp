@@ -1,9 +1,9 @@
 import sys
 
-def convertRulesFile(filename="tmp", prefix=""):
+def convertRulesFile(filename="tmp", prefix="", c=0):
     f = open("tmp/" + filename + ".pl", 'r')
     r = ""
-    count = 0
+    count = c
     for line in f:
         r += convertRules(line, prefix, count) + "\n"
         count += 1
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     #pref = sys.argv[2]
 
     #if rules:
-    convertRulesFile("../background", "bg")
+    convertRulesFile("fireeyetechprolog_rule", "bg", 102)
     #if pref:
     #    convertPrefFile(pref)
     # convertRulesFile()
