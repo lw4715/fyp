@@ -13,6 +13,8 @@ class GUI {
     private static final String SUBMIT = "Submit";
     private static final String EXECUTE = "Execute";
     private static final String UPDATE = "Update";
+    private static final String EXECUTEALL = "Execute all";
+    private static final String EXECUTEALLINFO = "(Get a list of predicates that can be derived by current evidences)";
     private final Utils utils;
     private JFrame mainFrame;
     private JLabel status;
@@ -154,19 +156,24 @@ class GUI {
 
     private void addButtonsToPanel(){
         JButton submitButton = new JButton(SUBMIT);
-        JButton cancelButton = new JButton(EXECUTE);
+        JButton executeButton = new JButton(EXECUTE);
+        JButton executeAllButton = new JButton(EXECUTEALL);
         JButton updateButton = new JButton(UPDATE);
 
         submitButton.setActionCommand(SUBMIT);
-        cancelButton.setActionCommand(EXECUTE);
+        executeButton.setActionCommand(EXECUTE);
+        executeAllButton.setActionCommand(EXECUTEALL);
         updateButton.setActionCommand(UPDATE);
 
         submitButton.addActionListener(new ButtonClickListener());
-        cancelButton.addActionListener(new ButtonClickListener());
+        executeButton.addActionListener(new ButtonClickListener());
+        executeAllButton.addActionListener(new ButtonClickListener());
         updateButton.addActionListener(new ButtonClickListener());
 
-        panel3.add(submitButton);
-        panel3.add(cancelButton);
+        panel1.add(submitButton);
+        panel2.add(executeButton);
+        panel2.add(executeAllButton);
+        panel2.add(new JLabel(EXECUTEALLINFO, JLabel.LEFT));
         panel4.add(updateButton);
         mainFrame.setVisible(true);
     }
@@ -187,7 +194,10 @@ class GUI {
                 }
                 accumulatedResults.clear();
             } else if (command.equals(EXECUTE)){
-                executeQuery();
+                executeQuery(false);
+            } else if (command.equals(EXECUTEALL)) {
+                status.setText(String.format("\t\tExecuting all: %s", utils.USER_EVIDENCE_FILENAME));
+                executeQuery(true);
             } else {
                 status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
                 utils.updateEvidence(currentEvidences.getText());
@@ -196,14 +206,14 @@ class GUI {
         }
     }
 
-    private void executeQuery() {
+    private void executeQuery(boolean all) {
         if (attackName.getText().isEmpty()) {
             status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
             highlightElement(attackName);
             return;
         } else {
             Result executeResult = null;
-            if (accumulatedResults.containsKey(attackName.getText())) {
+            if (!all && accumulatedResults.containsKey(attackName.getText())) {
                 executeResult = accumulatedResults.get(attackName.getText());
             } else {
                 status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
@@ -212,6 +222,7 @@ class GUI {
                         jc = new JasperCallable();
                     }
                     jc.setName(attackName.getText());
+                    jc.setAll(all);
                     executeResult = jc.call();
                     accumulatedResults.put(attackName.getText(), executeResult);
                 } catch (Exception e1) {

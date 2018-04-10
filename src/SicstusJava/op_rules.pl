@@ -43,31 +43,23 @@ abducible(specificTarget(_Att), []).
 % rule(nafMot2, prefer(pMotive(C,T), motiveDefault), []).
 % rule(nafMot3, prefer(conflict, motiveDefault), []).
 
-% evidences
-%% rule(f6, target(iran,attack), []).
-%% rule(f8, recentNewsInYear(nuclearProgram,iran, 2010), []).
-%% rule(f9, countriesAgainstTargetForReason([usa, israel], iran, nuclearProgram), []).
-%% rule(f10, attackYear(attack, 2010), []).
-
 
 % output:
 %% hasCapability(X,A)
 %% hasMotive(X,A)
 %% governmentLinked(P,X)
-writeToFile(X) :-
-  open('op.pl',append, Stream),
-  write(Stream, 'rule(op_'), write(Stream, X), write(Stream, ', '),
-  write(Stream, X), write(Stream, ',[]).\n'),
-  close(Stream).
 
 goal(A, X, D0, D1, D2) :-
   initFile('op.pl'), case(A),
-  (hasCapability(X,A,D0), writeToFile(hasCapability(X,A));
-    \+ (hasCapability(X,A,D0)), writeToFile(neg(hasCapability(X,A)))), nl,
-  (hasMotive(X,A,D1), writeToFile(hasMotive(X,A));
-    \+ (hasMotive(X,A,D1)), writeToFile(neg(hasMotive(X,A)))), nl,
-	(governmentLinked(P,X,D2), writeToFile(governmentLinked(P,X));
-    \+ (governmentLinked(P,X,D2))).
+  writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0)),
+  writeToFiles('op.pl', hasMotive(X,A), hasMotive(X,A,D1)),
+  writeToFiles('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2)).
+
+goal_all(A, X, D0, D1, D2) :-
+  initFile('op.pl'), case(A),
+  writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0)),
+  writeToFilesAll('op.pl', hasMotive(X,A), hasMotive(X,A,D1)),
+  writeToFilesAll('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2)).
 
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).

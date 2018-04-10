@@ -4,6 +4,7 @@ public class JasperCallable implements Callable {
 //    private Thread t;
     private String name;
     private QueryExecutor qe;
+    private boolean all;
 
 
     JasperCallable() {
@@ -15,9 +16,13 @@ public class JasperCallable implements Callable {
         this.name = name;
     }
 
+    void setAll(boolean all) {
+        this.all = all;
+    }
+
     @Override
     public Result call() throws Exception {
         System.out.println("Running... " + name);
-        return qe.execute(name);
+        return qe.execute(name, all);
     }
 }

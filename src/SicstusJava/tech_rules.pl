@@ -67,26 +67,24 @@ rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
 %  notForBlackMarketUse/1 (strat)
 % similar/2 (strat)
 
-writeToFile(X) :-
-  open('tech.pl',append, Stream),
-  write(Stream, 'rule(t_'), write(Stream, X), write(Stream, ', '),
-  write(Stream, X), write(Stream, ',[]).\n'),
-  close(Stream).
-
 goal(A, X, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), case(A),
-  (requireHighResource(A, D1), writeToFile(requireHighResource(A)));
-    (\+ (requireHighResource(A, D1)), writeToFile(neg(requireHighResource(A)))), nl,
-  (culpritIsFrom(X, A, D2), writeToFile(culpritIsFrom(X, A)));
-    (\+ culpritIsFrom(X, A, D2)), nl,
-  (malwareUsedInAttack(M, A), notForBlackMarketUse(M, D3), writeToFile( notForBlackMarketUse(M)))
-  ; (\+ notForBlackMarketUse(M, D3)), nl,
-  (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2)), writeToFile(similar(M2, M)));
-    (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)))), nl,
-  (specificTarget(A, D4), writeToFile(specificConfigInMalware(A))); (\+ specificTarget(A, D4)).
+  writeToFiles('tech.pl', requireHighResource(A), requireHighResource(A, D1)),
+  writeToFiles('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2)),
+  writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
+  writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4)),
+  malwareUsedInAttack(M,A), writeToFiles('tech.pl', similar(M, M2), similar(M, M2, D5)).
+
+goal_all(A, X, D1, D2, D3, D4, D5) :-
+  initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'), case(A),
+  writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1)),
+  writeToFilesAll('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2)),
+  writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
+  writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4)),
+  malwareUsedInAttack(M,A), writeToFilesAll('tech.pl', similar(M, M2), similar(M, M2, D5)).
+
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
-%% neg(requireHighResource(A), D) :- prove([neg(requireHighResource(A))], D).
 culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
 notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
 similar(M1, M2, D) :- prove([similar(M1, M2)], D).

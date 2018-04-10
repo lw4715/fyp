@@ -59,7 +59,7 @@ public class QueryExecutor {
     1 : op
     2 : str
     */
-    void executeQuery(int mode, String caseName, boolean verbose) {
+    void executeQuery(int mode, String caseName, boolean verbose, boolean all) {
 //        SICStus sp;
         SPPredicate pred;
         SPTerm attack, culprit, r;
@@ -74,6 +74,12 @@ public class QueryExecutor {
             SPCanonicalAtom TIMEOUT = new SPCanonicalAtom(sp, "time_out");
             r = new SPTerm(sp, "success");
             SPTerm[] ds;
+            String goal;
+            if (all) {
+                goal = "goal_all";
+            } else {
+                goal = "goal";
+            }
 
             switch(mode) {
                 case 0:
@@ -82,7 +88,7 @@ public class QueryExecutor {
                     label = "t";
                     accMap = techMap;
                     sp.load(TECH);
-                    pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
+                    pred = new SPPredicate(sp, goal, numDeltas + 2, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
                     ds = new SPTerm[numDeltas];
@@ -97,7 +103,7 @@ public class QueryExecutor {
                     label = "op";
                     accMap = opMap;
                     sp.load(OP);
-                    pred = new SPPredicate(sp, "goal", numDeltas + 2, "");
+                    pred = new SPPredicate(sp, goal, numDeltas + 2, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
                     ds = new SPTerm[numDeltas];
@@ -240,7 +246,7 @@ public class QueryExecutor {
         return getScoreAndProcess(deltaString, mode);
     }
 
-    public Result execute(String caseName) {
+    public Result execute(String caseName, boolean all) {
         culprits.clear();
         abduced.clear();
         derivations.clear();
@@ -248,16 +254,16 @@ public class QueryExecutor {
 
         double time = System.nanoTime();
         System.out.println("Start time: " + time);
-        this.executeQuery(0, caseName, verbose);
+        this.executeQuery(0, caseName, verbose, all);
         double techTime = (System.nanoTime() - time)/pow(10,9);
         time = System.nanoTime();
         System.out.println("Time taken for tech layer: " + techTime + "s");
-        this.executeQuery(1, caseName, verbose);
+        this.executeQuery(1, caseName, verbose, all);
         double opTime = (System.nanoTime() - time)/pow(10,9);
         time = System.nanoTime();
         System.out.println("Time taken for op layer: " + opTime + "s");
         time = System.nanoTime();
-        this.executeQuery(2, caseName, verbose);
+        this.executeQuery(2, caseName, verbose, all);
         double strTime = (System.nanoTime() - time)/pow(10,9);
         System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("Total time: " + (techTime + opTime + strTime));
@@ -299,7 +305,7 @@ public class QueryExecutor {
 //            System.out.println(qe.execute(c));
 //        }
 //        System.out.println(qe.execute("us_bank_hack"));
-        System.out.println(qe.execute("stuxnetattack"));
+        System.out.println(qe.execute("gaussattack", true));
 //        System.out.println(qe.execute("gaussattack"));
     }
 
