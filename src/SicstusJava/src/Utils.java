@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 public class Utils {
     static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
@@ -47,5 +49,19 @@ public class Utils {
             System.out.println("File not found");
             return "";
         }
+    }
+
+    static String formatMap(Map<String, List<String>> abducedMap) {
+        StringBuilder sb = new StringBuilder();
+        for (String k : abducedMap.keySet()) {
+            sb.append(k);
+            sb.append(": {");
+            for (String v : abducedMap.get(k)) {
+                sb.append("\n\t");
+                sb.append(v);
+            }
+            sb.append("}\n");
+        }
+        return sb.toString();
     }
 }

@@ -5,11 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.*;
+import java.util.List;
 import java.util.stream.Stream;
 
 class GUI {
+    private static final String RESULTFILENAME = "results.pl";
+    private static final String NONRESULTFILENAME = "non_results.pl";
+
     private static final String SUBMIT = "Submit";
     private static final String EXECUTE = "Execute";
     private static final String UPDATE = "Update";
@@ -22,7 +28,6 @@ class GUI {
     private JPanel panel2;
     private JPanel panel3;
     private JPanel panel4;
-//    private JComboBox dropdown;
     private JTextField evidence;
     private JTextField attackName;
     private JTextArea currentEvidences;
@@ -229,15 +234,63 @@ class GUI {
                     e1.printStackTrace();
                 }
             }
-            int option = 1;
-            if (executeResult.hasAbduced()) {
-                option = 2;
+
+            if (!all) {
+                int option = 1;
+                if (executeResult.hasAbduced()) {
+                    option = 2;
+                }
+                JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(),
+                        "Execution result for " + attackName.getText(), JOptionPane.DEFAULT_OPTION, option);
+            } else {
+                List<String> res = readFromResultAndNonResultFiles();
+                JDialog dialog = new JDialog();
+                dialog.setLayout(new GridLayout(0, 1));
+                JTextArea results = new JTextArea(res.get(0));
+                results.setEditable(false);
+                StringBuilder sb = new StringBuilder();
+                res.remove(0);
+                for (String r : res) {
+                    sb.append(r + '\n');
+                }
+                JTextArea nonresults = new JTextArea(sb.toString());
+                nonresults.setEditable(false);
+                Set<String> set = new HashSet<>(res);
+                JTextArea possiblerules = new JTextArea(Utils.formatMap(QueryExecutor.getPredMap(set, false)));
+                possiblerules.setEditable(false);
+                dialog.add(new JLabel("Results:", JLabel.LEFT));
+                dialog.add(results);
+                dialog.add(new JLabel("Non-results:", JLabel.LEFT));
+                dialog.add(nonresults);
+                dialog.add(new JLabel("Possible rules:", JLabel.LEFT));
+                dialog.add(possiblerules);
+                dialog.setSize(600, 800);
+                dialog.setVisible(true);
+//                dialog.setAlwaysOnTop(true);
+                dialog.setModal(true);
+
             }
-            JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(), "Execution Result for " + attackName.getText(), JOptionPane.DEFAULT_OPTION, option);
             mainFrame.dispose();
             prepareGUI();
             addButtonsToPanel();
         }
+    }
+
+    // elem at index 0 is combined predicates as one string read from RESULTFILENAME,
+    // elem at index 1 .. n are individual predicates from NONRESULTFILENAME
+    private static List<String> readFromResultAndNonResultFiles() {
+        List<String> res = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(RESULTFILENAME));
+            final StringBuilder sb = new StringBuilder();
+            br.lines().forEach(x -> sb.append(x + '\n'));
+            res.add(sb.toString());
+            br = new BufferedReader(new FileReader(NONRESULTFILENAME));
+            br.lines().forEach(x -> res.add(x));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     private boolean checkArgs() {

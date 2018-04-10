@@ -35,22 +35,8 @@ public class Result {
         if (abducedMap.isEmpty()) {
             return s;
         } else {
-            return String.format("%s\nAbduced: %s\n\nPossible additional evidences needed:\n%s", s, abduced, format(abducedMap));
+            return String.format("%s\nAbduced: %s\n\nPossible additional evidences needed:\n%s", s, abduced, Utils.formatMap(abducedMap));
         }
 
-    }
-
-    private String format(Map<String, List<String>> abducedMap) {
-        StringBuilder sb = new StringBuilder();
-        for (String k : abducedMap.keySet()) {
-            sb.append(k);
-            sb.append(": {");
-            for (String v : abducedMap.get(k)) {
-                sb.append("\n\t\t");
-                sb.append(v);
-            }
-            sb.append("}\n");
-        }
-        return sb.toString();
     }
 }

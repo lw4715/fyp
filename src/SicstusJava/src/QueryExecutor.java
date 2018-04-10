@@ -267,13 +267,18 @@ public class QueryExecutor {
         double strTime = (System.nanoTime() - time)/pow(10,9);
         System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("Total time: " + (techTime + opTime + strTime));
-        return new Result(culpritString(), techMap, opMap, strMap, abduced, getAbduciblesMap());
+        return new Result(culpritString(), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
     }
 
-    private Map<String, List<String>> getAbduciblesMap() {
+    static Map<String, List<String>> getPredMap(Set<String> preds, boolean isAbducibles) {
         Map<String, List<String>> map = new HashMap<>();
-        for (String pred : this.abduced) {
-            String key = pred.substring(4, pred.length() - 1).split("\\(")[0];
+        for (String pred : preds) {
+            String key;
+            if (isAbducibles) {
+                key = pred.substring(4, pred.length() - 1).split("\\(")[0];
+            } else {
+                key = pred.split("\\(")[0];
+            }
             List<String> val = new ArrayList<>();
             val.addAll(scanFileForPredicate(TECH, key));
             val.addAll(scanFileForPredicate(OP, key));
@@ -283,7 +288,7 @@ public class QueryExecutor {
         return map;
     }
 
-    private List<String> scanFileForPredicate(String filename, String pred) {
+    private static List<String> scanFileForPredicate(String filename, String pred) {
         List<String> r = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
