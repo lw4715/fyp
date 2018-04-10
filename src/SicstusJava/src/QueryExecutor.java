@@ -147,9 +147,6 @@ public class QueryExecutor {
 
                         if (verbose) System.out.println("Delta:\n" + sb + "}");
 
-//                        for (SPTerm delta : dSet) {
-//                             FIXME: recursive evidences make very large res values
-//                        }
                         String ruleName = String.format("%s_%s%d", label, attack, i+1);
                         if (accMap.get(ruleName) == null || res > accMap.get(ruleName)) {
                             accMap.put(ruleName, res);

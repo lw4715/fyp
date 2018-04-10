@@ -12,7 +12,7 @@ public class Utils {
         counter++;
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
-            bw.write(String.format("rule(usercase_f%d, %s, []).\n", counter, evidence));
+            bw.write(String.format("rule(case_user_f%d, %s, []).\n", counter, evidence));
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
