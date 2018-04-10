@@ -68,7 +68,9 @@ rule(bg72b, neg(hasResources(X)), [listNegHasResources(L),member(X,L)]).
 rule(bg73, firstLanguage(chinese,X), [listChineseCountries(L),member(X,L)]).
 rule(bg74, firstLanguage(english,X), [listEnglishCountries(L),member(X,L)]).
 
-rule(bg78, isCulprit( equationGroup , flameattack ), []).
+%% part of nsa
+%% have support of us gov/ has relations
+rule(bg78, isCulprit( equationGroup , flameattack ), []). 
 rule(bg79, malwareUsedInAttack( flame , flameattack ), []).
 
 rule(bg81, isInfrastructure( nuclear ), []).
@@ -89,3 +91,13 @@ rule(bg98, ccServer( secuurity , flame ), []).
 rule(bg99, domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6 ), []).
 rule(bg100, domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6 ), []).
 rule(bg101, addressType( prinsen_gate_6 , hotel ), []).
+
+%% fireeye tech
+rule(bg104, fileCharaMalware(wannacry_filechara1,wannacry), []).
+rule(bg105, fileChara('mssecsvcexe','db349b97c37d22f5ea1d1841e3c89eb4','3723264','2010-11-20T09:03:08Z','Loader+WormComponent','EXE',wannacry_filechara1), []).
+rule(bg106, fileCharaMalware(wannacry_filechara2,wannacry), []).
+rule(bg107, fileChara('taskscheexe','84c82835a5d21bbcf75a61706d8ab549','3514368','2010-11-20T09:05:05Z','Loader','EXE',wannacry_filechara2), []).
+rule(bg108, fileCharaMalware(wannacry_filechara3,wannacry), []).
+rule(bg109, fileChara('Unavailable','f351e1fcca0c4ea05fc44d15a17f8b36','65536','2009-07-1401:12:55Z','Encryptor','DLL',wannacry_filechara3), []).
+rule(bg110, fileCharaMalware(wannacry_filechara4,wannacry), []).
+rule(bg111, fileChara('@WanaDecryptor@exe','7bf2b57f2a205768755c07f238fb32cc','245760','2009-07-1323:19:35Z','Decryptor','EXE',wannacry_filechara4), []).

@@ -11,9 +11,8 @@
 
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(highSkill3, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(highSkill4, neg(highLevelSkill(Att)), [ neg(notForBlackMarketUse(M)),malwareUsedInAttack(M,Att)]).
-rule(highSkill5, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
+rule(highSkill3, neg(highLevelSkill(Att)), [ neg(notForBlackMarketUse(M)),malwareUsedInAttack(M,Att)]).
+rule(highSkill4, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
 
 rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
@@ -30,10 +29,11 @@ rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra
 rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
 
 %% rule(similarDefault, neg(similar(_M1, _M2)), []).
-rule(similar, similar(M1, M2), [similarCCServer(M1, M2), \+ M1 = M2]).
+same(X,X).
+rule(similar, similar(M1, M2), [similarCCServer(M1, M2), \+ same(M1,M2)]). % try same(A,A)
 rule(simCC, similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
 rule(simCC, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2),
-  ccServerAddrType(S1,T),ccServerAddrType(S2,T), \+ (S1=S2)]).
+  ccServerAddrType(S1,T),ccServerAddrType(S2,T), \+ same(S1,S2)]).
 rule(ccServerAddrType, ccServerAddrType(Server, Type),
   [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
 %TODO can link to googlemaps?
@@ -43,6 +43,16 @@ rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 
 rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
 rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
+
+%% rule(bg110, fileCharaMalware(wannacry_filechara4,wannacry), []).
+%% rule(bg111, fileChara('@WanaDecryptor@exe','7bf2b57f2a205768755c07f238fb32cc','245760','2009-07-1323:19:35Z','Decryptor','EXE',wannacry_filechara4), []).
+%% 'Filename', 'MD5 Hash', 'Size (bytes)', 'Compile Time', 'Description', 'Filetype', malware 
+
+rule(similar4, similar(M1, M2), [fileCharaMalware(C1, M1), fileCharaMalware(C2,M2), similarFileChara(C1, C2)]).
+rule(similarFileChara1, similarFileChara(C1, C2), [fileChara(Filename,_,_,_,_,_,C1), fileChara(Filename,_,_,_,_,_,C2)]).
+rule(similarFileChara2, similarFileChara(C1, C2), [fileChara(_,MD5,_,_,_,_,C1), fileChara(_,MD5,_,_,_,_,C2)]).
+rule(similarFileChara3, similarFileChara(C1, C2), [fileChara(_,_,_,_,Desc,_,C1), fileChara(_,_,_,_,Desc,_,C2)]).
+rule(similarFileChara4, similarFileChara(C1, C2), [fileChara(_,_,Size,CompileTime,_,Filetype,C1), fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
 % pref
 rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).

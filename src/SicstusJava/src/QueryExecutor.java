@@ -188,7 +188,7 @@ public class QueryExecutor {
 //                acc -= 1;
             }
         }
-        if (deltaString.contains("case")) {
+        if (deltaString.contains("case")) { // FIXME: add userevidence DONE: usercase also contains case
             acc += 2;
         } else if (deltaString.contains("bg")) {
             acc += 1;
