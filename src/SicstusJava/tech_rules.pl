@@ -67,23 +67,23 @@ rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
 %  notForBlackMarketUse/1 (strat)
 % similar/2 (strat)
 
-writeToFile(X, A, N) :-
+writeToFile(X) :-
   open('tech.pl',append, Stream),
-  write(Stream, 'rule(t_'), write(Stream, A), write(Stream, N), write(Stream, ', '),
+  write(Stream, 'rule(t_'), write(Stream, X), write(Stream, ', '),
   write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
 
 goal(A, X, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), case(A),
-  (requireHighResource(A, D1), writeToFile(requireHighResource(A), A, 1));
-    (\+ (requireHighResource(A, D1)), writeToFile(neg(requireHighResource(A)), A, 1)), nl,
-  (culpritIsFrom(X, A, D2), writeToFile(culpritIsFrom(X, A), A, 2));
+  (requireHighResource(A, D1), writeToFile(requireHighResource(A)));
+    (\+ (requireHighResource(A, D1)), writeToFile(neg(requireHighResource(A)))), nl,
+  (culpritIsFrom(X, A, D2), writeToFile(culpritIsFrom(X, A)));
     (\+ culpritIsFrom(X, A, D2)), nl,
-  (malwareUsedInAttack(M, A), notForBlackMarketUse(M, D3), writeToFile( notForBlackMarketUse(M), A, 3))
+  (malwareUsedInAttack(M, A), notForBlackMarketUse(M, D3), writeToFile( notForBlackMarketUse(M)))
   ; (\+ notForBlackMarketUse(M, D3)), nl,
-  (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2), A, 5), writeToFile(similar(M2, M), A, 5));
-    (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)), A, 5)), nl,
-  (specificTarget(A, D4), writeToFile(specificConfigInMalware(A), A, 4)); (\+ specificTarget(A, D4)).
+  (malwareUsedInAttack(M, A), similar(M, M2, D5), writeToFile(similar(M, M2)), writeToFile(similar(M2, M)));
+    (\+ (similar(M, M2, D5)), writeToFile(neg(similar(M, M2)))), nl,
+  (specificTarget(A, D4), writeToFile(specificConfigInMalware(A))); (\+ specificTarget(A, D4)).
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 %% neg(requireHighResource(A), D) :- prove([neg(requireHighResource(A))], D).
