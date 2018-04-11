@@ -9,7 +9,7 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
-    private final boolean VERBOSE = false;
+    private final boolean VERBOSE = true;
 
     private static final QueryExecutor instance = new QueryExecutor();
     // TODO: update to relative filepath of prolog files
@@ -155,16 +155,8 @@ public class QueryExecutor {
                 for (int i = 0; i < ds.length; i++) {
                     SPTerm d = ds[i];
 
-                    Set<Set<String>> culpritSet = derivations.get(culprit.toString());
-                    if (culpritSet == null) {
-                        derivations.put(culprit.toString(), new HashSet<>());
-                        culpritSet = derivations.get(culprit.toString());
-                    }
-                    if (d.toString().charAt(0) == '_' || culpritSet.contains(toSet(d))) {
-                        continue;
-                    }
+                    if (derivationIsSeen(d, culprit)) continue;
 
-                    culpritSet.add(toSet(d));
                     if (d.isList()) {
                         res = 0;
                         Set<String> dSet = new HashSet<>();
@@ -174,11 +166,12 @@ public class QueryExecutor {
                         StringBuilder sb = new StringBuilder("{");
                         for (String str : dSet) {
                             sb.append(str + ",");
-                            res += getScoreAndProcess(str, mode);
+                            res += getScore(str, mode);
                             if (str.contains("ass(") && count == 1) {
                                 abduced.add(str);
                             }
                         }
+
                         // only add abducibles that are cautiously entailed
                         for (String abd : abduced) {
                             if (!dSet.contains(abd)) {
@@ -213,16 +206,27 @@ public class QueryExecutor {
         }
     }
 
-//    writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-//    writeToFilesAll('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2), 'tech_'),
-//    writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
-//    writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
-//    writeToFilesAll('tech.pl', similar(M3, M2), similar(M3, M2, D5), 'tech_'),
-//    writeToFilesAll('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
+    /*
+    * adds derivation to culpritSet
+    * returns false if derivation starts with '_' (anonymous variable)
+    * or if current derivation is seen
+    */
+    private boolean derivationIsSeen(SPTerm d, SPTerm culprit) throws IllegalTermException, ConversionFailedException {
+        Set<Set<String>> culpritSet = derivations.get(culprit.toString());
 
-//    writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
-//    writeToFiles('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
-//    writeToFiles('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
+        if (culpritSet == null) {
+            derivations.put(culprit.toString(), new HashSet<>());
+            culpritSet = derivations.get(culprit.toString());
+        }
+
+        if (d.toString().charAt(0) == '_' || culpritSet.contains(toSet(d))) {
+            return true;
+        }
+
+        culpritSet.add(toSet(d));
+        return false;
+    }
+
     private String getRulename(int mode, int i, SPTerm attack, SPTerm culprit, SPTerm person, SPTerm m, SPTerm m1, SPTerm m2) {
         String label;
         String args;
@@ -276,7 +280,7 @@ public class QueryExecutor {
         return set;
     }
 
-    private int getScoreAndProcess(String deltaString, int mode) {
+    private int getScore(String deltaString, int mode) {
         int acc = 0;
         String prefix;
         Map<String, Integer> map;
@@ -305,9 +309,9 @@ public class QueryExecutor {
         return acc;
     }
 
-    private int getScoreAndProcess(SPTerm delta, int mode) {
+    private int getScore(SPTerm delta, int mode) {
         String deltaString = delta.toString();
-        return getScoreAndProcess(deltaString, mode);
+        return getScore(deltaString, mode);
     }
 
     public Result execute(String caseName, boolean all) {

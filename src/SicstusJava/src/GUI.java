@@ -6,22 +6,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
 
+@SuppressWarnings("ALL")
 class GUI {
     private static final String RESULTFILENAME = "results.pl";
     private static final String NONRESULTFILENAME = "non_results.pl";
 
     private static final String SUBMIT = "Submit";
+    private static final String UPLOAD = "Upload";
     private static final String EXECUTE = "Execute";
     private static final String UPDATE = "Update";
     private static final String EXECUTEALL = "Execute all";
     private static final String EXECUTEALLINFO = "(Get a list of predicates that can be derived by current evidences)";
+
     private final Utils utils;
+
     private JFrame mainFrame;
     private JLabel status;
     private JPanel panel1;
@@ -33,7 +38,7 @@ class GUI {
     private JTextArea currentEvidences;
     private JasperCallable jc;
     private Map<String, Result> accumulatedResults;
-
+    private final JFileChooser fileChooser = new JFileChooser();
 
     private static final String[] placeholderItem = {"Select from existing predicates"};
 
@@ -131,17 +136,16 @@ class GUI {
         panel1.add(dropdown);
         panel1.add(evidence);
 
-//        panel2.add(new JLabel("\jc\tName of attack (No spaces or '.'):", JLabel.LEFT));
         panel2.add(existsingAttacks);
         panel2.add(attackName);
 
         mainFrame.add(panel1);
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
-//        mainFrame.add(attackName);
+
         mainFrame.add(panel2);
         mainFrame.add(panel3);
         mainFrame.add(new JLabel("\t\tEvidence so far:", JLabel.LEFT));
-//        mainFrame.add(scrollPane);
+
         mainFrame.add(currentEvidences);
         mainFrame.add(panel4);
         mainFrame.add(status);
@@ -161,24 +165,28 @@ class GUI {
 
     private void addButtonsToPanel(){
         JButton submitButton = new JButton(SUBMIT);
+        JButton uploadButton = new JButton(UPLOAD);
         JButton executeButton = new JButton(EXECUTE);
         JButton executeAllButton = new JButton(EXECUTEALL);
         JButton updateButton = new JButton(UPDATE);
 
         submitButton.setActionCommand(SUBMIT);
+        uploadButton.setActionCommand(UPLOAD);
         executeButton.setActionCommand(EXECUTE);
         executeAllButton.setActionCommand(EXECUTEALL);
         updateButton.setActionCommand(UPDATE);
 
         submitButton.addActionListener(new ButtonClickListener());
+        uploadButton.addActionListener(new ButtonClickListener());
         executeButton.addActionListener(new ButtonClickListener());
         executeAllButton.addActionListener(new ButtonClickListener());
         updateButton.addActionListener(new ButtonClickListener());
 
         panel1.add(submitButton);
+        panel1.add(uploadButton);
         panel2.add(executeButton);
         panel2.add(executeAllButton);
-        panel2.add(new JLabel(EXECUTEALLINFO, JLabel.LEFT));
+        panel2.add(new JLabel(EXECUTEALLINFO, JLabel.LEFT)); // FIXME: attach info to corrent place?
         panel4.add(updateButton);
         mainFrame.setVisible(true);
     }
@@ -190,23 +198,37 @@ class GUI {
             String command = e.getActionCommand();
             resetColours();
 
-            if (command.equals(SUBMIT))  {
-                if (checkArgs()) {
-                    String evidenceText = evidence.getText();
-                    status.setText("\t\tSubmitted: " + evidenceText);
-                    utils.addEvidence(evidenceText);
+            switch (command) {
+                case SUBMIT:
+                    if (checkArgs()) {
+                        String evidenceText = evidence.getText();
+                        status.setText("\t\tSubmitted: " + evidenceText);
+                        utils.addEvidence(evidenceText);
+                        currentEvidences.setText(utils.getCurrentEvidence());
+                    }
+                    accumulatedResults.clear();
+                    break;
+                case UPLOAD:
+                    int returnVal = fileChooser.showOpenDialog(mainFrame);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+                        System.out.println("Opening: " + file.getName() + ".");
+                        status.setText("Uploaded file: " + file.getName());
+                        utils.updateRule(file);
+                    }
                     currentEvidences.setText(utils.getCurrentEvidence());
-                }
-                accumulatedResults.clear();
-            } else if (command.equals(EXECUTE)){
-                executeQuery(false);
-            } else if (command.equals(EXECUTEALL)) {
-                status.setText(String.format("\t\tExecuting all: %s", utils.USER_EVIDENCE_FILENAME));
-                executeQuery(true);
-            } else {
-                status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
-                utils.updateEvidence(currentEvidences.getText());
-                accumulatedResults.clear();
+                    break;
+                case EXECUTE:
+                    executeQuery(false);
+                    break;
+                case EXECUTEALL:
+                    status.setText(String.format("\t\tExecuting all: %s", utils.USER_EVIDENCE_FILENAME));
+                    executeQuery(true);
+                    break;
+                default:
+                    status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
+                    utils.updateEvidence(currentEvidences.getText());
+                    accumulatedResults.clear();
             }
         }
     }
@@ -244,7 +266,7 @@ class GUI {
                         "Execution result for " + attackName.getText(), JOptionPane.DEFAULT_OPTION, option);
             } else {
                 List<String> res = readFromResultAndNonResultFiles();
-                JDialog dialog = new JDialog();
+                JDialog dialog = new JDialog(mainFrame);
                 dialog.setLayout(new GridLayout(0, 1));
                 JTextArea results = new JTextArea(res.get(0));
                 results.setEditable(false);

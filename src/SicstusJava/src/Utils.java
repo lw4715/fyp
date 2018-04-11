@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class Utils {
     static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
@@ -11,10 +12,34 @@ public class Utils {
     }
 
     void addEvidence(String evidence) {
+        if (evidence.length() == 0) {
+            return;
+        }
         counter++;
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
             bw.write(String.format("rule(case_user_f%d, %s, []).\n", counter, evidence));
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void addRules(String rule) {
+        if (rule.length() == 0) {
+            return;
+        }
+        counter++;
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
+            String[] split = rule.replace(".", "").split(":-");
+            String head = split[0];
+            StringJoiner sj = new StringJoiner(",");
+            for (int i = 1; i < split.length; i++) {
+                sj.add(split[i]);
+            }
+            String body = sj.toString();
+            bw.write(String.format("rule(case_user_f%d, %s, [%s]).\n", counter, head, body));
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,7 +60,17 @@ public class Utils {
     public void updateEvidence(String evidences) {
         clearFile();
         for (String evidence : evidences.split("\n")) {
-            addEvidence(evidence);
+            addEvidence(evidence.split("%")[0]);
+        }
+    }
+
+    public void updateRule(File file) {
+        clearFile();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            br.lines().forEach(rule -> addRules(rule.split("%")[0]));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
