@@ -67,24 +67,24 @@ rule(spoofedIp, prefer(spoofedSrcIp,srcIP, [])).
 %  notForBlackMarketUse/1 (strat)
 % similar/2 (strat)
 
-goal(A, X, D1, D2, D3, D4, D5) :-
+goal(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), case(A),
-  writeToFiles('tech.pl', requireHighResource(A), requireHighResource(A, D1)),
-  writeToFiles('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2)),
-  writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
-  writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4)),
-  writeToFiles('tech.pl', similar(M3, M2), similar(M3, M2, D5)),
-  writeToFiles('tech.pl', similar(M2, M3), similar(M2, M3, D5)).
+  writeToFiles('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
+  writeToFiles('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2), 'tech_'),
+  writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
+  writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
+  writeToFiles('tech.pl', similar(M3, M2), similar(M3, M2, D5), 'tech_'),
+  writeToFiles('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
 
 
-goal_all(A, X, D1, D2, D3, D4, D5) :-
+goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'), case(A),
-  writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1)),
-  writeToFilesAll('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2)),
-  writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
-  writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4)),
-  writeToFilesAll('tech.pl', similar(M3, M2), similar(M3, M2, D5)),
-  writeToFilesAll('tech.pl', similar(M2, M3), similar(M2, M3, D5)).
+  writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
+  writeToFilesAll('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2), 'tech_'),
+  writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
+  writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
+  writeToFilesAll('tech.pl', similar(M3, M2), similar(M3, M2, D5), 'tech_'),
+  writeToFilesAll('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
 
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).

@@ -29,24 +29,24 @@ writeNonResultsToFile(X) :-
   write(Stream, X), write(Stream, '\n'),
   close(Stream).
 
-writeToFile(Filename, X) :-
+writeToFile(Filename, X, Prefix) :-
   open(Filename,append, Stream),
-  write(Stream, 'rule(t_'), write(Stream, X), write(Stream, ', '),
+  write(Stream, 'rule('), write(Stream, Prefix), write(Stream, X), write(Stream, ', '),
   write(Stream, X), write(Stream, ',[]).\n'),
   close(Stream).
 
-writeToFiles(Filename, X, D) :-
-  (D, writeToFile(Filename, X));
-    (\+ D, writeToFile(Filename, neg(X))).
+writeToFiles(Filename, X, D, Prefix) :-
+  (D, writeToFile(Filename, X, Prefix));
+    (\+ D, writeToFile(Filename, neg(X), Prefix)).
 
-writeToFilesAll(Filename, X, D) :-
-  (D, writeToFile(Filename, X), writeResultsToFile(X));
-    (\+ D, writeToFile(Filename, neg(X)), writeNonResultsToFile(X)).
+writeToFilesAll(Filename, X, D, Prefix) :-
+  (D, writeToFile(Filename, X, Prefix), writeResultsToFile(X));
+    (\+ D, writeToFile(Filename, neg(X), Prefix), writeNonResultsToFile(X)).
 
-writeToFilesAbd(Filename, X, D) :-
-  (D, writeToFile(Filename, X));
+writeToFilesAbd(Filename, X, D, Prefix) :-
+  (D, writeToFile(Filename, X, Prefix));
     (\+ D).
 
-writeToFilesAllAbd(Filename, X, D) :-
-  (D, writeToFile(Filename, X), writeResultsToFile(X));
+writeToFilesAllAbd(Filename, X, D, Prefix) :-
+  (D, writeToFile(Filename, X, Prefix), writeResultsToFile(X));
     (\+ D, writeNonResultsToFile(X)).

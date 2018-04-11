@@ -49,17 +49,17 @@ abducible(specificTarget(_Att), []).
 %% hasMotive(X,A)
 %% governmentLinked(P,X)
 
-goal(A, X, D0, D1, D2) :-
+goal(A, X, P, D0, D1, D2) :-
   initFile('op.pl'), case(A),
-  writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0)),
-  writeToFiles('op.pl', hasMotive(X,A), hasMotive(X,A,D1)),
-  writeToFiles('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2)).
+  writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
+  writeToFiles('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
+  writeToFiles('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
 
-goal_all(A, X, D0, D1, D2) :-
+goal_all(A, X, P, D0, D1, D2) :-
   initFile('op.pl'), case(A),
-  writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0)),
-  writeToFilesAll('op.pl', hasMotive(X,A), hasMotive(X,A,D1)),
-  writeToFilesAll('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2)).
+  writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
+  writeToFilesAll('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
+  writeToFilesAll('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
 
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
