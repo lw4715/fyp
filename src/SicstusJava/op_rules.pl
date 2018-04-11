@@ -61,6 +61,6 @@ goal_all(A, X, P, D0, D1, D2) :-
   writeToFilesAll('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
   writeToFilesAll('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
 
-hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
-hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
-governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).
+hasCapability(X,A,D0) :- visual_prove([hasCapability(X,A)], D0).
+hasMotive(X,A,D1) :- visual_prove([hasMotive(X,A)], D1).
+governmentLinked(P,X,D2) :- visual_prove([governmentLinked(P,X)], D2).

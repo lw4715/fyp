@@ -37,22 +37,23 @@ rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)])
 rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasPrecedence(C,A2), \+ (Att = A2)]).
 rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
 rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
-rule(social3, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
-rule(notAttackItself, neg(isCulprit(C,Att)), [target(C,Att)]). % Purposely leave out for now
+rule(social, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 
-rule(weakAttack, neg(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
 rule(hasPrecedenceOfAttack, hasPrecedence(X, A), [isCulprit(X, A)]).
 rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), country(Group, C), 
   hasMotive(C, Att)]).
+
+rule(weakAttack, neg(isCulprit(C,Att)), [neg(requireHighResource(Att)),isCountry(C)]).
+rule(notAttackItself, neg(isCulprit(C,Att)), [target(C,Att)]). % Purposely leave out for now
 
 abducible(notForBlackMarketUse(_), []).
 abducible(hasCapability(_,_), []).
 
 % pref
 rule(p0, prefer(hasMotiveAndCap,claimedResp), []).
-rule(p1, prefer(hasMotiveAndLoc,claimedResponsibility), []).
+rule(p1, prefer(hasMotiveAndLoc,claimedResp), []).
 rule(p2, prefer(noCap,hasMotiveAndLoc), []).
-rule(p3, prefer(social3,noCap), []).
+rule(p3, prefer(social,noCap), []).
 rule(p4, prefer(similarMalware, noCap), []).
 rule(p5, prefer(linkedMalware, noCap), []).
 

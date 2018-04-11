@@ -49,10 +49,6 @@ rule(similar4, similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMa
 rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
 rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
-%% rule(bg110, fileCharaMalware(wannacry_filechara4,wannacry), []).
-%% rule(bg111, fileChara('@WanaDecryptor@exe','7bf2b57f2a205768755c07f238fb32cc','245760','2009-07-1323:19:35Z','Decryptor','EXE',wannacry_filechara4), []).
-%% 'Filename', 'MD5 Hash', 'Size (bytes)', 'Compile Time', 'Description', 'Filetype', malware 
-
 rule(similarFileChara1, similarFileChara(C1, C2), [fileChara(Filename,_,_,_,_,_,C1), fileChara(Filename,_,_,_,_,_,C2)]).
 rule(similarFileChara2, similarFileChara(C1, C2), [fileChara(_,MD5,_,_,_,_,C1), fileChara(_,MD5,_,_,_,_,C2)]).
 rule(similarFileChara3, similarFileChara(C1, C2), [fileChara(_,_,_,_,Desc,_,C1), fileChara(_,_,_,_,Desc,_,C2)]).
@@ -87,9 +83,9 @@ goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   writeToFilesAll('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
 
 
-requireHighResource(A, D) :- prove([requireHighResource(A)], D).
-culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
-notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
-similar(M1, M2, D) :- prove([similar(M1, M2)], D).
-specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
-malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).
+requireHighResource(A, D) :- visual_prove([requireHighResource(A)], D).
+culpritIsFrom(X, A, D) :- visual_prove([culpritIsFrom(X, A)], D).
+notForBlackMarketUse(M, D) :- visual_prove([notForBlackMarketUse(M)], D).
+similar(M1, M2, D) :- visual_prove([similar(M1, M2)], D).
+specificTarget(A, D) :- visual_prove([specificTarget(A)], D). % abducible
+malwareUsedInAttack(M, Att) :- visual_prove([malwareUsedInAttack(M, Att)], _).
