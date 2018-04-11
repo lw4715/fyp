@@ -9,8 +9,10 @@ public class JasperCallable implements Callable {
 
     JasperCallable() {
         System.out.println("Callable created " + this);
-        this.qe = new QueryExecutor();
+        this.qe = QueryExecutor.getInstance();
     }
+
+
 
     void setName(String name) {
         this.name = name;

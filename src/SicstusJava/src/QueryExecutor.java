@@ -9,12 +9,16 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
+    private final boolean VERBOSE = false;
+
+    private static final QueryExecutor instance = new QueryExecutor();
     // TODO: update to relative filepath of prolog files
     private static String FILEPATH = "";
     private static final String TECH = FILEPATH + "tech_rules.pl";
     private static final String OP = FILEPATH + "op_rules.pl";
     private static final String STR = FILEPATH + "str_rules.pl";
 
+    private List<String[]> mapStrings = new ArrayList<>();
     private SICStus sp;
     private Map<String, Integer> techMap;
     private Map<String, Integer> opMap;
@@ -23,7 +27,18 @@ public class QueryExecutor {
     private Set<String> abduced;
     private Map<String, Set<Set<String>>> derivations;
 
-    QueryExecutor() {
+    public static QueryExecutor getInstance() {
+        return instance;
+    }
+
+    private QueryExecutor() {
+        mapStrings = new ArrayList<>();
+        // tech
+        mapStrings.add(new String[]{"requireHighResource", "culpritIsFrom", "notForBlackMarketUse", "specificTarget", "similar"});
+        // op
+        mapStrings.add(new String[]{"hasCapability", "hasMotive", "governmentLinked"});
+        mapStrings.add(new String[]{"isCulprit"});
+
         techMap = new HashMap<>();
         opMap = new HashMap<>();
         strMap = new HashMap<>();
@@ -60,12 +75,10 @@ public class QueryExecutor {
     2 : str
     */
     void executeQuery(int mode, String caseName, boolean verbose, boolean all) {
-//        SICStus sp;
         SPPredicate pred;
-        SPTerm attack, culprit, r;
+        SPTerm attack, culprit, r, m = null, m1 = null, m2 = null, person = null;
         SPQuery query;
         Map<String, Integer> accMap;
-        String label;
         int res;
         int numDeltas;
 
@@ -85,38 +98,39 @@ public class QueryExecutor {
                 case 0:
                     numDeltas = 5;
                     System.out.println("\n-------\nTECHNICAL");
-                    label = "t";
                     accMap = techMap;
-                    sp.load(TECH);
-                    pred = new SPPredicate(sp, goal, numDeltas + 2, "");
+                    sp.restore("tech.sav");
+                    pred = new SPPredicate(sp, goal, numDeltas + 5, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
+                    m = new SPTerm(sp).putVariable();
+                    m1 = new SPTerm(sp).putVariable();
+                    m2 = new SPTerm(sp).putVariable();
                     ds = new SPTerm[numDeltas];
                     for (int i = 0; i < numDeltas; i++) {
                         ds[i] = new SPTerm(sp).putVariable();
                     }
-                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], ds[1], ds[2], ds[3], ds[4] });
+                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, m, m1, m2, ds[0], ds[1], ds[2], ds[3], ds[4] });
                     break;
                 case 1:
                     numDeltas = 3;
                     System.out.println("\n-------\nOPERATIONAL");
-                    label = "op";
                     accMap = opMap;
-                    sp.load(OP);
-                    pred = new SPPredicate(sp, goal, numDeltas + 2, "");
+                    sp.restore("op.sav");
+                    pred = new SPPredicate(sp, goal, numDeltas + 3, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
+                    person = new SPTerm(sp).putVariable();
                     ds = new SPTerm[numDeltas];
                     for (int i = 0; i < numDeltas; i++) {
                         ds[i] = new SPTerm(sp).putVariable();
                     }
-                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, ds[0], ds[1], ds[2] });
+                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, person, ds[0], ds[1], ds[2] });
                     break;
                 case 2:
                     System.out.println("\n-------\nSTRATEGIC");
-                    label = "str";
                     accMap = strMap;
-                    sp.load(STR);
+                    sp.restore("str.sav");
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -132,7 +146,7 @@ public class QueryExecutor {
 
             int count = 0;
 
-            while (query.nextSolution() && count < 50) {
+            while (query.nextSolution() && count < 75) {
                 if (TIMEOUT.toString().equals(r.toString())) {
                     System.out.println("TIMEOUT");
                     continue;
@@ -175,9 +189,10 @@ public class QueryExecutor {
 
                         if (verbose) System.out.println(sb + "}");
 
-                        String ruleName = String.format("%s_%s%d", label, attack, i + 1);
-                        if (accMap.get(ruleName) == null || res > accMap.get(ruleName)) {
-                            accMap.put(ruleName, res);
+                        String rulename = getRulename(mode, i, attack, culprit, person, m, m1, m2);
+
+                        if (accMap.get(rulename) == null || res > accMap.get(rulename)) {
+                            accMap.put(rulename, res);
                         }
                         if (mode == 2 && caseName.equals(attack.toString())) {
                             Integer curr = culprits.get(culprit.toString());
@@ -188,7 +203,6 @@ public class QueryExecutor {
                         }
                     }
                 }
-//                }
             }
 
             System.out.println("Finished\n");
@@ -197,6 +211,58 @@ public class QueryExecutor {
             e.printStackTrace();
             return;
         }
+    }
+
+//    writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
+//    writeToFilesAll('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2), 'tech_'),
+//    writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
+//    writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
+//    writeToFilesAll('tech.pl', similar(M3, M2), similar(M3, M2, D5), 'tech_'),
+//    writeToFilesAll('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
+
+//    writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
+//    writeToFiles('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
+//    writeToFiles('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
+    private String getRulename(int mode, int i, SPTerm attack, SPTerm culprit, SPTerm person, SPTerm m, SPTerm m1, SPTerm m2) {
+        String label;
+        String args;
+        switch(mode) {
+            case 0:
+                label = "t";
+                switch(i) {
+                    case 0:
+                    case 3:
+                        args = attack.toString();
+                        break;
+                    case 1:
+                        args = String.format("%s,%s", culprit.toString(), attack.toString());
+                        break;
+                    case 2:
+                        args = m.toString();
+                        break;
+                    case 4:
+                        args = String.format("%s,%s", m1.toString(), m2.toString());
+                        break;
+                    default:
+                        return "";
+                }
+                break;
+            case 1:
+                label = "op";
+                if (i == 2) {
+                    args = String.format("%s,%s", person.toString(), attack.toString());
+                } else {
+                    args = String.format("%s,%s", culprit.toString(), attack.toString());
+                }
+                break;
+            case 2:
+                label = "str";
+                args = attack.toString();
+                break;
+            default:
+                return "";
+        }
+        return String.format("%s_%s(%s)", label, mapStrings.get(mode)[i], args);
     }
 
     private Set<String> toSet(SPTerm d) throws IllegalTermException, ConversionFailedException {
@@ -248,21 +314,20 @@ public class QueryExecutor {
         culprits.clear();
         abduced.clear();
         derivations.clear();
-        boolean verbose = true;
 
         double time = System.nanoTime();
         System.out.println("Start time: " + time);
-        this.executeQuery(0, caseName, verbose, all);
+        this.executeQuery(0, caseName, VERBOSE, all);
         double techTime = (System.nanoTime() - time)/pow(10,9);
 
         time = System.nanoTime();
         System.out.println("Time taken for tech layer: " + techTime + "s");
-        this.executeQuery(1, caseName, verbose, all);
+        this.executeQuery(1, caseName, VERBOSE, all);
         double opTime = (System.nanoTime() - time)/pow(10,9);
 
         time = System.nanoTime();
         System.out.println("Time taken for op layer: " + opTime + "s");
-        this.executeQuery(2, caseName, verbose, all);
+        this.executeQuery(2, caseName, VERBOSE, all);
         double strTime = (System.nanoTime() - time)/pow(10,9);
 
         System.out.println("Time taken for str layer: " + strTime + "s");
@@ -305,14 +370,9 @@ public class QueryExecutor {
     }
 
     public static void main(String[] args) {
-        QueryExecutor qe = new QueryExecutor();
-//        for (String c : new String[]{"us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"}) {
-//            System.out.println(qe.execute(c));
-//        }
-//        System.out.println(qe.execute("us_bank_hack"));
-        System.out.println(qe.execute("gaussattack", false));
-//        System.out.println(qe.execute("apt1", false));
-//        System.out.println(qe.execute("gaussattack"));
+        QueryExecutor qe = QueryExecutor.getInstance();
+        for (String c : new String[]{"apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack", "us_bank_hack"}) {
+            System.out.println(qe.execute(c, false));
+        }
     }
-
 }
