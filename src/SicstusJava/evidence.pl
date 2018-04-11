@@ -81,3 +81,10 @@ rule(case6_f5, malwareUsedInAttack( trojanBravonc ,  wannacryattack ), []).
 rule(case6_f6, similarCodeObfuscation( backdoorBravonc ,  infostealerFakepude ), []).
 rule(case6_f7, sharedCode( wannacry ,  backdoorCantopee ), []).
 rule(case6_f8, attackYear( wannacryattack , 2017), []).
+rule(case6_f9, neg(specificTarget(wannacryattack)), []).
+rule(case6_f10, hasKillSwitch(wannacry), []).
+rule(case6_f10, numComputersAffected(wannacryattack, 200000), []).
+rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
+%% rule(case6_f10, , []).
+%% rule(case6_f10, , []).
+%% rule(case6_f10, , []).

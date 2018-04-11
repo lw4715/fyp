@@ -38,6 +38,7 @@ rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasPrecedence(C,A2), \
 rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
 rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
 rule(social3, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
+rule(notAttackItself, neg(isCulprit(C,Att)), [target(C,Att)]). % Purposely leave out for now
 
 rule(weakAttack, neg(isCulprit(C,Att)), [\+(highLevelSkill(Att)),isCountry(C)]).
 rule(hasPrecedenceOfAttack, hasPrecedence(X, A), [isCulprit(X, A)]).
@@ -55,5 +56,5 @@ rule(p3, prefer(social3,noCap), []).
 rule(p4, prefer(similarMalware, noCap), []).
 rule(p5, prefer(linkedMalware, noCap), []).
 
-goal(A, X, D) :- prove([isCulprit(X, A)], D).
+goal(A, X, D) :- visual_prove([isCulprit(X, A)], D).
 goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 1500, Result).
