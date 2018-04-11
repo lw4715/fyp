@@ -1,5 +1,4 @@
 :- use_module(library(timeout)).
-%% :- use_module(double_quotes).
 :- compile('../gorgias-src-0.6d/lib/gorgias.pl').
 :- compile('../gorgias-src-0.6d/ext/lpwnf.pl').
 :- compile('backgroundgorgias.pl').
@@ -46,7 +45,7 @@ writeToFilesAll(Filename, X, D) :-
 
 writeToFilesAbd(Filename, X, D) :-
   (D, writeToFile(Filename, X));
-    (\+ D, writeNonResultsToFile(X)).
+    (\+ D).
 
 writeToFilesAllAbd(Filename, X, D) :-
   (D, writeToFile(Filename, X), writeResultsToFile(X));

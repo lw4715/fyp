@@ -73,7 +73,9 @@ goal(A, X, D1, D2, D3, D4, D5) :-
   writeToFiles('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2)),
   writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
   writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4)),
-  malwareUsedInAttack(M,A), writeToFiles('tech.pl', similar(M, M2), similar(M, M2, D5)).
+  writeToFiles('tech.pl', similar(M3, M2), similar(M3, M2, D5)),
+  writeToFiles('tech.pl', similar(M2, M3), similar(M2, M3, D5)).
+
 
 goal_all(A, X, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'), case(A),
@@ -81,7 +83,8 @@ goal_all(A, X, D1, D2, D3, D4, D5) :-
   writeToFilesAll('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2)),
   writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
   writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4)),
-  malwareUsedInAttack(M,A), writeToFilesAll('tech.pl', similar(M, M2), similar(M, M2, D5)).
+  writeToFilesAll('tech.pl', similar(M3, M2), similar(M3, M2, D5)),
+  writeToFilesAll('tech.pl', similar(M2, M3), similar(M2, M3, D5)).
 
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
