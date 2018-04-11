@@ -266,7 +266,7 @@ class GUI {
                 dialog.add(possiblerules);
                 dialog.setSize(600, 800);
                 dialog.setVisible(true);
-//                dialog.setAlwaysOnTop(true);
+//                dialog.setAlwaysOnTop(true); FIXME
                 dialog.setModal(true);
 
             }

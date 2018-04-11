@@ -191,7 +191,7 @@ public class QueryExecutor {
 //                }
             }
 
-            System.out.println("Finished");
+            System.out.println("Finished\n");
             return;
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -207,8 +207,6 @@ public class QueryExecutor {
         for (SPTerm term : d.toTermArray()) {
             set.add(term.toString());
         }
-//        System.out.println("Size: " + set.size());
-//        System.out.println(set);
         return set;
     }
 
@@ -256,15 +254,17 @@ public class QueryExecutor {
         System.out.println("Start time: " + time);
         this.executeQuery(0, caseName, verbose, all);
         double techTime = (System.nanoTime() - time)/pow(10,9);
+
         time = System.nanoTime();
         System.out.println("Time taken for tech layer: " + techTime + "s");
         this.executeQuery(1, caseName, verbose, all);
         double opTime = (System.nanoTime() - time)/pow(10,9);
+
         time = System.nanoTime();
         System.out.println("Time taken for op layer: " + opTime + "s");
-        time = System.nanoTime();
         this.executeQuery(2, caseName, verbose, all);
         double strTime = (System.nanoTime() - time)/pow(10,9);
+
         System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("Total time: " + (techTime + opTime + strTime));
         return new Result(culpritString(), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
@@ -310,7 +310,8 @@ public class QueryExecutor {
 //            System.out.println(qe.execute(c));
 //        }
 //        System.out.println(qe.execute("us_bank_hack"));
-        System.out.println(qe.execute("gaussattack", true));
+        System.out.println(qe.execute("gaussattack", false));
+//        System.out.println(qe.execute("apt1", false));
 //        System.out.println(qe.execute("gaussattack"));
     }
 
