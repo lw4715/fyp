@@ -100,6 +100,7 @@ public class QueryExecutor {
                     System.out.println("\n-------\nTECHNICAL");
                     accMap = techMap;
                     sp.restore("tech.sav");
+                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 5, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -117,6 +118,7 @@ public class QueryExecutor {
                     System.out.println("\n-------\nOPERATIONAL");
                     accMap = opMap;
                     sp.restore("op.sav");
+                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 3, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -131,6 +133,7 @@ public class QueryExecutor {
                     System.out.println("\n-------\nSTRATEGIC");
                     accMap = strMap;
                     sp.restore("str.sav");
+                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();

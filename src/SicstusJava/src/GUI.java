@@ -53,7 +53,8 @@ class GUI {
                 "ccServer/2", "domainRegisteredDetails/3", "addressType/2",
                 "simlarCodeObfuscation/2", "sharedCode/2", "malwareModifiedFrom/2",
                 "specificConfigInMalware/1", "malwareUsedInAttack/2",
-                "usesZeroDayVulnerabilities/1", "sophisticatedMalware/1", "specificTarget/1"
+                "usesZeroDayVulnerabilities/1", "sophisticatedMalware/1", "specificTarget/1",
+                "hasKillSwitch/1", "numComputersAffected/2", "numCountriesAffected/2"
         };
     private static final String[] opPredicates =
             {
