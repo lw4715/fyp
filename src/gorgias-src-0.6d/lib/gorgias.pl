@@ -5,8 +5,8 @@
  * Antonis Kakas (antonis@cs.ucy.ac.cy)
  */ 
 
-
 :- compile('prolog_detect').
+:- compile('visualization').
 
 :- prolog(sicstus) -> compile(sicstus);true.
 
