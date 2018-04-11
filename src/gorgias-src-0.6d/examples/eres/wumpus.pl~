@@ -1,5 +1,0 @@
-
-:- compile('../../lib/gorgias').
-:- compile('../../ext/lpwnf').
-:- compile('eres').
-
