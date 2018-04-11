@@ -56,4 +56,4 @@ rule(p4, prefer(similarMalware, noCap), []).
 rule(p5, prefer(linkedMalware, noCap), []).
 
 goal(A, X, D) :- prove([isCulprit(X, A)], D).
-goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 2500, Result).
+goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 1500, Result).
