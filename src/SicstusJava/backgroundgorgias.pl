@@ -1,7 +1,4 @@
 :- multifile rule/3.
-%% :- multifile hasResources/1.
-%% :- multifile malwareUsedInAttack/2.
-%% :- multifile target/2.
 
 rule(bg8, prominentGroup( lazarusGrp ), []).
 rule(bg9, country( lazarusGrp , northkorea ), []).
@@ -72,16 +69,16 @@ rule(bg64, listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,be
 	panama,venezuela,germany,paraguay,australia,japan,oman ,canada,southkorea,russia,egypt,malaysia,singapore,estonia,
 	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,uk,georgia,norway,usa]), []).
 
-rule(bg65, listHasResources([ china , israel , iran , usa , northkorea ]), []).
-rule(bg65b, listNegHasResources([ indonesia, saudi_arabia, india, southafrica, turkey ]), []).
+%% rule(bg65, listHasResources([ china , israel , iran , usa , northkorea ]), []).
+%% rule(bg65b, listNegHasResources([ indonesia, saudi_arabia, india, southafrica, turkey ]), []).
 rule(bg66, listIndustries([ infocomm ]), []).
 rule(bg67, listChineseCountries([ china ]), []).
 rule(bg68, listEnglishCountries([ usa , uk ]), []).
 
 rule(bg70, isCountry(X), [listCountries(L),member(X,L)]).
 rule(bg71, industry(X), [listIndustries(L),member(X,L)]).
-rule(bg72, hasResources(X), [listHasResources(L),member(X,L)]).
-rule(bg72b, neg(hasResources(X)), [listNegHasResources(L),member(X,L)]).
+%% rule(bg72, hasResources(X), [listHasResources(L),member(X,L)]).
+%% rule(bg72b, neg(hasResources(X)), [listNegHasResources(L),member(X,L)]).
 rule(bg73, firstLanguage(chinese,X), [listChineseCountries(L),member(X,L)]).
 rule(bg74, firstLanguage(english,X), [listEnglishCountries(L),member(X,L)]).
 
@@ -117,6 +114,7 @@ rule(bg109, fileChara('Unavailable','f351e1fcca0c4ea05fc44d15a17f8b36','65536','
 rule(bg110, fileCharaMalware(wannacry_filechara4,wannacry), []).
 rule(bg111, fileChara('@WanaDecryptor@exe','7bf2b57f2a205768755c07f238fb32cc','245760','2009-07-1323:19:35Z','Decryptor','EXE',wannacry_filechara4), []).
 
+%% Global Cybersecurity Index
 rule(bg112, list_gci_initiating([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia,
 	bosnia_herzegovina,burkina_faso,burundi,cambodia,cape,verde,central_african_republic,chad,comoros,congo,cuba,
 	democratic_republic_of_the_congo,djibouti,dominica,dominican_republic,el_salvador,equatorial_guinea,eritrea,

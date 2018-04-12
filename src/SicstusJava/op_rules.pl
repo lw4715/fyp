@@ -19,6 +19,8 @@
 % input (background):
 % industry/1
 
+rule(hasResources, hasResources(X), [gci_tier(X,leading)]).
+
 rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
 rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).

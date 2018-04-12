@@ -45,6 +45,7 @@ rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), country(Group,
 
 rule(weakAttack, neg(isCulprit(C,Att)), [neg(requireHighResource(Att)),isCountry(C)]).
 rule(notAttackItself, neg(isCulprit(C,Att)), [target(C,Att)]). % Purposely leave out for now
+rule(lowGciTier, neg(isCulprit(C,Att)), [gci_tier(C,initiating)]).
 
 abducible(notForBlackMarketUse(_), []).
 abducible(hasCapability(_,_), []).
