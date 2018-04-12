@@ -133,6 +133,6 @@ rule(bg113, list_gci_maturing([albania,ghana,peru,algeria,greece,philippines,arg
 rule(bg114, list_gci_leading([australia,japan,oman,canada,southkorea,russia,egypt,malaysia,singapore,estonia,mauritius,sweden,
 	finland,netherlands,switzerland,france,new_zealand,uk,georgia,norway,usa]), []).
 rule(bg115, gci_tier(X,initiating), [list_gci_initiating(L),member(X,L)]).
-rule(bg116, gci_tier(X,maturing), [list_gci_maturing,member(X,L)]).
-rule(bg117, gci_tier(X,leading), [list_gci_leading,member(X,L)]).
+rule(bg116, gci_tier(X,maturing), [list_gci_maturing(L),member(X,L)]).
+rule(bg117, gci_tier(X,leading), [list_gci_leading(L),member(X,L)]).
 

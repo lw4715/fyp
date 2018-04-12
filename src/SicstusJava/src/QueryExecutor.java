@@ -9,7 +9,7 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
-    private final boolean VERBOSE = true;
+    private final boolean VERBOSE = false;
 
     private static final QueryExecutor instance = new QueryExecutor();
     // TODO: update to relative filepath of prolog files
@@ -17,6 +17,7 @@ public class QueryExecutor {
     private static final String TECH = FILEPATH + "tech_rules.pl";
     private static final String OP = FILEPATH + "op_rules.pl";
     private static final String STR = FILEPATH + "str_rules.pl";
+    private static final String EMPTYSAV = "empty.sav";
 
     private List<String[]> mapStrings = new ArrayList<>();
     private SICStus sp;
@@ -35,8 +36,9 @@ public class QueryExecutor {
         mapStrings = new ArrayList<>();
         // tech
         mapStrings.add(new String[]{"requireHighResource", "culpritIsFrom", "notForBlackMarketUse", "specificTarget", "similar"});
-        // op
+        // operational
         mapStrings.add(new String[]{"hasCapability", "hasMotive", "governmentLinked"});
+        // strategic
         mapStrings.add(new String[]{"isCulprit"});
 
         techMap = new HashMap<>();
@@ -54,6 +56,8 @@ public class QueryExecutor {
             SPQuery query = sp.openQuery(pred,
                     new SPTerm[]{redefineFlag, oldVal, newVal});
             query.nextSolution();
+
+
         } catch (SPException e) {
             e.printStackTrace();
         }
@@ -99,8 +103,9 @@ public class QueryExecutor {
                     numDeltas = 5;
                     System.out.println("\n-------\nTECHNICAL");
                     accMap = techMap;
-                    sp.restore("tech.sav");
-                    sp.load(Utils.USER_EVIDENCE_FILENAME);
+                    sp.restore(EMPTYSAV);
+                    sp.load(TECH);
+//                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 5, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -117,8 +122,9 @@ public class QueryExecutor {
                     numDeltas = 3;
                     System.out.println("\n-------\nOPERATIONAL");
                     accMap = opMap;
-                    sp.restore("op.sav");
-                    sp.load(Utils.USER_EVIDENCE_FILENAME);
+                    sp.restore(EMPTYSAV);
+                    sp.load(OP);
+//                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 3, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -132,8 +138,9 @@ public class QueryExecutor {
                 case 2:
                     System.out.println("\n-------\nSTRATEGIC");
                     accMap = strMap;
-                    sp.restore("str.sav");
-                    sp.load(Utils.USER_EVIDENCE_FILENAME);
+                    sp.restore(EMPTYSAV);
+                    sp.load(STR);
+//                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -377,9 +384,12 @@ public class QueryExecutor {
     }
 
     public static void main(String[] args) {
+//        System.out.println("hello world");
         QueryExecutor qe = QueryExecutor.getInstance();
         for (String c : new String[]{"apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack", "us_bank_hack"}) {
             System.out.println(qe.execute(c, false));
         }
+//        System.out.println(qe.execute("sonyhack", false));
+
     }
 }
