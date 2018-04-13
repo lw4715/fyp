@@ -103,8 +103,9 @@ public class QueryExecutor {
                     numDeltas = 5;
                     System.out.println("\n-------\nTECHNICAL");
                     accMap = techMap;
-                    sp.restore(EMPTYSAV);
-                    sp.load(TECH);
+//                    sp.restore(EMPTYSAV);
+                    sp.restore("tech.sav");
+//                    sp.load(TECH);
 //                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 5, "");
                     attack = new SPTerm(sp, caseName);
@@ -122,10 +123,14 @@ public class QueryExecutor {
                     numDeltas = 3;
                     System.out.println("\n-------\nOPERATIONAL");
                     accMap = opMap;
-                    sp.restore(EMPTYSAV);
-                    sp.load(OP);
+//                    sp.restore(EMPTYSAV);
+                    sp.restore("op.sav");
+                    sp.load("tech.pl");
+//                    sp.load(OP);
 //                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 3, "");
+//                    pred = new SPPredicate(sp, goal, 4, "");
+
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
                     person = new SPTerm(sp).putVariable();
@@ -134,12 +139,16 @@ public class QueryExecutor {
                         ds[i] = new SPTerm(sp).putVariable();
                     }
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, person, ds[0], ds[1], ds[2] });
+//                    query = sp.openQuery(pred, new SPTerm[] {attack, ds[0], ds[1], ds[2]});
                     break;
                 case 2:
                     System.out.println("\n-------\nSTRATEGIC");
                     accMap = strMap;
-                    sp.restore(EMPTYSAV);
-                    sp.load(STR);
+//                    sp.restore(EMPTYSAV);
+                    sp.restore("str.sav");
+//                    sp.load("tech.pl");
+                    sp.load("op.pl");
+//                    sp.load(STR);
 //                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
                     attack = new SPTerm(sp, caseName);
@@ -156,7 +165,7 @@ public class QueryExecutor {
 
             int count = 0;
 
-            while (query.nextSolution() && count < 75) {
+            while (query.nextSolution() && count < 200) {
                 if (TIMEOUT.toString().equals(r.toString())) {
                     System.out.println("TIMEOUT");
                     continue;
@@ -345,7 +354,7 @@ public class QueryExecutor {
         double strTime = (System.nanoTime() - time)/pow(10,9);
 
         System.out.println("Time taken for str layer: " + strTime + "s");
-        System.out.println("Total time: " + (techTime + opTime + strTime));
+        System.out.println("Total time for " + caseName + ": " + (techTime + opTime + strTime));
         return new Result(culpritString(), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
     }
 
@@ -389,7 +398,6 @@ public class QueryExecutor {
         for (String c : new String[]{"apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack", "us_bank_hack"}) {
             System.out.println(qe.execute(c, false));
         }
-//        System.out.println(qe.execute("sonyhack", false));
-
+//        System.out.println(qe.execute("us_bank_hack", false));
     }
 }

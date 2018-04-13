@@ -45,7 +45,7 @@ class GUI {
     private static final String[] techPredicates =
             {
                 "highLevelSkill/1", "requireHighResource/1",
-                "ipGeoloc/2", "geolocInCountry/2", "attackSourceIP/2",
+                "ipGeoloc/2", "attackSourceIP/2",
                 "spoofedIp/1", "sysLanguage/2", "firstLanguage/2",
                 "languageInCode/2", "infraRegisteredIn/2", "infraUsed/2",
                 "forBlackMarketUse/1", "infectionMethod/2",
