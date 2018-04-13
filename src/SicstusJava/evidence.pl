@@ -11,8 +11,8 @@ case(X) :- listCases(L), member(X, L).
 rule(case1_f2, target( usa ,  us_bank_hack ), []).
 rule(case1_f3, imposedSanctions( usa ,  iran ), []).
 rule(case1_f4, hijackCorporateClouds( us_bank_hack ), []).
-rule(case1_f5, sophisticatedMalware( itsoknoproblem ), []).
-rule(case1_f6, malwareUsedInAttack( itsoknoproblem ,  us_bank_hack ), []).
+rule(case1_f5, sophisticatedMalware( itsoknoproblembro ), []).
+rule(case1_f6, malwareUsedInAttack( itsoknoproblembro ,  us_bank_hack ), []).
 rule(case1_f7, attackYear( us_bank_hack , 2012), []).
 
 % APT1
@@ -85,6 +85,16 @@ rule(case6_f9, neg(specificTarget(wannacryattack)), []).
 rule(case6_f10, hasKillSwitch(wannacry), []).
 rule(case6_f10, numComputersAffected(wannacryattack, 200000), []).
 rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
+%% rule(8, hasKillSwitch(wannacry), []).
+%% rule(9, type(wannacry,ransomware), []).
+%% rule(10, propagationMechanism(wannacry,self_propagating), []).
+%% rule(11, scale(wannacryattack,large), []).
+%% rule(12, exploitVul('EternalBlue'), []).
+%% rule(13, vulPatched('EternalBlue'), []).
+%% rule(14, vulReleased(14,4,17,'EternalBlue'), []).
+%% rule(15, dateOfAttack(12,5,17,wannacryattack), []).
+%% rule(16, ccCommunicationChannel(tor), []).
+
 %% rule(case6_f10, , []).
 %% rule(case6_f10, , []).
 %% rule(case6_f10, , []).
