@@ -26,8 +26,7 @@ rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
 rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
 
-rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T),
-  target(T, Att), specificTarget(Att)]).
+rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att), specificTarget(Att)]).
 rule(pMotive,       hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att), specificTarget(Att)]).
 rule(pMotive(C,T),  hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
 rule(conflict,      hasMotive(X, Att), [attackYear(Att, Y), target(T, Att),

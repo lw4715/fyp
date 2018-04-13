@@ -7,7 +7,6 @@ listCases([ us_bank_hack ,  apt1 ,  gaussattack ,  stuxnetattack ,  sonyhack ,  
 case(X) :- listCases(L), member(X, L).
 
 % us bank hack evidences
-% rule(case1_f1, hasResources( iran ), []).
 rule(case1_f2, target( usa ,  us_bank_hack ), []).
 rule(case1_f3, imposedSanctions( usa ,  iran ), []).
 rule(case1_f4, hijackCorporateClouds( us_bank_hack ), []).

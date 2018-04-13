@@ -23,23 +23,10 @@
 % malwareUsedInAttack/2 (past)
 
 
-rule(similarMalware, isCulprit(X, A1), 
-	[similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),
-	isCulprit(X,A2),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
-rule(linkedMalware, isCulprit(X, A1), [similar(M1,M2),malwareUsedInAttack(M1,A1),
-  malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
-rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
-rule(grpPastTargets, hasMotive(Group, Att), [prominentGroup(Group), pastTargets(Group, Ts),
-  target(T, Att), member(T, Ts)]).
-
-
-rule(hasPrecedenceOfAttack, hasPrecedence(X, A), [isCulprit(X, A)]).
-rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), groupOrigin(Group, C), 
-  hasMotive(C, Att)]).
-
 rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
 rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
-rule(hasMotiveAndCap1, isCulprit(C,Att), [hasMotive(C,Att),hasPrecedence(C,A2), \+ (Att = A2)]).
+rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), groupOrigin(Group, C), 
+  hasMotive(C, Att)]).
 rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
 rule(hasLoc, isCulprit(C,Att), [culpritIsFrom(C,Att)]).
 rule(social, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
@@ -48,20 +35,31 @@ rule(social, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAtta
 rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
 rule(weakAttack, neg(isCulprit(C,Att)), [neg(requireHighResource(Att)),isCountry(C)]).
 rule(notAttackItself, neg(isCulprit(C,Att)), [target(C,Att)]). % Purposely leave out for now
-rule(lowGciTier, neg(isCulprit(C,Att)), [gci_tier(C,initiating)]).
+rule(lowGciTier, neg(isCulprit(C,_)), [gci_tier(C,initiating)]).
+rule(noMotive, neg(isCulprit(X, Att)), [neg(hasMotive(X,Att))]).
+
+rule(similarMalware, isCulprit(X, A1), 
+	[similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),
+	isCulprit(X,A2),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
+rule(linkedMalware, isCulprit(X, A1), [malwareUsedInAttack(M1,A1),similar(M1,M2),
+  malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
+rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
+rule(grpPastTargets, hasMotive(Group, Att), [target(T, Att), prominentGroup(Group), pastTargets(Group, Ts),
+   member(T, Ts)]).
 
 abducible(notForBlackMarketUse(_), []).
 abducible(hasCapability(_,_), []).
 
 % pref
 rule(p0, prefer(hasMotiveAndCap,claimedResp), []).
-rule(p0, prefer(hasMotiveAndCap1,claimedResp), []).
-rule(p1, prefer(hasMotiveAndLoc,claimedResp), []).
-rule(p2, prefer(noCap,hasMotiveAndLoc), []).
-rule(p2, prefer(noCap,hasLoc), []).
-rule(p3, prefer(social,noCap), []).
-rule(p4, prefer(similarMalware, noCap), []).
-rule(p5, prefer(linkedMalware, noCap), []).
+rule(p1, prefer(hasMotiveAndCap1,claimedResp), []).
+rule(p2, prefer(hasMotiveAndLoc,claimedResp), []).
+rule(p3, prefer(noCap,hasMotiveAndLoc), []).
+rule(p4, prefer(noCap,hasLoc), []).
+rule(p5, prefer(social,noCap), []).
+rule(p6, prefer(similarMalware, noCap), []).
+rule(p7, prefer(linkedMalware, noCap), []).
+rule(p8, prefer(noMotive, grpPastTargets), []).
 
 goal(A, X, D) :- visual_prove([isCulprit(X, A)], D).
 goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 1500, Result).
