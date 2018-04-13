@@ -32,17 +32,20 @@ rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 rule(grpPastTargets, hasMotive(Group, Att), [prominentGroup(Group), pastTargets(Group, Ts),
   target(T, Att), member(T, Ts)]).
 
-rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
-rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
-rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasPrecedence(C,A2), \+ (Att = A2)]).
-rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
-rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
-rule(social, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 
 rule(hasPrecedenceOfAttack, hasPrecedence(X, A), [isCulprit(X, A)]).
 rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), country(Group, C), 
   hasMotive(C, Att)]).
 
+rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
+rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
+rule(hasMotiveAndCap1, isCulprit(C,Att), [hasMotive(C,Att),hasPrecedence(C,A2), \+ (Att = A2)]).
+rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
+rule(hasLoc, isCulprit(C,Att), [culpritIsFrom(C,Att)]).
+rule(social, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
+
+
+rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
 rule(weakAttack, neg(isCulprit(C,Att)), [neg(requireHighResource(Att)),isCountry(C)]).
 rule(notAttackItself, neg(isCulprit(C,Att)), [target(C,Att)]). % Purposely leave out for now
 rule(lowGciTier, neg(isCulprit(C,Att)), [gci_tier(C,initiating)]).
@@ -52,8 +55,10 @@ abducible(hasCapability(_,_), []).
 
 % pref
 rule(p0, prefer(hasMotiveAndCap,claimedResp), []).
+rule(p0, prefer(hasMotiveAndCap1,claimedResp), []).
 rule(p1, prefer(hasMotiveAndLoc,claimedResp), []).
 rule(p2, prefer(noCap,hasMotiveAndLoc), []).
+rule(p2, prefer(noCap,hasLoc), []).
 rule(p3, prefer(social,noCap), []).
 rule(p4, prefer(similarMalware, noCap), []).
 rule(p5, prefer(linkedMalware, noCap), []).

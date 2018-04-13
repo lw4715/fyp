@@ -1,4 +1,6 @@
 :- use_module(library(timeout)).
+:- use_module(library(lists)).
+:- use_module(library(system)).
 :- compile('../gorgias-src-0.6d/lib/gorgias.pl').
 :- compile('../gorgias-src-0.6d/ext/lpwnf.pl').
 :- compile('backgroundgorgias.pl').
