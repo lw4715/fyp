@@ -34,7 +34,7 @@ rule(grpPastTargets, hasMotive(Group, Att), [prominentGroup(Group), pastTargets(
 
 
 rule(hasPrecedenceOfAttack, hasPrecedence(X, A), [isCulprit(X, A)]).
-rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), country(Group, C), 
+rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), groupOrigin(Group, C), 
   hasMotive(C, Att)]).
 
 rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
