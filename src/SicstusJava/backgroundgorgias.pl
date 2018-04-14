@@ -106,13 +106,14 @@ rule(bg64, listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,be
 	panama,venezuela,germany,paraguay,australia,japan,oman ,canada,southkorea,russia,egypt,malaysia,singapore,estonia,
 	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,usa]), []).
 
-%% rule(bg65, listHasResources([ china , israel , iran , usa , northkorea ]), []).
+rule(bg65, cybersuperpowerlist([ china , israel , iran , usa , northkorea ]), []).
+rule(bg65b, cybersuperpower(X), [cybersuperpowerlist(L), member(X,L)]).
 %% rule(bg65b, listNegHasResources([ indonesia, saudi_arabia, india, southafrica, turkey ]), []).
 rule(bg66, listIndustries([ infocomm ]), []).
 rule(bg67, listChineseCountries([ china ]), []).
 rule(bg68, listEnglishCountries([ usa , united_kingdom ]), []).
 
-rule(bg70, isCountry(X), [listCountries(L),member(X,L)]).
+rule(bg70, country(X), [listCountries(L),member(X,L)]).
 rule(bg71, industry(X), [listIndustries(L),member(X,L)]).
 %% rule(bg72, hasResources(X), [listHasResources(L),member(X,L)]).
 %% rule(bg72b, neg(hasResources(X)), [listNegHasResources(L),member(X,L)]).
@@ -131,7 +132,9 @@ rule(bg86, informationRich( consumer ), []).
 rule(bg88, possibleMotive( sabotage ,Att), [isInfrastructure(Ind),industry(Ind,V),target(V,Att)]).
 rule(bg89, possibleMotive( espionage ,Att), [informationRich(Ind),industry(Ind,V),target(V,Att)]).
 
-rule(bg78, isCulprit( equationGroup , flameattack ), []). 
+%% rule(bg78, isCulprit( equationGroup , flameattack ), []). 
+rule(bg78, malwareLinkedTo(flame, equationGroup), []). 
+
 %% rule(bg94, isCulprit([ usa , israel ], flameattack ), []).
 rule(bg95, target( middleeast , flameattack ), []).
 rule(bg96, malwareUsedInAttack( flame , flameattack ), []).

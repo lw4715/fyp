@@ -10,8 +10,8 @@
 % addressType/2 (gMaps integration??)
 
 rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
-rule(highSkill2, highLevelSkill(Att), [sophisticatedMalware(M), malwareUsedInAttack(M, Att)]).
-rule(highSkill3, neg(highLevelSkill(Att)), [ neg(notForBlackMarketUse(M)),malwareUsedInAttack(M,Att)]).
+rule(highSkill2, highLevelSkill(Att), [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
+rule(highSkill3, neg(highLevelSkill(Att)), [malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
 rule(highSkill4, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
 
 rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
@@ -19,11 +19,11 @@ rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
 rule(highResource2, requireHighResource(Att), [highSecurity(T), target(T, Att)]).
 rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
 
-rule(srcIP, culpritIsFrom(X, Att), [ipGeoloc(X, IP), attackSourceIP(IP, Att)]).
-rule(spoofedSrcIp, neg(culpritIsFrom(X, Att)), [spoofedIp(IP), ipGeoloc(X, IP), attackSourceIP(IP, Att)]).
+rule(srcIP, culpritIsFrom(X, Att), [attackSourceIP(IP, Att), ipGeoloc(X, IP)]).
+rule(spoofedSrcIp, neg(culpritIsFrom(X, Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
 rule(lang1, culpritIsFrom(X, Att), [sysLanguage(L, Att), firstLanguage(L, X)]).
 rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
-rule(infra, culpritIsFrom(X, Att), [infraRegisteredIn(X, Infra), infraUsed(Infra, Att)]).
+rule(infra, culpritIsFrom(X, Att), [infraUsed(Infra, Att), infraRegisteredIn(X, Infra)]).
 
 rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
 
@@ -45,7 +45,7 @@ rule(similar2, similar(M1, M2), [sharedCode(M1, M2)]).
 rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 rule(similar4, similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMalware(C2,M2), similarFileChara(C1, C2)]).
 
-rule(targetted, specificTarget(Att), [specificConfigInMalware(M),malwareUsedInAttack(M,Att)]).
+rule(targetted, specificTarget(Att), [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
 rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
 
 rule(similarFileChara1, similarFileChara(C1, C2), [fileChara(Filename,_,_,_,_,_,C1), fileChara(Filename,_,_,_,_,_,C2)]).

@@ -20,16 +20,17 @@
 % industry/1
 
 rule(hasResources1, hasResources(X), [gci_tier(X,leading)]).
-rule(hasResources2, hasResources(X), [gci_tier(X,maturing)]).
+rule(hasResources2, hasResources(X), [cybersuperpower(X)]).
+%% rule(hasResources2, hasResources(X), [gci_tier(X,maturing)]).
 
 rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
 rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
 
-rule(ecMotive(C,T), hasMotive(C, Att), [hasEconomicMotive(C, T), industry(T), target(T, Att), specificTarget(Att)]).
-rule(pMotive,       hasMotive(C, Att), [hasPoliticalMotive(C, T), target(T, Att), specificTarget(Att)]).
+rule(ecMotive(C,T), hasMotive(C, Att), [industry(T), target(T, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
+rule(pMotive,       hasMotive(C, Att), [target(T, Att), hasPoliticalMotive(C, T), specificTarget(Att)]).
 rule(pMotive(C,T),  hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
-rule(conflict,      hasMotive(X, Att), [attackYear(Att, Y), target(T, Att),
+rule(conflict,      hasMotive(X, Att), [target(T, Att), attackYear(Att, Y),
   recentNewsInYear(News, T, Y), causeOfConflict(X, T, News), specificTarget(Att)]).
 
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
@@ -55,13 +56,13 @@ goal(A, X, P, D0, D1, D2) :-
   initFile('op.pl'), case(A),
   writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
   writeToFiles('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
-  writeToFiles('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
+  writeToFilesAbd('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
 
 goal_all(A, X, P, D0, D1, D2) :-
   initFile('op.pl'), case(A),
   writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
   writeToFilesAll('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
-  writeToFilesAll('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
+  writeToFilesAllAbd('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
 
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).

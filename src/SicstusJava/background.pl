@@ -7,7 +7,7 @@
 
 % North Korea
 prominentGroup(lazarusGrp).
-country(lazarusGrp, northkorea).
+groupOrigin(lazarusGrp, northkorea).
 malwareLinkedTo('Backdoor.Duuzer', lazarusGrp).
 malwareLinkedTo('Backdoor.Destover', lazarusGrp).
 malwareLinkedTo('Infostealer.Fakepude', lazarusGrp).
@@ -15,60 +15,60 @@ malwareLinkedTo('Backdoor.Contopee', lazarusGrp).
 
 % USA
 prominentGroup(equationGrp).
-country(equationGrp, usa).
+groupOrigin(equationGrp, usa).
 pastTargets(equationGrp, [iran, russia, pakistan, afghanistan, india, syria, mali]).
 %% https://en.wikipedia.org/wiki/Equation_Group
 
 % USSR
 prominentGroup(anglerEK).
-country(anglerEK, ussr).
-pastAttackMethods(anglerEK, [driveByDownloads]).
+groupOrigin(anglerEK, ussr).
+groupAttackMethods(anglerEK, [driveByDownloads]).
 pastMotives(anglerEK, [undergroundBusiness]).
 
 %% China
-prominentGroup(blackVine).
-country(blackVine, china).
-pastAttackMethods(blackVine, [zeroday, wateringHole, customMalware]).
-pastTargets(blackVine, [aerospace, energy, healthcare]).
-pastMotives(blackVine, [cyberespionage]).
+prominentGroup(deepPanda).
+groupOrigin(deepPanda, china).
+groupAttackMethods(deepPanda, [zeroday, wateringHole, customMalware]).
+pastTargets(deepPanda, [aerospace, energy, healthcare]).
+pastMotives(deepPanda, [cyberespionage]).
 
 prominentGroup(butterfly).
-country(butterfly, china).
-pastAttackMethods(butterfly, [zeroday, customMalware]).
+groupOrigin(butterfly, china).
+groupAttackMethods(butterfly, [zeroday, customMalware]).
 pastTargets(butterfly, [twitter, facebook, apple, microsoft, pharmaceutical, technology, law, oil, preciousMetalMining]).
 pastMotives(butterfly, [cyberespionage, undergroundBusiness]).
 
 %% Eastern Europe
 prominentGroup(dragonfly).
-country(dragonfly, eastEurope).
-pastAttackMethods(dragonfly, [spamEmail, wateringHole, customMalware]).
+groupOrigin(dragonfly, eastEurope).
+groupAttackMethods(dragonfly, [spamEmail, wateringHole, customMalware]).
 pastTargets(dragonfly, [defense, aerospace, energy]).
 pastMotives(dragonfly, [cyberespionage, spy, sabotage]).
 %% ?
 
 prominentGroup(govRAT).
-pastAttackMethods(govRAT, [clientSideExploits]).
+groupAttackMethods(govRAT, [clientSideExploits]).
 pastTargets(govRAT, [govOfficials, militaryOfficials, enterprises]).
 pastMotives(govRAT, [cyberespionage]).
 
 prominentGroup(pawnStorm).
-pastAttackMethods(pawnStorm, [spearphishing, phishingWebsites, ios, exploits, zeroday]).
+groupAttackMethods(pawnStorm, [spearphishing, phishingWebsites, ios, exploits, zeroday]).
 pastTargets(pawnStorm, [nato, govOfficials, militaryOfficials, russia, ukraine]).
 pastMotives(pawnStorm, [cyberespionage]).
 
 prominentGroup(waterbug).
-pastAttackMethods(waterbug, [zeroday, email, stolenCertificates, wateringHole]).
+groupAttackMethods(waterbug, [zeroday, email, stolenCertificates, wateringHole]).
 pastTargets(waterbug, [govInstitutions, embassies, education, research]).
 pastMotives(waterbug, [cyberespionage, spy, intelligenceGathering]).
 
 %% Background
-listCountries([china, israel, iran, usa, uk, northkorea, southkorea]).
+listCountries([china, israel, iran, usa, united_kingdom, northkorea, southkorea]).
 listHasResources([china, israel, iran, usa, northkorea]).
 listIndustries([infocomm]).
 listChineseCountries([china]).
-listEnglishCountries([usa, uk]).
+listEnglishCountries([usa, united_kingdom]).
 
-isCountry(X) :- listCountries(L), member(X, L).
+country(X) :- listCountries(L), member(X, L).
 industry(X) :- listIndustries(L), member(X, L).
 hasResources(X) :- listHasResources(L), member(X, L).
 firstLanguage(chinese, X) :- listChineseCountries(L), member(X, L).
@@ -100,3 +100,7 @@ ccServer(secuurity, flame).
 domainRegisteredDetails(gowin7, "adolph dybevek", "prinsen gate 6").
 domainRegisteredDetails(secuurity, "adolph dybevek", "prinsen gate 6").
 addressType("prinsen gate 6", hotel).
+
+
+
+

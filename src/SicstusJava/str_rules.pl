@@ -18,41 +18,39 @@
 % target/2
 
 % input (bg):
-% isCountry
+% country
 % isCulprit/2 (past attacks)
 % malwareUsedInAttack/2 (past)
 
 
 rule(claimedResp, isCulprit(G,Att), [claimedResponsibility(G,Att)]).
 rule(hasMotiveAndCap, isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
-rule(countryHasMotive, isCulprit(C, Att), [isCulprit(Group, Att), groupOrigin(Group, C), 
-  hasMotive(C, Att)]).
-rule(hasMotiveAndLoc, isCulprit(C,Att), [hasMotive(C,Att),culpritIsFrom(C,Att)]).
-rule(hasLoc, isCulprit(C,Att), [culpritIsFrom(C,Att)]).
-rule(social, isCulprit(C,Att), [governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
+rule(countryHasMotive, isCulprit(C, Att), [country(C), prominentGroup(Group), isCulprit(Group, Att), groupOrigin(Group, C), hasMotive(C, Att)]).
+rule(hasMotiveAndLoc, isCulprit(C,Att), [country(C), hasMotive(C,Att),culpritIsFrom(C,Att)]).
+rule(hasLoc, isCulprit(C,Att), [country(C), culpritIsFrom(C,Att)]).
+rule(social, isCulprit(C,Att), [country(C), governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 
 
 rule(noCap, neg(isCulprit(C,Att)), [culpritIsFrom(C,Att),neg(hasCapability(C,Att))]).
-rule(weakAttack, neg(isCulprit(C,Att)), [neg(requireHighResource(Att)),isCountry(C)]).
+rule(weakAttack, neg(isCulprit(C,Att)), [country(C), neg(requireHighResource(Att))]).
 rule(notAttackItself, neg(isCulprit(C,Att)), [target(C,Att)]). % Purposely leave out for now
 rule(lowGciTier, neg(isCulprit(C,_)), [gci_tier(C,initiating)]).
 rule(noMotive, neg(isCulprit(X, Att)), [neg(hasMotive(X,Att))]).
 
-rule(similarMalware, isCulprit(X, A1), 
-	[similar(M1,M2),malwareUsedInAttack(M1,A1),malwareUsedInAttack(M2,A2),
-	isCulprit(X,A2),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
+%% rule(similarMalware, isCulprit(X, A1), 
+%% 	[malwareUsedInAttack(M1,A1),similar(M1,M2),malwareUsedInAttack(M2,A2),
+	%% isCulprit(X,A2),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 rule(linkedMalware, isCulprit(X, A1), [malwareUsedInAttack(M1,A1),similar(M1,M2),
   malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
-rule(grpPastTargets, hasMotive(Group, Att), [target(T, Att), prominentGroup(Group), pastTargets(Group, Ts),
-   member(T, Ts)]).
+%% rule(grpPastTargets, hasMotive(Group, Att), [target(T, Att), prominentGroup(Group), pastTargets(Group, Ts), member(T, Ts)]). %WEAK RULE
 
 abducible(notForBlackMarketUse(_), []).
 abducible(hasCapability(_,_), []).
 
 % pref
 rule(p0, prefer(hasMotiveAndCap,claimedResp), []).
-rule(p1, prefer(hasMotiveAndCap1,claimedResp), []).
+%% rule(p1, prefer(hasMotiveAndCap1,claimedResp), []).
 rule(p2, prefer(hasMotiveAndLoc,claimedResp), []).
 rule(p3, prefer(noCap,hasMotiveAndLoc), []).
 rule(p4, prefer(noCap,hasLoc), []).
