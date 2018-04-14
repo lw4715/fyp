@@ -65,7 +65,7 @@ class GUI {
             };
     private static final String[] bgPredicates =
             {
-                "prominentGroup/1", "pastTargets/2", "industry/1", "isCountry/1", "hasPrecedence/2"
+                "prominentGroup/1", "pastTargets/2", "industry/1", "country/1", "hasPrecedence/2"
             };
 
 

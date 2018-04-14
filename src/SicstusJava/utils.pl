@@ -5,7 +5,7 @@
 :- compile('../gorgias-src-0.6d/ext/lpwnf.pl').
 :- compile('backgroundgorgias.pl').
 :- compile('evidence.pl').
-:- compile('user_evidence.pl').
+%% :- compile('user_evidence.pl').
 
 ?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
 

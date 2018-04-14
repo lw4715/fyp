@@ -55,8 +55,8 @@ abducible(specificTarget(_Att), []).
 goal(A, X, P, D0, D1, D2) :-
   initFile('op.pl'), case(A),
   writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
-  writeToFiles('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
-  writeToFilesAbd('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
+  writeToFiles('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_'),
+  writeToFilesAbd('op.pl', governmentLinked(P,X2), governmentLinked(P,X2,D2), 'op_').
 
 goal_all(A, X, P, D0, D1, D2) :-
   initFile('op.pl'), case(A),

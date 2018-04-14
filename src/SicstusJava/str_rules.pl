@@ -60,4 +60,4 @@ rule(p7, prefer(linkedMalware, noCap), []).
 rule(p8, prefer(noMotive, grpPastTargets), []).
 
 goal(A, X, D) :- visual_prove([isCulprit(X, A)], D).
-goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 1500, Result).
+goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 3000, Result).

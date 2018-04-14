@@ -17,7 +17,9 @@ public class QueryExecutor {
     private static final String TECH = FILEPATH + "tech_rules.pl";
     private static final String OP = FILEPATH + "op_rules.pl";
     private static final String STR = FILEPATH + "str_rules.pl";
-    private static final String EMPTYSAV = "empty.sav";
+    private static final String TECHSAV = "tech.sav";
+    private static final String OPSAV = "op.sav";
+    private static final String STRSAV = "str.sav";
 
     private List<String[]> mapStrings = new ArrayList<>();
     private SICStus sp;
@@ -49,19 +51,21 @@ public class QueryExecutor {
         derivations = new HashMap<>();
         try {
             sp = new SICStus(new String[] {""},null);
-            SPPredicate pred = new SPPredicate(sp, "prolog_flag",  3, "");
-            SPTerm redefineFlag = new SPTerm(sp, "redefine_warnings");
-            SPTerm oldVal = new SPTerm(sp, "on");
-            SPTerm newVal = new SPTerm(sp, "off");
-            SPQuery query = sp.openQuery(pred,
-                    new SPTerm[]{redefineFlag, oldVal, newVal});
-            query.nextSolution();
-
-
+            redefineFlagOff();
         } catch (SPException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void redefineFlagOff() throws SPException {
+        SPPredicate pred = new SPPredicate(sp, "prolog_flag",  3, "");
+        SPTerm redefineFlag = new SPTerm(sp, "redefine_warnings");
+        SPTerm oldVal = new SPTerm(sp, "on");
+        SPTerm newVal = new SPTerm(sp, "off");
+        SPQuery query = sp.openQuery(pred,
+                new SPTerm[]{redefineFlag, oldVal, newVal});
+        query.nextSolution();
     }
 
     public String culpritString() {
@@ -101,12 +105,10 @@ public class QueryExecutor {
             switch(mode) {
                 case 0:
                     numDeltas = 5;
-                    System.out.println("\n-------\nTECHNICAL");
+                    System.out.println("-------\nTECHNICAL");
                     accMap = techMap;
-//                    sp.restore(EMPTYSAV);
-                    sp.restore("tech.sav");
-//                    sp.load(TECH);
-//                    sp.load(Utils.USER_EVIDENCE_FILENAME);
+                    sp.restore(TECHSAV);
+                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 5, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -121,16 +123,12 @@ public class QueryExecutor {
                     break;
                 case 1:
                     numDeltas = 3;
-                    System.out.println("\n-------\nOPERATIONAL");
+                    System.out.println("-------\nOPERATIONAL");
                     accMap = opMap;
-//                    sp.restore(EMPTYSAV);
-                    sp.restore("op.sav");
-                    sp.load("tech.pl");
-//                    sp.load(OP);
-//                    sp.load(Utils.USER_EVIDENCE_FILENAME);
+                    sp.restore(OPSAV);
+                    sp.load(TECH);
+                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, goal, numDeltas + 3, "");
-//                    pred = new SPPredicate(sp, goal, 4, "");
-
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
                     person = new SPTerm(sp).putVariable();
@@ -139,17 +137,14 @@ public class QueryExecutor {
                         ds[i] = new SPTerm(sp).putVariable();
                     }
                     query = sp.openQuery(pred, new SPTerm[] { attack, culprit, person, ds[0], ds[1], ds[2] });
-//                    query = sp.openQuery(pred, new SPTerm[] {attack, ds[0], ds[1], ds[2]});
                     break;
                 case 2:
-                    System.out.println("\n-------\nSTRATEGIC");
+                    System.out.println("-------\nSTRATEGIC");
                     accMap = strMap;
-//                    sp.restore(EMPTYSAV);
-                    sp.restore("str.sav");
-//                    sp.load("tech.pl");
-                    sp.load("op.pl");
-//                    sp.load(STR);
-//                    sp.load(Utils.USER_EVIDENCE_FILENAME);
+                    sp.restore(STRSAV);
+                    sp.load(TECH);
+                    sp.load(OP);
+                    sp.load(Utils.USER_EVIDENCE_FILENAME);
                     pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
                     attack = new SPTerm(sp, caseName);
                     culprit = new SPTerm(sp).putVariable();
@@ -344,16 +339,16 @@ public class QueryExecutor {
         double techTime = (System.nanoTime() - time)/pow(10,9);
 
         time = System.nanoTime();
-        System.out.println("Time taken for tech layer: " + techTime + "s");
+//        System.out.println("Time taken for tech layer: " + techTime + "s");
         this.executeQuery(1, caseName, VERBOSE, all);
         double opTime = (System.nanoTime() - time)/pow(10,9);
 
         time = System.nanoTime();
-        System.out.println("Time taken for op layer: " + opTime + "s");
+//        System.out.println("Time taken for op layer: " + opTime + "s");
         this.executeQuery(2, caseName, VERBOSE, all);
         double strTime = (System.nanoTime() - time)/pow(10,9);
 
-        System.out.println("Time taken for str layer: " + strTime + "s");
+//        System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("Total time for " + caseName + ": " + (techTime + opTime + strTime));
         return new Result(culpritString(), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
     }
@@ -393,11 +388,10 @@ public class QueryExecutor {
     }
 
     public static void main(String[] args) {
-//        System.out.println("hello world");
         QueryExecutor qe = QueryExecutor.getInstance();
-        for (String c : new String[]{"apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack", "us_bank_hack"}) {
+        for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "us_bank_hack"}) {
             System.out.println(qe.execute(c, false));
         }
-//        System.out.println(qe.execute("us_bank_hack", false));
+//        System.out.println(qe.execute("wannacryattack", false));
     }
 }

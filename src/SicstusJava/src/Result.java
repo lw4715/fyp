@@ -35,7 +35,8 @@ public class Result {
         if (abducedMap.isEmpty()) {
             return s;
         } else {
-            return String.format("%s\nAbduced: %s\n\nPossible additional evidences needed:\n%s", s, abduced, Utils.formatMap(abducedMap));
+            return String.format("%s\nAbduced: %s\n\nPossible additional evidences needed:" +
+                    "\n%s", s, abduced, Utils.formatMap(abducedMap));
         }
 
     }
