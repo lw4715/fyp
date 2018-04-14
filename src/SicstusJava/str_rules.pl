@@ -1,6 +1,6 @@
 :- compile('utils.pl').
-:- compile('op.pl').
-:- compile('tech.pl').
+%% :- compile('op.pl').
+%% :- compile('tech.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
 

@@ -111,9 +111,9 @@ goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   writeToFilesAll('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
 
 
-requireHighResource(A, D) :- visual_prove([requireHighResource(A)], D).
-culpritIsFrom(X, A, D) :- visual_prove([culpritIsFrom(X, A)], D).
-notForBlackMarketUse(M, D) :- visual_prove([notForBlackMarketUse(M)], D).
-similar(M1, M2, D) :- visual_prove([similar(M1, M2)], D).
-specificTarget(A, D) :- visual_prove([specificTarget(A)], D). % abducible
-malwareUsedInAttack(M, Att) :- visual_prove([malwareUsedInAttack(M, Att)], _).
+requireHighResource(A, D) :- prove([requireHighResource(A)], D).
+culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
+notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
+similar(M1, M2, D) :- prove([similar(M1, M2)], D).
+specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
+malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).
