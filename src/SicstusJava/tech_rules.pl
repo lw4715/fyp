@@ -9,44 +9,47 @@
 % misc:
 % addressType/2 (gMaps integration??)
 
-rule(highSkill1, highLevelSkill(Att), [hijackCorporateClouds(Att)]).
-rule(highSkill2, highLevelSkill(Att), [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
-rule(highSkill3, neg(highLevelSkill(Att)), [malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
-rule(highSkill4, highLevelSkill(Att), [stolenValidSignedCertificates(Att)]).
+rule(reliability1, reliability(srcIP,1), []).
+rule(reliability2, reliability(language,2), []).
+rule(reliability3, reliability(infraAddr,1), []).
+rule(reliability3, reliability(domainAddr,1), []).
+rule(reliability4, reliability(similarMalware,5), []).
+rule(reliability5, reliability([],0), []).
+rule(reliability6, reliability([X|L],N), [reliability(X,N1),reliability(L,N2),N is N1+N2]).
+
+
+rule(highSkill1, highLevelSkill(Att),     [hijackCorporateClouds(Att)]).
+rule(highSkill2, highLevelSkill(Att),     [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
+rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+rule(highSkill4, highLevelSkill(Att),     [stolenValidSignedCertificates(Att)]).
 
 rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
 rule(highResource2, requireHighResource(Att), [highSecurity(T), target(T, Att)]).
 rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
 
-rule(srcIP, culpritIsFrom(X, Att), [attackSourceIP(IP, Att), ipGeoloc(X, IP)]).
-rule(spoofedSrcIp, neg(culpritIsFrom(X, Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
-rule(lang1, culpritIsFrom(X, Att), [sysLanguage(L, Att), firstLanguage(L, X)]).
-rule(lang2, culpritIsFrom(X,Att), [languageInCode(L,Att),firstLanguage(L,X)]).
-rule(infra, culpritIsFrom(X, Att), [infraUsed(Infra, Att), infraRegisteredIn(X, Infra)]).
+rule(srcIP,   culpritIsFrom(X,Att,[srcIP]),     [attackSourceIP(IP, Att), ipGeoloc(X, IP)]).
+rule(spoofIP, neg(culpritIsFrom(X,Att,[srcIP])),[attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
+rule(lang1,   culpritIsFrom(X,Att,[language]),  [sysLanguage(L, Att), firstLanguage(L, X)]).
+rule(lang2,   culpritIsFrom(X,Att,[language]),  [languageInCode(L,Att), firstLanguage(L,X)]).
+rule(infra,   culpritIsFrom(X,Att,[infraAddr]), [infraUsed(Infra, Att), infraRegisteredIn(X, Infra)]).
+rule(domain,  culpritIsFrom(X,Att,[domainAddr]),[malwareUsedInAttack(M, Att), ccServer(S, M), domainRegisteredDetails(S,_,Addr), addrInCountry(Addr, X)]).
 
 rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
 
-%% rule(similarDefault, neg(similar(_M1, _M2)), []).
-rule(similar, similar(M1, M2), [similarCCServer(M1, M2), M1 \= M2]).
+rule(similar,similar(M1, M2),         [similarCCServer(M1, M2), M1 \= M2]).
 rule(simCC1, similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
-%% rule(simCC2, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), \+ S1 = S2,
-  %% ccServerAddrType(S1,T),ccServerAddrType(S2,T)]).
-rule(simCC2, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2,
-  domainRegisteredDetails(S1,_,A), domainRegisteredDetails(S2,_,A)]).
-rule(simCC3, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2,
-  domainRegisteredDetails(S1,Name,_), domainRegisteredDetails(S2,Name,_)]).
+rule(simCC2, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2, domainRegisteredDetails(S1,_,A), domainRegisteredDetails(S2,_,A)]).
+rule(simCC3, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2, domainRegisteredDetails(S1,Name,_), domainRegisteredDetails(S2,Name,_)]).
 
-rule(ccServerAddrType, ccServerAddrType(Server, Type),
-  [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
-%TODO can link to googlemaps?
+rule(ccServerAddrType, ccServerAddrType(Server, Type), [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
 rule(similar1, similar(M1, M2), [simlarCodeObfuscation(M1, M2)]).
 rule(similar2, similar(M1, M2), [sharedCode(M1, M2)]).
 rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 rule(similar4, similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMalware(C2,M2), similarFileChara(C1, C2)]).
 
-rule(targetted, specificTarget(Att), [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
-rule(zeroday, sophisticatedMalware(M), [usesZeroDayVulnerabilities(M)]).
+rule(targetted, specificTarget(Att),      [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
+rule(zeroday,   sophisticatedMalware(M),  [usesZeroDayVulnerabilities(M)]).
 
 rule(similarFileChara1, similarFileChara(C1, C2), [fileChara(Filename,_,_,_,_,_,C1), fileChara(Filename,_,_,_,_,_,C2)]).
 rule(similarFileChara2, similarFileChara(C1, C2), [fileChara(_,MD5,_,_,_,_,C1), fileChara(_,MD5,_,_,_,_,C2)]).
@@ -63,9 +66,8 @@ rule(internalIP3, isInternalIP([10,_,_,_]), []).
 rule(sameIPsubnet, similarIPSubnet([H1,H2,_,_],[H1,H2,_,_]), []).
 rule(validIP, validIP([N1,N2,N3,N4]), [N1>=0, N2>=0, N3>=0, N4>=0, N1<256, N2<256, N3<256, N4<256]).
 
-%% 
-rule(spoofedIp1, spoofedIp(IP), [connection(IP, in), isInternalIP(IP), validIP(IP)]).
-rule(spoofedIp2, spoofedIp(IP), [connection(IP, out), isExternalIP(IP), validIP(IP)]).
+rule(spoofedIP1, spoofedIp(IP), [connection(IP, in), isInternalIP(IP), validIP(IP)]).
+rule(spoofedIP2, spoofedIp(IP), [connection(IP, out), isExternalIP(IP), validIP(IP)]).
 rule(abnormalIP, abnormalIP(IP), [domainName(IP, Domain), domainCountry(Domain, C1), ipGeoloc(IP, C2), C1 \= C2]).
 
 %% rule(4, isCulprit(X,A1), [similarNature(A1,A2),isCulprit(X,A2)]).
@@ -82,7 +84,7 @@ rule(abnormalIP, abnormalIP(IP), [domainName(IP, Domain), domainCountry(Domain, 
 
 
 % pref
-rule(p1, prefer(spoofedSrcIp,srcIP, [])).
+rule(p1, prefer(spoofIP,srcIP, [])).
 rule(p2, prefer(externalIP1,externalIP, [])).
 
 % output:

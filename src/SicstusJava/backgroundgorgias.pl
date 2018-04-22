@@ -40,10 +40,11 @@ rule(bg16, prominentGroup( equationGrp ), []).
 rule(bg17, groupOrigin( equationGrp , usa ), []).
 rule(bg18, pastTargets( equationGrp ,[ iran , russia , pakistan , afghanistan , india , syria , mali ]), []).
 
-rule(bg22, prominentGroup( anglerEK ), []).
-rule(bg23, groupOrigin( anglerEK , ussr ), []).
-rule(bg24, groupAttackMethods( anglerEK ,[ driveByDownloads ]), []).
-rule(bg25, pastMotives( anglerEK ,[ undergroundBusiness ]), []).
+%% https://www.trendmicro.com/vinfo/us/security/definition/exploit-kit
+%% rule(bg22, prominentGroup( anglerEK ), []).
+%% rule(bg23, groupOrigin( anglerEK , ussr ), []).
+%% rule(bg24, groupAttackMethods( anglerEK ,[ driveByDownloads ]), []).
+%% rule(bg25, pastMotives( anglerEK ,[ undergroundBusiness ]), []).
 
 rule(bg28, prominentGroup( deepPanda ), []).
 rule(bg29, groupOrigin( deepPanda , china ), []).
