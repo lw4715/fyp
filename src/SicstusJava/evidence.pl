@@ -7,7 +7,8 @@ listCases([ us_bank_hack ,  apt1 ,  gaussattack ,  stuxnetattack ,  sonyhack ,  
 case(X) :- listCases(L), member(X, L).
 
 % us bank hack evidences
-rule(case1_f2, target( usa ,  us_bank_hack ), []).
+rule(case1_f1, target( usa ,  us_bank_hack ), []).
+%% rule(case1_f2, targetCountry( usa ,  us_bank_hack ), []).
 rule(case1_f3, imposedSanctions( usa ,  iran ), []).
 rule(case1_f4, hijackCorporateClouds( us_bank_hack ), []).
 rule(case1_f5, sophisticatedMalware( itsoknoproblembro ), []).
@@ -21,8 +22,8 @@ rule(case2_f3, firstLanguage(chinese, china ), []).
 rule(case2_f4, infraRegisteredIn( china , infra ), []).
 rule(case2_f5, infraUsed( infra , apt1 ), []).
 rule(case2_f6, hasEconomicMotive( china , infocomm ), []).
-rule(case2_f7, industry( infocomm ,victim), []).
-rule(case2_f8, target(victim, apt1 ), []).
+rule(case2_f7, industry( infocomm ,victims), []).
+rule(case2_f8, target(victims, apt1 ), []).
 rule(case2_f9, largeNumberOfVictims( apt1 ), []).
 rule(case2_f10, highVolumeAttack( apt1 ), []).
 rule(case2_f11, longDurationAttack( apt1 ), []).
@@ -49,15 +50,15 @@ rule(case3_f19, domainRegisteredDetails( secuurity ,  adolph_dybevek ,  prinsen_
 %% rule(case3_f20, addressType( prinsen_gate_6 ,  hotel ), []).
 
 %  stuxnet 
-rule(case4_f0, industry( nuclear ,stuxnet_victim), []).
-rule(case4_f1, target(stuxnet_victim, stuxnetattack ), []).
+rule(case4_f0, industry( nuclear ,iranian_org), []).
+rule(case4_f1, target(iranian_org, stuxnetattack ), []).
 rule(case4_f2, infectionMethod( usb , stuxnetattack ), []).
 rule(case4_f3, spreadingMechanism( localNetwork , stuxnetattack ), []).
 rule(case4_f4, stolenValidSignedCertificates( stuxnetattack ), []).
-rule(case4_f6, target( iran , stuxnetattack ), []).
+rule(case4_f6, targetCountry( iran , stuxnetattack ), []).
 rule(case4_f7, usesZeroDayVulnerabilities( stuxnet ), []).
-rule(case4_f8, recentNewsInYear( nuclearProgram ,  iran , 2010), []).
-rule(case4_f9, causeOfConflict([ usa ,  israel ],  iran ,  nuclearProgram ), []).
+rule(case4_f8, recentNewsInYear( nuclear ,  iran , 2010), []).
+rule(case4_f9, causeOfConflict([ usa ,  israel ],  iran ,  nuclear ), []).
 rule(case4_f10, attackYear( stuxnetattack , 2010), []).
 rule(case4_f11, malwareUsedInAttack( stuxnet ,  stuxnetattack ), []).
 rule(case4_f12, specificConfigInMalware( stuxnet ), []).
@@ -97,3 +98,18 @@ rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
 %% rule(case6_f10, , []).
 %% rule(case6_f10, , []).
 %% rule(case6_f10, , []).
+
+
+% DNC intrusion, expected culprits: fancyBear, cozyBear, russia
+%% http://time.com/4600177/election-hack-russia-hillary-clinton-donald-trump/
+%% http://time.com/4597457/the-downside-of-donald-trumps-fight-with-the-intelligence-community/
+rule(case7_f1, claimedResponsibility('Guccifer2.0', dnc_hack), []).
+
+%% dummy
+rule(dummy_f1, claimedResponsibility('randomGroup', dummy), []).
+rule(dummy_f2, target(myCountry, dummy), []).
+%% rule(dummy_f3, hasMotive(yourCountry, dummy), []).
+rule(dummy_f4, hasCapability(yourCountry, dummy), []).
+
+
+

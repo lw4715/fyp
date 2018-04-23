@@ -30,8 +30,8 @@ rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(ha
 rule(ecMotive(C,T), hasMotive(C, Att), [industry(T), target(T, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
 rule(pMotive,       hasMotive(C, Att), [target(T, Att), hasPoliticalMotive(C, T), specificTarget(Att)]).
 rule(pMotive(C,T),  hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
-rule(conflict,      hasMotive(X, Att), [target(T, Att), attackYear(Att, Y),
-  recentNewsInYear(News, T, Y), causeOfConflict(X, T, News), specificTarget(Att)]).
+rule(conflict,      hasMotive(X, Att), [target(T, Att), industry(Industry, T), targetCountry(TC, Att), attackYear(Att, Y),
+  recentNewsInYear(Industry, TC, Y), causeOfConflict(X, TC, Industry), specificTarget(Att)]).
 
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
 rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).

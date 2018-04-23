@@ -9,15 +9,6 @@
 % misc:
 % addressType/2 (gMaps integration??)
 
-rule(reliability1, reliability(srcIP,1), []).
-rule(reliability2, reliability(language,2), []).
-rule(reliability3, reliability(infraAddr,1), []).
-rule(reliability3, reliability(domainAddr,1), []).
-rule(reliability4, reliability(similarMalware,5), []).
-rule(reliability5, reliability([],0), []).
-rule(reliability6, reliability([X|L],N), [reliability(X,N1),reliability(L,N2),N is N1+N2]).
-
-
 rule(highSkill1, highLevelSkill(Att),     [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att),     [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
 rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
@@ -48,8 +39,8 @@ rule(similar2, similar(M1, M2), [sharedCode(M1, M2)]).
 rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 rule(similar4, similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMalware(C2,M2), similarFileChara(C1, C2)]).
 
-rule(targetted, specificTarget(Att),      [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
-rule(zeroday,   sophisticatedMalware(M),  [usesZeroDayVulnerabilities(M)]).
+rule(targetted, specificTarget(Att),        [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
+rule(zeroday,   sophisticatedMalware(M),    [usesZeroDayVulnerabilities(M)]).
 
 rule(similarFileChara1, similarFileChara(C1, C2), [fileChara(Filename,_,_,_,_,_,C1), fileChara(Filename,_,_,_,_,_,C2)]).
 rule(similarFileChara2, similarFileChara(C1, C2), [fileChara(_,MD5,_,_,_,_,C1), fileChara(_,MD5,_,_,_,_,C2)]).
@@ -57,7 +48,7 @@ rule(similarFileChara3, similarFileChara(C1, C2), [fileChara(_,_,_,_,Desc,_,C1),
 rule(similarFileChara4, similarFileChara(C1, C2), [fileChara(_,_,Size,CompileTime,_,Filetype,C1), fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
 
-%% TODO: do more stuff with IP
+%% TODO: do more stuff with IP?
 rule(externalIP, isExternalIP(_IP), []).
 rule(externalIP1, neg(isExternalIP(IP)), [isInternalIP(IP)]).
 rule(internalIP1, isInternalIP([192,168,_,_]), []).
@@ -69,7 +60,6 @@ rule(validIP, validIP([N1,N2,N3,N4]), [N1>=0, N2>=0, N3>=0, N4>=0, N1<256, N2<25
 rule(spoofedIP1, spoofedIp(IP), [connection(IP, in), isInternalIP(IP), validIP(IP)]).
 rule(spoofedIP2, spoofedIp(IP), [connection(IP, out), isExternalIP(IP), validIP(IP)]).
 rule(abnormalIP, abnormalIP(IP), [domainName(IP, Domain), domainCountry(Domain, C1), ipGeoloc(IP, C2), C1 \= C2]).
-
 %% rule(4, isCulprit(X,A1), [similarNature(A1,A2),isCulprit(X,A2)]).
 %% rule(8, hasKillSwitch(wannacry), []).
 %% rule(9, type(wannacry,ransomware), []).
@@ -96,7 +86,7 @@ rule(p2, prefer(externalIP1,externalIP, [])).
 goal(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), case(A),
   writeToFiles('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-  writeToFiles('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2), 'tech_'),
+  writeToFiles('tech.pl', culpritIsFrom(X,A,L), culpritIsFrom(X,A,L,D2), 'tech_'),
   writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
   writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
   writeToFiles('tech.pl', similar(M3, M2), similar(M3, M2, D5), 'tech_'),
@@ -106,7 +96,7 @@ goal(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
 goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'), case(A),
   writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-  writeToFilesAll('tech.pl', culpritIsFrom(X,A), culpritIsFrom(X,A,D2), 'tech_'),
+  writeToFilesAll('tech.pl', culpritIsFrom(X,A,L), culpritIsFrom(X,A,L,D2), 'tech_'),
   writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
   writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
   writeToFilesAll('tech.pl', similar(M3, M2), similar(M3, M2, D5), 'tech_'),
@@ -114,7 +104,7 @@ goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
 
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
-culpritIsFrom(X, A, D) :- prove([culpritIsFrom(X, A)], D).
+culpritIsFrom(X, A, L, D) :- prove([culpritIsFrom(X, A, L)], D).
 notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
 similar(M1, M2, D) :- prove([similar(M1, M2)], D).
 specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible

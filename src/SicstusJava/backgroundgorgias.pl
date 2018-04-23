@@ -3,6 +3,8 @@ rule(bg1a, attackTypeList([ddos, espionage, defacement, data_destruction, sabota
 rule(bg1b, malwareTypeList([bot, ransomware, rootkit, spyware, trojan, virus, worm, keyloggers, grayware]), []).
 rule(bg1c, spreadMechanismList([driveByDownloads, homogeneity, vulnerability, backdoor]), []).
 rule(bg1d, attackMechanismList([zeroday, exploits, priviledgeEscalation, evasion, blended]), []).
+rule(bg2, target(X,Att), [targets(L,Att), member(X,L)]).
+
 
 rule(bg1z, knownVulnerabilities([eternalBlue]), []). %% TODO: find comprehensive list of knownVulnerabilities
 
@@ -27,6 +29,13 @@ rule(bg5, pastTargets( fancyBear ,[georgia,france,jordan,usa,hungary,world_antid
 	nato,ukraine,belgium,pakistan,asia_pacific_economic_cooperation,osce,united_kingdom,
 	germany,poland,european_commission]), []).
 rule(bg6, targetCategory(fancyBear, government,military), []).
+
+rule(bg7a, prominentGroup( cozyBear ), []).
+rule(bg7b, groupOrigin(cozyBear, russia), []).
+rule(bg7c, pastTargets(cozyBear, [government, diplomatic_organizations, defense, energy, financial, insurance, legal, pharmaceutical, research, technology, brazil, china, japan, mexico, new_zealand, southkorea, turkey]), []).
+rule(bg7x, malwareLinkedTo(trojanMiniduke, cozyBear), []).
+rule(bg7y, malwareLinkedTo(trojanCozyduke, cozyBear), []).
+rule(bg7z, malwareLinkedTo(trojanSeaduke, cozyBear), []).
 
 
 rule(bg8, prominentGroup( lazarusGrp ), []).
