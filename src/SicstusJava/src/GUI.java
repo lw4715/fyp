@@ -44,17 +44,21 @@ class GUI {
 
     private static final String[] techPredicates =
             {
-                "highLevelSkill/1", "requireHighResource/1",
-                "ipGeoloc/2", "attackSourceIP/2",
-                "spoofedIp/1", "sysLanguage/2", "firstLanguage/2",
-                "languageInCode/2", "infraRegisteredIn/2", "infraUsed/2",
-                "forBlackMarketUse/1", "infectionMethod/2",
-                "controlAndCommandEasilyFingerprinted/1", "similarCCServer/2",
-                "ccServer/2", "domainRegisteredDetails/3", "addressType/2",
-                "simlarCodeObfuscation/2", "sharedCode/2", "malwareModifiedFrom/2",
-                "specificConfigInMalware/1", "malwareUsedInAttack/2",
-                "usesZeroDayVulnerabilities/1", "sophisticatedMalware/1", "specificTarget/1",
-                "hasKillSwitch/1", "numComputersAffected/2", "numCountriesAffected/2"
+                "highLevelSkill(<attack_id>)", "requireHighResource(<attack_id>)",
+                "attackSourceIP(<ip_id>, <attack_id>)","ipGeoloc(<country>,<ip_id>)",
+                "spoofedIp(<ip_id>)", "sysLanguage(<language>,<attack_id>)", "firstLanguage(<language>,<country>)",
+                "languageInCode(<language>,<attack_id>)", "infraUsed(<infra_id>, <attack_id>)",
+                "infraRegisteredIn(<country>,<infra_id>)", "forBlackMarketUse(<malware_id>)",
+                "infectionMethod(<infection_method>, <malware_id>)",
+                "controlAndCommandEasilyFingerprinted(<malware_id>)", "ccServer(<server_id>,<malware_id>)",
+                "similarCCServer(<malware_id>,<malware_id>)",
+                "domainRegisteredDetails(<server_id>,<name>,<address>)", "addressType(<address>,<type>)",
+                "simlarCodeObfuscation(<malware_id>,<malware_id>)", "sharedCode(<malware_id>,<malware_id>)",
+                "malwareModifiedFrom(<malware_id>,<malware_id>)",
+                "specificConfigInMalware(<malware_id>)", "malwareUsedInAttack(<malware_id>,<attack_id>)",
+                "usesZeroDayVulnerabilities(<malware_id>)", "sophisticatedMalware(<malware_id>)", "specificTarget(<attack_id>)",
+                "hasKillSwitch(<malware_id>)",
+//                    "numComputersAffected", "numCountriesAffected/2"
         };
     private static final String[] opPredicates =
             {
@@ -92,7 +96,7 @@ class GUI {
         dropdown.addItemListener(arg0 -> {
             resetColours();
             status.setText("\t\tSelected: " + dropdown.getSelectedItem());
-            evidence.setText(formatPredicate(dropdown.getSelectedItem().toString()));
+            evidence.setText(dropdown.getSelectedItem().toString());
 
         });
 
@@ -154,15 +158,15 @@ class GUI {
         mainFrame.setVisible(true);
     }
 
-    private String formatPredicate(String s) {
-        String[] split = s.split("/");
-        StringBuilder sb = new StringBuilder();
-        sb.append("<arg>");
-        for (int i = 1; i < Integer.parseInt(split[1]); i++) {
-            sb.append(", <arg>");
-        }
-        return split[0] + '(' + sb + ')';
-    }
+//    private String formatPredicate(String s) {
+//        String[] split = s.split("/");
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("<arg>");
+//        for (int i = 1; i < Integer.parseInt(split[1]); i++) {
+//            sb.append(", <arg>");
+//        }
+//        return split[0] + '(' + sb + ')';
+//    }
 
     private void addButtonsToPanel(){
         JButton submitButton = new JButton(SUBMIT);
@@ -319,7 +323,7 @@ class GUI {
     private boolean checkArgs() {
         if (evidence.getText().equals(placeholderItem[0]) ||
                 evidence.getText().contains("<") || evidence.getText().contains(">")) {
-            status.setText("\t\tSelect predicate and replace \"<arg>\" with argument");
+            status.setText("\t\tSelect predicate and replace \"<argument>\" with argument");
             highlightElement(evidence);
             return false;
         }

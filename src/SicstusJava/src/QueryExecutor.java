@@ -9,7 +9,8 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
-    private final boolean VERBOSE = false;
+    private final boolean VERBOSE = true;
+    private final boolean combined = false;
 
     private static final QueryExecutor instance = new QueryExecutor();
     // TODO: update to relative filepath of prolog files
@@ -68,8 +69,8 @@ public class QueryExecutor {
         query.nextSolution();
     }
 
-    public String culpritString() {
-        StringBuilder sb = new StringBuilder();
+    public String culpritString(String attack) {
+        StringBuilder sb = new StringBuilder("{" + attack + "} ");
         for (String c : culprits.keySet()) {
             sb.append(String.format("%s [Score: %d, D: %d], ", c, culprits.get(c), derivations.get(c).size()));
         }
@@ -84,7 +85,7 @@ public class QueryExecutor {
     */
     void executeQuery(int mode, String caseName, boolean verbose, boolean all) {
         SPPredicate pred;
-        SPTerm attack, culprit, r, m = null, m1 = null, m2 = null, person = null;
+        SPTerm attack, culprit, r, m = null, m1 = null, m2 = null, person = null, reliability = null;
         SPQuery query;
         Map<String, Integer> accMap;
         int res;
@@ -102,65 +103,81 @@ public class QueryExecutor {
                 goal = "goal";
             }
 
-            switch(mode) {
-                case 0:
-                    numDeltas = 5;
-                    System.out.println("-------\nTECHNICAL");
-                    accMap = techMap;
-                    sp.restore(TECHSAV);
-                    sp.load(Utils.USER_EVIDENCE_FILENAME);
-                    pred = new SPPredicate(sp, goal, numDeltas + 5, "");
-                    attack = new SPTerm(sp, caseName);
-                    culprit = new SPTerm(sp).putVariable();
-                    m = new SPTerm(sp).putVariable();
-                    m1 = new SPTerm(sp).putVariable();
-                    m2 = new SPTerm(sp).putVariable();
-                    ds = new SPTerm[numDeltas];
-                    for (int i = 0; i < numDeltas; i++) {
-                        ds[i] = new SPTerm(sp).putVariable();
-                    }
-                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, m, m1, m2, ds[0], ds[1], ds[2], ds[3], ds[4] });
-                    break;
-                case 1:
-                    numDeltas = 3;
-                    System.out.println("-------\nOPERATIONAL");
-                    accMap = opMap;
-                    sp.restore(OPSAV);
-                    sp.load(TECH);
-                    sp.load(Utils.USER_EVIDENCE_FILENAME);
-                    pred = new SPPredicate(sp, goal, numDeltas + 3, "");
-                    attack = new SPTerm(sp, caseName);
-                    culprit = new SPTerm(sp).putVariable();
-                    person = new SPTerm(sp).putVariable();
-                    ds = new SPTerm[numDeltas];
-                    for (int i = 0; i < numDeltas; i++) {
-                        ds[i] = new SPTerm(sp).putVariable();
-                    }
-                    query = sp.openQuery(pred, new SPTerm[] { attack, culprit, person, ds[0], ds[1], ds[2] });
-                    break;
-                case 2:
-                    System.out.println("-------\nSTRATEGIC");
-                    accMap = strMap;
-                    sp.restore(STRSAV);
-                    sp.load(TECH);
-                    sp.load(OP);
-                    sp.load(Utils.USER_EVIDENCE_FILENAME);
-                    pred = new SPPredicate(sp, "goal_with_timeout", 4, "");
-                    attack = new SPTerm(sp, caseName);
-                    culprit = new SPTerm(sp).putVariable();
-                    ds = new SPTerm[1];
-                    ds[0] = new SPTerm(sp).putVariable();
-                    r = new SPTerm(sp).putVariable();
-                    query = sp.openQuery(pred, new SPTerm[] {attack, culprit, ds[0], r});
-                    break;
-                default:
-                    System.exit(-1);
-                    return;
+            if (combined) {
+//                System.out.println("-------\nSTRATEGIC");
+                accMap = strMap;
+                sp.restore("all.sav");
+                pred = new SPPredicate(sp, "goal_with_timeout", 5, "");
+                attack = new SPTerm(sp, caseName);
+                culprit = new SPTerm(sp).putVariable();
+                reliability = new SPTerm(sp).putVariable();
+                ds = new SPTerm[1];
+                ds[0] = new SPTerm(sp).putVariable();
+                r = new SPTerm(sp).putVariable();
+                query = sp.openQuery(pred, new SPTerm[] {attack, culprit, reliability, ds[0], r});
+            } else {
+
+                switch (mode) {
+                    case 0:
+                        numDeltas = 5;
+//                        System.out.println("Technical");
+                        accMap = techMap;
+                        sp.restore(TECHSAV);
+                        sp.load(Utils.USER_EVIDENCE_FILENAME);
+                        pred = new SPPredicate(sp, goal, numDeltas + 5, "");
+                        attack = new SPTerm(sp, caseName);
+                        culprit = new SPTerm(sp).putVariable();
+                        m = new SPTerm(sp).putVariable();
+                        m1 = new SPTerm(sp).putVariable();
+                        m2 = new SPTerm(sp).putVariable();
+                        ds = new SPTerm[numDeltas];
+                        for (int i = 0; i < numDeltas; i++) {
+                            ds[i] = new SPTerm(sp).putVariable();
+                        }
+                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, m, m1, m2, ds[0], ds[1], ds[2], ds[3], ds[4]});
+                        break;
+                    case 1:
+                        numDeltas = 3;
+//                        System.out.println("Operational");
+                        accMap = opMap;
+                        sp.restore(OPSAV);
+                        sp.load(TECH);
+                        sp.load(Utils.USER_EVIDENCE_FILENAME);
+                        pred = new SPPredicate(sp, goal, numDeltas + 3, "");
+                        attack = new SPTerm(sp, caseName);
+                        culprit = new SPTerm(sp).putVariable();
+                        person = new SPTerm(sp).putVariable();
+                        ds = new SPTerm[numDeltas];
+                        for (int i = 0; i < numDeltas; i++) {
+                            ds[i] = new SPTerm(sp).putVariable();
+                        }
+                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, person, ds[0], ds[1], ds[2]});
+                        break;
+                    case 2:
+//                        System.out.println("Strategic");
+                        accMap = strMap;
+                        sp.restore(STRSAV);
+                        sp.load(TECH);
+                        sp.load(OP);
+                        sp.load(Utils.USER_EVIDENCE_FILENAME);
+                        pred = new SPPredicate(sp, "goal_with_timeout", 5, "");
+                        attack = new SPTerm(sp, caseName);
+                        culprit = new SPTerm(sp).putVariable();
+                        reliability = new SPTerm(sp).putVariable();
+                        ds = new SPTerm[1];
+                        ds[0] = new SPTerm(sp).putVariable();
+                        r = new SPTerm(sp).putVariable();
+                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, reliability, ds[0], r});
+                        break;
+                    default:
+                        System.exit(-1);
+                        return;
+                }
             }
 
             int count = 0;
 
-            while (query.nextSolution() && count < 200) {
+            while (query.nextSolution()) {
                 if (TIMEOUT.toString().equals(r.toString())) {
                     System.out.println("TIMEOUT");
                     continue;
@@ -177,9 +194,9 @@ public class QueryExecutor {
                         for (SPTerm term : d.toTermArray()) {
                             dSet.add(term.toString());
                         }
-                        StringBuilder sb = new StringBuilder("{");
+                        StringJoiner sj = new StringJoiner(",");
                         for (String str : dSet) {
-                            sb.append(str + ",");
+                            sj.add(str);
                             res += getScore(str, mode);
                             if (str.contains("ass(") && count == 1) {
                                 abduced.add(str);
@@ -194,7 +211,9 @@ public class QueryExecutor {
                             }
                         }
 
-                        if (verbose) System.out.println(sb + "}");
+                        if (verbose && reliability != null) {
+                            System.out.println(String.format("Reliability: %s\nDerivation: {%s}\n", reliability, sj));
+                        }
 
                         String rulename = getRulename(mode, i, attack, culprit, person, m, m1, m2);
 
@@ -211,8 +230,6 @@ public class QueryExecutor {
                     }
                 }
             }
-
-            System.out.println("Finished\n");
             return;
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -332,9 +349,9 @@ public class QueryExecutor {
         culprits.clear();
         abduced.clear();
         derivations.clear();
-
+        System.out.println(String.format("---------\nStart %s derivation", caseName));
         double time = System.nanoTime();
-        System.out.println("Start time: " + time);
+//        System.out.println("Start time: " + time);
         this.executeQuery(0, caseName, VERBOSE, all);
         double techTime = (System.nanoTime() - time)/pow(10,9);
 
@@ -349,8 +366,8 @@ public class QueryExecutor {
         double strTime = (System.nanoTime() - time)/pow(10,9);
 
 //        System.out.println("Time taken for str layer: " + strTime + "s");
-        System.out.println("Total time for " + caseName + ": " + (techTime + opTime + strTime));
-        return new Result(culpritString(), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
+        System.out.println("\nTotal time for " + caseName + ": " + (techTime + opTime + strTime));
+        return new Result(culpritString(caseName), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
     }
 
     static Map<String, List<String>> getPredMap(Set<String> preds, boolean isAbducibles) {
@@ -377,7 +394,7 @@ public class QueryExecutor {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             br.lines().forEach(line -> {
                 if (line.contains(pred) && line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%')) {
-                    System.out.println(line);
+//                    System.out.println(line);
                     r.add(line);
                 }
             });
