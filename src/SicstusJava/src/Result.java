@@ -30,10 +30,10 @@ public class Result {
 
     @Override
     public String toString() {
-//        String s = String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
-//                this.culpritString, this.techMap, this.opMap, this.strMap);
+        String s = String.format("Culprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
+                this.culpritString, this.techMap, this.opMap, this.strMap);
 
-        String s = String.format("Culprit(s): %s\n", this.culpritString);
+//        String s = String.format("Culprit(s): %s\n", this.culpritString);
         if (abducedMap.isEmpty()) {
             return s;
         } else {

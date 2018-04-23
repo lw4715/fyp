@@ -3,7 +3,7 @@ rule(bg1a, attackTypeList([ddos, espionage, defacement, data_destruction, sabota
 rule(bg1b, malwareTypeList([bot, ransomware, rootkit, spyware, trojan, virus, worm, keyloggers, grayware]), []).
 rule(bg1c, spreadMechanismList([driveByDownloads, homogeneity, vulnerability, backdoor]), []).
 rule(bg1d, attackMechanismList([zeroday, exploits, priviledgeEscalation, evasion, blended]), []).
-rule(bg2, target(X,Att), [targets(L,Att), member(X,L)]).
+rule(bg2, target(X,Att), [targets(L,Att), member(X,L), \+ is_list(X), is_list(L)]).
 
 
 rule(bg1z, knownVulnerabilities([eternalBlue]), []). %% TODO: find comprehensive list of knownVulnerabilities

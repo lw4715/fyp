@@ -32,7 +32,7 @@ rule(culprit(linkedMalware,X,A1),	 	isCulprit(X, A1, N),[malwareUsedInAttack(M1,
 
 
 rule(emptyHasCap, 	hasCapability([], _Att), 	[]).
-rule(allHasCap, 	hasCapability([X|L], Att), 	[X \= [], hasCapability(X,Att), hasCapability(L,Att)]).
+rule(allHasCap, 	hasCapability([X|L], Att), 	[\+ is_list(X), is_list(L), hasCapability(X,Att), hasCapability(L,Att)]).
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 
 rule(notCulprit(noCapability,Att), 	neg(isCulprit(C,Att,2)), [culpritIsFrom(C,Att,_L),neg(hasCapability(C,Att))]).
