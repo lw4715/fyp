@@ -30,11 +30,11 @@ rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(ha
 rule(ecMotive(C,T), hasMotive(C, Att), [industry(T), target(T, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
 rule(pMotive,       hasMotive(C, Att), [target(T, Att), hasPoliticalMotive(C, T), specificTarget(Att)]).
 rule(pMotive(C,T),  hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
-rule(conflict,      hasMotive(X, Att), [target(T, Att), industry(Industry, T), targetCountry(TC, Att), attackYear(Att, Y),
-  recentNewsInYear(Industry, TC, Y), causeOfConflict(X, TC, Industry), specificTarget(Att)]).
+rule(conflict,      hasMotive(X, Att), [targetCountry(TC, Att), attackYear(Att, Y),
+  recentNewsInYear(News, TC, Y), causeOfConflict(X, TC, News), specificTarget(Att)]).
+rule(conflict1,      hasMotive(X, Att), [target(TC, Att), attackYear(Att, Y),
+  recentNewsInYear(News, TC, Y), causeOfConflict(X, TC, News), specificTarget(Att)]).
 
-rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
-rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 
 abducible(specificTarget(_Att), []).
 
@@ -50,20 +50,19 @@ abducible(specificTarget(_Att), []).
 % output:
 %% hasCapability(X,A)
 %% hasMotive(X,A)
-%% governmentLinked(P,X)
 
-goal(A, X, P, D0, D1, D2) :-
+goal(A, X, X1, D0, D1) :-
   initFile('op.pl'), case(A),
   writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
-  writeToFiles('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_'),
-  writeToFilesAbd('op.pl', governmentLinked(P,X2), governmentLinked(P,X2,D2), 'op_').
+  writeToFiles('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_').
+  %% writeToFilesAbd('op.pl', governmentLinked(P,X2), governmentLinked(P,X2,D2), 'op_').
 
-goal_all(A, X, P, D0, D1, D2) :-
+goal_all(A, X, X1, D0, D1) :-
   initFile('op.pl'), case(A),
   writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
-  writeToFilesAll('op.pl', hasMotive(X,A), hasMotive(X,A,D1), 'op_'),
-  writeToFilesAllAbd('op.pl', governmentLinked(P,X), governmentLinked(P,X,D2), 'op_').
+  writeToFilesAll('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_').
+  %% writeToFilesAllAbd('op.pl', governmentLinked(P,X2), governmentLinked(P,X2,D2), 'op_').
 
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
-governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).
+%% governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).

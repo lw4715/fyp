@@ -66,12 +66,13 @@ rule(case4_f12, specificConfigInMalware( stuxnet ), []).
 %  sony 
 rule(case5_f1, claimedResponsibility( guardiansOfPeace ,  sonyhack ), []).
 rule(case5_f2, target( sony ,  sonyhack ), []).
-rule(case5_f3, recentNewsInYear( theInterview ,  sony , 2014), []).
-rule(case5_f4, attackYear( sonyhack , 2014), []).
-rule(case5_f5, causeOfConflict( northkorea ,  sony ,  theInterview ), []).
-rule(case5_f6, majorityIpOrigin( northkorea ,  sonyhack ), []).
-rule(case5_f7, malwareUsedInAttack( trojanVolgmer ,  sonyhack ), []).
-rule(case5_f8, malwareUsedInAttack( backdoorDestover ,  sonyhack ), []).
+rule(case5_f3, targetCountry( usa ,  sonyhack ), []).
+rule(case5_f4, recentNewsInYear( theInterview ,  sony , 2014), []).
+rule(case5_f5, attackYear( sonyhack , 2014), []).
+rule(case5_f6, causeOfConflict( northkorea ,  sony ,  theInterview ), []).
+rule(case5_f7, majorityIpOrigin( northkorea ,  sonyhack ), []).
+rule(case5_f8, malwareUsedInAttack( trojanVolgmer ,  sonyhack ), []).
+rule(case5_f9, malwareUsedInAttack( backdoorDestover ,  sonyhack ), []).
 
 %  wannacry 
 rule(case6_f1, malwareUsedInAttack( wannacry ,  wannacryattack ), []).

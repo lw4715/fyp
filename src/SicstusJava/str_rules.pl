@@ -18,7 +18,8 @@ abducible(notForBlackMarketUse(_), []).
 abducible(hasCapability(_,_), []).
 
 rule(notTargetted, neg(specificTarget(Att)),[target(T1, Att), target(T2, Att), T1 \= T2]).
-
+rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
+rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 
 rule(culprit(claimedResp,X,Att), 		isCulprit(X,Att,1),	[claimedResponsibility(X,Att)]).
 rule(culprit(motiveAndCapability,C,Att),isCulprit(C,Att,3), [hasMotive(C,Att),hasCapability(C,Att)]).
@@ -31,15 +32,15 @@ rule(culprit(linkedMalware,X,A1),	 	isCulprit(X, A1, N),[malwareUsedInAttack(M1,
 
 
 rule(emptyHasCap, 	hasCapability([], _Att), 	[]).
-rule(allHasCap, 	hasCapability([X|L], Att), 	[hasCapability(X,Att), hasCapability(L,Att)]).
+rule(allHasCap, 	hasCapability([X|L], Att), 	[X \= [], hasCapability(X,Att), hasCapability(L,Att)]).
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 
-rule(notCulprit(noCapability,Att), 	neg(isCulprit(C,Att,2)), 	[culpritIsFrom(C,Att,_L),neg(hasCapability(C,Att))]).
-rule(notCulprit(weakAttack,Att), 	neg(isCulprit(C,Att,2)),	[country(C), neg(requireHighResource(Att))]).
-rule(notCulprit(targetItself,Att), 	neg(isCulprit(C,Att,1)),	[target(C,Att)]). % Purposely leave out for now
-rule(notCulprit(lowGciTier,Att), 	neg(isCulprit(C,Att,2)),		[gci_tier(C,initiating)]).
-rule(notCulprit(noMotive,Att), 		neg(isCulprit(X,Att,3)),	[neg(hasMotive(X,Att))]).
-rule(notCulprit(oneCulprit,Att), 	neg(isCulprit(X,Att,_)), 	[isCulprit(Y,Att,_), X \= Y]).
+rule(notCulprit(noCapability,Att), 	neg(isCulprit(C,Att,2)), [culpritIsFrom(C,Att,_L),neg(hasCapability(C,Att))]).
+rule(notCulprit(weakAttack,Att), 	neg(isCulprit(C,Att,2)), [country(C), neg(requireHighResource(Att))]).
+rule(notCulprit(targetItself,Att), 	neg(isCulprit(C,Att,1)), [target(C,Att)]). % Purposely leave out for now
+rule(notCulprit(lowGciTier,Att), 	neg(isCulprit(C,Att,2)), [gci_tier(C,initiating)]).
+rule(notCulprit(noMotive,Att), 		neg(isCulprit(X,Att,3)), [neg(hasMotive(X,Att))]).
+rule(notCulprit(oneCulprit,Att), 	neg(isCulprit(X,Att,_)), [isCulprit(Y,Att,_), X \= Y]).
 
 
 %% rule(similarMalware, isCulprit(X, A1), 
