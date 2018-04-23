@@ -9,7 +9,7 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
-    private final boolean VERBOSE = true;
+    private final boolean VERBOSE = false;
     private final boolean combined = false;
 
     private static final QueryExecutor instance = new QueryExecutor();
@@ -137,7 +137,8 @@ public class QueryExecutor {
 //                r = new SPTerm(sp).putVariable();
 //                query = sp.openQuery(pred, new SPTerm[] {attack, culprit, reliability, ds[0], r});
                 queryMap = new HashMap();
-                queryString = String.format("goal_with_timeout(%s,X,N,D0,R).", caseName);
+                queryString = String.format("%s(%s,X,N,D0,R).", goal, caseName);
+                System.out.println(queryString);
                 query = sp.openQuery(queryString, queryMap);
             } else {
                 switch (mode) {
@@ -160,7 +161,8 @@ public class QueryExecutor {
 //                        }
 //                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, m, m1, m2, ds[0], ds[1], ds[2], ds[3], ds[4]});
                         queryMap = new HashMap();
-                        queryString = String.format("goal(%s,X,M,M1,M2,D0,D1,D2,D3,D4).", caseName);
+                        queryString = String.format("%s(%s,X,M,M1,M2,D0,D1,D2,D3,D4).", goal, caseName);
+                        System.out.println(queryString);
                         query = sp.openQuery(queryString, queryMap);
                         break;
                     case 1:
@@ -180,7 +182,8 @@ public class QueryExecutor {
 //                        }
 //                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, culprit1, ds[0], ds[1]});
                         queryMap = new HashMap();
-                        queryString = String.format("goal(%s,X,X1,D0,D1).", caseName);
+                        queryString = String.format("%s(%s,X,X1,D0,D1).", goal, caseName);
+                        System.out.println(queryString);
                         query = sp.openQuery(queryString, queryMap);
                         break;
                     case 2:
@@ -202,6 +205,7 @@ public class QueryExecutor {
                         queryMap = new HashMap();
                         queryString = String.format("goal_with_timeout(%s,X,N,D0,R).", caseName);
                         query = sp.openQuery(queryString, queryMap);
+                        System.out.println(queryString);
                         System.out.println(queryMap);
                         break;
                     default:
@@ -212,7 +216,7 @@ public class QueryExecutor {
 
             int count = 0;
 
-            while (query.nextSolution()) {
+            while (query.nextSolution() && count < 500) {
                 if (queryMap.get("R") != null &&
                         TIMEOUT.toString().equals(queryMap.get("R").toString())) {
                     System.out.println("TIMEOUT");
@@ -396,16 +400,16 @@ public class QueryExecutor {
         double techTime = (System.nanoTime() - time)/pow(10,9);
 
         time = System.nanoTime();
-        System.out.println("Time taken for tech layer: " + techTime + "s");
+//        System.out.println("Time taken for tech layer: " + techTime + "s");
         this.executeQuery(1, caseName, VERBOSE, all);
         double opTime = (System.nanoTime() - time)/pow(10,9);
 
         time = System.nanoTime();
-        System.out.println("Time taken for op layer: " + opTime + "s");
+//        System.out.println("Time taken for op layer: " + opTime + "s");
         this.executeQuery(2, caseName, VERBOSE, all);
         double strTime = (System.nanoTime() - time)/pow(10,9);
 
-        System.out.println("Time taken for str layer: " + strTime + "s");
+//        System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("\nTotal time for " + caseName + ": " + (techTime + opTime + strTime));
 
 //        closeRedirectStdout();

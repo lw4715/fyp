@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Stream;
 
 @SuppressWarnings("ALL")
@@ -227,7 +226,7 @@ class GUI {
                     executeQuery(false);
                     break;
                 case EXECUTEALL:
-                    status.setText(String.format("\t\tExecuting all: %s", utils.USER_EVIDENCE_FILENAME));
+                    status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
                     executeQuery(true);
                     break;
                 default:
@@ -248,7 +247,7 @@ class GUI {
             if (!all && accumulatedResults.containsKey(attackName.getText())) {
                 executeResult = accumulatedResults.get(attackName.getText());
             } else {
-                status.setText(String.format("\t\tExecuting isCulprit(%s, X)...", attackName.getText()));
+                status.setText(String.format("\t\tExecuted isCulprit(%s, X)...", attackName.getText()));
                 try {
                     if (jc == null) {
                         jc = new JasperCallable();
@@ -270,50 +269,52 @@ class GUI {
                 JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(),
                         "Execution result for " + attackName.getText(), JOptionPane.DEFAULT_OPTION, option);
             } else {
-                List<String> res = readFromResultAndNonResultFiles();
+                Set<String>[] res = readFromResultAndNonResultFiles();
                 JDialog dialog = new JDialog(mainFrame);
-                dialog.setLayout(new GridLayout(0, 1));
-                JTextArea results = new JTextArea(res.get(0));
-                results.setEditable(false);
-                StringBuilder sb = new StringBuilder();
-                res.remove(0);
-                for (String r : res) {
-                    sb.append(r + '\n');
+                dialog.setLayout(new GridLayout(1, 3));
+                StringJoiner sj = new StringJoiner("\n");
+                for (String s : res[0]) {
+                    sj.add(s);
                 }
-                JTextArea nonresults = new JTextArea(sb.toString());
+                JTextArea results = new JTextArea("Results:\n" + sj);
+
+                results.setEditable(false);
+                sj = new StringJoiner("\n");
+                for (String s : res[1]) {
+                    sj.add(s);
+                }
+                JTextArea nonresults = new JTextArea("Other possible predicates:\n" + sj);
+
                 nonresults.setEditable(false);
-                Set<String> set = new HashSet<>(res);
-                JTextArea possiblerules = new JTextArea(Utils.formatMap(QueryExecutor.getPredMap(set, false)));
+                JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
                 possiblerules.setEditable(false);
-                dialog.add(new JLabel("Results:", JLabel.LEFT));
                 dialog.add(results);
-                dialog.add(new JLabel("Non-results:", JLabel.LEFT));
                 dialog.add(nonresults);
-                dialog.add(new JLabel("Possible rules:", JLabel.LEFT));
                 dialog.add(possiblerules);
-                dialog.setSize(600, 800);
+                dialog.setSize(1600, 1000);
                 dialog.setVisible(true);
 //                dialog.setAlwaysOnTop(true); FIXME
                 dialog.setModal(true);
 
             }
-            mainFrame.dispose();
-            prepareGUI();
-            addButtonsToPanel();
         }
     }
 
     // elem at index 0 is combined predicates as one string read from RESULTFILENAME,
     // elem at index 1 .. n are individual predicates from NONRESULTFILENAME
-    private static List<String> readFromResultAndNonResultFiles() {
-        List<String> res = new ArrayList<>();
+    private static Set<String>[] readFromResultAndNonResultFiles() {
+        Set<String>[] res = new Set[2];
         try {
             BufferedReader br = new BufferedReader(new FileReader(RESULTFILENAME));
+            Set<String> set = new HashSet<>();
             final StringBuilder sb = new StringBuilder();
-            br.lines().forEach(x -> sb.append(x + '\n'));
-            res.add(sb.toString());
+            br.lines().forEach(x -> set.add(x));
+            res[0] = set;
+
+            Set<String> set1 = new HashSet<>();
             br = new BufferedReader(new FileReader(NONRESULTFILENAME));
-            br.lines().forEach(x -> res.add(x));
+            br.lines().forEach(x -> set1.add(x));
+            res[1] = set1;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
