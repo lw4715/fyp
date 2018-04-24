@@ -69,6 +69,18 @@ public class QueryExecutor {
         query.nextSolution();
     }
 
+    private String getVisualTree() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("visual.log"));
+            StringBuilder sb = new StringBuilder();
+            br.lines().forEach(line -> sb.append(line + "\n"));
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void redirectStdout() {
         System.out.println("Redirecting stdout");
         try {
@@ -215,6 +227,7 @@ public class QueryExecutor {
                             List<String> existingDerivation = culprits.get(culprit.toString());
                             int curr = existingDerivation == null ? 0 : getScore(existingDerivation, mode);
                             if (res > curr) {
+                                dList.add(getVisualTree());
                                 culprits.put(culprit.toString(), dList);
                                 System.out.println(culprits);
                             }
@@ -370,7 +383,6 @@ public class QueryExecutor {
 //    }
 
     public Result execute(String caseName, boolean all) {
-//        redirectStdout();
         culprits.clear();
         abduced.clear();
         derivations.clear();
@@ -393,7 +405,6 @@ public class QueryExecutor {
 //        System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("\nTotal time for " + caseName + ": " + (techTime + opTime + strTime));
 
-        closeRedirectStdout();
         return new Result(culpritString(caseName), techMap, opMap, strMap, abduced, getPredMap(abduced, true), derivations);
     }
 

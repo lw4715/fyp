@@ -97,5 +97,5 @@ rule(p37, prefer(p12, p16), []).
 rule(p38, prefer(p13, p16), []).
 rule(p37, prefer(p8, p2), []).
 
-goal(A, X, N, D) :- tell('visual.log'),visual_prove([isCulprit(X, A, N)], D).
+goal(A, X, N, D) :- tell('visual.log'),visual_prove([isCulprit(X, A, N)], D), told.
 goal_with_timeout(A, X, N, D, Result) :- time_out(goal(A, X, N, D), 3000, Result).
