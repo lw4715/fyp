@@ -16,7 +16,6 @@
 
 abducible(notForBlackMarketUse(_), []).
 abducible(hasCapability(_,_), []).
-abducible(governmentLinked(_,_), []).
 
 rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). % more than one country targetted
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
@@ -66,7 +65,7 @@ rule(notCulprit(lowGciTier,X,Att), 	neg(isCulprit(X,Att,2)), [gci_tier(X,initiat
 
 
 % pref
-rule(p0, prefer(culprit(_,_,_),notCulprit(noEvidence,_,_)), []).
+rule(p0, prefer(culprit(_,X,A),notCulprit(noEvidence,X,A)), []). %With any evidence, we prefer to attribute the culprit accordingly
 rule(p1, prefer(culprit(motiveAndCapability,X,A), culprit(claimedResp,Y,A)), [X\=Y]).   
 rule(p2, prefer(culprit(motiveAndLocation,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
 rule(p3, prefer(culprit(motive,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
