@@ -24,7 +24,7 @@ rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 rule(emptyHasCap, 	hasCapability([], _Att), 	[]).
 rule(allHasCap, 	hasCapability([X|L], Att), 	[\+ is_list(X), is_list(L), hasCapability(X,Att), hasCapability(L,Att)]).
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
-rule(similarAttack, malwareLinkedTo(M,X), [malwareUsedInAttack(M,A), isCulprit(X,A)]).
+rule(relatedMalware, malwareLinkedTo(M,X), [malwareUsedInAttack(M,A), isCulprit(X,A)]).
 
 rule(culprit(claimedResp,X,Att), 		isCulprit(X,Att,1),	[claimedResponsibility(X,Att)]).
 rule(culprit(motiveAndCapability,C,Att),isCulprit(C,Att,3), [hasMotive(C,Att),hasCapability(C,Att)]).
@@ -34,7 +34,8 @@ rule(culprit(loc,C,Att),	 			isCulprit(C,Att,N),	[country(C), culpritIsFrom(C,At
 rule(culprit(social,C,Att), 			isCulprit(C,Att,2), [country(C), governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 rule(culprit(linkedMalware,X,A1),	 	isCulprit(X,A1, N), [malwareUsedInAttack(M1,A1),similar(M1,M2),
   malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2), reliability(similarMalware,N)]).
-%% rule(culprit(similarAttack,X,A1),       isCulprit(X,A1, N), [similarAttack(A1,A2), isCulprit(X,A2)]).
+rule(culprit(linkedMalware,X,A1),       isCulprit(X,A1, N), [malwareUsedInAttack(M1,A1),similar(M2,M1),
+  malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2), reliability(similarMalware,N)]).
 
 %% culprit not from, notculprit rule, add pref
 %% make example case with spoof ip, use tor
@@ -45,14 +46,14 @@ rule(culprit(linkedMalware,X,A1),	 	isCulprit(X,A1, N), [malwareUsedInAttack(M1,
 
 %% GUI: analyst add rules and preferences
 
-rule(notCulprit(noEvidence,Att), 	neg(isCulprit(_X,Att,0)), []).
-rule(notCulprit(culpritNotFrom,Att),neg(isCulprit(X,Att,N)), [neg(culpritIsFrom(X, Att, L)), reliability(L,N)]).
-rule(notCulprit(noCapability,Att), 	neg(isCulprit(X,Att,2)), [neg(hasCapability(X,Att))]).
-rule(notCulprit(noMotive,Att),      neg(isCulprit(X,Att,3)), [neg(hasMotive(X,Att))]).
-rule(notCulprit(weakAttack,Att), 	neg(isCulprit(X,Att,2)), [hasResources(X), neg(requireHighResource(Att))]).
-rule(notCulprit(targetItself,Att), 	neg(isCulprit(X,Att,1)), [target(X,Att)]). % Purposely leave out for now
-rule(notCulprit(lowGciTier,Att), 	neg(isCulprit(X,Att,2)), [gci_tier(X,initiating)]).
-rule(notCulprit(noLinkToGov,Att),   neg(isCulprit(X,Att,2)), [neg(governmentLinked(P,X)),identifiedIndividualInAttack(P,Att)]). % could be individual attack
+rule(notCulprit(noEvidence,X,Att), 	neg(isCulprit(X,Att,0)), []).
+rule(notCulprit(culpritNotFrom,X,Att),neg(isCulprit(X,Att,N)), [neg(culpritIsFrom(X, Att, L)), reliability(L,N)]).
+rule(notCulprit(noCapability,X,Att), 	neg(isCulprit(X,Att,2)), [neg(hasCapability(X,Att))]).
+rule(notCulprit(noMotive,X,Att),      neg(isCulprit(X,Att,3)), [neg(hasMotive(X,Att))]).
+rule(notCulprit(weakAttack,X,Att), 	neg(isCulprit(X,Att,2)), [hasResources(X), neg(requireHighResource(Att))]).
+rule(notCulprit(targetItself,X,Att), 	neg(isCulprit(X,Att,1)), [target(X,Att)]). % Purposely leave out for now
+rule(notCulprit(lowGciTier,X,Att), 	neg(isCulprit(X,Att,2)), [gci_tier(X,initiating)]).
+rule(notCulprit(noLinkToGov,X,Att),   neg(isCulprit(X,Att,2)), [neg(governmentLinked(P,X)),identifiedIndividualInAttack(P,Att)]). % could be individual attack
 
 %% rule(notCulprit(oneCulprit,Att), 	neg(isCulprit(X,Att,_)), [isCulprit(Y,Att,_), X \= Y]).
 
@@ -64,30 +65,34 @@ rule(notCulprit(noLinkToGov,Att),   neg(isCulprit(X,Att,2)), [neg(governmentLink
 
 
 % pref
-rule(p0, prefer(notCulprit(noEvidence,_), culprit(_,_,_)), []).
-rule(p1, prefer(culprit(motiveAndCapability,_,_), culprit(claimedResp,_,_)), []).
-rule(p2, prefer(culprit(motiveAndLocation,_,_), culprit(claimedResp,_,_)), []).
-rule(p3, prefer(culprit(motive,_,_), culprit(claimedResp,_,_)), []).
-rule(p4, prefer(culprit(social,_,_), culprit(claimedResp,_,_)), []).
-%% rule(p5, prefer(culprit(linkedMalware,_,_), culprit(claimedResp,_,_)), []).
-%% rule(p6, prefer(culprit(linkedMalware1,_,_), culprit(claimedResp,_,_)), []).
-rule(p7, prefer(culprit(similarAttack,_,_), culprit(claimedResp,_,_)), []).
+rule(p0, prefer(culprit(_,_,_),notCulprit(noEvidence,_,_)), []).
+rule(p1, prefer(culprit(motiveAndCapability,X,A), culprit(claimedResp,Y,A)), [X\=Y]).   
+rule(p2, prefer(culprit(motiveAndLocation,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
+rule(p3, prefer(culprit(motive,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
+rule(p4, prefer(culprit(social,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
+rule(p5, prefer(culprit(linkedMalware,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
 
-%% 
-rule(p8, prefer(notCulprit(noCapability,_),culprit(motiveAndLocation,_,_)), []).
-rule(p9, prefer(notCulprit(noCapability,_),culprit(loc,_,_)), []).
+rule(p8, prefer(notCulprit(noCapability,X,A),culprit(motiveAndLocation,X,A)), []).    
+rule(p9, prefer(notCulprit(noCapability,X,A),culprit(loc,X,A)), []).  
+rule(p10, prefer(culprit(social,X,A),notCulprit(noCapability,X,A)), []).  
+    
 
-rule(p10, prefer(culprit(social,_,_),notCulprit(noCapability,_)), []).
-rule(p11, prefer(culprit(linkedMalware,_,_), notCulprit(noCapability,_)), []).
-%% rule(p8, prefer(similarMalware, noCap(_Att)), []).
-%% rule(p8, prefer(noMotive(Att), grpPastTargets), []).
+rule(p14, prefer(notCulprit(culpritNotFrom,X,A), culprit(motive,X,A)), []).
+rule(p15, prefer(notCulprit(weakAttack,X,A), culprit(motive,X,A)), []).
 
-%% rule(p10, prefer(notCulprit(targetItself,Att), claimedResp(X,Att)), [specificTarget(Att)]).
-rule(p12, prefer(notCulprit(targetItself,Att), culprit(_,_,Att)), [specificTarget(Att)]). % if target is specific, then prefer targetItself
-%% rule(p12, prefer(notCulprit(oneCulprit,_), culprit(_,_,_)), []).
+rule(p16, prefer(notCulprit(lowGciTier,X,A), culprit(linkedMalware,X,A)), []).   
+rule(p17, prefer(notCulprit(noCapability,X,A), culprit(linkedMalware,X,A)), []). 
+rule(p22, prefer(notCulprit(noLinkToGov,X,A), culprit(linkedMalware,X,A)), []).   
 
-%% rule(p16, prefer(oneCulprit(Y,X,Att), claimedResp(X,Att)),	[]).
-%% rule(p16, prefer(oneCulprit(Y,X,Att), claimedResp(X,Att)),	[]).
+rule(p24, prefer(notCulprit(noLinkToGov,X,A), culprit(social,X,A)), []).    
+
+rule(p27, prefer(culprit(motive,X,A), notCulprit( culpritNotFrom,X,A)),[]).
+rule(p28, prefer(culprit(motive,X,A), notCulprit( weakAttack,X,A)),[]).
+
+rule(p30, prefer(culprit(loc,X,A), notCulprit(noCapability,X,A)),[]).
+rule(p31, prefer(notCulprit(noCapability,X,A), culprit(social,X,A)),[]).
+
+rule(p36, prefer(notCulprit(targetItself,X,Att), culprit(_,X,Att)), [specificTarget(Att)]). 
 
 
 
