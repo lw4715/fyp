@@ -16,6 +16,7 @@
 
 abducible(notForBlackMarketUse(_), []).
 abducible(hasCapability(_,_), []).
+abducible(governmentLinked(_,_), []).
 
 rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). % more than one country targetted
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
@@ -53,7 +54,7 @@ rule(notCulprit(noMotive,X,Att),      neg(isCulprit(X,Att,3)), [neg(hasMotive(X,
 rule(notCulprit(weakAttack,X,Att), 	neg(isCulprit(X,Att,2)), [hasResources(X), neg(requireHighResource(Att))]).
 rule(notCulprit(targetItself,X,Att), 	neg(isCulprit(X,Att,1)), [target(X,Att)]). % Purposely leave out for now
 rule(notCulprit(lowGciTier,X,Att), 	neg(isCulprit(X,Att,2)), [gci_tier(X,initiating)]).
-rule(notCulprit(noLinkToGov,X,Att),   neg(isCulprit(X,Att,2)), [neg(governmentLinked(P,X)),identifiedIndividualInAttack(P,Att)]). % could be individual attack
+%% rule(notCulprit(noLinkToGov,X,Att),   neg(isCulprit(X,Att,2)), [neg(governmentLinked(P,X)),identifiedIndividualInAttack(P,Att)]). % could be individual attack
 
 %% rule(notCulprit(oneCulprit,Att), 	neg(isCulprit(X,Att,_)), [isCulprit(Y,Att,_), X \= Y]).
 
@@ -70,31 +71,31 @@ rule(p1, prefer(culprit(motiveAndCapability,X,A), culprit(claimedResp,Y,A)), [X\
 rule(p2, prefer(culprit(motiveAndLocation,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
 rule(p3, prefer(culprit(motive,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
 rule(p4, prefer(culprit(social,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
-rule(p5, prefer(culprit(linkedMalware,X,A), culprit(claimedResp,Y,A)), [X\=Y]). 
+rule(p5, prefer(culprit(linkedMalware,X,A), culprit(claimedResp,Y,A)), [X\=Y]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
 
+rule(p6, prefer(notCulprit(noCapability,X,A), culprit(claimedResp,X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
+rule(p7, prefer(notCulprit(noCapability,X,A),culprit(motive,X,A)), []).    
 rule(p8, prefer(notCulprit(noCapability,X,A),culprit(motiveAndLocation,X,A)), []).    
 rule(p9, prefer(notCulprit(noCapability,X,A),culprit(loc,X,A)), []).  
-rule(p10, prefer(culprit(social,X,A),notCulprit(noCapability,X,A)), []).  
-    
+rule(p10, prefer(notCulprit(noCapability,X,A), culprit(social,X,A)),[]). % social evidences e.g. twitter posts/ emails can be easily forged
+rule(p12, prefer(notCulprit(noCapability,X,A), culprit(linkedMalware,X,A)), []).
 
-rule(p14, prefer(notCulprit(culpritNotFrom,X,A), culprit(motive,X,A)), []).
-rule(p15, prefer(notCulprit(weakAttack,X,A), culprit(motive,X,A)), []).
+rule(p13, prefer(notCulprit(lowGciTier,X,A), culprit(linkedMalware,X,A)), []).  
+%% rule(p14, prefer(notCulprit(noLinkToGov,X,A), culprit(linkedMalware,X,A)), []).
 
-rule(p16, prefer(notCulprit(lowGciTier,X,A), culprit(linkedMalware,X,A)), []).   
-rule(p17, prefer(notCulprit(noCapability,X,A), culprit(linkedMalware,X,A)), []). 
-rule(p22, prefer(notCulprit(noLinkToGov,X,A), culprit(linkedMalware,X,A)), []).   
+%% rule(p15, prefer(culprit(claimedResp,X,A), notCulprit(noLinkToGov,X,A)), []).
+%% rule(p16, prefer(culprit(linkedMalware,X,A), notCulprit(noLinkToGov,X,A)), []). 
+%% rule(p17, prefer(culprit(motiveAndCapability,X,A), notCulprit(noLinkToGov,X,A)), []).
 
-rule(p24, prefer(notCulprit(noLinkToGov,X,A), culprit(social,X,A)), []).    
+rule(p19, prefer(notCulprit(culpritNotFrom,X,A), culprit(motive,X,A)), []).
+rule(p20, prefer(notCulprit(weakAttack,X,A), culprit(motive,X,A)), []).
 
-rule(p27, prefer(culprit(motive,X,A), notCulprit( culpritNotFrom,X,A)),[]).
-rule(p28, prefer(culprit(motive,X,A), notCulprit( weakAttack,X,A)),[]).
-
-rule(p30, prefer(culprit(loc,X,A), notCulprit(noCapability,X,A)),[]).
-rule(p31, prefer(notCulprit(noCapability,X,A), culprit(social,X,A)),[]).
 
 rule(p36, prefer(notCulprit(targetItself,X,Att), culprit(_,X,Att)), [specificTarget(Att)]). 
 
+rule(p37, prefer(p12, p16), []).
+rule(p38, prefer(p13, p16), []).
+rule(p37, prefer(p8, p2), []).
 
-
-goal(A, X, N, D) :- visual_prove([isCulprit(X, A, N)], D).
+goal(A, X, N, D) :- tell('visual.log'),visual_prove([isCulprit(X, A, N)], D).
 goal_with_timeout(A, X, N, D, Result) :- time_out(goal(A, X, N, D), 3000, Result).

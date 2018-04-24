@@ -104,8 +104,6 @@ public class QueryExecutor {
     2 : str
     */
     SPTerm[] executeQuery(int mode, String caseName, boolean verbose, boolean all) {
-//        SPPredicate pred;
-//        SPTerm attack, culprit, culprit1 = null, r, m = null, m1 = null, m2 = null, reliability = null;
         SPQuery query;
         Map<String, Integer> accMap;
         int res;
@@ -195,7 +193,6 @@ public class QueryExecutor {
                     if (derivationIsSeen(d, culprit)) continue;
 
                     if (d.isList()) {
-//                        StringJoiner sj = new StringJoiner(",");
                         List<String> dList = new ArrayList<>();
                         for (SPTerm term : d.toTermArray()) {
                             dList.add(term.toString());
@@ -249,7 +246,6 @@ public class QueryExecutor {
         StringJoiner sj = new StringJoiner(",");
         for (String str : dSet) {
             sj.add(str);
-//            res += getScore(str, mode);
             if (str.contains("ass(") && count == 1) {
                 abduced.add(str);
             }
@@ -397,7 +393,7 @@ public class QueryExecutor {
 //        System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("\nTotal time for " + caseName + ": " + (techTime + opTime + strTime));
 
-//        closeRedirectStdout();
+        closeRedirectStdout();
         return new Result(culpritString(caseName), techMap, opMap, strMap, abduced, getPredMap(abduced, true), derivations);
     }
 
