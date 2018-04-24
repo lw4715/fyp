@@ -25,6 +25,16 @@ public class Utils {
         }
     }
 
+    void addRulesWithoutChange(String rule) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
+            bw.write(rule);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     void addRules(String rule) {
         if (rule.length() == 0) {
             return;
@@ -59,9 +69,7 @@ public class Utils {
 
     public void updateEvidence(String evidences) {
         clearFile();
-        for (String evidence : evidences.split("\n")) {
-            addEvidence(evidence.split("%")[0]);
-        }
+        addRulesWithoutChange(evidences);
     }
 
     public void updateRule(File file) {
