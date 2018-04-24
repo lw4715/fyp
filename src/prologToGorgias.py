@@ -72,6 +72,26 @@ def convertPredFile(filename="preds"):
     f_w = open("tmp/" + filename + "output_rule.pl", 'w')
     f_w.write(convertPredicateToOutputRule(preds))
 
+def renumberRules(filename):
+    f = open(filename + '.pl', 'r')
+    
+    counter = 0
+    r = ""
+    for line in f:
+        if line.startswith("rule("):
+            split = line.split("(")
+            head = split[0]
+            label = split[1].split(",")
+            label[0] = "bg" + str(counter)
+            split[1] = ",".join(label)
+            counter += 1
+            r += ("(".join(split))
+        else:
+            r += line
+
+    f_w = open(filename + '_renumbered.pl', 'w')
+    f_w.write(r)
+
 if __name__ == "__main__":
     # convertPredicateToOutputRule(["requireHighResource(A)", "culpritIsFrom(X, A)", "forBlackMarketUse(M)"])
     # convertPrefFile()
@@ -79,7 +99,8 @@ if __name__ == "__main__":
     #pref = sys.argv[2]
 
     #if rules:
-    convertRulesFile("fireeyetechprolog_rule", "bg", 102)
+    # convertRulesFile()
+    renumberRules('SicstusJava/backgroundgorgias')
     #if pref:
     #    convertPrefFile(pref)
     # convertRulesFile()
