@@ -137,7 +137,7 @@ public class QueryExecutor {
 //                r = new SPTerm(sp).putVariable();
 //                query = sp.openQuery(pred, new SPTerm[] {attack, culprit, reliability, ds[0], r});
                 queryMap = new HashMap();
-                queryString = String.format("%s(%s,X,N,D0,R).", goal, caseName);
+                queryString = String.format("goal_with_timeout(%s,X,N,D0,R).", goal, caseName);
                 System.out.println(queryString);
                 query = sp.openQuery(queryString, queryMap);
             } else {
@@ -454,6 +454,6 @@ public class QueryExecutor {
         for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "us_bank_hack"}) {
             System.out.println(qe.execute(c, false));
         }
-//        System.out.println(qe.execute("sonyhack", false));
+//        System.out.println(qe.execute("wannacryattack", false));
     }
 }
