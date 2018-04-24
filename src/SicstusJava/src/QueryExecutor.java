@@ -27,7 +27,7 @@ public class QueryExecutor {
     private Map<String, Integer> techMap;
     private Map<String, Integer> opMap;
     private Map<String, Integer> strMap;
-    private Map<String, Integer> culprits;
+    private Map<String, List<String>> culprits;
     private Set<String> abduced;
     private Map<String, Set<Set<String>>> derivations;
 
@@ -47,7 +47,7 @@ public class QueryExecutor {
         techMap = new HashMap<>();
         opMap = new HashMap<>();
         strMap = new HashMap<>();
-        culprits = new HashMap<>();
+        culprits = new HashMap<String, List<String>>();
         abduced = new HashSet<>();
         derivations = new HashMap<>();
         try {
@@ -92,9 +92,9 @@ public class QueryExecutor {
     public String culpritString(String attack) {
         StringJoiner sj = new StringJoiner(",");
         for (String c : culprits.keySet()) {
-            sj.add(String.format("%s [Score: %d, D: %d], ", c, culprits.get(c), derivations.get(c).size()));
+            sj.add(String.format("%s [Score: %d, D: %d] Derivation: %s,\n", c, getScore(culprits.get(c), 2), derivations.get(c).size(), culprits.get(c)));
         }
-        return "{" + attack + "} " + sj;
+        return "{" + attack + "}\n" + sj;
     }
 
     /*
@@ -103,7 +103,7 @@ public class QueryExecutor {
     1 : op
     2 : str
     */
-    void executeQuery(int mode, String caseName, boolean verbose, boolean all) {
+    SPTerm[] executeQuery(int mode, String caseName, boolean verbose, boolean all) {
 //        SPPredicate pred;
 //        SPTerm attack, culprit, culprit1 = null, r, m = null, m1 = null, m2 = null, reliability = null;
         SPQuery query;
@@ -116,8 +116,6 @@ public class QueryExecutor {
         try
         {
             SPCanonicalAtom TIMEOUT = new SPCanonicalAtom(sp, "time_out");
-//            r = new SPTerm(sp, "success");
-            SPTerm[] ds;
             String goal;
             if (all) {
                 goal = "goal_all";
@@ -128,14 +126,7 @@ public class QueryExecutor {
             if (combined) {
                 accMap = strMap;
                 sp.restore("all.sav");
-//                pred = new SPPredicate(sp, "goal_with_timeout", 5, "");
-//                attack = new SPTerm(sp, caseName);
-//                culprit = new SPTerm(sp).putVariable();
-//                reliability = new SPTerm(sp).putVariable();
-//                ds = new SPTerm[1];
-//                ds[0] = new SPTerm(sp).putVariable();
-//                r = new SPTerm(sp).putVariable();
-//                query = sp.openQuery(pred, new SPTerm[] {attack, culprit, reliability, ds[0], r});
+
                 queryMap = new HashMap();
                 queryString = String.format("goal_with_timeout(%s,X,N,D0,R).", goal, caseName);
                 System.out.println(queryString);
@@ -149,17 +140,6 @@ public class QueryExecutor {
                         sp.restore(TECHSAV);
                         sp.load(Utils.USER_EVIDENCE_FILENAME);
 
-//                        pred = new SPPredicate(sp, goal, numDeltas + 5, "");
-//                        attack = new SPTerm(sp, caseName);
-//                        culprit = new SPTerm(sp).putVariable();
-//                        m = new SPTerm(sp).putVariable();
-//                        m1 = new SPTerm(sp).putVariable();
-//                        m2 = new SPTerm(sp).putVariable();
-//                        ds = new SPTerm[numDeltas];
-//                        for (int i = 0; i < numDeltas; i++) {
-//                            ds[i] = new SPTerm(sp).putVariable();
-//                        }
-//                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, m, m1, m2, ds[0], ds[1], ds[2], ds[3], ds[4]});
                         queryMap = new HashMap();
                         queryString = String.format("%s(%s,X,M,M1,M2,D0,D1,D2,D3,D4).", goal, caseName);
                         System.out.println(queryString);
@@ -172,15 +152,7 @@ public class QueryExecutor {
                         sp.restore(OPSAV);
                         sp.load("tech.pl");
                         sp.load(Utils.USER_EVIDENCE_FILENAME);
-//                        pred = new SPPredicate(sp, goal, 5, "");
-//                        attack = new SPTerm(sp, caseName);
-//                        culprit = new SPTerm(sp).putVariable();
-//                        culprit1 = new SPTerm(sp).putVariable();
-//                        ds = new SPTerm[numDeltas];
-//                        for (int i = 0; i < numDeltas; i++) {
-//                            ds[i] = new SPTerm(sp).putVariable();
-//                        }
-//                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, culprit1, ds[0], ds[1]});
+
                         queryMap = new HashMap();
                         queryString = String.format("%s(%s,X,X1,D0,D1).", goal, caseName);
                         System.out.println(queryString);
@@ -194,14 +166,7 @@ public class QueryExecutor {
                         sp.load("tech.pl");
                         sp.load("op.pl");
                         sp.load(Utils.USER_EVIDENCE_FILENAME);
-//                        pred = new SPPredicate(sp, "goal_with_timeout", 5, "");
-//                        attack = new SPTerm(sp, caseName);
-//                        culprit = new SPTerm(sp).putVariable();
-//                        reliability = new SPTerm(sp).putVariable();
-//                        ds = new SPTerm[1];
-//                        ds[0] = new SPTerm(sp).putVariable();
-//                        r = new SPTerm(sp).putVariable();
-//                        query = sp.openQuery(pred, new SPTerm[]{attack, culprit, reliability, ds[0], r});
+
                         queryMap = new HashMap();
                         queryString = String.format("goal_with_timeout(%s,X,N,D0,R).", caseName);
                         query = sp.openQuery(queryString, queryMap);
@@ -210,7 +175,7 @@ public class QueryExecutor {
                         break;
                     default:
                         System.exit(-1);
-                        return;
+                        return null;
                 }
             }
 
@@ -230,52 +195,74 @@ public class QueryExecutor {
                     if (derivationIsSeen(d, culprit)) continue;
 
                     if (d.isList()) {
-                        res = 0;
-                        Set<String> dSet = new HashSet<>();
+//                        StringJoiner sj = new StringJoiner(",");
+                        List<String> dList = new ArrayList<>();
                         for (SPTerm term : d.toTermArray()) {
-                            dSet.add(term.toString());
+                            dList.add(term.toString());
                         }
-                        StringJoiner sj = new StringJoiner(",");
-                        for (String str : dSet) {
-                            sj.add(str);
-                            res += getScore(str, mode);
-                            if (str.contains("ass(") && count == 1) {
-                                abduced.add(str);
-                            }
-                        }
-
-                        // only add abducibles that are cautiously entailed
-                        for (String abd : abduced) {
-                            if (!dSet.contains(abd)) {
-                                abduced.remove(abd);
-                                break;
-                            }
-                        }
+                        String ds = updateAbducibles(dList, mode, count);
 
                         if (verbose && queryMap.get("N") != null) {
-                            System.out.println(String.format("Reliability: %s\nDerivation: {%s}\n", queryMap.get("N"), sj));
+                            System.out.println(String.format("Reliability: %s\n" +
+                                    "Derivation: {%s}\n", queryMap.get("N"), ds));
                         }
 
                         String rulename = getRulename(mode, i, caseName, queryMap);
+
+                        res = getScore(dList, mode);
 
                         if (accMap.get(rulename) == null || res > accMap.get(rulename)) {
                             accMap.put(rulename, res);
                         }
                         if (mode == 2) {
-                            Integer curr = culprits.get(culprit.toString());
-                            if (curr == null || res > curr) {
-                                culprits.put(culprit.toString(), res);
+                            List<String> existingDerivation = culprits.get(culprit.toString());
+                            int curr = existingDerivation == null ? 0 : getScore(existingDerivation, mode);
+                            if (res > curr) {
+                                culprits.put(culprit.toString(), dList);
                                 System.out.println(culprits);
                             }
                         }
                     }
                 }
             }
-            return;
+
+            SPTerm[] ret = new SPTerm[numDeltas];
+            for (int i = 0; i < numDeltas; i++) {
+                ret[i] = queryMap.get("D" + i);
+            }
+            return ret;
         } catch ( Exception e ) {
             e.printStackTrace();
-            return;
+            return null;
         }
+    }
+
+    private int getScore(List<String> ds, int mode) {
+        int acc = 0;
+        for (String d : ds) {
+            acc += getScore(d, mode);
+        }
+        return acc;
+    }
+
+    private String updateAbducibles(List<String> dSet, int mode, int count) throws IllegalTermException, ConversionFailedException {
+        StringJoiner sj = new StringJoiner(",");
+        for (String str : dSet) {
+            sj.add(str);
+//            res += getScore(str, mode);
+            if (str.contains("ass(") && count == 1) {
+                abduced.add(str);
+            }
+        }
+
+        // only add abducibles that are cautiously entailed
+        for (String abd : abduced) {
+            if (!dSet.contains(abd)) {
+                abduced.remove(abd);
+                break;
+            }
+        }
+        return sj.toString();
     }
 
     /*
@@ -298,9 +285,7 @@ public class QueryExecutor {
         culpritSet.add(toSet(d));
         return false;
     }
-//
-//    private String getRulename(int mode, int i, SPTerm attack, SPTerm x,
-//                               SPTerm x1, SPTerm m, SPTerm m1, SPTerm m2) {
+
     private String getRulename(int mode, int i, String attack, Map<String, SPTerm> queryMap) {
         String label;
         String args;
@@ -383,10 +368,10 @@ public class QueryExecutor {
         return acc;
     }
 
-    private int getScore(SPTerm delta, int mode) {
-        String deltaString = delta.toString();
-        return getScore(deltaString, mode);
-    }
+//    private int getScore(List<String> delta, int mode) {
+//        String deltaString = delta.toString();
+//        return getScore(deltaString, mode);
+//    }
 
     public Result execute(String caseName, boolean all) {
 //        redirectStdout();
@@ -406,14 +391,14 @@ public class QueryExecutor {
 
         time = System.nanoTime();
 //        System.out.println("Time taken for op layer: " + opTime + "s");
-        this.executeQuery(2, caseName, VERBOSE, all);
+        SPTerm[] derivations = this.executeQuery(2, caseName, VERBOSE, all);
         double strTime = (System.nanoTime() - time)/pow(10,9);
 
 //        System.out.println("Time taken for str layer: " + strTime + "s");
         System.out.println("\nTotal time for " + caseName + ": " + (techTime + opTime + strTime));
 
 //        closeRedirectStdout();
-        return new Result(culpritString(caseName), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
+        return new Result(culpritString(caseName), techMap, opMap, strMap, abduced, getPredMap(abduced, true), derivations);
     }
 
     static Map<String, List<String>> getPredMap(Set<String> preds, boolean isAbducibles) {
