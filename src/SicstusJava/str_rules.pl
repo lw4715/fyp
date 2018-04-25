@@ -27,8 +27,8 @@ rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 rule(claimedResp(X,Att), 		isCulprit(X,Att),	[claimedResponsibility(X,Att)]).
 rule(motiveAndCapability(C,Att),isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
 rule(motive(C,Att), 			isCulprit(C,Att), [country(C), prominentGroup(Group), isCulprit(Group, Att), groupOrigin(Group, C), hasMotive(C, Att)]).
-rule(motiveAndLocation(C,Att), 	isCulprit(C,Att), [country(C), hasMotive(C,Att),culpritIsFrom(C,Att,_L)]).
-rule(loc(C,Att),	 			isCulprit(C,Att),	[country(C), culpritIsFrom(C,Att,_L)]).
+rule(motiveAndLocation(C,Att), 	isCulprit(C,Att), [country(C), hasMotive(C,Att),attackOrigin(C,Att,_L)]).
+rule(loc(C,Att),	 			isCulprit(C,Att),	[country(C), attackOrigin(C,Att,_L)]).
 rule(social(C,Att), 			isCulprit(C,Att), [country(C), governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
 rule(linkedMalware(X,A1),	 	isCulprit(X,A1), [malwareUsedInAttack(M1,A1),similar(M1,M2),
   malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
@@ -45,13 +45,12 @@ rule(linkedMalware(X,A1),       isCulprit(X,A1), [malwareUsedInAttack(M1,A1),sim
 %% GUI: analyst add rules and preferences
 
 rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
-rule(culpritNotFrom(X,Att),neg(isCulprit(X,Att)), [neg(culpritIsFrom(X, Att, _L))]).
+rule(culpritNotFrom(X,Att), neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att, _L))]).
 rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
-rule(noMotive(X,Att),      neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
+rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
 rule(weakAttack(X,Att), 	neg(isCulprit(X,Att)), [hasResources(X), neg(requireHighResource(Att))]).
 rule(targetItself(X,Att), 	neg(isCulprit(X,Att)), [target(X,Att)]). % Purposely leave out for now
 rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
-%% rule(notCulprit(noLinkToGov,X,Att),   neg(isCulprit(X,Att,2)), [neg(governmentLinked(P,X)),identifiedIndividualInAttack(P,Att)]). % could be individual attack
 
 %% rule(oneCulprit(X,Att), 	neg(isCulprit(X,Att,_)), [isCulprit(Y,Att,_), X \= Y]).
 
@@ -63,13 +62,13 @@ rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
 
 
 % pref
-rule(p0a, prefer(claimedResp(X,A),notCulprit(noEvidence,X,A)), []). %With any evidence, we prefer to attribute the culprit accordingly
-rule(p0b, prefer(motiveAndCapability(X,A),notCulprit(noEvidence,X,A)), []).
-rule(p0c, prefer(motive(X,A),notCulprit(noEvidence,X,A)), []).
-rule(p0d, prefer(motiveAndLocation(X,A),notCulprit(noEvidence,X,A)), []).
-rule(p0e, prefer(loc(X,A),notCulprit(noEvidence,X,A)), []).
-rule(p0f, prefer(social(X,A),notCulprit(noEvidence,X,A)), []).
-rule(p0g, prefer(linkedMalware(X,A),notCulprit(noEvidence,X,A)), []).
+rule(p0a, prefer(claimedResp(X,A),noEvidence(X,A)), []). %With any evidence, we prefer to attribute the culprit accordingly
+rule(p0b, prefer(motiveAndCapability(X,A),noEvidence(X,A)), []).
+rule(p0c, prefer(motive(X,A),noEvidence(X,A)), []).
+rule(p0d, prefer(motiveAndLocation(X,A),noEvidence(X,A)), []).
+rule(p0e, prefer(loc(X,A),noEvidence(X,A)), []).
+rule(p0f, prefer(social(X,A),noEvidence(X,A)), []).
+rule(p0g, prefer(linkedMalware(X,A),noEvidence(X,A)), []).
 
 rule(p1, prefer(motiveAndCapability(X,A), claimedResp(Y,A)), [X\=Y]).   
 rule(p2, prefer(motiveAndLocation(X,A), claimedResp(Y,A)), [X\=Y]). 
@@ -93,14 +92,6 @@ rule(p18, prefer(linkedMalware(X,A), culpritNotFrom(X,A)), []).
 
 rule(p19, prefer(culpritNotFrom(X,A), motive(X,A)), []).
 rule(p20, prefer(weakAttack(X,A), motive(X,A)), []).
-
-%% rule(p35, prefer(oneCulprit(X,Att), claimedResp(X,Att)), []). 
-%% rule(p35, prefer(oneCulprit(X,Att), motiveAndCapability(X,Att)), []). 
-%% rule(p35, prefer(oneCulprit(X,Att), motive(X,Att)), []). 
-%% rule(p35, prefer(oneCulprit(X,Att), motiveAndLocation(X,Att)), []). 
-%% rule(p35, prefer(oneCulprit(X,Att), loc(X,Att)), []). 
-%% rule(p35, prefer(oneCulprit(X,Att), social(X,Att)), []). 
-%% rule(p35, prefer(oneCulprit(X,Att), linkedMalware(X,Att)), []). 
 
 rule(p36a, prefer(targetItself(X,Att), claimedResp(X,Att)), [specificTarget(Att)]).
 rule(p36b, prefer(targetItself(X,Att), motiveAndCapability(X,Att)), [specificTarget(Att)]).
@@ -134,4 +125,6 @@ rule(p36g, prefer(targetItself(X,Att), linkedMalware(X,Att)), [specificTarget(At
 rule(p37, prefer(p8, p2), []).
 
 goal(A, X, D) :- tell('visual.log'),visual_prove([isCulprit(X, A)], D), told.
+
 goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 3000, Result).
+

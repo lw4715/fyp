@@ -122,6 +122,7 @@ public class QueryExecutor {
         int numDeltas;
         Map<String, SPTerm> queryMap;
         String queryString;
+        Queue<String> queryStrings = new PriorityQueue<>();
 
         try
         {
@@ -225,15 +226,21 @@ public class QueryExecutor {
                         }
                         if (mode == 2) {
                             List<String> existingDerivation = culprits.get(culprit.toString());
-                            int curr = existingDerivation == null ? 0 : getScore(existingDerivation, mode);
+                            int curr = existingDerivation == null ? -1 : getScore(existingDerivation, mode);
                             if (res > curr) {
                                 dList.add("\nTree >" + getVisualTree() + "<");
                                 culprits.put(culprit.toString(), dList);
                                 System.out.println(culprits);
                             }
+
+                            queryStrings.add(String.format("time_out(prove([neg(isCulprit(%s,%s))],D), 500, R).",queryMap.get("X"), caseName));
                         }
                     }
                 }
+            }
+
+            for (String q : queryStrings) {
+                executeQueryString(q);
             }
 
             SPTerm[] ret = new SPTerm[numDeltas];
@@ -247,10 +254,21 @@ public class QueryExecutor {
         }
     }
 
+    private void executeQueryString(String query) throws Exception {
+        Map<String, SPTerm> negQueryMap = new HashMap<>();
+        Query q = sp.openQuery(query, negQueryMap);
+        int count = 0;
+        while (q.nextSolution() && count < 10) {
+            System.out.println(String.format("Negation derivation for %s: %s", query, negQueryMap.get("D")));
+            count++;
+        }
+    }
+
     private int getScore(List<String> ds, int mode) {
         int acc = 0;
-        for (String d : ds) {
-            acc += getScore(d, mode);
+        // Note: last deltaString is derivation tree
+        for (int i = 0; i < ds.size() - 1; i++) {
+             acc += getScore(ds.get(i), mode);
         }
         return acc;
     }
@@ -369,18 +387,14 @@ public class QueryExecutor {
                 acc = map.get(deltaString);
             }
         }
-        if (deltaString.contains("case")) { // FIXME: add userevidence DONE: usercase also contains case
+        if (deltaString.contains("case")) {
             acc += 2;
         } else if (deltaString.contains("bg")) {
             acc += 1;
         }
+//        System.out.println(String.format("Score for %s is %d", deltaString, acc));
         return acc;
     }
-
-//    private int getScore(List<String> delta, int mode) {
-//        String deltaString = delta.toString();
-//        return getScore(deltaString, mode);
-//    }
 
     public Result execute(String caseName, boolean all) {
         culprits.clear();
@@ -446,6 +460,6 @@ public class QueryExecutor {
         for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "us_bank_hack"}) {
             System.out.println(qe.execute(c, false));
         }
-//        System.out.println(qe.execute("gaussattack", false));
+        System.out.println(qe.execute("dummy", false));
     }
 }

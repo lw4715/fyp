@@ -19,8 +19,8 @@ rule(case1_f7, attackYear( us_bank_hack , 2012), []).
 rule(case2_f1, majorityIpOrigin( china , apt1 ), []).
 rule(case2_f2, sysLanguage(chinese, apt1 ), []).
 rule(case2_f3, firstLanguage(chinese, china ), []).
-rule(case2_f4, infraRegisteredIn( china , infra ), []).
-rule(case2_f5, infraUsed( infra , apt1 ), []).
+rule(case2_f4, infraRegisteredIn( china , apt1_infra ), []).
+rule(case2_f5, infraUsed( apt1_infra , apt1 ), []).
 rule(case2_f6, hasEconomicMotive( china , infocomm ), []).
 rule(case2_f7, industry( infocomm ,victims), []).
 rule(case2_f8, target(victims, apt1 ), []).
@@ -62,6 +62,8 @@ rule(case4_f9, causeOfConflict([ usa ,  israel ],  iran ,  nuclear ), []).
 rule(case4_f10, attackYear( stuxnetattack , 2010), []).
 rule(case4_f11, malwareUsedInAttack( stuxnet ,  stuxnetattack ), []).
 rule(case4_f12, specificConfigInMalware( stuxnet ), []).
+rule(case4_f13, infectionMethod( usb , stuxnet ), []).
+
 
 %  sony 
 rule(case5_f1, claimedResponsibility( guardiansOfPeace ,  sonyhack ), []).
@@ -107,13 +109,13 @@ rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
 rule(case7_f1, claimedResponsibility('Guccifer2.0', dnc_hack), []).
 
 %% dummy
-rule(dummy_f1, claimedResponsibility(randomGroup, dummy), []).
-rule(dummy_f2, target(myCountry, dummy), []).
-rule(dummy_f3, malwareUsedInAttack(m1, dummy), []).
-rule(dummy_f4, simlarCodeObfuscation(m1, m2), []).
-rule(dummy_f5, malwareLinkedTo(m2, yourCountry), []).
-rule(dummy_f6, hasMotive(myCountry,dummy), []).
-rule(dummy_f7, specificTarget(dummy), []).
+rule(case_dummy_f1, claimedResponsibility(randomGroup, dummy), []).
+rule(case_dummy_f2, target(myCountry, dummy), []).
+rule(case_dummy_f3, malwareUsedInAttack(m1, dummy), []).
+rule(case_dummy_f4, simlarCodeObfuscation(m1, m2), []).
+rule(case_dummy_f5, malwareLinkedTo(m2, yourCountry), []).
+rule(case_dummy_f6, hasMotive(myCountry,dummy), []).
+%% rule(dummy_f7, specificTarget(dummy), []).
 
 %% rule(dummy_f6, gci_tier(yourCountry,initiating), []).
 
