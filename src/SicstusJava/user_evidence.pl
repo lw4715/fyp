@@ -1,2 +1,0 @@
-:- multifile rule/3.
-rule(case_user_f1, claimedResponsibility('randomGroup', dummy), []).rule(case_user_f2, target(myCountry, dummy), []).rule(case_user_f3, hasMotive(yourCountry, dummy), []).rule(case_user_f4, hasCapability(yourCountry, dummy), []).
