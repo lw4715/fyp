@@ -107,9 +107,14 @@ rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
 rule(case7_f1, claimedResponsibility('Guccifer2.0', dnc_hack), []).
 
 %% dummy
-%% rule(dummy_f1, claimedResponsibility('randomGroup', dummy), []).
-%% rule(dummy_f2, target(myCountry, dummy), []).
-%% rule(dummy_f3, hasMotive(yourCountry, dummy), []).
-%% rule(dummy_f4, hasCapability(yourCountry, dummy), []).
+rule(dummy_f1, claimedResponsibility(randomGroup, dummy), []).
+rule(dummy_f2, target(myCountry, dummy), []).
+rule(dummy_f3, malwareUsedInAttack(m1, dummy), []).
+rule(dummy_f4, simlarCodeObfuscation(m1, m2), []).
+rule(dummy_f5, malwareLinkedTo(m2, yourCountry), []).
+rule(dummy_f6, hasMotive(myCountry,dummy), []).
+rule(dummy_f7, specificTarget(dummy), []).
+
+%% rule(dummy_f6, gci_tier(yourCountry,initiating), []).
 
 

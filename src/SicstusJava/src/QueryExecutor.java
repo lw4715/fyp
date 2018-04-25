@@ -138,7 +138,7 @@ public class QueryExecutor {
                 sp.restore("all.sav");
 
                 queryMap = new HashMap();
-                queryString = String.format("goal_with_timeout(%s,X,N,D0,R).", goal, caseName);
+                queryString = String.format("goal_with_timeout(%s,X,D0,R).", goal, caseName);
                 System.out.println(queryString);
                 query = sp.openQuery(queryString, queryMap);
             } else {
@@ -178,7 +178,7 @@ public class QueryExecutor {
                         sp.load(Utils.USER_EVIDENCE_FILENAME);
 
                         queryMap = new HashMap();
-                        queryString = String.format("goal_with_timeout(%s,X,N,D0,R).", caseName);
+                        queryString = String.format("goal_with_timeout(%s,X,D0,R).", caseName);
                         query = sp.openQuery(queryString, queryMap);
                         System.out.println(queryString);
                         System.out.println(queryMap);
@@ -227,7 +227,7 @@ public class QueryExecutor {
                             List<String> existingDerivation = culprits.get(culprit.toString());
                             int curr = existingDerivation == null ? 0 : getScore(existingDerivation, mode);
                             if (res > curr) {
-                                dList.add(getVisualTree());
+                                dList.add("\nTree >" + getVisualTree() + "<");
                                 culprits.put(culprit.toString(), dList);
                                 System.out.println(culprits);
                             }
@@ -446,6 +446,6 @@ public class QueryExecutor {
         for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "us_bank_hack"}) {
             System.out.println(qe.execute(c, false));
         }
-//        System.out.println(qe.execute("wannacryattack", false));
+//        System.out.println(qe.execute("gaussattack", false));
     }
 }
