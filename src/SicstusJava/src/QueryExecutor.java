@@ -13,7 +13,6 @@ import static java.util.Collections.max;
 public class QueryExecutor {
     private static final String VISUALLOG = "visual.log";
     private final boolean VERBOSE = false;
-    private final boolean combined = false;
 
     private static final QueryExecutor instance = new QueryExecutor();
     // TODO: update to relative filepath of prolog files
@@ -33,7 +32,6 @@ public class QueryExecutor {
     private Map<String, List<Integer>> culprits;
     private Map<Integer, List<String>> culpritsDerivation;
     private Set<String> abduced;
-//    private Map<String, Set<Set<String>>> derivations;
 
     public static QueryExecutor getInstance() {
         return instance;
@@ -54,7 +52,6 @@ public class QueryExecutor {
         culprits = new HashMap<>();
         culpritsDerivation = new HashMap<>();
         abduced = new HashSet<>();
-//        derivations = new HashMap<>();
         try {
             sp = new SICStus(new String[] {""},null);
             redefineFlagOff();
@@ -90,7 +87,6 @@ public class QueryExecutor {
     }
 
     private void redirectStdout() {
-//        System.out.println("Redirecting stdout");
         try {
             SPQuery query = sp.openQuery(String.format("tell('%s').", VISUALLOG), new HashMap());
             query.nextSolution();
@@ -100,7 +96,6 @@ public class QueryExecutor {
     }
 
     private void closeRedirectStdout() {
-//        System.out.println("Closing redirected stdout");
         try {
             SPQuery query = sp.openQuery("told.", new HashMap());
             query.nextSolution();
@@ -116,8 +111,6 @@ public class QueryExecutor {
             for (int j : culprits.get(c)) {
                 scores.add(getScore(culpritsDerivation.get(j), 2));
             }
-//            System.out.println(scores);
-//            System.out.println(scores.size());
             sj.add(String.format("%s [Highest score: %d, D: %d]\n", c,
                     max(scores),culprits.get(c).size()));
             for (int i = 0; i < culprits.get(c).size(); i++) {
@@ -160,7 +153,6 @@ public class QueryExecutor {
                 System.out.println("All");
                 numDeltas = 1;
                 accMap = strMap;
-//                sp.restore("all.sav");
                 sp.load(TECH);
                 sp.load(OP);
                 sp.load(STR);
@@ -521,11 +513,11 @@ public class QueryExecutor {
 //        for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
 //            System.out.println(qe.execute(c, false, true));
 //        }
-//        for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
-//            System.out.println(qe.execute(c, false, true));
-//        }
+        for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
+            System.out.println(qe.execute(c, false, true));
+        }
 //        System.out.println(qe.execute("usbankhack", false, true));
-        System.out.println(qe.execute("gaussattack", false, true));
+//        System.out.println(qe.execute("gaussattack", false, true));
 
     }
 }

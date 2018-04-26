@@ -6,20 +6,10 @@
 :- compile('backgroundgorgias_renumbered.pl').
 :- compile('evidence.pl').
 :- multifile rule/3.
-%% :- compile('user_evidence.pl').
+?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]). % for displaying entire list
 
-%% ?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
-
-%% rule(reliability1, reliability(srcIP,1), []).
-%% rule(reliability2, reliability(language,2), []).
-%% rule(reliability3, reliability(infraAddr,1), []).
-%% rule(reliability3, reliability(domainAddr,1), []).
-%% rule(reliability4, reliability(similarMalware,5), []).
-%% rule(reliability5, reliability([],0), []).
-%% rule(reliability6, reliability([X|L],N), [reliability(X,N1),reliability(L,N2),N is N1+N2]).
-
-count(L, S, I-S) :-
-    aggregate(count, member(S, L), C), I is -C.
+%% count(L, S, I-S) :-
+%%     aggregate(count, member(S, L), C), I is -C.
 
 initFile(Filename) :- open(Filename, write, Stream),
   write(Stream, ':- multifile rule/3.\n'),

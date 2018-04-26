@@ -18,6 +18,7 @@
 
 % input (background):
 % industry/1
+abducible(specificTarget(_Att), []).
 
 rule(hasResources1, hasResources(X), [gci_tier(X,leading)]).
 rule(hasResources2, hasResources(X), [cybersuperpower(X)]).
@@ -48,13 +49,12 @@ rule(date1, dateApplicable([Y,M|_], [Y,M|_]), []).
 rule(date2, dateApplicable([Y,M1|_],[Y,M2|_]), [M2 < M1]).
 rule(date3, dateApplicable([Y1,_|_],[Y2,_|_]), [Y2 < Y1, Y2 > (Y1 - 3)]).
 
-abducible(specificTarget(_Att), []).
 
 % prefer
 rule(p1_op, prefer(ecMotive(C,T), geopolitics1(C,T)), []).
 rule(p2_op, prefer(conflict(C,T), geopolitics1(C,T)), []).
 rule(p3_op, prefer(conflict1(C,T), geopolitics1(C,T)), []).
-rule(p1_op, prefer(pMotive(C,T), geopolitics1(C,T)), []).
+rule(p4_op, prefer(pMotive(C,T), geopolitics1(C,T)), []).
 
 
 % output:

@@ -13,7 +13,7 @@ rule(highResource2, requireHighResource(Att), [highSecurity(T), target(T, Att)])
 rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
 
 
-rule(noLocEvidence(_X,_Att), neg(attackPossibleOrigin(_X,_Att)), []).
+rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
 rule(srcIP(X,Att),   attackPossibleOrigin(X,Att),      [attackSourceIP(IP, Att), ipGeoloc(X, IP)]).
 rule(srcIP(X,Att),   attackPossibleOrigin(X,Att),      [majorityIpOrigin(X,Att)]).
 rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
@@ -24,8 +24,8 @@ rule(domain(X,Att),  attackPossibleOrigin(X,Att),      [malwareUsedInAttack(M, A
 
 rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
 rule(attackOrigin(X,Att), attackOrigin(X,Att),              [attackPossibleOrigin(X,Att)]).
-rule(conflictingOrigin(X,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
-rule(conflictingOrigin1(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
+rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
 
 rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
 
@@ -50,14 +50,15 @@ rule(similarFileChara4, similarFileChara(C1, C2), [fileChara(_,_,Size,CompileTim
 
 % pref
 rule(p1_t, prefer(attackOrigin(_X,_Att), attackOriginDefault), []).
-rule(p1_t, prefer(conflictingOrigin(X,Att), attackOrigin(X,Att)), []).
-rule(p1_t, prefer(conflictingOrigin1(X,Att), attackOrigin(X,Att)), []).
-rule(p2_t, prefer(srcIP(X,Att), noLocEvidence(X,Att)), []).
-rule(p3_t, prefer(lang1(X,Att), noLocEvidence(X,Att)), []).
-rule(p4_t, prefer(lang2(X,Att), noLocEvidence(X,Att)), []).
-rule(p5_t, prefer(infra(X,Att), noLocEvidence(X,Att)), []).
-rule(p6_t, prefer(domain(X,Att), noLocEvidence(X,Att)), []).
-rule(p7_t, prefer(spoofIP(X,Att), srcIP(X,Att)), []).
+rule(p2a_t, prefer(conflictingOrigin(X,_Y,Att), attackOrigin(X,Att)), []).
+rule(p2b_t, prefer(conflictingOrigin(_Y,X,Att), attackOrigin(X,Att)), []).
+rule(p3_t, prefer(nonOrigin(X,Att), attackOrigin(X,Att)), []).
+rule(p4_t, prefer(srcIP(X,Att), noLocEvidence(X,Att)), []).
+rule(p5_t, prefer(lang1(X,Att), noLocEvidence(X,Att)), []).
+rule(p6_t, prefer(lang2(X,Att), noLocEvidence(X,Att)), []).
+rule(p7_t, prefer(infra(X,Att), noLocEvidence(X,Att)), []).
+rule(p8_t, prefer(domain(X,Att), noLocEvidence(X,Att)), []).
+rule(p9_t, prefer(spoofIP(X,Att), srcIP(X,Att)), []).
 
 
 %% TODO: do more stuff with IP?
