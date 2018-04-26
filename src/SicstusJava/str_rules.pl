@@ -49,6 +49,7 @@ rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
 rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
 rule(weakAttack(X,Att), 	neg(isCulprit(X,Att)), [hasResources(X), neg(requireHighResource(Att))]).
 rule(targetItself(X,Att), 	neg(isCulprit(X,Att)), [target(X,Att)]).
+rule(targetItself(X,Att),   neg(isCulprit(X,Att)), [targetCountry(X,Att)]).
 rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
 
 %% rule(oneCulprit(X,Att), 	neg(isCulprit(X,Att,_)), [isCulprit(Y,Att,_), X \= Y]).
@@ -121,5 +122,5 @@ rule(p37, prefer(p8, p2), []).
 
 goal(A, X, D) :- visual_prove([isCulprit(X, A)], D).
 
-goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 3000, Result).
+goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 3500, Result).
 

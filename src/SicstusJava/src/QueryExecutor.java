@@ -311,12 +311,7 @@ public class QueryExecutor {
     * or if current derivation is seen
     */
     private boolean derivationIsSeen(SPTerm d) throws IllegalTermException, ConversionFailedException {
-        if (culpritsDerivation.containsValue(convertToString(d))) {
-            System.out.println(d + " is seen!");
-            return true;
-        }
-//        System.out.println(convertToString(d) + " is not seen!");
-        return false;
+        return culpritsDerivation.containsValue(convertToString(d));
     }
 
     private List<String> convertToString(SPTerm d) {

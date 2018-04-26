@@ -1,14 +1,7 @@
 :- multifile rule/3.
-%% :- multifile hasResources/1.
-%% :- multifile target/2.
-
-
-listCases([ us_bank_hack ,  apt1 ,  gaussattack ,  stuxnetattack ,  sonyhack ,  wannacryattack ]).
-case(X) :- listCases(L), member(X, L).
 
 % us bank hack evidences
-rule(case1_f1, target( usa ,  us_bank_hack ), []).
-%% rule(case1_f2, targetCountry( usa ,  us_bank_hack ), []).
+rule(case1_f1, targetCountry( usa ,  us_bank_hack ), []).
 rule(case1_f3, imposedSanctions( usa ,  iran ), []).
 rule(case1_f4, hijackCorporateClouds( us_bank_hack ), []).
 rule(case1_f5, sophisticatedMalware( itsoknoproblembro ), []).
@@ -35,10 +28,10 @@ rule(case2_f15, identifiedIndividualInAttack( dota , apt1 ), []).
 %  gauss 
 rule(case3_f1, sophisticatedMalware( gauss ), []).
 rule(case3_f2, malwareUsedInAttack( gauss , gaussattack ), []).
-rule(case3_f7, target( middleEast , gaussattack ), []).
-rule(case3_f8, target( israel , gaussattack ), []).
-rule(case3_f9, target( lebanon , gaussattack ), []).
-rule(case3_f10, target( palestine , gaussattack ), []).
+rule(case3_f7, targetCountry( middleEast , gaussattack ), []).
+rule(case3_f8, targetCountry( israel , gaussattack ), []).
+rule(case3_f9, targetCountry( lebanon , gaussattack ), []).
+rule(case3_f10, targetCountry( palestine , gaussattack ), []).
 rule(case3_f12, infectionMethod( usb , gauss ), []).
 rule(case3_f13, controlAndCommandEasilyFingerprinted( gauss ), []).
 rule(case3_f14, hasPoliticalMotive( usa , iran ), []).
@@ -47,7 +40,6 @@ rule(case3_f16, ccServer( gowin7 ,  gauss ), []).
 rule(case3_f17, ccServer( secuurity ,  gauss ), []).
 rule(case3_f18, domainRegisteredDetails( gowin7 ,  adolph_dybevek ,  prinsen_gate_6 ), []).
 rule(case3_f19, domainRegisteredDetails( secuurity ,  adolph_dybevek ,  prinsen_gate_6 ), []).
-%% rule(case3_f20, addressType( prinsen_gate_6 ,  hotel ), []).
 
 %  stuxnet 
 rule(case4_f0, industry( nuclear ,iranian_org), []).
@@ -86,22 +78,11 @@ rule(case6_f6, similarCodeObfuscation( backdoorBravonc ,  infostealerFakepude ),
 rule(case6_f7, sharedCode( wannacry ,  backdoorCantopee ), []).
 rule(case6_f8, attackYear( wannacryattack , 2017), []).
 rule(case6_f9, neg(specificTarget(wannacryattack)), []).
-rule(case6_f10, hasKillSwitch(wannacry), []).
-rule(case6_f10, numComputersAffected(wannacryattack, 200000), []).
-rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
-%% rule(8, hasKillSwitch(wannacry), []).
-%% rule(9, type(wannacry,ransomware), []).
-%% rule(10, propagationMechanism(wannacry,self_propagating), []).
-%% rule(11, scale(wannacryattack,large), []).
-%% rule(12, exploitVul('EternalBlue'), []).
-%% rule(13, vulPatched('EternalBlue'), []).
-%% rule(14, vulReleased(14,4,17,'EternalBlue'), []).
-%% rule(15, dateOfAttack(12,5,17,wannacryattack), []).
-%% rule(16, ccCommunicationChannel(tor), []).
-
-%% rule(case6_f10, , []).
-%% rule(case6_f10, , []).
-%% rule(case6_f10, , []).
+rule(case6_f10, target(nhs, wannacryattack), []).
+rule(case6_f11, targetCountry(uk, wannacryattack), []).
+%% rule(case6_f10, hasKillSwitch(wannacry), []).
+%% rule(case6_f10, numComputersAffected(wannacryattack, 200000), []).
+%% rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
 
 
 % DNC intrusion, expected culprits: fancyBear, cozyBear, russia
@@ -148,7 +129,7 @@ rule(case_dummy2_f10, ipGeoloc(yourCountry, dummy2_ip), []).
 %% dummy2b
 %% expected: 
 %% randomGroup (claimResp)
-%% yourCountry is the only target, assume attacker won't target itself 
+%% yourCountry is not the only target => not specific attack => yourCountry might be culprit 
 rule(case_dummy2b_f1, claimedResponsibility(randomGroup, dummy2b), []).
 rule(case_dummy2b_f2, targetCountry(yourCountry, dummy2b), []).
 rule(case_dummy2b_f2b, targetCountry(myCountry, dummy2b), []).
