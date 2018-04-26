@@ -21,7 +21,9 @@
 
 rule(hasResources1, hasResources(X), [gci_tier(X,leading)]).
 rule(hasResources2, hasResources(X), [cybersuperpower(X)]).
-%% rule(hasResources2, hasResources(X), [gci_tier(X,maturing)]).
+
+% more than one country targetted
+rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
 
 rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
@@ -55,14 +57,11 @@ goal(A, X, X1, D0, D1) :-
   initFile('op.pl'), case(A),
   writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
   writeToFiles('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_').
-  %% writeToFilesAbd('op.pl', governmentLinked(P,X2), governmentLinked(P,X2,D2), 'op_').
 
 goal_all(A, X, X1, D0, D1) :-
   initFile('op.pl'), case(A),
   writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
   writeToFilesAll('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_').
-  %% writeToFilesAllAbd('op.pl', governmentLinked(P,X2), governmentLinked(P,X2,D2), 'op_').
 
 hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
 hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
-%% governmentLinked(P,X,D2) :- prove([governmentLinked(P,X)], D2).

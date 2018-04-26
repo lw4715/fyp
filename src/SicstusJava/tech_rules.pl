@@ -2,13 +2,6 @@
 :- multifile rule/3.
 :- multifile abducible/2.
 
-% input (bg):
-% geolocInCountry/2
-% firstLanguage/2
-
-% misc:
-% addressType/2 (gMaps integration??)
-
 rule(highSkill1, highLevelSkill(Att),     [hijackCorporateClouds(Att)]).
 rule(highSkill2, highLevelSkill(Att),     [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
 rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
@@ -28,9 +21,10 @@ rule(lang2(X,Att),   attackPossibleOrigin(X,Att),      [languageInCode(L,Att), f
 rule(infra(X,Att),   attackPossibleOrigin(X,Att),      [infraUsed(Infra, Att), infraRegisteredIn(X, Infra)]).
 rule(domain(X,Att),  attackPossibleOrigin(X,Att),      [malwareUsedInAttack(M, Att), ccServer(S, M), domainRegisteredDetails(S,_,Addr), addrInCountry(Addr, X)]).
 
-%% rule(attackOriginDefault, attackOrigin(_X,_Att),   []).
-%% rule(conflictingOrigin, neg(attackOrigin(_,Att)),   [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
-%% rule(conflictingOrigin1, neg(attackOrigin(X,Att)),  [neg(attackPossibleOrigin(X,Att))]).
+rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
+rule(attackOrigin(X,Att), attackOrigin(X,Att),              [attackPossibleOrigin(X,Att)]).
+rule(conflictingOrigin(X,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+rule(conflictingOrigin1(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
 
 rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
 
@@ -54,8 +48,9 @@ rule(similarFileChara3, similarFileChara(C1, C2), [fileChara(_,_,_,_,Desc,_,C1),
 rule(similarFileChara4, similarFileChara(C1, C2), [fileChara(_,_,Size,CompileTime,_,Filetype,C1), fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
 % pref
-rule(p1_t, prefer(conflictingOrigin(X,Att), attackOriginDefault(X,Att)), []).
-rule(p1_t, prefer(conflictingOrigin1(X,Att), attackOriginDefault(X,Att)), []).
+rule(p1_t, prefer(attackOrigin(_X,_Att), attackOriginDefault), []).
+rule(p1_t, prefer(conflictingOrigin(X,Att), attackOrigin(X,Att)), []).
+rule(p1_t, prefer(conflictingOrigin1(X,Att), attackOrigin(X,Att)), []).
 rule(p2_t, prefer(srcIP(X,Att), noLocEvidence(X,Att)), []).
 rule(p3_t, prefer(lang1(X,Att), noLocEvidence(X,Att)), []).
 rule(p4_t, prefer(lang2(X,Att), noLocEvidence(X,Att)), []).
@@ -84,9 +79,9 @@ rule(p7_t, prefer(spoofIP(X,Att), srcIP(X,Att)), []).
 % similar/2 (strat)
 
 goal(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
-  initFile('tech.pl'), case(A),
+  initFile('tech.pl'),
   writeToFiles('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-  writeToFilesAbd('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
+  writeToFiles('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
   writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
   writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
   writeToFilesAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
@@ -95,7 +90,7 @@ goal(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
 goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'), case(A),
   writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-  writeToFilesAllAbd('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
+  writeToFilesAll('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
   writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
   writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
   writeToFilesAllAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').

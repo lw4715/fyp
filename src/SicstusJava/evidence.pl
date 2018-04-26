@@ -58,11 +58,12 @@ rule(case4_f4, stolenValidSignedCertificates( stuxnetattack ), []).
 rule(case4_f6, targetCountry( iran , stuxnetattack ), []).
 rule(case4_f7, usesZeroDayVulnerabilities( stuxnet ), []).
 rule(case4_f8, recentNewsInYear( nuclear ,  iran , 2010), []).
-rule(case4_f9, causeOfConflict([ usa ,  israel ],  iran ,  nuclear ), []).
-rule(case4_f10, attackYear( stuxnetattack , 2010), []).
-rule(case4_f11, malwareUsedInAttack( stuxnet ,  stuxnetattack ), []).
-rule(case4_f12, specificConfigInMalware( stuxnet ), []).
-rule(case4_f13, infectionMethod( usb , stuxnet ), []).
+rule(case4_f9, causeOfConflict(usa,  iran ,  nuclear ), []).
+rule(case4_f10, causeOfConflict(israel,  iran ,  nuclear ), []).
+rule(case4_f11, attackYear( stuxnetattack , 2010), []).
+rule(case4_f12, malwareUsedInAttack( stuxnet ,  stuxnetattack ), []).
+rule(case4_f13, specificConfigInMalware( stuxnet ), []).
+rule(case4_f14, infectionMethod( usb , stuxnet ), []).
 
 
 %  sony 
@@ -106,17 +107,73 @@ rule(case6_f10, numCountriesAffected(wannacryattack, 100), []).
 % DNC intrusion, expected culprits: fancyBear, cozyBear, russia
 %% http://time.com/4600177/election-hack-russia-hillary-clinton-donald-trump/
 %% http://time.com/4597457/the-downside-of-donald-trumps-fight-with-the-intelligence-community/
-rule(case7_f1, claimedResponsibility('Guccifer2.0', dnc_hack), []).
+%% rule(case7_f1, claimedResponsibility('Guccifer2.0', dnc_hack), []).
 
-%% dummy
-rule(case_dummy_f1, claimedResponsibility(randomGroup, dummy), []).
-rule(case_dummy_f2, target(myCountry, dummy), []).
-rule(case_dummy_f3, malwareUsedInAttack(m1, dummy), []).
-rule(case_dummy_f4, simlarCodeObfuscation(m1, m2), []).
-rule(case_dummy_f5, malwareLinkedTo(m2, yourCountry), []).
-rule(case_dummy_f6, hasMotive(myCountry,dummy), []).
-%% rule(dummy_f7, specificTarget(dummy), []).
 
-%% rule(dummy_f6, gci_tier(yourCountry,initiating), []).
+rule(bg_dummy1, country(myCountry),[]).
+rule(bg_dummy2, country(yourCountry),[]).
+rule(bg_dummy3, country(hisCountry),[]).
+
+%% dummy0
+%% expected: 
+%% randomGroup (claimResp)
+rule(case_dummy0_f1, claimedResponsibility(randomGroup, dummy0), []).
+
+%% dummy1 
+%% expected: 
+%% randomGroup (claimResp)
+%% yourCountry (loc,linkedMalware)
+rule(case_dummy1_f1, claimedResponsibility(randomGroup, dummy1), []).
+rule(case_dummy1_f2, targetCountry(myCountry, dummy1), []).
+rule(case_dummy1_f3, malwareUsedInAttack(dummy1_m1, dummy1), []).
+rule(case_dummy1_f4, simlarCodeObfuscation(dummy1_m1, dummy1_m2), []).
+rule(case_dummy1_f5, malwareLinkedTo(dummy1_m2, yourCountry), []).
+rule(case_dummy1_f8, hasMotive(yourCountry,dummy1), []).
+rule(case_dummy1_f9, attackSourceIP(dummy1_ip, dummy1), []).
+rule(case_dummy1_f10, ipGeoloc(yourCountry, dummy1_ip), []).
+
+%% dummy2
+%% expected: 
+%% randomGroup (claimResp)
+%% yourCountry is the only target, assume attacker won't target itself 
+rule(case_dummy2_f1, claimedResponsibility(randomGroup, dummy2), []).
+rule(case_dummy2_f2, targetCountry(yourCountry, dummy2), []).
+rule(case_dummy2_f3, malwareUsedInAttack(dummy2_m1, dummy2), []).
+rule(case_dummy2_f4, simlarCodeObfuscation(dummy2_m1, dummy2_m2), []).
+rule(case_dummy2_f5, malwareLinkedTo(dummy2_m2, yourCountry), []).
+rule(case_dummy2_f8, hasMotive(yourCountry,dummy2), []).
+rule(case_dummy2_f9, attackSourceIP(dummy2_ip, dummy2), []).
+rule(case_dummy2_f10, ipGeoloc(yourCountry, dummy2_ip), []).
+
+%% dummy2b
+%% expected: 
+%% randomGroup (claimResp)
+%% yourCountry is the only target, assume attacker won't target itself 
+rule(case_dummy2b_f1, claimedResponsibility(randomGroup, dummy2b), []).
+rule(case_dummy2b_f2, targetCountry(yourCountry, dummy2b), []).
+rule(case_dummy2b_f2b, targetCountry(myCountry, dummy2b), []).
+rule(case_dummy2b_f3, malwareUsedInAttack(dummy2b_m1, dummy2b), []).
+rule(case_dummy2b_f4, simlarCodeObfuscation(dummy2b_m1, dummy2b_m2), []).
+rule(case_dummy2b_f5, malwareLinkedTo(dummy2b_m2, yourCountry), []).
+rule(case_dummy2b_f8, hasMotive(yourCountry,dummy2b), []).
+rule(case_dummy2b_f9, attackSourceIP(dummy2b_ip, dummy2b), []).
+rule(case_dummy2b_f10, ipGeoloc(yourCountry, dummy2b_ip), []).
+
+%% dummy3
+%% expected: 
+%% randomGroup (claimResp)
+%% more than one ipgeolocation doesnt give location information about attack 
+rule(case_dummy3_f1, claimedResponsibility(randomGroup, dummy3), []).
+rule(case_dummy3_f2, targetCountry(yourCountry, dummy3), []).
+rule(case_dummy3_f3, malwareUsedInAttack(dummy3_m1, dummy3), []).
+rule(case_dummy3_f4, simlarCodeObfuscation(dummy3_m1, dummy3_m2), []).
+rule(case_dummy3_f5, malwareLinkedTo(dummy3_m2, yourCountry), []).
+rule(case_dummy3_f8, hasMotive(yourCountry,dummy3), []).
+rule(case_dummy3_f9, attackSourceIP(dummy3_ip, dummy3), []).
+rule(case_dummy3_f10, ipGeoloc(yourCountry, dummy3_ip), []).
+rule(case_dummy3_f12, attackSourceIP(dummy3_ip1, dummy3), []).
+rule(case_dummy3_f13, ipGeoloc(hisCountry, dummy3_ip1), []).
+
+
 
 
