@@ -1,6 +1,7 @@
 import se.sics.jasper.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
@@ -9,6 +10,7 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
+    private static final String VISUALLOG = "visual.log";
     private final boolean VERBOSE = false;
     private final boolean combined = false;
 
@@ -27,9 +29,10 @@ public class QueryExecutor {
     private Map<String, Integer> techMap;
     private Map<String, Integer> opMap;
     private Map<String, Integer> strMap;
-    private Map<String, List<String>> culprits;
+    private Map<String, List<Integer>> culprits;
+    private Map<Integer, List<String>> culpritsDerivation;
     private Set<String> abduced;
-    private Map<String, Set<Set<String>>> derivations;
+//    private Map<String, Set<Set<String>>> derivations;
 
     public static QueryExecutor getInstance() {
         return instance;
@@ -47,9 +50,10 @@ public class QueryExecutor {
         techMap = new HashMap<>();
         opMap = new HashMap<>();
         strMap = new HashMap<>();
-        culprits = new HashMap<String, List<String>>();
+        culprits = new HashMap<>();
+        culpritsDerivation = new HashMap<>();
         abduced = new HashSet<>();
-        derivations = new HashMap<>();
+//        derivations = new HashMap<>();
         try {
             sp = new SICStus(new String[] {""},null);
             redefineFlagOff();
@@ -69,12 +73,15 @@ public class QueryExecutor {
         query.nextSolution();
     }
 
-    private String getVisualTree() {
+    private String[] getVisualTree() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("visual.log"));
+            File f = new File(VISUALLOG);
+            BufferedReader br = new BufferedReader(new FileReader(VISUALLOG));
             StringBuilder sb = new StringBuilder();
-            br.lines().forEach(line -> sb.append(line + "\n"));
-            return sb.toString();
+            br.lines().forEach(line -> {
+                sb.append(line + "\n");
+            });
+            return sb.toString().split("\n\n\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -82,9 +89,9 @@ public class QueryExecutor {
     }
 
     private void redirectStdout() {
-        System.out.println("Redirecting stdout");
+//        System.out.println("Redirecting stdout");
         try {
-            SPQuery query = sp.openQuery(new SPPredicate(sp, "tell", 1, ""), new SPTerm[]{new SPTerm(sp,"sicstus_log.txt")});
+            SPQuery query = sp.openQuery(String.format("tell('%s').", VISUALLOG), new HashMap());
             query.nextSolution();
         } catch (SPException e) {
             e.printStackTrace();
@@ -92,19 +99,25 @@ public class QueryExecutor {
     }
 
     private void closeRedirectStdout() {
-        System.out.println("Closing redirected stdout");
+//        System.out.println("Closing redirected stdout");
         try {
-            SPQuery query = sp.openQuery(new SPPredicate(sp, "told", 0, ""), new SPTerm[]{});
+            SPQuery query = sp.openQuery("told.", new HashMap());
             query.nextSolution();
         } catch (SPException e) {
             e.printStackTrace();
         }
     }
 
-    public String culpritString(String attack) {
+    public String culpritString(String attack, String[] visualTree) {
         StringJoiner sj = new StringJoiner(",");
         for (String c : culprits.keySet()) {
-            sj.add(String.format("%s [Score: %d, D: %d] Derivation: %s,\n", c, getScore(culprits.get(c), 2), derivations.get(c).size(), culprits.get(c)));
+            for (int i : culprits.get(c)) {
+            StringJoiner trees = new StringJoiner("----");
+                trees.add(visualTree[i-1]);
+            sj.add(String.format("X = %s [Score: %d, D: %d] \nDerivation:\n %s\n\n", c,
+                    getScore(culpritsDerivation.get(i), 2),
+                    culprits.get(c).size(), trees));
+            }
         }
         return "{" + attack + "}\n" + sj;
     }
@@ -134,14 +147,20 @@ public class QueryExecutor {
                 goal = "goal";
             }
 
-            if (combined) {
+            if (mode < 0) {
+                System.out.println("All");
+                numDeltas = 1;
                 accMap = strMap;
-                sp.restore("all.sav");
+//                sp.restore("all.sav");
+                sp.load(TECH);
+                sp.load(OP);
+                sp.load(STR);
+                sp.load(Utils.USER_EVIDENCE_FILENAME);
 
                 queryMap = new HashMap();
-                queryString = String.format("goal_with_timeout(%s,X,D0,R).", goal, caseName);
-                System.out.println(queryString);
+                queryString = String.format("goal_with_timeout(%s,X,D0,R).", caseName);
                 query = sp.openQuery(queryString, queryMap);
+                System.out.println(queryString);
             } else {
                 switch (mode) {
                     case 0:
@@ -182,7 +201,6 @@ public class QueryExecutor {
                         queryString = String.format("goal_with_timeout(%s,X,D0,R).", caseName);
                         query = sp.openQuery(queryString, queryMap);
                         System.out.println(queryString);
-                        System.out.println(queryMap);
                         break;
                     default:
                         System.exit(-1);
@@ -203,20 +221,12 @@ public class QueryExecutor {
                     SPTerm d = queryMap.get("D" + i);
                     SPTerm culprit = queryMap.get("X");
 
-                    if (derivationIsSeen(d, culprit)) continue;
+                    if (derivationIsSeen(d)) continue;
 
                     if (d.isList()) {
-                        List<String> dList = new ArrayList<>();
-                        for (SPTerm term : d.toTermArray()) {
-                            dList.add(term.toString());
-                        }
+                        List<String> dList = convertToString(d);
+
                         String ds = updateAbducibles(dList, mode, count);
-
-                        if (verbose && queryMap.get("N") != null) {
-                            System.out.println(String.format("Reliability: %s\n" +
-                                    "Derivation: {%s}\n", queryMap.get("N"), ds));
-                        }
-
                         String rulename = getRulename(mode, i, caseName, queryMap);
 
                         res = getScore(dList, mode);
@@ -224,15 +234,18 @@ public class QueryExecutor {
                         if (accMap.get(rulename) == null || res > accMap.get(rulename)) {
                             accMap.put(rulename, res);
                         }
-                        if (mode == 2) {
-                            List<String> existingDerivation = culprits.get(culprit.toString());
+                        if (mode == 2 || mode < 0) {
+                            List<String> existingDerivation = culpritsDerivation.get(culprits.get(culprit.toString()));
                             int curr = existingDerivation == null ? -1 : getScore(existingDerivation, mode);
-                            if (res > curr) {
-                                dList.add("\nTree >" + getVisualTree() + "<");
-                                culprits.put(culprit.toString(), dList);
-                                System.out.println(culprits);
+                            List list = culprits.get(culprit.toString());
+
+                            if (list == null) {
+                                list = new ArrayList<>();
+                                culprits.put(culprit.toString(), list);
                             }
 
+                            list.add(count);
+                            culpritsDerivation.put(count, dList);
                             queryStrings.add(String.format("time_out(prove([neg(isCulprit(%s,%s))],D), 500, R).",queryMap.get("X"), caseName));
                         }
                     }
@@ -247,6 +260,7 @@ public class QueryExecutor {
             for (int i = 0; i < numDeltas; i++) {
                 ret[i] = queryMap.get("D" + i);
             }
+
             return ret;
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -266,8 +280,7 @@ public class QueryExecutor {
 
     private int getScore(List<String> ds, int mode) {
         int acc = 0;
-        // Note: last deltaString is derivation tree
-        for (int i = 0; i < ds.size() - 1; i++) {
+        for (int i = 0; i < ds.size(); i++) {
              acc += getScore(ds.get(i), mode);
         }
         return acc;
@@ -297,20 +310,29 @@ public class QueryExecutor {
     * returns false if derivation starts with '_' (anonymous variable)
     * or if current derivation is seen
     */
-    private boolean derivationIsSeen(SPTerm d, SPTerm culprit) throws IllegalTermException, ConversionFailedException {
-        Set<Set<String>> culpritSet = derivations.get(culprit.toString());
-
-        if (culpritSet == null) {
-            derivations.put(culprit.toString(), new HashSet<>());
-            culpritSet = derivations.get(culprit.toString());
-        }
-
-        if (d.toString().charAt(0) == '_' || culpritSet.contains(toSet(d))) {
+    private boolean derivationIsSeen(SPTerm d) throws IllegalTermException, ConversionFailedException {
+        if (culpritsDerivation.containsValue(convertToString(d))) {
+            System.out.println(d + " is seen!");
             return true;
         }
-
-        culpritSet.add(toSet(d));
+//        System.out.println(convertToString(d) + " is not seen!");
         return false;
+    }
+
+    private List<String> convertToString(SPTerm d) {
+        List<String> dList = new ArrayList<>();
+        try {
+            if (d.isList()) {
+                for (SPTerm term : d.toTermArray()) {
+                    dList.add(term.toString());
+                }
+            }
+        } catch (IllegalTermException e) {
+            e.printStackTrace();
+        } catch (ConversionFailedException e) {
+            e.printStackTrace();
+        }
+        return dList;
     }
 
     private String getRulename(int mode, int i, String attack, Map<String, SPTerm> queryMap) {
@@ -392,34 +414,43 @@ public class QueryExecutor {
         } else if (deltaString.contains("bg")) {
             acc += 1;
         }
-//        System.out.println(String.format("Score for %s is %d", deltaString, acc));
         return acc;
     }
 
-    public Result execute(String caseName, boolean all) {
+    public Result execute(String caseName, boolean all, boolean combined) {
         culprits.clear();
+        culpritsDerivation.clear();
         abduced.clear();
-        derivations.clear();
+//        derivations.clear();
         System.out.println(String.format("---------\nStart %s derivation", caseName));
-        double time = System.nanoTime();
+        redirectStdout();
+        SPTerm[] derivations;
+
+        if (combined) {
+            derivations = this.executeQuery(-1, caseName, VERBOSE, all);
+        } else {
+            double time = System.nanoTime();
 //        System.out.println("Start time: " + time);
-        this.executeQuery(0, caseName, VERBOSE, all);
-        double techTime = (System.nanoTime() - time)/pow(10,9);
+            this.executeQuery(0, caseName, VERBOSE, all);
+            double techTime = (System.nanoTime() - time) / pow(10, 9);
 
-        time = System.nanoTime();
+            time = System.nanoTime();
 //        System.out.println("Time taken for tech layer: " + techTime + "s");
-        this.executeQuery(1, caseName, VERBOSE, all);
-        double opTime = (System.nanoTime() - time)/pow(10,9);
+            this.executeQuery(1, caseName, VERBOSE, all);
+            double opTime = (System.nanoTime() - time) / pow(10, 9);
 
-        time = System.nanoTime();
+            time = System.nanoTime();
 //        System.out.println("Time taken for op layer: " + opTime + "s");
-        SPTerm[] derivations = this.executeQuery(2, caseName, VERBOSE, all);
-        double strTime = (System.nanoTime() - time)/pow(10,9);
+            derivations = this.executeQuery(2, caseName, VERBOSE, all);
+
+            double strTime = (System.nanoTime() - time) / pow(10, 9);
 
 //        System.out.println("Time taken for str layer: " + strTime + "s");
-        System.out.println("\nTotal time for " + caseName + ": " + (techTime + opTime + strTime));
-
-        return new Result(culpritString(caseName), techMap, opMap, strMap, abduced, getPredMap(abduced, true), derivations);
+            System.out.println("\nTotal time for " + caseName + ": " + (techTime + opTime + strTime));
+        }
+        closeRedirectStdout();
+        System.out.println(culprits);
+        return new Result(culpritString(caseName, getVisualTree()), techMap, opMap, strMap, abduced, getPredMap(abduced, true), derivations);
     }
 
     static Map<String, List<String>> getPredMap(Set<String> preds, boolean isAbducibles) {
@@ -455,11 +486,36 @@ public class QueryExecutor {
         return r;
     }
 
+    private static void saveState() {
+        try {
+            SICStus sp = new SICStus(new String[] {""},null);
+            String q3 = "compile(str_rules), save_program('str.sav').";
+            Query query = sp.openQuery(q3, new HashMap());
+            query.nextSolution();
+            String q2 = "compile(op_rules), save_program('op.sav').";
+            query = sp.openQuery(q2, new HashMap());
+            query.nextSolution();
+            String q1 = "compile(tech_rules), save_program('tech.sav').";
+            query = sp.openQuery(q1, new HashMap());
+            query.nextSolution();
+                String q0 = "compile(tech_rules), compile(op_rules), compile(str_rules), save_program('all.sav').";
+            query = sp.openQuery(q0, new HashMap());
+            query.nextSolution();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void main(String[] args) {
+//        saveState();
         QueryExecutor qe = QueryExecutor.getInstance();
         for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "us_bank_hack"}) {
-            System.out.println(qe.execute(c, false));
+            System.out.println(qe.execute(c, false, true));
         }
-        System.out.println(qe.execute("dummy", false));
+        for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
+            System.out.println(qe.execute(c, false, true));
+        }
     }
 }

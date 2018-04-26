@@ -3,7 +3,6 @@ import se.sics.jasper.SPTerm;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringJoiner;
 
 public class Result {
 
@@ -31,15 +30,6 @@ public class Result {
         return !abducedMap.isEmpty();
     }
 
-    String getDerivations() {
-        StringJoiner sj = new StringJoiner(",\n");
-        for (SPTerm derivation : derivations) {
-            sj.add(derivation.toString());
-        }
-        return sj.toString();
-    }
-
-
 
     @Override
     public String toString() {
@@ -50,8 +40,8 @@ public class Result {
         if (abducedMap.isEmpty()) {
             return s;
         } else {
-            return String.format("%s\nAbduced: %s\n\nPossible additional evidences needed:" +
-                    "\n%s", s, abduced, Utils.formatMap(abducedMap));
+            return String.format("%s\nAbduced: %s\n\nPossible additional evidences needed:\n%s",
+                    s, abduced, Utils.formatMap(abducedMap));
         }
 
     }
