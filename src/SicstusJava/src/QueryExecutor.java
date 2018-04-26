@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.util.*;
 
 import static java.lang.Math.pow;
+import static java.util.Collections.max;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
@@ -111,12 +112,20 @@ public class QueryExecutor {
     public String culpritString(String attack, String[] visualTree) {
         StringJoiner sj = new StringJoiner(",");
         for (String c : culprits.keySet()) {
-            for (int i : culprits.get(c)) {
-            StringJoiner trees = new StringJoiner("----");
-                trees.add(visualTree[i-1]);
-            sj.add(String.format("X = %s [Score: %d, D: %d] \nDerivation:\n %s\n\n", c,
-                    getScore(culpritsDerivation.get(i), 2),
-                    culprits.get(c).size(), trees));
+            List<Integer> scores = new ArrayList<>();
+            for (int j : culprits.get(c)) {
+                scores.add(getScore(culpritsDerivation.get(j), 2));
+            }
+//            System.out.println(scores);
+//            System.out.println(scores.size());
+            sj.add(String.format("%s [Highest score: %d, D: %d]\n", c,
+                    max(scores),culprits.get(c).size()));
+            for (int i = 0; i < culprits.get(c).size(); i++) {
+                int num = culprits.get(c).get(i);
+                StringJoiner trees = new StringJoiner("----");
+                trees.add(visualTree[num-1]);
+                sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n\n", c,
+                    scores.get(i), trees));
             }
         }
         return "{" + attack + "}\n" + sj;
@@ -135,7 +144,7 @@ public class QueryExecutor {
         int numDeltas;
         Map<String, SPTerm> queryMap;
         String queryString;
-        Queue<String> queryStrings = new PriorityQueue<>();
+        Set<String> queryStrings = new HashSet<>();
 
         try
         {
@@ -422,7 +431,10 @@ public class QueryExecutor {
         SPTerm[] derivations;
 
         if (combined) {
+            double time = System.nanoTime();
             derivations = this.executeQuery(-1, caseName, VERBOSE, all);
+            System.out.println("\nTotal time for " + caseName + ": " + ((System.nanoTime() - time)/pow(10, 9)) );
+
         } else {
             double time = System.nanoTime();
 //        System.out.println("Start time: " + time);
@@ -506,11 +518,14 @@ public class QueryExecutor {
     public static void main(String[] args) {
 //        saveState();
         QueryExecutor qe = QueryExecutor.getInstance();
-        for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "us_bank_hack"}) {
-            System.out.println(qe.execute(c, false, true));
-        }
-        for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
-            System.out.println(qe.execute(c, false, true));
-        }
+//        for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//            System.out.println(qe.execute(c, false, true));
+//        }
+//        for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
+//            System.out.println(qe.execute(c, false, true));
+//        }
+//        System.out.println(qe.execute("usbankhack", false, true));
+        System.out.println(qe.execute("gaussattack", false, true));
+
     }
 }

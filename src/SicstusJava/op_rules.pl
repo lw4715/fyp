@@ -8,7 +8,7 @@
 % requireHighResource/1
 
 % input (evidence):
-% hasPoliticalMotive/2
+% hasPoliticalMotive/3
 % target/2
 % imposedSanctions/2
 % hasEconomicMotive/2
@@ -29,24 +29,32 @@ rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
 rule(hasCapability2, hasCapability(X, Att), [requireHighResource(Att), hasResources(X)]).
 rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
 
-rule(ecMotive(C,T), hasMotive(C, Att), [industry(T), target(T, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
-rule(pMotive,       hasMotive(C, Att), [target(T, Att), hasPoliticalMotive(C, T), specificTarget(Att)]).
-rule(pMotive(C,T),  hasPoliticalMotive(C, T), [imposedSanctions(T, C)]).
-rule(conflict,      hasMotive(X, Att), [targetCountry(TC, Att), attackYear(Att, Y),
-  recentNewsInYear(News, TC, Y), causeOfConflict(X, TC, News), specificTarget(Att)]).
-rule(conflict1,      hasMotive(X, Att), [target(TC, Att), attackYear(Att, Y),
-  recentNewsInYear(News, TC, Y), causeOfConflict(X, TC, News), specificTarget(Att)]).
+rule(ecMotive(C,T), 	hasMotive(C, Att), 		[industry(T), target(T, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
+rule(pMotive(C,T),    	hasMotive(C, Att), 		[targetCountry(T, Att), attackPeriod(Att, Date1), hasPoliticalMotive(C, T, Date2), 
+	dateApplicable(Date1, Date2), specificTarget(Att)]).
+rule(pMotive(C,T,Date), hasPoliticalMotive(C, T, Date), [imposedSanctions(T, C, Date)]).
+rule(conflict(X,T), 	hasMotive(X, Att), 		[targetCountry(T, Att), attackPeriod(Att, Date1),
+  news(News, T, Date2), dateApplicable(Date1,Date2), causeOfConflict(X, T, News), specificTarget(Att)]).
+rule(conflict1(X,T),   hasMotive(X, Att), 		[target(T, Att), attackPeriod(Att, Date1),
+  news(News, T, Date2), dateApplicable(Date1,Date2), causeOfConflict(X, T, News), specificTarget(Att)]).
+rule(geopolitics(C,T), 	hasMotive(C, Att), 		[target(T, Att), country(T), country(C), poorRelation(C,T)]).
+rule(geopolitics(C,T), 	hasMotive(C, Att), 		[target(T, Att), country(T), country(C), poorRelation(T,C)]).
+rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C,T)]).
+rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(T,C)]).
 
+%% Y2 M2 is before Y1 M1 but recent enough (within 2 years)
+rule(date, dateApplicable(_,ongoing), []).
+rule(date1, dateApplicable([Y,M|_], [Y,M|_]), []).
+rule(date2, dateApplicable([Y,M1|_],[Y,M2|_]), [M2 < M1]).
+rule(date3, dateApplicable([Y1,_|_],[Y2,_|_]), [Y2 < Y1, Y2 > (Y1 - 3)]).
 
 abducible(specificTarget(_Att), []).
 
 % prefer
-% rule(nafCap, prefer(hasCapability1, noCapability), []).
-% rule(nafCap1, prefer(hasCapability2, noCapability), []).
-% rule(nafMot, prefer(ecMotive, motiveDefault), []).
-% rule(nafMot1, prefer(pMotive, motiveDefault), []).
-% rule(nafMot2, prefer(pMotive(C,T), motiveDefault), []).
-% rule(nafMot3, prefer(conflict, motiveDefault), []).
+rule(p1_op, prefer(ecMotive(C,T), geopolitics1(C,T)), []).
+rule(p2_op, prefer(conflict(C,T), geopolitics1(C,T)), []).
+rule(p3_op, prefer(conflict1(C,T), geopolitics1(C,T)), []).
+rule(p1_op, prefer(pMotive(C,T), geopolitics1(C,T)), []).
 
 
 % output:

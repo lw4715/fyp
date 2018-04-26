@@ -24,14 +24,16 @@ rule(allHasCap, 	hasCapability([X|L], Att), 	[\+ is_list(X), is_list(L), hasCapa
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 
 rule(claimedResp(X,Att), 		isCulprit(X,Att),	[claimedResponsibility(X,Att)]).
-rule(motiveAndCapability(C,Att),isCulprit(C,Att), [hasMotive(C,Att),hasCapability(C,Att)]).
-rule(motive(C,Att), 			isCulprit(C,Att), [country(C), prominentGroup(Group), isCulprit(Group, Att), groupOrigin(Group, C), hasMotive(C, Att)]).
-rule(motiveAndLocation(C,Att), 	isCulprit(C,Att), [country(C), hasMotive(C,Att),attackOrigin(C,Att)]).
+rule(noHistory(X,Att),        neg(isCulprit(X,Att)),[claimedResponsibility(X,Att), noPriorHistory(X)]).
+
+rule(motiveAndCapability(C,Att),isCulprit(C,Att),   [hasMotive(C,Att),hasCapability(C,Att)]).
+rule(motive(C,Att), 			isCulprit(C,Att),   [country(C), prominentGroup(Group), isCulprit(Group, Att), groupOrigin(Group, C), hasMotive(C, Att)]).
+rule(motiveAndLocation(C,Att), 	isCulprit(C,Att),   [country(C), hasMotive(C,Att),attackOrigin(C,Att)]).
 rule(loc(C,Att),	 			isCulprit(C,Att),	[country(C), attackOrigin(C,Att)]).
-rule(social(C,Att), 			isCulprit(C,Att), [country(C), governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
-rule(linkedMalware(X,A1),	 	isCulprit(X,A1), [malwareUsedInAttack(M1,A1),similar(M1,M2),
+rule(social(C,Att), 			isCulprit(C,Att),   [country(C), governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
+rule(linkedMalware(X,A1),	 	isCulprit(X,A1),    [malwareUsedInAttack(M1,A1),similar(M1,M2),
   malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
-rule(linkedMalware(X,A1),       isCulprit(X,A1), [malwareUsedInAttack(M1,A1),similar(M2,M1),
+rule(linkedMalware(X,A1),       isCulprit(X,A1),    [malwareUsedInAttack(M1,A1),similar(M2,M1),
   malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 
 %% culprit not from, notculprit rule, add pref
@@ -77,6 +79,8 @@ rule(p4, prefer(social(X,A),        claimedResp(Y,A)), [X\=Y]).
 rule(p5, prefer(linkedMalware(X,A), claimedResp(Y,A)), [X\=Y]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
 
 rule(p6, prefer(noCapability(X,A),  claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
+rule(p7, prefer(noHistory(X,A),  claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
+
 %% rule(p7, prefer(noCapability(X,A),  motive(X,A)), []).    
 rule(p8, prefer(noCapability(X,A),  motiveAndLocation(X,A)), []).    
 rule(p9, prefer(noCapability(X,A),  loc(X,A)), []).  
@@ -122,5 +126,5 @@ rule(p37, prefer(p8, p2), []).
 
 goal(A, X, D) :- visual_prove([isCulprit(X, A)], D).
 
-goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 3500, Result).
+goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 6000, Result).
 

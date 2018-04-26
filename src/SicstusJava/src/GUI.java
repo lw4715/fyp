@@ -62,7 +62,7 @@ class GUI {
     private static final String[] opPredicates =
             {
                 "hasEconomicMotive/2", "target/2", "hasPoliticalMotive/2",
-                "imposedSanctions/2", "attackYear/2", "recentNewsInYear/3", "causeOfConflict/3",
+                "imposedSanctions/3", "attackPeriod/2", "news/3", "causeOfConflict/3",
                 "geolocatedInGovFacility/2", "publicCommentsRelatedToGov/2",
                 "claimedResponsibility/2", "identifiedIndividualInAttack/2"
             };
@@ -104,7 +104,7 @@ class GUI {
         attackName = new JTextField(JTextField.LEFT);
         attackName.setColumns(15);
 
-        JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks", "us_bank_hack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"});
+        JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks", "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
             status.setText("\t\tSelected attack: " + existsingAttacks.getSelectedItem());

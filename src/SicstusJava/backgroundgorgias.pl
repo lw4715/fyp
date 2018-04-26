@@ -6,6 +6,24 @@ rule(bg1d, attackMechanismList([zeroday, exploits, priviledgeEscalation, evasion
 rule(bg2, target(X,Att), [targets(L,Att), member(X,L), \+ is_list(X), is_list(L)]).
 
 
+rule(bg0, natoCountriesList([belgium, canada, denmark, france, iceland, italy, luxembourg, netherlands, norway, portugal, uk, usa, greece, turkey, spain]), []).
+rule(bg0, euCountriesList([austria, belgium, bulgaria, croatia, cyprus, czech_republic, denmark, estonia, finland, france, germany, greece, hungary, ireland, italy, latvia, lithuania, luxembourg, malta, netherlands, poland, portugal, romania, slovakia, slovenia, spain, sweden, uk]), []).
+%% https://brilliantmaps.com/us-allies-enemies/
+%% https://www.msn.com/en-gb/news/photos/which-countries-are-allies-and-which-are-enemies/ss-BBBNVNJ
+%% https://today.yougov.com/topics/politics/articles-reports/2017/02/02/americas-friends-and-enemies
+rule(bg2, poorRelationList(usa,[northkorea, iran, syria, iraq, afghanistan, russia, libya, somalia, pakistan, palestine]), []).
+rule(bg2, poorRelationList(northkorea,[usa, southkorea]), []).
+rule(bg3, poorRelation(X,Y), [poorRelationList(X,L), member(Y,L)]).
+rule(bg3, poorRelation(X,russia), [natoCountriesList(L), member(X,L)]).
+rule(bg3, poorRelation(iran,saudi_arabia), []).
+
+rule(bg4, goodRelationList(usa, [canada, australia, uk, france, italy, ireland, israel, norway, sweden, germany, saudi_arabia, southkorea, cuba]), []).
+rule(bg4, goodRelationList(china, [northkorea]), []).
+rule(bg4, goodRelation(X,Y), [natoCountriesList(L), member(X,L), member(Y,L), X\=Y]).
+rule(bg4, goodRelation(X,Y), [euCountriesList(L), member(X,L), member(Y,L), X\=Y]).
+rule(bg3, goodRelation(X,Y), [goodRelationList(X,L), member(Y,L)]).
+
+
 rule(bg1z, knownVulnerabilities([eternalBlue]), []). %% TODO: find comprehensive list of knownVulnerabilities
 
 rule(bg_1_1, malwareUsedInAttack(notPetya, notPetyaAttack), []).
@@ -143,7 +161,7 @@ rule(bg88, possibleMotive( sabotage ,Att), [isInfrastructure(Ind),industry(Ind,V
 rule(bg89, possibleMotive( espionage ,Att), [informationRich(Ind),industry(Ind,V),target(V,Att)]).
 
 %% rule(bg78, isCulprit( equationGroup , flameattack ), []). 
-rule(bg78, malwareLinkedTo(flame, equationGroup), []). 
+rule(bg78, malwareLinkedTo(flame, equationGrp), []). 
 
 %% rule(bg94, isCulprit([ usa , israel ], flameattack ), []).
 rule(bg95, target( middleeast , flameattack ), []).

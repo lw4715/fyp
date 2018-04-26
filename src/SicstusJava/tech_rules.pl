@@ -15,6 +15,7 @@ rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDuratio
 
 rule(noLocEvidence(_X,_Att), neg(attackPossibleOrigin(_X,_Att)), []).
 rule(srcIP(X,Att),   attackPossibleOrigin(X,Att),      [attackSourceIP(IP, Att), ipGeoloc(X, IP)]).
+rule(srcIP(X,Att),   attackPossibleOrigin(X,Att),      [majorityIpOrigin(X,Att)]).
 rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
 rule(lang1(X,Att),   attackPossibleOrigin(X,Att),      [sysLanguage(L, Att), firstLanguage(L, X)]).
 rule(lang2(X,Att),   attackPossibleOrigin(X,Att),      [languageInCode(L,Att), firstLanguage(L,X)]).
