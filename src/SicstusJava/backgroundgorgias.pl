@@ -1,27 +1,27 @@
 :- multifile rule/3.
-rule(bg1a, attackTypeList([ddos, espionage, defacement, data_destruction, sabotage, doxing]), []).
-rule(bg1b, malwareTypeList([bot, ransomware, rootkit, spyware, trojan, virus, worm, keyloggers, grayware]), []).
-rule(bg1c, spreadMechanismList([driveByDownloads, homogeneity, vulnerability, backdoor]), []).
-rule(bg1d, attackMechanismList([zeroday, exploits, priviledgeEscalation, evasion, blended]), []).
-rule(bg2, target(X,Att), [targets(L,Att), member(X,L), \+ is_list(X), is_list(L)]).
+attackTypeList([ddos, espionage, defacement, data_destruction, sabotage, doxing]).
+malwareTypeList([bot, ransomware, rootkit, spyware, trojan, virus, worm, keyloggers, grayware]).
+spreadMechanismList([driveByDownloads, homogeneity, vulnerability, backdoor]).
+attackMechanismList([zeroday, exploits, priviledgeEscalation, evasion, blended]).
+%% rule(bg2, target(X,Att), [targets(L,Att)]) :-  member(X,L), \+ is_list(X), is_list(L).
 
 
-rule(bg0, natoCountriesList([belgium, canada, denmark, france, iceland, italy, luxembourg, netherlands, norway, portugal, uk, usa, greece, turkey, spain]), []).
-rule(bg0, euCountriesList([austria, belgium, bulgaria, croatia, cyprus, czech_republic, denmark, estonia, finland, france, germany, greece, hungary, ireland, italy, latvia, lithuania, luxembourg, malta, netherlands, poland, portugal, romania, slovakia, slovenia, spain, sweden, uk]), []).
+natoCountriesList([belgium, canada, denmark, france, iceland, italy, luxembourg, netherlands, norway, portugal, uk, usa, greece, turkey, spain]).
+euCountriesList([austria, belgium, bulgaria, croatia, cyprus, czech_republic, denmark, estonia, finland, france, germany, greece, hungary, ireland, italy, latvia, lithuania, luxembourg, malta, netherlands, poland, portugal, romania, slovakia, slovenia, spain, sweden, uk]).
 %% https://brilliantmaps.com/us-allies-enemies/
 %% https://www.msn.com/en-gb/news/photos/which-countries-are-allies-and-which-are-enemies/ss-BBBNVNJ
 %% https://today.yougov.com/topics/politics/articles-reports/2017/02/02/americas-friends-and-enemies
-rule(bg2, poorRelationList(usa,[northkorea, iran, syria, iraq, afghanistan, russia, libya, somalia, pakistan, palestine]), []).
-rule(bg2, poorRelationList(northkorea,[usa, southkorea]), []).
-rule(bg3, poorRelation(X,Y), [poorRelationList(X,L), member(Y,L)]).
-rule(bg3, poorRelation(X,russia), [natoCountriesList(L), member(X,L)]).
+poorRelationList(usa,[northkorea, iran, syria, iraq, afghanistan, russia, libya, somalia, pakistan, palestine]).
+poorRelationList(northkorea,[usa, southkorea]).
+rule(bg3, poorRelation(X,Y), []) :- poorRelationList(X,L), member(Y,L).
+rule(bg3, poorRelation(X,russia), []) :- natoCountriesList(L), member(X,L).
 rule(bg3, poorRelation(iran,saudi_arabia), []).
 
-rule(bg4, goodRelationList(usa, [canada, australia, uk, france, italy, ireland, israel, norway, sweden, germany, saudi_arabia, southkorea, cuba]), []).
-rule(bg4, goodRelationList(china, [northkorea]), []).
-rule(bg4, goodRelation(X,Y), [natoCountriesList(L), member(X,L), member(Y,L), X\=Y]).
-rule(bg4, goodRelation(X,Y), [euCountriesList(L), member(X,L), member(Y,L), X\=Y]).
-rule(bg3, goodRelation(X,Y), [goodRelationList(X,L), member(Y,L)]).
+goodRelationList(usa, [canada, australia, uk, france, italy, ireland, israel, norway, sweden, germany, saudi_arabia, southkorea, cuba]).
+goodRelationList(china, [northkorea]).
+rule(bg4, goodRelation(X,Y), []) :- natoCountriesList(L), member(X,L), member(Y,L), X\=Y.
+rule(bg4, goodRelation(X,Y), []) :- euCountriesList(L), member(X,L), member(Y,L), X\=Y.
+rule(bg3, goodRelation(X,Y), []) :- goodRelationList(X,L), member(Y,L).
 
 
 rule(bg1z, knownVulnerabilities([eternalBlue]), []). %% TODO: find comprehensive list of knownVulnerabilities
@@ -116,7 +116,7 @@ rule(bg61, pastMotives( waterbug ,[ cyberespionage , spy , intelligenceGathering
 
 
 
-rule(bg64, listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia,
+listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia,
 	bosnia_herzegovina,burkina_faso,burundi,cambodia,cape,verde,central_african_republic,chad,comoros,congo,
 	cuba,democratic_republic_of_the_congo,djibouti,dominica,dominican_republic,el_salvador,equatorial_guinea,
 	eritrea,ethiopia,fiji,gabon,gambia,grenada,guatemala,guinea,guinea_bissau,guyana,haiti,honduras,iraq,jordan,
@@ -132,21 +132,21 @@ rule(bg64, listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,be
 	colombia,luxembourg,thailand,costa_rica,malta,cote_divoire, mexico,tunisia,croatia,moldova,turkey,cyprus,montenegro,
 	uganda,czech_republic,morocco,ukraine, northkorea,nigeria,united_arab_emirates,denmark,pakistan,uruguay,ecuador,
 	panama,venezuela,germany,paraguay,australia,japan,oman ,canada,southkorea,russia,egypt,malaysia,singapore,estonia,
-	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,usa]), []).
+	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,usa]).
 
-rule(bg65, cybersuperpowerlist([ china , israel , iran , usa , northkorea ]), []).
-rule(bg65b, cybersuperpower(X), [cybersuperpowerlist(L), member(X,L)]).
+cybersuperpowerlist([ china , israel , iran , usa , northkorea ]).
+rule(bg65b, cybersuperpower(X), []) :- cybersuperpowerlist(L), member(X,L).
 %% rule(bg65b, listNegHasResources([ indonesia, saudi_arabia, india, southafrica, turkey ]), []).
-rule(bg66, listIndustries([ infocomm ]), []).
-rule(bg67, listChineseCountries([ china ]), []).
-rule(bg68, listEnglishCountries([ usa , united_kingdom ]), []).
+listIndustries([ infocomm ]).
+listChineseCountries([ china ]).
+listEnglishCountries([ usa , united_kingdom ]).
 
-rule(bg70, country(X), [listCountries(L),member(X,L)]).
-rule(bg71, industry(X), [listIndustries(L),member(X,L)]).
+rule(bg70, country(X), []) :- listCountries(L), member(X,L).
+rule(bg71, industry(X), []) :- listIndustries(L), member(X,L).
 %% rule(bg72, hasResources(X), [listHasResources(L),member(X,L)]).
 %% rule(bg72b, neg(hasResources(X)), [listNegHasResources(L),member(X,L)]).
-rule(bg73, firstLanguage(chinese,X), [listChineseCountries(L),member(X,L)]).
-rule(bg74, firstLanguage(english,X), [listEnglishCountries(L),member(X,L)]).
+rule(bg73, firstLanguage(chinese,X), []) :- listChineseCountries(L), member(X,L).
+rule(bg74, firstLanguage(english,X), []) :- listEnglishCountries(L), member(X,L).
 
 %% part of nsa
 %% have support of us gov/ has relations
@@ -183,7 +183,7 @@ rule(bg110, fileCharaMalware(wannacry_filechara4,wannacry), []).
 rule(bg111, fileChara('@WanaDecryptor@exe','7bf2b57f2a205768755c07f238fb32cc','245760','2009-07-1323:19:35Z','Decryptor','EXE',wannacry_filechara4), []).
 
 %% Global Cybersecurity Index
-rule(bg112, list_gci_initiating([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia,
+list_gci_initiating([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia,
 	bosnia_herzegovina,burkina_faso,burundi,cambodia,cape,verde,central_african_republic,chad,comoros,congo,cuba,
 	democratic_republic_of_the_congo,djibouti,dominica,dominican_republic,el_salvador,equatorial_guinea,eritrea,
 	ethiopia,fiji,gabon,gambia,grenada,guatemala,guinea,guinea_bissau,guyana,haiti,honduras,iraq,jordan,kiribati,
@@ -191,16 +191,16 @@ rule(bg112, list_gci_initiating([afghanistan,andorra,angola,armenia,bahamas,barb
 	mauritania,micronesia,monaco,mongolia,mozambique,myanmar,namibia,nauru,nepal,nicaragua,niger,palau,state_of_palestine,
 	papua_new_guinea,saint_kitts_and_nevis,saint_lucia,saint_vincent_and_the_grenadines,samoa,san_marino,saotome_and_principe,
 	seychelles,sierra_leone,solomon_islands,somalia,southsudan,sudan,suriname,swaziland,syrian_arab_republic,tajikistan,
-	timor_leste,togo,tonga,trinidad_and_tobago,turkmenistan,tuvalu,uzbekistan,vanuatu,vatican,viet,nam,yemen,zambia,zimbabwe]), []).
-rule(bg113, list_gci_maturing([albania,ghana,peru,algeria,greece,philippines,argentina,hungary,poland,austria,iceland,portugal,
+	timor_leste,togo,tonga,trinidad_and_tobago,turkmenistan,tuvalu,uzbekistan,vanuatu,vatican,viet,nam,yemen,zambia,zimbabwe]).
+list_gci_maturing([albania,ghana,peru,algeria,greece,philippines,argentina,hungary,poland,austria,iceland,portugal,
 	azerbaijan,india,qatar,bahrain,indonesia,romania,bangladesh,iran,rwanda,belarus,ireland,saudi_arabia,belgium,israel,senegal,
 	botswana,italy,serbia,brazil,jamaica,slovakia,brunei_darussalam,kazakhstan,slovenia,bulgaria,kenya,southafrica,cameroon,laos,
 	spain,chile,latvia,sri,lanka,china,lithuania,tanzania,colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico,
 	tunisia,croatia,moldova,turkey,cyprus,montenegro,uganda,czech_republic,morocco,ukraine,northkorea,nigeria,
-	united_arab_emirates,denmark,pakistan,uruguay,ecuador,panama,venezuela,germany,paraguay]), []).
-rule(bg114, list_gci_leading([australia,japan,oman,canada,southkorea,russia,egypt,malaysia,singapore,estonia,mauritius,sweden,
-	finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,usa]), []).
-rule(bg115, gci_tier(X,initiating), [list_gci_initiating(L),member(X,L)]).
-rule(bg116, gci_tier(X,maturing), [list_gci_maturing(L),member(X,L)]).
-rule(bg117, gci_tier(X,leading), [list_gci_leading(L),member(X,L)]).
+	united_arab_emirates,denmark,pakistan,uruguay,ecuador,panama,venezuela,germany,paraguay]).
+list_gci_leading([australia,japan,oman,canada,southkorea,russia,egypt,malaysia,singapore,estonia,mauritius,sweden,
+	finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,usa]).
+rule(bg115, gci_tier(X,initiating), []) :- list_gci_initiating(L), member(X,L).
+rule(bg116, gci_tier(X,maturing), []) :- list_gci_maturing(L), member(X,L).
+rule(bg117, gci_tier(X,leading), []) :- list_gci_leading(L), member(X,L).
 

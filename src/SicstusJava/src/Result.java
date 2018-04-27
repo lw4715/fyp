@@ -1,5 +1,3 @@
-import se.sics.jasper.SPTerm;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,18 +10,18 @@ public class Result {
     private Map<String, Integer> strMap;
     private Set<String> abduced;
     private Map<String, List<String>> abducedMap;
-    private SPTerm[] derivations;
+//    private Map<String, Term>[] derivations;
 
     Result(String culpritString, Map<String, Integer> techMap, Map<String, Integer> opMap,
            Map<String, Integer> strMap, Set<String> abduced, Map<String,
-            List<String>> abducedMap, SPTerm[] derivations) {
+            List<String>> abducedMap) {
         this.culpritString = culpritString;
         this.techMap = techMap;
         this.opMap = opMap;
         this.strMap = strMap;
         this.abduced = abduced;
         this.abducedMap = abducedMap;
-        this.derivations = derivations;
+//        this.derivations = derivations;
     }
 
     boolean hasAbduced() {

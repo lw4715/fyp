@@ -20,7 +20,7 @@ rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
 rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
 
 rule(emptyHasCap, 	hasCapability([], _Att), 	[]).
-rule(allHasCap, 	hasCapability([X|L], Att), 	[\+ is_list(X), is_list(L), hasCapability(X,Att), hasCapability(L,Att)]).
+rule(allHaveCap, 	hasCapability([X|L], Att), 	[\+ is_list(X), is_list(L), hasCapability(X,Att), hasCapability(L,Att)]).
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 
 rule(claimedResp(X,Att), 		isCulprit(X,Att),	[claimedResponsibility(X,Att)]).
@@ -124,7 +124,7 @@ rule(p36g, prefer(targetItself(X,Att), linkedMalware(X,Att)),       [specificTar
 %% rule(p38, prefer(p13, p16), []).
 rule(p37, prefer(p8, p2), []).
 
-goal(A, X, D) :- visual_prove([isCulprit(X, A)], D).
+goal(A, X, D) :- visual_prove([isCulprit(X, A)], D, [failed(true)]).
 
-goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 6000, Result).
+%% goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 6000, Result).
 

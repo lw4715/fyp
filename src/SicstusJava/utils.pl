@@ -1,15 +1,16 @@
-:- use_module(library(timeout)).
-:- use_module(library(lists)).
-:- use_module(library(system)).
-:- compile('../gorgias-src-0.6d/lib/gorgias.pl').
-:- compile('../gorgias-src-0.6d/ext/lpwnf.pl').
-:- compile('backgroundgorgias_renumbered.pl').
-:- compile('evidence.pl').
+%% :- use_module(library(timeout)).
+%% :- use_module(library(time)).
+%% :- use_module(library(lists)).
+%% :- use_module(library(system)).
 :- multifile rule/3.
-?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]). % for displaying entire list
+:- compile('../gorgias-src-0.6d-Visual-20Feb2018/lib/gorgias.pl').
+:- compile('../gorgias-src-0.6d-Visual-20Feb2018/ext/lpwnf.pl').
+%% :- compile('../gorgias-src-0.6d/lib/gorgias.pl').
+%% :- compile('../gorgias-src-0.6d/ext/lpwnf.pl').
+:- compile('evidence.pl').
+:- compile('backgroundgorgias_renumbered.pl').
 
-%% count(L, S, I-S) :-
-%%     aggregate(count, member(S, L), C), I is -C.
+%% ?- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]). % for displaying entire list
 
 initFile(Filename) :- open(Filename, write, Stream),
   write(Stream, ':- multifile rule/3.\n'),

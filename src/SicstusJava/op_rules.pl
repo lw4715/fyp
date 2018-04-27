@@ -45,9 +45,9 @@ rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), cou
 
 %% Y2 M2 is before Y1 M1 but recent enough (within 2 years)
 rule(date, dateApplicable(_,ongoing), []).
-rule(date1, dateApplicable([Y,M|_], [Y,M|_]), []).
-rule(date2, dateApplicable([Y,M1|_],[Y,M2|_]), [M2 < M1]).
-rule(date3, dateApplicable([Y1,_|_],[Y2,_|_]), [Y2 < Y1, Y2 > (Y1 - 3)]).
+rule(date1, dateApplicable([Y,M], [Y,M]), []).
+rule(date2, dateApplicable([Y,M1],[Y,M2]), [M2 < M1]).
+rule(date3, dateApplicable([Y1,_],[Y2,_]), [Y2 < Y1, Y2 > (Y1 - 3)]).
 
 
 % prefer

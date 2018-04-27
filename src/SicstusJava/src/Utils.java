@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class Utils {
-    static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
+    static final String PROLOG_USER_EVIDENCE = "user_evidence";
+    static final String USER_EVIDENCE_FILENAME = PROLOG_USER_EVIDENCE + ".pl";
     int counter;
     Utils() {
         counter = 0;

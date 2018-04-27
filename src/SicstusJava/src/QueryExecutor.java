@@ -1,13 +1,17 @@
-import se.sics.jasper.*;
+import org.jpl7.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.Integer;
 import java.util.*;
 
 import static java.lang.Math.pow;
 import static java.util.Collections.max;
+
+//import se.sics.jasper.*;
+
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
@@ -17,15 +21,16 @@ public class QueryExecutor {
     private static final QueryExecutor instance = new QueryExecutor();
     // TODO: update to relative filepath of prolog files
     private static String FILEPATH = "";
-    private static final String TECH = FILEPATH + "tech_rules.pl";
-    private static final String OP = FILEPATH + "op_rules.pl";
-    private static final String STR = FILEPATH + "str_rules.pl";
+    private static final String CONSULT_STRING = "consult(%s)";
+    private static final String TECH = FILEPATH + "tech_rules";
+    private static final String OP = FILEPATH + "op_rules";
+    private static final String STR = FILEPATH + "str_rules";
     private static final String TECHSAV = "tech.sav";
     private static final String OPSAV = "op.sav";
     private static final String STRSAV = "str.sav";
 
     private List<String[]> mapStrings = new ArrayList<>();
-    private SICStus sp;
+//    private SICStus sp;
     private Map<String, Integer> techMap;
     private Map<String, Integer> opMap;
     private Map<String, Integer> strMap;
@@ -38,6 +43,7 @@ public class QueryExecutor {
     }
 
     private QueryExecutor() {
+        JPL.init();
         mapStrings = new ArrayList<>();
         // tech
         mapStrings.add(new String[]{"requireHighResource", "culpritIsFrom", "notForBlackMarketUse", "specificTarget", "similar"});
@@ -52,24 +58,24 @@ public class QueryExecutor {
         culprits = new HashMap<>();
         culpritsDerivation = new HashMap<>();
         abduced = new HashSet<>();
-        try {
-            sp = new SICStus(new String[] {""},null);
-            redefineFlagOff();
-        } catch (SPException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            sp = new SICStus(new String[] {""},null);
+////            redefineFlagOff();
+//        } catch (SPException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
-    private void redefineFlagOff() throws SPException {
-        SPPredicate pred = new SPPredicate(sp, "prolog_flag",  3, "");
-        SPTerm redefineFlag = new SPTerm(sp, "redefine_warnings");
-        SPTerm oldVal = new SPTerm(sp, "on");
-        SPTerm newVal = new SPTerm(sp, "off");
-        SPQuery query = sp.openQuery(pred,
-                new SPTerm[]{redefineFlag, oldVal, newVal});
-        query.nextSolution();
-    }
+//    private void redefineFlagOff() throws SPException {
+//        SPPredicate pred = new SPPredicate(sp, "prolog_flag",  3, "");
+//        SPTerm redefineFlag = new SPTerm(sp, "redefine_warnings");
+//        SPTerm oldVal = new SPTerm(sp, "on");
+//        SPTerm newVal = new SPTerm(sp, "off");
+//        SPQuery query = sp.openQuery(pred,
+//                new SPTerm[]{redefineFlag, oldVal, newVal});
+//        query.nextSolution();
+//    }
 
     private String[] getVisualTree() {
         try {
@@ -87,21 +93,21 @@ public class QueryExecutor {
     }
 
     private void redirectStdout() {
-        try {
-            SPQuery query = sp.openQuery(String.format("tell('%s').", VISUALLOG), new HashMap());
-            query.nextSolution();
-        } catch (SPException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            SPQuery query = sp.openQuery(String.format("tell('%s').", VISUALLOG), new HashMap());
+//            query.nextSolution();
+//        } catch (SPException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void closeRedirectStdout() {
-        try {
-            SPQuery query = sp.openQuery("told.", new HashMap());
-            query.nextSolution();
-        } catch (SPException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            SPQuery query = sp.openQuery("told.", new HashMap());
+//            query.nextSolution();
+//        } catch (SPException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public String culpritString(String attack, String[] visualTree) {
@@ -130,18 +136,18 @@ public class QueryExecutor {
     1 : op
     2 : str
     */
-    SPTerm[] executeQuery(int mode, String caseName, boolean verbose, boolean all) {
-        SPQuery query;
+    Map<String, Term>[] executeQuery(int mode, String caseName, boolean verbose, boolean all) {
+//        Query query;
         Map<String, Integer> accMap;
         int res;
         int numDeltas;
-        Map<String, SPTerm> queryMap;
+        Map<String, Term>[] queryMap;
         String queryString;
         Set<String> queryStrings = new HashSet<>();
 
         try
         {
-            SPCanonicalAtom TIMEOUT = new SPCanonicalAtom(sp, "time_out");
+//            SPCanonicalAtom TIMEOUT = new SPCanonicalAtom(sp, "time_out");
             String goal;
             if (all) {
                 goal = "goal_all";
@@ -153,14 +159,10 @@ public class QueryExecutor {
                 System.out.println("All");
                 numDeltas = 1;
                 accMap = strMap;
-                sp.load(TECH);
-                sp.load(OP);
-                sp.load(STR);
-                sp.load(Utils.USER_EVIDENCE_FILENAME);
 
-                queryMap = new HashMap();
-                queryString = String.format("goal_with_timeout(%s,X,D0,R).", caseName);
-                query = sp.openQuery(queryString, queryMap);
+//                queryMap = new HashMap();
+                queryString = String.format("goal(%s,X,D0)", caseName);
+                queryMap = executeQueryString(queryString);
                 System.out.println(queryString);
             } else {
                 switch (mode) {
@@ -168,116 +170,126 @@ public class QueryExecutor {
                         numDeltas = 5;
                         System.out.println("Technical");
                         accMap = techMap;
-                        sp.restore(TECHSAV);
-                        sp.load(Utils.USER_EVIDENCE_FILENAME);
+                        executeQueryString(String.format(CONSULT_STRING, TECH));
+                        executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME));
 
-                        queryMap = new HashMap();
-                        queryString = String.format("%s(%s,X,M,M1,M2,D0,D1,D2,D3,D4).", goal, caseName);
-                        System.out.println(queryString);
-                        query = sp.openQuery(queryString, queryMap);
+                        queryString = String.format("%s(%s,X,M,M1,M2,D0,D1,D2,D3,D4)", goal, caseName);
                         break;
                     case 1:
                         numDeltas = 2;
                         System.out.println("Operational");
                         accMap = opMap;
-                        sp.restore(OPSAV);
-                        sp.load("tech.pl");
-                        sp.load(Utils.USER_EVIDENCE_FILENAME);
-
-                        queryMap = new HashMap();
-                        queryString = String.format("%s(%s,X,X1,D0,D1).", goal, caseName);
-                        System.out.println(queryString);
-                        query = sp.openQuery(queryString, queryMap);
+                        executeQueryString(String.format(CONSULT_STRING, OP));
+                        executeQueryString(String.format(CONSULT_STRING, "tech"));
+                        executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME));
+                        queryString = String.format("%s(%s,X,X1,D0,D1)", goal, caseName);
                         break;
                     case 2:
                         System.out.println("Strategic");
                         numDeltas = 1;
                         accMap = strMap;
-                        sp.restore(STRSAV);
-                        sp.load("tech.pl");
-                        sp.load("op.pl");
-                        sp.load(Utils.USER_EVIDENCE_FILENAME);
+                        executeQueryString(String.format(CONSULT_STRING, STR));
+                        executeQueryString(String.format(CONSULT_STRING, "tech"));
+                        executeQueryString(String.format(CONSULT_STRING, "op"));
+                        executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME));
 
-                        queryMap = new HashMap();
-                        queryString = String.format("goal_with_timeout(%s,X,D0,R).", caseName);
-                        query = sp.openQuery(queryString, queryMap);
-                        System.out.println(queryString);
+                        queryString = String.format("goal(%s,X,D0)", caseName);
+
                         break;
                     default:
                         System.exit(-1);
                         return null;
                 }
             }
-
+            queryMap = executeQueryString(queryString);
+            System.out.println(queryString);
             int count = 0;
 
-            while (query.nextSolution() && count < 500) {
-                if (queryMap.get("R") != null &&
-                        TIMEOUT.toString().equals(queryMap.get("R").toString())) {
-                    System.out.println("TIMEOUT");
-                    continue;
-                }
-                count++;
-                for (int i = 0; i < numDeltas; i++) {
-                    SPTerm d = queryMap.get("D" + i);
-                    SPTerm culprit = queryMap.get("X");
-
-                    if (derivationIsSeen(d)) continue;
-
-                    if (d.isList()) {
-                        List<String> dList = convertToString(d);
-
-                        String ds = updateAbducibles(dList, mode, count);
-                        String rulename = getRulename(mode, i, caseName, queryMap);
-
-                        res = getScore(dList, mode);
-
-                        if (accMap.get(rulename) == null || res > accMap.get(rulename)) {
-                            accMap.put(rulename, res);
-                        }
-                        if (mode == 2 || mode < 0) {
-                            List<String> existingDerivation = culpritsDerivation.get(culprits.get(culprit.toString()));
-                            int curr = existingDerivation == null ? -1 : getScore(existingDerivation, mode);
-                            List list = culprits.get(culprit.toString());
-
-                            if (list == null) {
-                                list = new ArrayList<>();
-                                culprits.put(culprit.toString(), list);
-                            }
-
-                            list.add(count);
-                            culpritsDerivation.put(count, dList);
-                            queryStrings.add(String.format("time_out(prove([neg(isCulprit(%s,%s))],D), 500, R).",queryMap.get("X"), caseName));
-                        }
-                    }
-                }
+            for (Map<String, Term> stringTermMap : queryMap) {
+                System.out.println(stringTermMap);
             }
 
-            for (String q : queryStrings) {
-                executeQueryString(q);
-            }
+//            while (query.nextSolution() && count < 500) {
+//                if (queryMap.get("R") != null &&
+//                        TIMEOUT.toString().equals(queryMap.get("R").toString())) {
+//                    System.out.println("TIMEOUT");
+//                    continue;
+//                }
+//                count++;
+//                for (int i = 0; i < numDeltas; i++) {
+//                    SPTerm d = queryMap.get("D" + i);
+//                    SPTerm culprit = queryMap.get("X");
+//
+//                    if (derivationIsSeen(d)) continue;
+//
+//                    if (d.isList()) {
+//                        List<String> dList = convertToString(d);
+//
+//                        String ds = updateAbducibles(dList, mode, count);
+//                        String rulename = getRulename(mode, i, caseName, queryMap);
+//
+//                        res = getScore(dList, mode);
+//
+//                        if (accMap.get(rulename) == null || res > accMap.get(rulename)) {
+//                            accMap.put(rulename, res);
+//                        }
+//                        if (mode == 2 || mode < 0) {
+//                            List<String> existingDerivation = culpritsDerivation.get(culprits.get(culprit.toString()));
+//                            int curr = existingDerivation == null ? -1 : getScore(existingDerivation, mode);
+//                            List list = culprits.get(culprit.toString());
+//
+//                            if (list == null) {
+//                                list = new ArrayList<>();
+//                                culprits.put(culprit.toString(), list);
+//                            }
+//
+//                            list.add(count);
+//                            culpritsDerivation.put(count, dList);
+//                            queryStrings.add(String.format("time_out(prove([neg(isCulprit(%s,%s))],D), 500, R).",queryMap.get("X"), caseName));
+//                        }
+//                    }
+//                }
+//            }
 
-            SPTerm[] ret = new SPTerm[numDeltas];
-            for (int i = 0; i < numDeltas; i++) {
-                ret[i] = queryMap.get("D" + i);
-            }
+//            for (String q : queryStrings) {
+//                executeQueryString(q, new Term[]{new Atom("tech_rules")});
+//            }
 
-            return ret;
+//            Term[] ret = new Term[numDeltas];
+//            for (int i = 0; i < numDeltas; i++) {
+//                ret[i] = queryMap.get("D" + i);
+//            }
+
+            return queryMap;
         } catch ( Exception e ) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private void executeQueryString(String query) throws Exception {
-        Map<String, SPTerm> negQueryMap = new HashMap<>();
-        Query q = sp.openQuery(query, negQueryMap);
-        int count = 0;
-        while (q.nextSolution() && count < 10) {
-            System.out.println(String.format("Negation derivation for %s: %s", query, negQueryMap.get("D")));
-            count++;
-        }
+    private Map<String, Term>[] executeQueryString(String query) throws Exception {
+        Query q = new Query(query);
+        int limit = 10;
+        return q.nSolutions(limit);
     }
+
+//    private Map<String, Term>[] executeQueryString(String query, Term[] terms) throws Exception {
+//        Query q = new Query(query, terms);
+//        Map<String, Term>[] map = q.allSolutions();
+//        return map;
+//        while (q.hasMoreElements()) {
+//            Hashtable binding = (Hashtable) q.nextElement();
+//            Term t = (Term) binding.get(X);
+//            System.out.println(t);
+//        }
+//        Map<String, SPTerm> negQueryMap = new HashMap<>();
+//        Query q = sp.openQuery(query, negQueryMap);
+//        int count = 0;
+//        while (q.nextSolution() && count < 10) {
+//            System.out.println(String.format("Negation derivation for %s: %s", query, negQueryMap.get("D")));
+//            count++;
+//        }
+//    }
 
     private int getScore(List<String> ds, int mode) {
         int acc = 0;
@@ -287,7 +299,7 @@ public class QueryExecutor {
         return acc;
     }
 
-    private String updateAbducibles(List<String> dSet, int mode, int count) throws IllegalTermException, ConversionFailedException {
+    private String updateAbducibles(List<String> dSet, int mode, int count) {
         StringJoiner sj = new StringJoiner(",");
         for (String str : dSet) {
             sj.add(str);
@@ -311,78 +323,72 @@ public class QueryExecutor {
     * returns false if derivation starts with '_' (anonymous variable)
     * or if current derivation is seen
     */
-    private boolean derivationIsSeen(SPTerm d) throws IllegalTermException, ConversionFailedException {
-        return culpritsDerivation.containsValue(convertToString(d));
-    }
+//    private boolean derivationIsSeen(Term d) throws IllegalTermException, ConversionFailedException {
+//        return culpritsDerivation.containsValue(convertToString(d));
+//    }
 
-    private List<String> convertToString(SPTerm d) {
+    private List<String> convertToString(Term d) {
         List<String> dList = new ArrayList<>();
-        try {
-            if (d.isList()) {
-                for (SPTerm term : d.toTermArray()) {
-                    dList.add(term.toString());
-                }
+        if (d.isListPair()) {
+            for (Term term : d.toTermArray()) {
+                dList.add(term.toString());
             }
-        } catch (IllegalTermException e) {
-            e.printStackTrace();
-        } catch (ConversionFailedException e) {
-            e.printStackTrace();
         }
         return dList;
     }
 
-    private String getRulename(int mode, int i, String attack, Map<String, SPTerm> queryMap) {
-        String label;
-        String args;
-        switch(mode) {
-            case 0:
-                label = "t";
-                switch(i) {
-                    case 0:
-                    case 3:
-                        args = attack.toString();
-                        break;
-                    case 1:
-                        args = String.format("%s,%s", queryMap.get("X").toString(), attack.toString());
-                        break;
-                    case 2:
-                        args = queryMap.get("M").toString();
-                        break;
-                    case 4:
-                        args = String.format("%s,%s", queryMap.get("M1"), queryMap.get("M2"));
-                        break;
-                    default:
-                        return "";
-                }
-                break;
-            case 1:
-                label = "op";
-                if (i == 0) {
-                    args = String.format("%s,%s", queryMap.get("X").toString(), attack.toString());
-                } else {
-                    args = String.format("%s,%s", queryMap.get("X1").toString(), attack.toString());
-                }
-                break;
-            case 2:
-                label = "str";
-                args = attack.toString();
-                break;
-            default:
-                return "";
-        }
-        return String.format("%s_%s(%s)", label, mapStrings.get(mode)[i], args);
-    }
+//    private String getRulename(int mode, int i, String attack, Map<String, SPTerm> queryMap) {
+//        String label;
+//        String args;
+//        switch(mode) {
+//            case 0:
+//                label = "t";
+//                switch(i) {
+//                    case 0:
+//                    case 3:
+//                        args = attack.toString();
+//                        break;
+//                    case 1:
+//                        args = String.format("%s,%s", queryMap.get("X").toString(), attack.toString());
+//                        break;
+//                    case 2:
+//                        args = queryMap.get("M").toString();
+//                        break;
+//                    case 4:
+//                        args = String.format("%s,%s", queryMap.get("M1"), queryMap.get("M2"));
+//                        break;
+//                    default:
+//                        return "";
+//                }
+//                break;
+//            case 1:
+//                label = "op";
+//                if (i == 0) {
+//                    args = String.format("%s,%s", queryMap.get("X").toString(), attack.toString());
+//                } else {
+//                    args = String.format("%s,%s", queryMap.get("X1").toString(), attack.toString());
+//                }
+//                break;
+//            case 2:
+//                label = "str";
+//                args = attack.toString();
+//                break;
+//            default:
+//                return "";
+//        }
+//        return String.format("%s_%s(%s)", label, mapStrings.get(mode)[i], args);
+//    }
 
-    private Set<String> toSet(SPTerm d) throws IllegalTermException, ConversionFailedException {
-        if (!d.isList()) {
-            return new HashSet<>();
-        }
-        Set<String> set = new HashSet<>();
-        for (SPTerm term : d.toTermArray()) {
-            set.add(term.toString());
-        }
-        return set;
-    }
+//    private Set<String> toSet(SPTerm d) throws IllegalTermException, ConversionFailedException {
+//        if (!d.isList()) {
+//            return new HashSet<>();
+//        }
+//        Set<String> set = new HashSet<>();
+//        for (SPTerm term : d.toTermArray()) {
+//            set.add(term.toString());
+//        }
+//        return set;
+//    }
 
     private int getScore(String deltaString, int mode) {
         int acc = 0;
@@ -417,14 +423,26 @@ public class QueryExecutor {
         culprits.clear();
         culpritsDerivation.clear();
         abduced.clear();
-//        derivations.clear();
         System.out.println(String.format("---------\nStart %s derivation", caseName));
         redirectStdout();
-        SPTerm[] derivations;
 
         if (combined) {
             double time = System.nanoTime();
-            derivations = this.executeQuery(-1, caseName, VERBOSE, all);
+            loadFiles();
+            Map<String, Term>[] maps = this.executeQuery(-1, caseName, VERBOSE, all);
+            Map<String, List<List<String>>> resultMap = new HashMap<>();
+            for (Map<String, Term> map : maps) {
+                String culprit = map.get("X").name();
+                List<List<String>> list;
+                if (resultMap.get(culprit) == null) {
+                    list = new ArrayList<>();
+                    resultMap.put(culprit, list);
+                } else {
+                    list = resultMap.get(culprit);
+                }
+                list.add(convertToString(map.get("D0")));
+            }
+            System.out.println("Results: " + resultMap);
             System.out.println("\nTotal time for " + caseName + ": " + ((System.nanoTime() - time)/pow(10, 9)) );
 
         } else {
@@ -440,7 +458,7 @@ public class QueryExecutor {
 
             time = System.nanoTime();
 //        System.out.println("Time taken for op layer: " + opTime + "s");
-            derivations = this.executeQuery(2, caseName, VERBOSE, all);
+            this.executeQuery(2, caseName, VERBOSE, all);
 
             double strTime = (System.nanoTime() - time) / pow(10, 9);
 
@@ -449,7 +467,18 @@ public class QueryExecutor {
         }
         closeRedirectStdout();
         System.out.println(culprits);
-        return new Result(culpritString(caseName, getVisualTree()), techMap, opMap, strMap, abduced, getPredMap(abduced, true), derivations);
+        return new Result(culpritString(caseName, getVisualTree()), techMap, opMap, strMap, abduced, getPredMap(abduced, true));
+    }
+
+    private void loadFiles() {
+        try {
+            executeQueryString(String.format(CONSULT_STRING, TECH));
+            executeQueryString(String.format(CONSULT_STRING, OP));
+            executeQueryString(String.format(CONSULT_STRING, STR));
+            executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static Map<String, List<String>> getPredMap(Set<String> preds, boolean isAbducibles) {
@@ -485,39 +514,21 @@ public class QueryExecutor {
         return r;
     }
 
-    private static void saveState() {
-        try {
-            SICStus sp = new SICStus(new String[] {""},null);
-            String q3 = "compile(str_rules), save_program('str.sav').";
-            Query query = sp.openQuery(q3, new HashMap());
-            query.nextSolution();
-            String q2 = "compile(op_rules), save_program('op.sav').";
-            query = sp.openQuery(q2, new HashMap());
-            query.nextSolution();
-            String q1 = "compile(tech_rules), save_program('tech.sav').";
-            query = sp.openQuery(q1, new HashMap());
-            query.nextSolution();
-                String q0 = "compile(tech_rules), compile(op_rules), compile(str_rules), save_program('all.sav').";
-            query = sp.openQuery(q0, new HashMap());
-            query.nextSolution();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public static void main(String[] args) {
-//        saveState();
+
         QueryExecutor qe = QueryExecutor.getInstance();
-//        for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//            System.out.println(qe.execute(c, false, true));
+//        try {
+//            System.out.println(qe.executeQueryString("consult(tech_rules)")[0]);
+//            System.out.println(qe.executeQueryString("prove([targetCountry(X, dummy3)],D)")[0]);
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
-        for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
+        for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
             System.out.println(qe.execute(c, false, true));
         }
-//        System.out.println(qe.execute("usbankhack", false, true));
-//        System.out.println(qe.execute("gaussattack", false, true));
+//        for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
+//            System.out.println(qe.execute(c, false, true));
+//        }
 
     }
 }
