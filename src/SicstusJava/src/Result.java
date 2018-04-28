@@ -12,8 +12,8 @@ public class Result {
     private Map<String, List<String>> abducedMap;
 //    private Map<String, Term>[] derivations;
 
-    Result(String culpritString, Map<String, Integer> techMap, Map<String, Integer> opMap,
-           Map<String, Integer> strMap, Set<String> abduced, Map<String,
+    Result(String culpritString,
+           Set<String> abduced, Map<String,
             List<String>> abducedMap) {
         this.culpritString = culpritString;
         this.techMap = techMap;

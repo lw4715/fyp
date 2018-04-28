@@ -25,6 +25,6 @@ public class JasperCallable implements Callable {
     @Override
     public Result call() throws Exception {
         System.out.println("Running... " + name);
-        return qe.execute(name, all, false);
+        return qe.execute(name, all);
     }
 }

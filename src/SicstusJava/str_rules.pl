@@ -24,7 +24,6 @@ rule(allHaveCap, 	hasCapability([X|L], Att), 	[\+ is_list(X), is_list(L), hasCap
 rule(prominentGrpHasCapability, hasCapability(X, _Att), [prominentGroup(X)]).
 
 rule(claimedResp(X,Att), 		isCulprit(X,Att),	[claimedResponsibility(X,Att)]).
-rule(noHistory(X,Att),        neg(isCulprit(X,Att)),[claimedResponsibility(X,Att), noPriorHistory(X)]).
 
 rule(motiveAndCapability(C,Att),isCulprit(C,Att),   [hasMotive(C,Att),hasCapability(C,Att)]).
 rule(motive(C,Att), 			isCulprit(C,Att),   [country(C), prominentGroup(Group), isCulprit(Group, Att), groupOrigin(Group, C), hasMotive(C, Att)]).
@@ -44,7 +43,7 @@ rule(linkedMalware(X,A1),       isCulprit(X,A1),    [malwareUsedInAttack(M1,A1),
 %% add base rule: no info means not culprit
 
 %% GUI: analyst add rules and preferences
-
+rule(noHistory(X,Att),      neg(isCulprit(X,Att)),[claimedResponsibility(X,Att), noPriorHistory(X)]).
 rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
 rule(negAttackOrigin(X,Att),neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att))]).
 rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
@@ -72,19 +71,20 @@ rule(p0e, prefer(loc(X,A),noEvidence(X,A)), []).
 rule(p0f, prefer(social(X,A),noEvidence(X,A)), []).
 rule(p0g, prefer(linkedMalware(X,A),noEvidence(X,A)), []).
 
-rule(p1, prefer(motiveAndCapability(X,A), claimedResp(Y,A)), [X\=Y]).   
-rule(p2, prefer(motiveAndLocation(X,A), claimedResp(Y,A)), [X\=Y]). 
-rule(p3, prefer(motive(X,A),        claimedResp(Y,A)), [X\=Y]). 
-rule(p4, prefer(social(X,A),        claimedResp(Y,A)), [X\=Y]). 
-rule(p5, prefer(linkedMalware(X,A), claimedResp(Y,A)), [X\=Y]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
+rule(p1a, prefer(motiveAndCapability(X,A), claimedResp(Y,A)), [X\=Y]).   
+rule(p1b, prefer(motiveAndLocation(X,A), claimedResp(Y,A)), [X\=Y]). 
+rule(p1c, prefer(motive(X,A),        claimedResp(Y,A)), [X\=Y]). 
+rule(p1d, prefer(social(X,A),        claimedResp(Y,A)), [X\=Y]). 
+rule(p1e, prefer(linkedMalware(X,A), claimedResp(Y,A)), [X\=Y]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
+rule(p1f, prefer(noHistory(X,A), claimedResp(X,A)), [isCulprit(Y,A), X\=Y]).   
 
 rule(p6, prefer(noCapability(X,A),  claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
 rule(p7, prefer(noHistory(X,A),  claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
 
-%% rule(p7, prefer(noCapability(X,A),  motive(X,A)), []).    
-rule(p8, prefer(noCapability(X,A),  motiveAndLocation(X,A)), []).    
-rule(p9, prefer(noCapability(X,A),  loc(X,A)), []).  
-rule(p10, prefer(noCapability(X,A), social(X,A)),[]). % social evidences e.g. twitter posts/ emails can be easily forged
+rule(p8, prefer(noCapability(X,A),  motive(X,A)), []).    
+rule(p9, prefer(noCapability(X,A),  motiveAndLocation(X,A)), []).    
+rule(p10, prefer(noCapability(X,A),  loc(X,A)), []).  
+rule(p11, prefer(noCapability(X,A), social(X,A)),[]). % social evidences e.g. twitter posts/ emails can be easily forged
 rule(p12, prefer(noCapability(X,A), linkedMalware(X,A)), []).
 rule(p13, prefer(lowGciTier(X,A),   linkedMalware(X,A)), []).  
 
@@ -101,30 +101,10 @@ rule(p36e, prefer(targetItself(X,Att), loc(X,Att)),                 [specificTar
 rule(p36f, prefer(targetItself(X,Att), social(X,Att)),              [specificTarget(Att)]).
 rule(p36g, prefer(targetItself(X,Att), linkedMalware(X,Att)),       [specificTarget(Att)]).
 
-%% YES
-%% claimedResp
-%% motiveAndCapability
-%% motive
-%% motiveAndLocation
-%% loc
-%% social
-%% linkedMalware
-
-%% NO
-%% noEvidence
-%% negAttackOrigin
-%% noCapability
-%% noMotive
-%% weakAttack
-%% targetItself
-%% lowGciTier
-%% oneCulprit
-
 %% rule(p37, prefer(p12, p16), []).
 %% rule(p38, prefer(p13, p16), []).
 rule(p37, prefer(p8, p2), []).
 
 goal(A, X, D) :- visual_prove([isCulprit(X, A)], D, [failed(true)]).
-
-%% goal_with_timeout(A, X, D, Result) :- time_out(goal(A, X, D), 6000, Result).
+neg_goal(A, X, D) :- visual_prove([neg(isCulprit(X, A))], D, [failed(true)]).
 
