@@ -43,8 +43,8 @@ rule(linkedMalware(X,A1),       isCulprit(X,A1),    [malwareUsedInAttack(M1,A1),
 %% add base rule: no info means not culprit
 
 %% GUI: analyst add rules and preferences
-rule(noHistory(X,Att),      neg(isCulprit(X,Att)),[claimedResponsibility(X,Att), noPriorHistory(X)]).
 rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
+rule(noHistory(X,Att),      neg(isCulprit(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
 rule(negAttackOrigin(X,Att),neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att))]).
 rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
 rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
@@ -76,10 +76,10 @@ rule(p1b, prefer(motiveAndLocation(X,A), claimedResp(Y,A)), [X\=Y]).
 rule(p1c, prefer(motive(X,A),        claimedResp(Y,A)), [X\=Y]). 
 rule(p1d, prefer(social(X,A),        claimedResp(Y,A)), [X\=Y]). 
 rule(p1e, prefer(linkedMalware(X,A), claimedResp(Y,A)), [X\=Y]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
-rule(p1f, prefer(noHistory(X,A), claimedResp(X,A)), [isCulprit(Y,A), X\=Y]).   
+%% rule(p1f, prefer(noHistory(X,A), claimedResp(X,A)), [isCulprit(Y,A), X\=Y]).   
+rule(p1f, prefer(noHistory(X,A), claimedResp(X,A)), []).   
 
 rule(p6, prefer(noCapability(X,A),  claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
-rule(p7, prefer(noHistory(X,A),  claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
 
 rule(p8, prefer(noCapability(X,A),  motive(X,A)), []).    
 rule(p9, prefer(noCapability(X,A),  motiveAndLocation(X,A)), []).    
@@ -93,17 +93,20 @@ rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
 rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).
 rule(p20, prefer(weakAttack(X,A),       motive(X,A)), []).
 
-rule(p36a, prefer(targetItself(X,Att), claimedResp(X,Att)),         [specificTarget(Att)]).
-rule(p36b, prefer(targetItself(X,Att), motiveAndCapability(X,Att)), [specificTarget(Att)]).
-rule(p36c, prefer(targetItself(X,Att), motive(X,Att)),              [specificTarget(Att)]).
-rule(p36d, prefer(targetItself(X,Att), motiveAndLocation(X,Att)),   [specificTarget(Att)]).
-rule(p36e, prefer(targetItself(X,Att), loc(X,Att)),                 [specificTarget(Att)]).
-rule(p36f, prefer(targetItself(X,Att), social(X,Att)),              [specificTarget(Att)]).
-rule(p36g, prefer(targetItself(X,Att), linkedMalware(X,Att)),       [specificTarget(Att)]).
+rule(p21a, prefer(targetItself(X,Att), claimedResp(X,Att)),         [specificTarget(Att)]).
+rule(p21b, prefer(targetItself(X,Att), motiveAndCapability(X,Att)), [specificTarget(Att)]).
+rule(p21c, prefer(targetItself(X,Att), motive(X,Att)),              [specificTarget(Att)]).
+rule(p21d, prefer(targetItself(X,Att), motiveAndLocation(X,Att)),   [specificTarget(Att)]).
+rule(p21e, prefer(targetItself(X,Att), loc(X,Att)),                 [specificTarget(Att)]).
+rule(p21f, prefer(targetItself(X,Att), social(X,Att)),              [specificTarget(Att)]).
+rule(p21g, prefer(targetItself(X,Att), linkedMalware(X,Att)),       [specificTarget(Att)]).
 
-%% rule(p37, prefer(p12, p16), []).
-%% rule(p38, prefer(p13, p16), []).
-rule(p37, prefer(p8, p2), []).
+
+rule(p22a, prefer(linkedMalware(X,A),noHistory(X,A)), []).
+rule(p22c, prefer(linkedMalware(X,A),noMotive(X,A)), []).
+rule(p22d, prefer(linkedMalware(X,A),weakAttack(X,A)), []).
+
+%% rule(p30, prefer(p8, p2), []).
 
 goal(A, X, D) :- visual_prove([isCulprit(X, A)], D, [failed(true)]).
 neg_goal(A, X, D) :- visual_prove([neg(isCulprit(X, A))], D, [failed(true)]).

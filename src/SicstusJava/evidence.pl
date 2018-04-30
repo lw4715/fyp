@@ -1,7 +1,7 @@
 :- multifile rule/3.
 
 % us bank hack evidences
-%% expected: iran
+%% expected: iran (hasMotive)
 %% https://www.aljazeera.com/news/middleeast/2012/02/20122616342323385.html
 rule(case1_f1, targetCountry(usa ,  usbankhack), []).
 rule(case1_f3, imposedSanctions(usa, iran, [2012, 2]), []).
@@ -11,7 +11,7 @@ rule(case1_f6, malwareUsedInAttack(itsoknoproblembro ,  usbankhack), []).
 rule(case1_f7, attackPeriod(usbankhack , [2012, 9]), []).
 
 % APT1
-%% expected: china
+%% expected: china (social, location, hasMotive)
 rule(case2_f1, majorityIpOrigin(china , apt1), []).
 rule(case2_f2, sysLanguage(chinese, apt1), []).
 rule(case2_f3, firstLanguage(chinese, china), []).
@@ -29,14 +29,12 @@ rule(case2_f14, identifiedIndividualInAttack(superhard , apt1), []).
 rule(case2_f15, identifiedIndividualInAttack(dota , apt1), []).
 
 %  gauss 
-%% expected: equationGroup
+%% expected: equationGroup (linkedMalware)
 %% online banking Trojan functionality. The ability to steal online banking credentials is something we havent previously seen in nation-state sponsored malware attacks
 rule(case3_f1, sophisticatedMalware(gauss), []).
 rule(case3_f2, malwareUsedInAttack(gauss , gaussattack), []).
 rule(case3_f7, targetCountry(middleEast , gaussattack), []).
-%% rule(case3_f8, targetCountry(israel , gaussattack), []).
 rule(case3_f9, targetCountry(lebanon , gaussattack), []). % Note: other countries were attacked too, but focus is on lebanon
-%% rule(case3_f10, targetCountry(palestine , gaussattack), []).
 rule(case3_f12, infectionMethod(usb , gauss), []).
 rule(case3_f13, controlAndCommandEasilyFingerprinted(gauss), []).
 rule(case3_f16, ccServer(gowin7 ,  gauss), []).
@@ -46,7 +44,7 @@ rule(case3_f19, domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_g
 rule(case3_f20, attackPeriod(gaussattack, [2011, 9]), []).
 
 %  stuxnet 
-%% expected: usa, israel
+%% expected: usa, israel (hasMotive, hasCapability)
 rule(case4_f0, industry(nuclear ,iranian_org), []).
 rule(case4_f1, target(iranian_org, stuxnetattack), []).
 rule(case4_f2, infectionMethod(usb , stuxnetattack), []).
@@ -64,7 +62,7 @@ rule(case4_f14, infectionMethod(usb , stuxnet), []).
 
 
 %  sony 
-%% expected: guardiansOfPeace, northkorea
+%% expected: guardiansOfPeace (claimResponsibility), northkorea (hasMotive, location)
 rule(case5_f1, claimedResponsibility(guardiansOfPeace ,  sonyhack), []).
 rule(case5_f2, target(sony ,  sonyhack), []).
 rule(case5_f3, targetCountry(usa ,  sonyhack), []).
@@ -76,7 +74,7 @@ rule(case5_f8, malwareUsedInAttack(trojanVolgmer ,  sonyhack), []).
 rule(case5_f9, malwareUsedInAttack(backdoorDestover ,  sonyhack), []).
 
 %  wannacry 
-%% expected: lazarusGrp, northkorea
+%% expected: lazarusGrp (linkedMalware)
 rule(case6_f1, malwareUsedInAttack(wannacry ,  wannacryattack), []).
 rule(case6_f2, malwareUsedInAttack(trojanAlphanc ,  wannacryattack), []).
 rule(case6_f3, malwareModifiedFrom(trojanAlphanc ,  backdoorDuuzer), []).
@@ -98,6 +96,7 @@ rule(case6_f11, targetCountry(uk, wannacryattack), []).
 %% rule(case7_f1, claimedResponsibility('Guccifer2.0', dnc_hack), []).
 
 
+
 rule(bg_dummy1, country(myCountry),[]).
 rule(bg_dummy2, country(yourCountry),[]).
 rule(bg_dummy3, country(hisCountry),[]).
@@ -110,7 +109,7 @@ rule(case_dummy0_f1, claimedResponsibility(randomGroup, dummy0), []).
 %% dummy1 
 %% expected: 
 %% randomGroup (claimResp)
-%% yourCountry (loc,linkedMalware)
+%% yourCountry (location,linkedMalware)
 rule(case_dummy1_f1, claimedResponsibility(randomGroup, dummy1), []).
 rule(case_dummy1_f2, targetCountry(myCountry, dummy1), []).
 rule(case_dummy1_f3, malwareUsedInAttack(dummy1_m1, dummy1), []).
@@ -136,7 +135,8 @@ rule(case_dummy2_f10, ipGeoloc(yourCountry, dummy2_ip), []).
 %% dummy2b
 %% expected: 
 %% randomGroup (claimResp)
-%% yourCountry is not the only target => not specific attack => yourCountry might be culprit 
+%% yourCountry
+%% (yourCountry is not the only target => not specific attack => yourCountry might be culprit) 
 rule(case_dummy2b_f1, claimedResponsibility(randomGroup, dummy2b), []).
 rule(case_dummy2b_f2, targetCountry(yourCountry, dummy2b), []).
 rule(case_dummy2b_f2b, targetCountry(myCountry, dummy2b), []).
@@ -150,6 +150,7 @@ rule(case_dummy2b_f10, ipGeoloc(yourCountry, dummy2b_ip), []).
 %% dummy3
 %% expected: 
 %% randomGroup (claimResp)
+%% targetItself is preferred over linkedMalware
 %% more than one ipgeolocation doesnt give location information about attack 
 rule(case_dummy3_f1, claimedResponsibility(randomGroup, dummy3), []).
 rule(case_dummy3_f2, targetCountry(yourCountry, dummy3), []).
@@ -164,4 +165,15 @@ rule(case_dummy3_f13, ipGeoloc(hisCountry, dummy3_ip1), []).
 
 
 
+%% dummy4
+%% expected: 
+%% yourCountry (location)
+rule(case_dummy4_f1, claimedResponsibility(yourCountry, dummy4), []).
+rule(case_dummy4_f2, noPriorHistory(yourCountry), []).
+rule(case_dummy4_f2, hasResources(yourCountry), []).
+rule(case_dummy4_f3, neg(requireHighResource(dummy4)), []).
+rule(case_dummy4_f4, ipGeoloc(yourCountry, dummy4_ip), []).
+rule(case_dummy4_f5, attackSourceIP(dummy4_ip, dummy4), []).
+
+%% governmentLinked(P,C),identifiedIndividualInAttack(P,Att)
 

@@ -13,7 +13,7 @@ import static java.util.Collections.max;
 @SuppressWarnings("ALL")
 public class QueryExecutor {
     private static final String VISUALLOG = "visual.log";
-    private final boolean VERBOSE = false;
+    private boolean verbose = false;
 
     private static final QueryExecutor instance = new QueryExecutor();
     private static String FILEPATH = "";
@@ -61,15 +61,22 @@ public class QueryExecutor {
         StringJoiner sj = new StringJoiner(",");
         for (String c : resultMap.keySet()) {
             List<Integer> scores = new ArrayList<>();
-            for (List<String> d : resultMap.get(c)) {
+            LinkedHashSet<List<String>> ds = resultMap.get(c);
+            for (List<String> d : ds) {
                 scores.add(getScore(d));
             }
             sj.add(String.format("%s [Highest score: %d, D: %d]\n", c,
-                    max(scores),resultMap.get(c).size()));
-            for (int i = 0; i < resultMap.get(c).size(); i++) {
-                sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\nNegative Derivation: %s\n", c,
-                        scores.get(i), visualTree[i], negMap.get(c)));
-                negMap.remove(c);
+                    max(scores),ds.size()));
+            for (int i = 0; i < ds.size(); i++) {
+                if (scores.get(i) > 0) {
+                    sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s" +
+//                        "\nNegative Derivation: %s" +
+                                    "\n\n", c,
+                            scores.get(i), visualTree[i]
+//                        ,negMap.get(c)
+                    ));
+//                    negMap.remove(c);
+                }
             }
 
         }
@@ -107,6 +114,7 @@ public class QueryExecutor {
     }
 
     private Map<String, Term>[] executeQueryString(String query, int limit) throws Exception {
+        if (verbose) System.out.println(query);
         Query q = new Query(query);
         return q.nSolutions(limit);
     }
@@ -163,19 +171,19 @@ public class QueryExecutor {
 
         double time = System.nanoTime();
         loadFiles();
-        Map<String, Term>[] maps = this.executeQuery(caseName, VERBOSE, all);
+        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, all);
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
         for (Map<String, Term> map : maps) {
             String culprit = map.get("X").name();
-
+//
 //            Set<List<String>> negDerivations = new HashSet<>();
 //            Map<String, Term>[] ms =
 //                executeQueryString(
-//                    String.format("neg_goal(%s, %s, D)", caseName, culprit),3);
+//                    String.format("call_with_time_limit(3000,prove([neg(isCulprit(%s, %s))], D))", culprit, caseName), 5);
 //            for (Map<String, Term> m: ms) {
 //                Term d = m.get("D");
-////                System.out.println("d...|" + d + "|");
+//                if (verbose) System.out.println(ms + " " + m);
 //                if (!d.toString().equals("'FAIL'")) {
 //                    negDerivations.add(convertToString(d));
 //                } else {
@@ -195,7 +203,7 @@ public class QueryExecutor {
         }
         System.out.println("Results: " + resultMap);
         populateAbduced(resultMap);
-        System.out.println("\nTotal time for " + caseName + ": " + ((System.nanoTime() - time)/pow(10, 9)) );
+        if (verbose) System.out.println("\nTotal time for " + caseName + ": " + ((System.nanoTime() - time)/pow(10, 9)) );
         String culpritString = culpritString(caseName, resultMap, negMap, getVisualTree().toArray());
         return new Result(culpritString, abduced, getPredMap(abduced, true));
     }
@@ -269,15 +277,20 @@ public class QueryExecutor {
 
         try {
             QueryExecutor qe = QueryExecutor.getInstance();
-            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                    System.out.println(qe.execute(c, false));
-            }
-            for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3"}) {
+            qe.setDebug();
+//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                    System.out.println(qe.execute(c, false));
+//            }
+            for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3", "dummy4"}) {
                 System.out.println(qe.execute(c, false));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void setDebug() {
+        verbose = true;
     }
 }
