@@ -58,6 +58,7 @@ public class QueryExecutor {
     }
 
     public String culpritString(String attack, Map<String, LinkedHashSet<List<String>>> resultMap, Map<String, Set<List<String>>> negMap, Object[] visualTree) {
+        StringBuilder sb = new StringBuilder();
         StringJoiner sj = new StringJoiner(",");
         for (String c : resultMap.keySet()) {
             List<Integer> scores = new ArrayList<>();
@@ -65,7 +66,7 @@ public class QueryExecutor {
             for (List<String> d : ds) {
                 scores.add(getScore(d));
             }
-            sj.add(String.format("%s [Highest score: %d, D: %d]\n", c,
+            sb.append(String.format("%s [Highest score: %d, D: %d]\n", c,
                     max(scores),ds.size()));
             for (int i = 0; i < ds.size(); i++) {
                 if (scores.get(i) > 0) {
@@ -80,7 +81,7 @@ public class QueryExecutor {
             }
 
         }
-        return "{" + attack + "}\n" + sj;
+        return "{" + attack + "}\n" + sb + "\n" + sj;
     }
 
     Map<String, Term>[] executeQuery(String caseName, boolean verbose, boolean all) {
@@ -201,7 +202,7 @@ public class QueryExecutor {
             }
             set.add(convertToString(map.get("D0")));
         }
-        System.out.println("Results: " + resultMap);
+//        System.out.println("Results: " + resultMap);
         populateAbduced(resultMap);
         if (verbose) System.out.println("\nTotal time for " + caseName + ": " + ((System.nanoTime() - time)/pow(10, 9)) );
         String culpritString = culpritString(caseName, resultMap, negMap, getVisualTree().toArray());
@@ -278,9 +279,9 @@ public class QueryExecutor {
         try {
             QueryExecutor qe = QueryExecutor.getInstance();
             qe.setDebug();
-//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                    System.out.println(qe.execute(c, false));
-//            }
+            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                    System.out.println(qe.execute(c, false));
+            }
             for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3", "dummy4"}) {
                 System.out.println(qe.execute(c, false));
             }
