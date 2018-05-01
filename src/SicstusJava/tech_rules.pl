@@ -2,73 +2,74 @@
 :- multifile rule/3.
 :- multifile abducible/2.
 
-rule(highSkill0(Att), neg(highLevelSkill(Att)),     []).
-rule(highSkill1(Att), highLevelSkill(Att),     [hijackCorporateClouds(Att)]).
-rule(highSkill2(Att), highLevelSkill(Att),     [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
-rule(highSkill3(Att), neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
-rule(highSkill4(Att), highLevelSkill(Att),     [stolenValidSignedCertificates(Att)]).
+rule(r_t_highSkill0(Att), neg(highLevelSkill(Att)),     []).
+rule(r_t_highSkill1(Att), highLevelSkill(Att),     [hijackCorporateClouds(Att)]).
+rule(r_t_highSkill2(Att), highLevelSkill(Att),     [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
+rule(r_t_highSkill3(Att), neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+rule(r_t_highSkill4(Att), highLevelSkill(Att),     [stolenValidSignedCertificates(Att)]).
 
-rule(highResource0(Att), neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
-rule(highResource1(Att), requireHighResource(Att), [highLevelSkill(Att)]).
-rule(highResource2(Att), requireHighResource(Att), [highSecurity(T), target(T, Att)]).
-rule(highResource3(Att), requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
+rule(r_t_highResource0(Att), neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+rule(r_t_highResource1(Att), requireHighResource(Att), [highLevelSkill(Att)]).
+rule(r_t_highResource2(Att), requireHighResource(Att), [highSecurity(T), target(T, Att)]).
+rule(r_t_highResource3(Att), requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
 
 
-rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
-rule(srcIP(X,Att),   attackPossibleOrigin(X,Att),      [attackSourceIP(IP, Att), ipGeoloc(X, IP)]).
-rule(srcIP(X,Att),   attackPossibleOrigin(X,Att),      [majorityIpOrigin(X,Att)]).
-rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
-rule(lang1(X,Att),   attackPossibleOrigin(X,Att),      [sysLanguage(L, Att), firstLanguage(L, X)]).
-rule(lang2(X,Att),   attackPossibleOrigin(X,Att),      [languageInCode(L,Att), firstLanguage(L,X)]).
-rule(infra(X,Att),   attackPossibleOrigin(X,Att),      [infraUsed(Infra, Att), infraRegisteredIn(X, Infra)]).
-rule(domain(X,Att),  attackPossibleOrigin(X,Att),      [malwareUsedInAttack(M, Att), ccServer(S, M), domainRegisteredDetails(S,_,Addr), addrInCountry(Addr, X)]).
+rule(r_t_noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
+rule(r_t_srcIP1(X,Att),   attackPossibleOrigin(X,Att),      [attackSourceIP(IP, Att), ipGeoloc(X, IP)]).
+rule(r_t_srcIP2(X,Att),   attackPossibleOrigin(X,Att),      [majorityIpOrigin(X,Att)]).
+rule(r_t_spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
+rule(r_t_lang1(X,Att),   attackPossibleOrigin(X,Att),      [sysLanguage(L, Att), firstLanguage(L, X)]).
+rule(r_t_lang2(X,Att),   attackPossibleOrigin(X,Att),      [languageInCode(L,Att), firstLanguage(L,X)]).
+rule(r_t_infra(X,Att),   attackPossibleOrigin(X,Att),      [infraUsed(Infra, Att), infraRegisteredIn(X, Infra)]).
+rule(r_t_domain(X,Att),  attackPossibleOrigin(X,Att),      [malwareUsedInAttack(M, Att), ccServer(S, M), domainRegisteredDetails(S,_,Addr), addrInCountry(Addr, X)]).
 
-rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
-rule(attackOrigin(X,Att), attackOrigin(X,Att),              [attackPossibleOrigin(X,Att)]).
-rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
-rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
+rule(r_t_attackOriginDefault(X,Att), neg(attackOrigin(X,Att)), []).
+rule(r_t_attackOrigin(X,Att), attackOrigin(X,Att),              [attackPossibleOrigin(X,Att)]).
+rule(r_t_conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+rule(r_t_nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
 
-rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),commandAndControlEasilyFingerprinted(M)]). 
+rule(r_t_bm(M), notForBlackMarketUse(M), [infectionMethod(usb,M),commandAndControlEasilyFingerprinted(M)]). 
 
-rule(similar,similar(M1, M2),         [similarCCServer(M1, M2), M1 \= M2]).
-rule(simCC1, similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
-rule(simCC2, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2, domainRegisteredDetails(S1,_,A), domainRegisteredDetails(S2,_,A)]).
-rule(simCC3, similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2, domainRegisteredDetails(S1,Name,_), domainRegisteredDetails(S2,Name,_)]).
+rule(r_t_similar(M1,M2),similar(M1, M2),         [similarCCServer(M1, M2), M1 \= M2]).
+rule(r_t_simCC1(M1,M2), similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
+rule(r_t_simCC2(M1,M2), similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2, domainRegisteredDetails(S1,_,A), domainRegisteredDetails(S2,_,A)]).
+rule(r_t_simCC3(M1,M2), similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2, domainRegisteredDetails(S1,Name,_), domainRegisteredDetails(S2,Name,_)]).
 
-rule(ccServerAddrType, ccServerAddrType(Server, Type), [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
-rule(similar1, similar(M1, M2), [simlarCodeObfuscation(M1, M2)]).
-rule(similar2, similar(M1, M2), [sharedCode(M1, M2)]).
-rule(similar3, similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
-rule(similar4, similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMalware(C2,M2), similarFileChara(C1, C2)]).
+rule(r_t_ccServerAddrType(Server,Type), ccServerAddrType(Server, Type), [domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
+rule(r_t_similar1(M1,M2), similar(M1, M2), [simlarCodeObfuscation(M1, M2)]).
+rule(r_t_similar2(M1,M2), similar(M1, M2), [sharedCode(M1, M2)]).
+rule(r_t_similar3(M1,M2), similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
+rule(r_t_similar4(M1,M2), similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMalware(C2,M2), similarFileChara(C1, C2)]).
 
-rule(targetted, specificTarget(Att),        [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
-rule(zeroday,   sophisticatedMalware(M),    [usesZeroDayVulnerabilities(M)]).
+rule(r_t_targetted(Att), specificTarget(Att),        [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
+rule(r_t_zeroday(M),   sophisticatedMalware(M),    [usesZeroDayVulnerabilities(M)]).
 
-rule(similarFileChara1, similarFileChara(C1, C2), [fileChara(Filename,_,_,_,_,_,C1), fileChara(Filename,_,_,_,_,_,C2)]).
-rule(similarFileChara2, similarFileChara(C1, C2), [fileChara(_,MD5,_,_,_,_,C1), fileChara(_,MD5,_,_,_,_,C2)]).
-rule(similarFileChara3, similarFileChara(C1, C2), [fileChara(_,_,_,_,Desc,_,C1), fileChara(_,_,_,_,Desc,_,C2)]).
-rule(similarFileChara4, similarFileChara(C1, C2), [fileChara(_,_,Size,CompileTime,_,Filetype,C1), fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
+rule(r_t_similarFileChara1(C1,C2), similarFileChara(C1, C2), [fileChara(Filename,_,_,_,_,_,C1), fileChara(Filename,_,_,_,_,_,C2)]).
+rule(r_t_similarFileChara2(C1,C2), similarFileChara(C1, C2), [fileChara(_,MD5,_,_,_,_,C1), fileChara(_,MD5,_,_,_,_,C2)]).
+rule(r_t_similarFileChara3(C1,C2), similarFileChara(C1, C2), [fileChara(_,_,_,_,Desc,_,C1), fileChara(_,_,_,_,Desc,_,C2)]).
+rule(r_t_similarFileChara4(C1,C2), similarFileChara(C1, C2), [fileChara(_,_,Size,CompileTime,_,Filetype,C1), fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
 % pref
-rule(p1_t, prefer(attackOrigin(_X,_Att), attackOriginDefault), []).
-rule(p2a_t, prefer(conflictingOrigin(X,_Y,Att), attackOrigin(X,Att)), []).
-rule(p2b_t, prefer(conflictingOrigin(_Y,X,Att), attackOrigin(X,Att)), []).
-rule(p3_t, prefer(nonOrigin(X,Att), attackOrigin(X,Att)), []).
-rule(p4_t, prefer(srcIP(X,Att), noLocEvidence(X,Att)), []).
-rule(p5_t, prefer(lang1(X,Att), noLocEvidence(X,Att)), []).
-rule(p6_t, prefer(lang2(X,Att), noLocEvidence(X,Att)), []).
-rule(p7_t, prefer(infra(X,Att), noLocEvidence(X,Att)), []).
-rule(p8_t, prefer(domain(X,Att), noLocEvidence(X,Att)), []).
-rule(p9_t, prefer(spoofIP(X,Att), srcIP(X,Att)), []).
-rule(p10a_t, prefer(highSkill1(Att), highSkill0(Att)), []).
-rule(p10b_t, prefer(highSkill2(Att), highSkill0(Att)), []).
-rule(p10c_t, prefer(highSkill4(Att), highSkill0(Att)), []).
-rule(p11a_t, prefer(highSkill3(Att), highSkill1(Att)), []).
-rule(p11b_t, prefer(highSkill3(Att), highSkill2(Att)), []).
-rule(p11c_t, prefer(highSkill3(Att), highSkill4(Att)), []).
-rule(p12a_t, prefer(highResource1(Att), highResource0(Att)), []).
-rule(p12b_t, prefer(highResource2(Att), highResource0(Att)), []).
-rule(p12c_t, prefer(highResource3(Att), highResource0(Att)), []).
+rule(p1_t, prefer(r_t_attackOrigin(X,Att), r_t_attackOriginDefault(X,Att)), []).
+rule(p2a_t, prefer(r_t_conflictingOrigin(X,_Y,Att), r_t_attackOrigin(X,Att)), []).
+rule(p2b_t, prefer(r_t_conflictingOrigin(_Y,X,Att), r_t_attackOrigin(X,Att)), []).
+rule(p3_t, prefer(r_t_nonOrigin(X,Att), r_t_attackOrigin(X,Att)), []).
+rule(p4a_t, prefer(r_t_srcIP1(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p4b_t, prefer(r_t_srcIP2(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p5_t, prefer(r_t_lang1(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p6_t, prefer(r_t_lang2(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p7_t, prefer(r_t_infra(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p8_t, prefer(r_t_domain(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p9_t, prefer(r_t_spoofIP(X,Att), r_t_srcIP(X,Att)), []).
+rule(p10a_t, prefer(r_t_highSkill1(Att), r_t_highSkill0(Att)), []).
+rule(p10b_t, prefer(r_t_highSkill2(Att), r_t_highSkill0(Att)), []).
+rule(p10c_t, prefer(r_t_highSkill4(Att), r_t_highSkill0(Att)), []).
+rule(p11a_t, prefer(r_t_highSkill3(Att), r_t_highSkill1(Att)), []).
+rule(p11b_t, prefer(r_t_highSkill3(Att), r_t_highSkill2(Att)), []).
+rule(p11c_t, prefer(r_t_highSkill3(Att), r_t_highSkill4(Att)), []).
+rule(p12a_t, prefer(r_t_highResource1(Att), r_t_highResource0(Att)), []).
+rule(p12b_t, prefer(r_t_highResource2(Att), r_t_highResource0(Att)), []).
+rule(p12c_t, prefer(r_t_highResource3(Att), r_t_highResource0(Att)), []).
 
 
 
@@ -91,27 +92,27 @@ rule(p12c_t, prefer(highResource3(Att), highResource0(Att)), []).
 %  notForBlackMarketUse/1 (strat)
 % similar/2 (strat)
 
-goal(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
-  initFile('tech.pl'),
-  writeToFiles('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-  writeToFiles('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
-  writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
-  writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
-  writeToFilesAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
+%% goal(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
+%%   initFile('tech.pl'),
+%%   writeToFiles('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
+%%   writeToFiles('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
+%%   writeToFilesAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
+%%   writeToFilesAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
+%%   writeToFilesAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
 
 
-goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
-  initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'), case(A),
-  writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-  writeToFilesAll('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
-  writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
-  writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
-  writeToFilesAllAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
+%% goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
+%%   initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'), case(A),
+%%   writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
+%%   writeToFilesAll('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
+%%   writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
+%%   writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
+%%   writeToFilesAllAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
 
 
-requireHighResource(A, D) :- prove([requireHighResource(A)], D).
-attackOrigin(X, A, D) :- prove([attackOrigin(X, A)], D).
-notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
-similar(M1, M2, D) :- prove([similar(M1, M2)], D).
-specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
-malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).
+%% requireHighResource(A, D) :- prove([requireHighResource(A)], D).
+%% attackOrigin(X, A, D) :- prove([attackOrigin(X, A)], D).
+%% notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
+%% similar(M1, M2, D) :- prove([similar(M1, M2)], D).
+%% specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
+%% malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).

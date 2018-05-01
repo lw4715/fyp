@@ -82,7 +82,7 @@ def renumberRules(filename):
             split = line.split("(")
             head = split[0]
             label = split[1].split(",")
-            label[0] = "bg" + str(counter)
+            label[0] = "bg" + str(counter) + "()"
             split[1] = ",".join(label)
             counter += 1
             r += ("(".join(split))

@@ -13,15 +13,10 @@ import static java.util.Collections.max;
 @SuppressWarnings("ALL")
 public class QueryExecutor {
     List<Double> timings;
-    private static final String VISUALLOG = "visual.log";
     private boolean verbose = false;
 
     private static final QueryExecutor instance = new QueryExecutor();
-    private static String FILEPATH = "";
     private static final String CONSULT_STRING = "consult(%s)";
-    private static final String TECH = FILEPATH + "tech_rules";
-    private static final String OP = FILEPATH + "op_rules";
-    private static final String STR = FILEPATH + "str_rules";
 
 
     private Set<String> abduced;
@@ -38,8 +33,8 @@ public class QueryExecutor {
 
     private LinkedHashSet<String> getVisualTree() {
         try {
-            File f = new File(VISUALLOG);
-            BufferedReader br = new BufferedReader(new FileReader(VISUALLOG));
+            File f = new File(Utils.VISUALLOG);
+            BufferedReader br = new BufferedReader(new FileReader(Utils.VISUALLOG));
             StringBuilder sb = new StringBuilder();
             br.lines().forEach(line -> {
                 sb.append(line + "\n");
@@ -73,11 +68,12 @@ public class QueryExecutor {
             for (int i = 0; i < ds.size(); i++) {
                 if (scores.get(i) > 0) {
                     sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n %s" +
-                        "\nNegative Derivation: %s\n\n", c, ds.toArray()[i],
-                            scores.get(i), visualTree[i]
-                        ,negMap.get(c)
+//                        "\nNegative Derivation: %s" +
+                            "\n\n", c, scores.get(i),
+                            ds.toArray()[i], visualTree[i]
+//                        ,negMap.get(c)
                     ));
-                    negMap.remove(c);
+//                    negMap.remove(c);
                 }
             }
 
@@ -103,7 +99,7 @@ public class QueryExecutor {
             }
 
             System.out.println("All");
-            executeQueryString(String.format("tell('%s')", VISUALLOG), 1);
+            executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
             queryString = String.format("%s(%s,X,D0)", goal, caseName);
             queryMap = executeQueryString(queryString, 10);
             System.out.println(queryString);
@@ -180,19 +176,19 @@ public class QueryExecutor {
             String culprit = map.get("X").name();
 
             Set<List<String>> negDerivations = new HashSet<>();
-            Map<String, Term>[] ms =
-                executeQueryString(
-                    String.format("prove([neg(isCulprit(%s, %s))], D)", culprit, caseName), 5);
-            for (Map<String, Term> m: ms) {
-                Term d = m.get("D");
-                if (verbose) System.out.println(ms + " " + m);
-                if (!d.toString().equals("'FAIL'")) {
-                    negDerivations.add(convertToString(d));
-                } else {
-                    System.out.println("FAILED!");
-                }
-            }
-            negMap.put(culprit, negDerivations);
+//            Map<String, Term>[] ms =
+//                executeQueryString(
+//                    String.format("prove([neg(isCulprit(%s, %s))], D)", culprit, caseName), 5);
+//            for (Map<String, Term> m: ms) {
+//                Term d = m.get("D");
+//                if (verbose) System.out.println(ms + " " + m);
+//                if (!d.toString().equals("'FAIL'")) {
+//                    negDerivations.add(convertToString(d));
+//                } else {
+//                    System.out.println("FAILED!");
+//                }
+//            }
+//            negMap.put(culprit, negDerivations);
 
             LinkedHashSet<List<String>> set;
             if (resultMap.get(culprit) == null) {
@@ -236,9 +232,9 @@ public class QueryExecutor {
     private void loadFiles() {
         try {
             executeQueryString(String.format(CONSULT_STRING, "utils"), 1);
-            executeQueryString(String.format(CONSULT_STRING, TECH), 1);
-            executeQueryString(String.format(CONSULT_STRING, OP), 1);
-            executeQueryString(String.format(CONSULT_STRING, STR), 1);
+            executeQueryString(String.format(CONSULT_STRING, Utils.TECH), 1);
+            executeQueryString(String.format(CONSULT_STRING, Utils.OP), 1);
+            executeQueryString(String.format(CONSULT_STRING, Utils.STR), 1);
 //            executeQueryString(String.format(CONSULT_STRING, "everything"), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
         } catch (Exception e) {
@@ -256,9 +252,9 @@ public class QueryExecutor {
                 key = pred.split("\\(")[0];
             }
             List<String> val = new ArrayList<>();
-            val.addAll(scanFileForPredicate(TECH, key));
-            val.addAll(scanFileForPredicate(OP, key));
-            val.addAll(scanFileForPredicate(STR, key));
+            val.addAll(scanFileForPredicate(Utils.TECH, key));
+            val.addAll(scanFileForPredicate(Utils.OP, key));
+            val.addAll(scanFileForPredicate(Utils.STR, key));
             map.put(key, val);
         }
         return map;
@@ -277,6 +273,18 @@ public class QueryExecutor {
             e.printStackTrace();
         }
         return r;
+    }
+
+    private static double mean(List<Double> timings) {
+        double acc = 0;
+        for (Double t : timings) {
+            acc += t;
+        }
+        return acc/timings.size();
+    }
+
+    private void setDebug() {
+        verbose = true;
     }
 
     public static void main(String[] args) {
@@ -302,15 +310,4 @@ public class QueryExecutor {
 
     }
 
-    private static double mean(List<Double> timings) {
-        double acc = 0;
-        for (Double t : timings) {
-            acc += t;
-        }
-        return acc/timings.size();
-    }
-
-    private void setDebug() {
-        verbose = true;
-    }
 }
