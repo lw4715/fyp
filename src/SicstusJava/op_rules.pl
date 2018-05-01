@@ -1,4 +1,4 @@
-:- compile('utils.pl').
+%% :- compile('utils.pl').
 %% :- compile('tech.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
@@ -62,12 +62,12 @@ rule(p4_op, prefer(pMotive(C,T), geopolitics1(C,T)), []).
 %% hasMotive(X,A)
 
 goal(A, X, X1, D0, D1) :-
-  initFile('op.pl'), case(A),
+  initFile('op.pl'), 
   writeToFiles('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
   writeToFiles('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_').
 
 goal_all(A, X, X1, D0, D1) :-
-  initFile('op.pl'), case(A),
+  initFile('op.pl'), 
   writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
   writeToFilesAll('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_').
 

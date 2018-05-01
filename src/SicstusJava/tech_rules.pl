@@ -1,16 +1,17 @@
-:- compile('utils.pl').
+%% :- compile('utils.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
 
-rule(highSkill1, highLevelSkill(Att),     [hijackCorporateClouds(Att)]).
-rule(highSkill2, highLevelSkill(Att),     [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
-rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
-rule(highSkill4, highLevelSkill(Att),     [stolenValidSignedCertificates(Att)]).
+rule(highSkill0(Att), neg(highLevelSkill(Att)),     []).
+rule(highSkill1(Att), highLevelSkill(Att),     [hijackCorporateClouds(Att)]).
+rule(highSkill2(Att), highLevelSkill(Att),     [malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
+rule(highSkill3(Att), neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+rule(highSkill4(Att), highLevelSkill(Att),     [stolenValidSignedCertificates(Att)]).
 
-rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
-rule(highResource1, requireHighResource(Att), [highLevelSkill(Att)]).
-rule(highResource2, requireHighResource(Att), [highSecurity(T), target(T, Att)]).
-rule(highResource3, requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
+rule(highResource0(Att), neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+rule(highResource1(Att), requireHighResource(Att), [highLevelSkill(Att)]).
+rule(highResource2(Att), requireHighResource(Att), [highSecurity(T), target(T, Att)]).
+rule(highResource3(Att), requireHighResource(Att), [highVolumeAttack(Att),longDurationAttack(Att)]).
 
 
 rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
@@ -27,7 +28,7 @@ rule(attackOrigin(X,Att), attackOrigin(X,Att),              [attackPossibleOrigi
 rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
 rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
 
-rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). 
+rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),commandAndControlEasilyFingerprinted(M)]). 
 
 rule(similar,similar(M1, M2),         [similarCCServer(M1, M2), M1 \= M2]).
 rule(simCC1, similarCCServer(M1, M2), [ccServer(S, M1), ccServer(S, M2)]).
@@ -59,6 +60,16 @@ rule(p6_t, prefer(lang2(X,Att), noLocEvidence(X,Att)), []).
 rule(p7_t, prefer(infra(X,Att), noLocEvidence(X,Att)), []).
 rule(p8_t, prefer(domain(X,Att), noLocEvidence(X,Att)), []).
 rule(p9_t, prefer(spoofIP(X,Att), srcIP(X,Att)), []).
+rule(p10a_t, prefer(highSkill1(Att), highSkill0(Att)), []).
+rule(p10b_t, prefer(highSkill2(Att), highSkill0(Att)), []).
+rule(p10c_t, prefer(highSkill4(Att), highSkill0(Att)), []).
+rule(p11a_t, prefer(highSkill3(Att), highSkill1(Att)), []).
+rule(p11b_t, prefer(highSkill3(Att), highSkill2(Att)), []).
+rule(p11c_t, prefer(highSkill3(Att), highSkill4(Att)), []).
+rule(p12a_t, prefer(highResource1(Att), highResource0(Att)), []).
+rule(p12b_t, prefer(highResource2(Att), highResource0(Att)), []).
+rule(p12c_t, prefer(highResource3(Att), highResource0(Att)), []).
+
 
 
 %% TODO: do more stuff with IP?

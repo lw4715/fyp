@@ -1,4 +1,4 @@
-:- compile('utils.pl').
+%% :- compile('utils.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
 
@@ -15,6 +15,9 @@
 
 abducible(notForBlackMarketUse(_), []).
 %% abducible(hasCapability(_,_), []).
+
+complement(isCulprit(X, Att), isCulprit(Y, Att)) :- X \= Y.
+
 
 rule(social1(P,C), governmentLinked(P,C), [geolocatedInGovFacility(P,C)]).
 rule(social2(P,C), governmentLinked(P,C), [publicCommentsRelatedToGov(P,C)]).
@@ -71,12 +74,11 @@ rule(p0e, prefer(loc(X,A),noEvidence(X,A)), []).
 rule(p0f, prefer(social(X,A),noEvidence(X,A)), []).
 rule(p0g, prefer(linkedMalware(X,A),noEvidence(X,A)), []).
 
-rule(p1a, prefer(motiveAndCapability(X,A), claimedResp(Y,A)), [X\=Y]).   
-rule(p1b, prefer(motiveAndLocation(X,A), claimedResp(Y,A)), [X\=Y]). 
-rule(p1c, prefer(motive(X,A),        claimedResp(Y,A)), [X\=Y]). 
-rule(p1d, prefer(social(X,A),        claimedResp(Y,A)), [X\=Y]). 
-rule(p1e, prefer(linkedMalware(X,A), claimedResp(Y,A)), [X\=Y]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
-%% rule(p1f, prefer(noHistory(X,A), claimedResp(X,A)), [isCulprit(Y,A), X\=Y]).   
+rule(p1a, prefer(motiveAndCapability(_X,A), claimedResp(_Y,A)), []).   
+rule(p1b, prefer(motiveAndLocation(_X,A), claimedResp(_Y,A)), []). 
+rule(p1c, prefer(motive(_X,A),        claimedResp(_Y,A)), []). 
+rule(p1d, prefer(social(_X,A),        claimedResp(_Y,A)), []). 
+rule(p1e, prefer(linkedMalware(_X,A), claimedResp(_Y,A)), []). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
 rule(p1f, prefer(noHistory(X,A), claimedResp(X,A)), []).   
 
 rule(p6, prefer(noCapability(X,A),  claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
@@ -109,5 +111,5 @@ rule(p22d, prefer(linkedMalware(X,A),weakAttack(X,A)), []).
 %% rule(p30, prefer(p8, p2), []).
 
 goal(A, X, D) :- visual_prove([isCulprit(X, A)], D, [failed(true)]).
-neg_goal(A, X, D) :- visual_prove([neg(isCulprit(X, A))], D, [failed(true)]).
+neg_goal(A, X, D) :- prove([neg(isCulprit(X, A))], D).
 

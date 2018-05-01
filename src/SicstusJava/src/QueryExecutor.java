@@ -12,6 +12,7 @@ import static java.util.Collections.max;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
+    List<Double> timings;
     private static final String VISUALLOG = "visual.log";
     private boolean verbose = false;
 
@@ -21,9 +22,7 @@ public class QueryExecutor {
     private static final String TECH = FILEPATH + "tech_rules";
     private static final String OP = FILEPATH + "op_rules";
     private static final String STR = FILEPATH + "str_rules";
-//    private static final String TECHSAV = "tech.sav";
-//    private static final String OPSAV = "op.sav";
-//    private static final String STRSAV = "str.sav";
+
 
     private Set<String> abduced;
 
@@ -33,6 +32,7 @@ public class QueryExecutor {
 
     private QueryExecutor() {
         JPL.init();
+        timings = new ArrayList<>();
         abduced = new HashSet<>();
     }
 
@@ -66,17 +66,18 @@ public class QueryExecutor {
             for (List<String> d : ds) {
                 scores.add(getScore(d));
             }
-            sb.append(String.format("%s [Highest score: %d, D: %d]\n", c,
-                    max(scores),ds.size()));
+            if (max(scores) > 0) {
+                sb.append(String.format("%s [Highest score: %d, D: %d]\n", c,
+                        max(scores), ds.size()));
+            }
             for (int i = 0; i < ds.size(); i++) {
                 if (scores.get(i) > 0) {
-                    sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s" +
-//                        "\nNegative Derivation: %s" +
-                                    "\n\n", c,
+                    sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n %s" +
+                        "\nNegative Derivation: %s\n\n", c, ds.toArray()[i],
                             scores.get(i), visualTree[i]
-//                        ,negMap.get(c)
+                        ,negMap.get(c)
                     ));
-//                    negMap.remove(c);
+                    negMap.remove(c);
                 }
             }
 
@@ -177,21 +178,21 @@ public class QueryExecutor {
         Map<String, Set<List<String>>> negMap = new HashMap<>();
         for (Map<String, Term> map : maps) {
             String culprit = map.get("X").name();
-//
-//            Set<List<String>> negDerivations = new HashSet<>();
-//            Map<String, Term>[] ms =
-//                executeQueryString(
-//                    String.format("call_with_time_limit(3000,prove([neg(isCulprit(%s, %s))], D))", culprit, caseName), 5);
-//            for (Map<String, Term> m: ms) {
-//                Term d = m.get("D");
-//                if (verbose) System.out.println(ms + " " + m);
-//                if (!d.toString().equals("'FAIL'")) {
-//                    negDerivations.add(convertToString(d));
-//                } else {
-//                    System.out.println("FAILED!");
-//                }
-//            }
-//            negMap.put(culprit, negDerivations);
+
+            Set<List<String>> negDerivations = new HashSet<>();
+            Map<String, Term>[] ms =
+                executeQueryString(
+                    String.format("prove([neg(isCulprit(%s, %s))], D)", culprit, caseName), 5);
+            for (Map<String, Term> m: ms) {
+                Term d = m.get("D");
+                if (verbose) System.out.println(ms + " " + m);
+                if (!d.toString().equals("'FAIL'")) {
+                    negDerivations.add(convertToString(d));
+                } else {
+                    System.out.println("FAILED!");
+                }
+            }
+            negMap.put(culprit, negDerivations);
 
             LinkedHashSet<List<String>> set;
             if (resultMap.get(culprit) == null) {
@@ -204,7 +205,9 @@ public class QueryExecutor {
         }
 //        System.out.println("Results: " + resultMap);
         populateAbduced(resultMap);
-        if (verbose) System.out.println("\nTotal time for " + caseName + ": " + ((System.nanoTime() - time)/pow(10, 9)) );
+        time = ((System.nanoTime() - time)/pow(10, 9));
+        timings.add(time);
+        if (verbose) System.out.println("\nTotal time for " + caseName + ": " + time );
         String culpritString = culpritString(caseName, resultMap, negMap, getVisualTree().toArray());
         return new Result(culpritString, abduced, getPredMap(abduced, true));
     }
@@ -232,9 +235,11 @@ public class QueryExecutor {
 
     private void loadFiles() {
         try {
+            executeQueryString(String.format(CONSULT_STRING, "utils"), 1);
             executeQueryString(String.format(CONSULT_STRING, TECH), 1);
             executeQueryString(String.format(CONSULT_STRING, OP), 1);
             executeQueryString(String.format(CONSULT_STRING, STR), 1);
+//            executeQueryString(String.format(CONSULT_STRING, "everything"), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,19 +281,33 @@ public class QueryExecutor {
 
     public static void main(String[] args) {
 
+        QueryExecutor qe = QueryExecutor.getInstance();
+//        qe.setDebug();
+        int n = 1;
         try {
-            QueryExecutor qe = QueryExecutor.getInstance();
-            qe.setDebug();
-            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+            for (int i = 0; i < n; i++) {
+                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                        System.out.println(qe.execute(c, false));
+                }
+                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4"}) {
                     System.out.println(qe.execute(c, false));
-            }
-            for (String c : new String[]{"dummy0", "dummy1", "dummy2", "dummy2b", "dummy3", "dummy4"}) {
-                System.out.println(qe.execute(c, false));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        assert (n == qe.timings.size());
+        System.out.println("Mean total runtime over" + n + "times: " + mean(qe.timings));
+
+    }
+
+    private static double mean(List<Double> timings) {
+        double acc = 0;
+        for (Double t : timings) {
+            acc += t;
+        }
+        return acc/timings.size();
     }
 
     private void setDebug() {
