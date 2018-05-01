@@ -145,7 +145,6 @@ public class Utils {
                             if (var.length() > 0)
                                 argsMap.put(var, args[i].replace(")", ""));
                         }
-                        System.out.println("args:" + argsMap);
                         StringJoiner sj = new StringJoiner(",");
                         for (String var : headVar) {
                             sj.add(argsMap.get(var));
@@ -161,9 +160,7 @@ public class Utils {
                 }
                 line = br.readLine();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println(r + " file: " + f);
@@ -180,7 +177,6 @@ public class Utils {
             while (line != null) {
                 if (line.startsWith("rule(" + rule[0])) {
                     for (String b : line.split("\\[")[1].split("\\]")[0].split("\\)")) {
-                        System.out.println(b);
                         b = b.split("\\(")[0];
                         b = b.replace(" ", "");
                         b = b.replace(",", "");

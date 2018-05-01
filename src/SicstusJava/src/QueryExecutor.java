@@ -203,7 +203,7 @@ public class QueryExecutor {
         populateAbduced(resultMap);
         time = ((System.nanoTime() - time)/pow(10, 9));
         timings.add(time);
-        if (verbose) System.out.println("\nTotal time for " + caseName + ": " + time );
+        System.out.println("\nTotal time for " + caseName + ": " + time );
         String culpritString = culpritString(caseName, resultMap, negMap, getVisualTree().toArray());
         return new Result(culpritString, abduced, getPredMap(abduced, true));
     }
@@ -306,7 +306,7 @@ public class QueryExecutor {
         }
 
         assert (n == qe.timings.size());
-        System.out.println("Mean total runtime over" + n + "times: " + mean(qe.timings));
+        System.out.println("Mean total runtime over " + n + " times: " + mean(qe.timings));
 
     }
 

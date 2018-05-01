@@ -1,0 +1,679 @@
+
+---------
+Start apt1 derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(apt1,X,D0)
+goal(apt1,X,D0)
+told
+
+Total time for apt1: 1.568987481
+
+Culprit(s): {apt1}
+china [Highest score: 7, D: 8]
+
+X = china [Score: 3] 
+Derivation:
+ 
+[case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[srcIP(china,apt1), case2_f1, p4_t]  {DEFENSE}
+
+,X = china [Score: 7] 
+Derivation:
+ [case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[srcIP(china,apt1), case2_f1, p4_t]  {DEFENSE}
+
+,X = china [Score: 6] 
+Derivation:
+ [case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[lang1(china,apt1), case2_f3, case2_f2, p5_t]  {DEFENSE}
+
+,X = china [Score: 7] 
+Derivation:
+ [case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[lang1(china,apt1), bg66, case2_f2, p5_t]  {DEFENSE}
+
+,X = china [Score: 3] 
+Derivation:
+ [case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[infra(china,apt1), case2_f4, case2_f5, p7_t]  {DEFENSE}
+
+,X = china [Score: 7] 
+Derivation:
+ [case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[srcIP(china,apt1), case2_f1, ass(neg(prefer(noLocEvidence(china,apt1),srcIP(china,apt1))))]  {DEFENSE}
+
+,X = china [Score: 6] 
+Derivation:
+ [case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[lang1(china,apt1), case2_f3, case2_f2, ass(neg(prefer(noLocEvidence(china,apt1),lang1(china,apt1))))]  {DEFENSE}
+
+,X = china [Score: 7] 
+Derivation:
+ [case2_f1, srcIP(china,apt1), attackOrigin(china,apt1), bg64, loc(china,apt1)]  {DEFENSE}
+|___[nonOrigin(china,apt1), noLocEvidence(china,apt1), p3_t]
+    |___[lang1(china,apt1), bg66, case2_f2, ass(neg(prefer(noLocEvidence(china,apt1),lang1(china,apt1))))]  {DEFENSE}
+
+
+
+Abduced: [ass(neg(prefer(noLocEvidence(china, apt1), srcIP(china, apt1)))), ass(neg(prefer(noLocEvidence(china, apt1), lang1(china, apt1)))), ass(neg(prefer(noLocEvidence(china, apt1), infra(china, apt1))))]
+
+Possible additional evidences needed:
+neg: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
+	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
+	rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
+	rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+	rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
+	rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
+	rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
+	rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C,T)]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(T,C)]).
+	rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
+	rule(noHistory(X,Att),      neg(isCulprit(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
+	rule(negAttackOrigin(X,Att),neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att))]).
+	rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
+	rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
+	rule(weakAttack(X,Att), 	neg(isCulprit(X,Att)), [hasResources(X), neg(requireHighResource(Att))]).
+	rule(targetItself(X,Att), 	neg(isCulprit(X,Att)), [target(X,Att)]).
+	rule(targetItself(X,Att),   neg(isCulprit(X,Att)), [targetCountry(X,Att)]).
+	rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
+	rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
+	rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).}
+
+---------
+Start wannacryattack derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(wannacryattack,X,D0)
+goal(wannacryattack,X,D0)
+told
+
+Total time for wannacryattack: 3.147614542
+
+Culprit(s): {wannacryattack}
+lazarusGrp [Highest score: 5, D: 1]
+
+X = lazarusGrp [Score: 5] 
+Derivation:
+ 
+[ass(notForBlackMarketUse(backdoorDuuzer)), ass(notForBlackMarketUse(trojanAlphanc)), bg26, case6_f3, similar3, case6_f2, linkedMalware(lazarusGrp,wannacryattack)]  {DEFENSE}
+
+
+
+
+
+Abduced: [ass(notForBlackMarketUse(trojanAlphanc)), ass(notForBlackMarketUse(backdoorDuuzer))]
+
+Possible additional evidences needed:
+notForBlackMarketUse: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+
+---------
+Start gaussattack derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(gaussattack,X,D0)
+goal(gaussattack,X,D0)
+told
+
+Total time for gaussattack: 7.785743622
+
+Culprit(s): {gaussattack}
+equationGrp [Highest score: 14, D: 10]
+
+X = equationGrp [Score: 10] 
+Derivation:
+ 
+[ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg79, case3_f16, simCC1, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 10] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg80, case3_f17, simCC1, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 14] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f19, case3_f18, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 13] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg82, case3_f18, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 13] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f19, bg81, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 12] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg82, bg81, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 14] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f18, case3_f19, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 13] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg81, case3_f19, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 13] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f18, bg82, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+,X = equationGrp [Score: 12] 
+Derivation:
+ [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg81, bg82, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+
+
+
+
+
+Abduced: [ass(notForBlackMarketUse(flame))]
+
+Possible additional evidences needed:
+notForBlackMarketUse: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+
+---------
+Start stuxnetattack derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(stuxnetattack,X,D0)
+goal(stuxnetattack,X,D0)
+told
+
+Total time for stuxnetattack: 1.474223035
+
+Culprit(s): {stuxnetattack}
+usa [Highest score: 17, D: 4]
+israel [Highest score: 17, D: 2]
+
+X = usa [Score: 17] 
+Derivation:
+ 
+[bg94, hasResources1, case4_f7, zeroday, case4_f12, highSkill2, highResource1, hasCapability2, case4_f13, case4_f12, targetted, case4_f9, date, case4_f8, case4_f11, case4_f6, conflict(usa,iran), motiveAndCapability(usa,stuxnetattack)]  {DEFENSE}
+
+,X = usa [Score: 17] 
+Derivation:
+ [bg63, hasResources2, case4_f7, zeroday, case4_f12, highSkill2, highResource1, hasCapability2, case4_f13, case4_f12, targetted, case4_f9, date, case4_f8, case4_f11, case4_f6, conflict(usa,iran), motiveAndCapability(usa,stuxnetattack)]  {DEFENSE}
+
+,X = usa [Score: 15] 
+Derivation:
+ [bg94, hasResources1, case4_f4, highSkill4, highResource1, hasCapability2, case4_f13, case4_f12, targetted, case4_f9, date, case4_f8, case4_f11, case4_f6, conflict(usa,iran), motiveAndCapability(usa,stuxnetattack)]  {DEFENSE}
+
+,X = usa [Score: 15] 
+Derivation:
+ [bg63, hasResources2, case4_f4, highSkill4, highResource1, hasCapability2, case4_f13, case4_f12, targetted, case4_f9, date, case4_f8, case4_f11, case4_f6, conflict(usa,iran), motiveAndCapability(usa,stuxnetattack)]  {DEFENSE}
+
+,X = israel [Score: 17] 
+Derivation:
+ 
+[bg94, hasResources1, case4_f7, zeroday, case4_f12, highSkill2, highResource1, hasCapability2, case4_f13, case4_f12, targetted, case4_f9, date, case4_f8, case4_f11, case4_f6, conflict(usa,iran), motiveAndCapability(usa,stuxnetattack)]  {DEFENSE}
+
+,X = israel [Score: 15] 
+Derivation:
+ [bg63, hasResources2, case4_f7, zeroday, case4_f12, highSkill2, highResource1, hasCapability2, case4_f13, case4_f12, targetted, case4_f9, date, case4_f8, case4_f11, case4_f6, conflict(usa,iran), motiveAndCapability(usa,stuxnetattack)]  {DEFENSE}
+
+
+
+---------
+Start sonyhack derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(sonyhack,X,D0)
+goal(sonyhack,X,D0)
+told
+
+Total time for sonyhack: 2.130492929
+
+Culprit(s): {sonyhack}
+guardiansOfPeace [Highest score: 2, D: 1]
+northkorea [Highest score: 11, D: 4]
+
+X = guardiansOfPeace [Score: 2] 
+Derivation:
+ 
+[case5_f1, claimedResp(guardiansOfPeace,sonyhack)]  {DEFENSE}
+
+,X = northkorea [Score: 11] 
+Derivation:
+ 
+[case5_f1, claimedResp(guardiansOfPeace,sonyhack)]  {DEFENSE}
+
+,X = northkorea [Score: 11] 
+Derivation:
+ [case5_f7, srcIP(northkorea,sonyhack), attackOrigin(northkorea,sonyhack), ass(specificTarget(sonyhack)), case5_f6, date3, case5_f4, case5_f5, case5_f2, conflict1(northkorea,sony), bg64, motiveAndLocation(northkorea,sonyhack)]  {DEFENSE}
+|___[nonOrigin(northkorea,sonyhack), noLocEvidence(northkorea,sonyhack), p3_t]
+    |___[srcIP(northkorea,sonyhack), case5_f7, p4_t]  {DEFENSE}
+
+,X = northkorea [Score: 3] 
+Derivation:
+ [case5_f7, srcIP(northkorea,sonyhack), attackOrigin(northkorea,sonyhack), ass(specificTarget(sonyhack)), case5_f6, date3, case5_f4, case5_f5, case5_f2, conflict1(northkorea,sony), bg64, motiveAndLocation(northkorea,sonyhack)]  {DEFENSE}
+|___[nonOrigin(northkorea,sonyhack), noLocEvidence(northkorea,sonyhack), p3_t]
+    |___[srcIP(northkorea,sonyhack), case5_f7, ass(neg(prefer(noLocEvidence(northkorea,sonyhack),srcIP(northkorea,sonyhack))))]  {DEFENSE}
+
+,X = northkorea [Score: 3] 
+Derivation:
+ [case5_f7, srcIP(northkorea,sonyhack), attackOrigin(northkorea,sonyhack), bg64, loc(northkorea,sonyhack)]  {DEFENSE}
+|___[nonOrigin(northkorea,sonyhack), noLocEvidence(northkorea,sonyhack), p3_t]
+    |___[srcIP(northkorea,sonyhack), case5_f7, p4_t]  {DEFENSE}
+
+
+
+Abduced: [ass(specificTarget(sonyhack)), ass(neg(prefer(noLocEvidence(northkorea, sonyhack), srcIP(northkorea, sonyhack))))]
+
+Possible additional evidences needed:
+neg: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
+	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
+	rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
+	rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+	rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
+	rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
+	rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
+	rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C,T)]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(T,C)]).
+	rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
+	rule(noHistory(X,Att),      neg(isCulprit(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
+	rule(negAttackOrigin(X,Att),neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att))]).
+	rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
+	rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
+	rule(weakAttack(X,Att), 	neg(isCulprit(X,Att)), [hasResources(X), neg(requireHighResource(Att))]).
+	rule(targetItself(X,Att), 	neg(isCulprit(X,Att)), [target(X,Att)]).
+	rule(targetItself(X,Att),   neg(isCulprit(X,Att)), [targetCountry(X,Att)]).
+	rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
+	rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
+	rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).}
+specificTarget: {
+	rule(targetted, specificTarget(Att),        [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
+	rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
+	rule(ecMotive(C,T), 	hasMotive(C, Att), 		[industry(T), target(T, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
+	rule(p21a, prefer(targetItself(X,Att), claimedResp(X,Att)),         [specificTarget(Att)]).
+	rule(p21b, prefer(targetItself(X,Att), motiveAndCapability(X,Att)), [specificTarget(Att)]).
+	rule(p21c, prefer(targetItself(X,Att), motive(X,Att)),              [specificTarget(Att)]).
+	rule(p21d, prefer(targetItself(X,Att), motiveAndLocation(X,Att)),   [specificTarget(Att)]).
+	rule(p21e, prefer(targetItself(X,Att), loc(X,Att)),                 [specificTarget(Att)]).
+	rule(p21f, prefer(targetItself(X,Att), social(X,Att)),              [specificTarget(Att)]).
+	rule(p21g, prefer(targetItself(X,Att), linkedMalware(X,Att)),       [specificTarget(Att)]).}
+
+---------
+Start usbankhack derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(usbankhack,X,D0)
+goal(usbankhack,X,D0)
+told
+
+Total time for usbankhack: 1.338816051
+
+Culprit(s): {usbankhack}
+iran [Highest score: 11, D: 2]
+
+X = iran [Score: 9] 
+Derivation:
+ 
+[bg63, hasResources2, case1_f4, highSkill1, highResource1, hasCapability2, ass(specificTarget(usbankhack)), date2, case1_f3, pMotive(iran,usa,[2012,2]), case1_f7, case1_f1, pMotive(iran,usa), motiveAndCapability(iran,usbankhack)]  {DEFENSE}
+
+,X = iran [Score: 11] 
+Derivation:
+ [bg63, hasResources2, case1_f5, case1_f6, highSkill2, highResource1, hasCapability2, ass(specificTarget(usbankhack)), date2, case1_f3, pMotive(iran,usa,[2012,2]), case1_f7, case1_f1, pMotive(iran,usa), motiveAndCapability(iran,usbankhack)]  {DEFENSE}
+
+
+
+
+
+Abduced: [ass(specificTarget(usbankhack))]
+
+Possible additional evidences needed:
+specificTarget: {
+	rule(targetted, specificTarget(Att),        [malwareUsedInAttack(M,Att), specificConfigInMalware(M)]).
+	rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
+	rule(ecMotive(C,T), 	hasMotive(C, Att), 		[industry(T), target(T, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
+	rule(p21a, prefer(targetItself(X,Att), claimedResp(X,Att)),         [specificTarget(Att)]).
+	rule(p21b, prefer(targetItself(X,Att), motiveAndCapability(X,Att)), [specificTarget(Att)]).
+	rule(p21c, prefer(targetItself(X,Att), motive(X,Att)),              [specificTarget(Att)]).
+	rule(p21d, prefer(targetItself(X,Att), motiveAndLocation(X,Att)),   [specificTarget(Att)]).
+	rule(p21e, prefer(targetItself(X,Att), loc(X,Att)),                 [specificTarget(Att)]).
+	rule(p21f, prefer(targetItself(X,Att), social(X,Att)),              [specificTarget(Att)]).
+	rule(p21g, prefer(targetItself(X,Att), linkedMalware(X,Att)),       [specificTarget(Att)]).}
+
+---------
+Start dummy0 derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(dummy0,X,D0)
+goal(dummy0,X,D0)
+told
+
+Total time for dummy0: 0.666655685
+
+Culprit(s): {dummy0}
+randomGroup [Highest score: 2, D: 1]
+
+X = randomGroup [Score: 2] 
+Derivation:
+ 
+[case_dummy0_f1, claimedResp(randomGroup,dummy0)]  {DEFENSE}
+
+
+
+
+
+---------
+Start dummy1 derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(dummy1,X,D0)
+goal(dummy1,X,D0)
+told
+
+Total time for dummy1: 1.470660913
+
+Culprit(s): {dummy1}
+randomGroup [Highest score: 2, D: 1]
+yourCountry [Highest score: 7, D: 5]
+
+X = randomGroup [Score: 2] 
+Derivation:
+ 
+[case_dummy1_f1, claimedResp(randomGroup,dummy1)]  {DEFENSE}
+
+,X = yourCountry [Score: 7] 
+Derivation:
+ 
+[case_dummy1_f1, claimedResp(randomGroup,dummy1)]  {DEFENSE}
+
+,X = yourCountry [Score: 7] 
+Derivation:
+ [case_dummy1_f10, case_dummy1_f9, srcIP(yourCountry,dummy1), attackOrigin(yourCountry,dummy1), case_dummy1_f8, bg_dummy2, motiveAndLocation(yourCountry,dummy1)]  {DEFENSE}
+|___[nonOrigin(yourCountry,dummy1), noLocEvidence(yourCountry,dummy1), p3_t]
+    |___[srcIP(yourCountry,dummy1), case_dummy1_f10, case_dummy1_f9, p4_t]  {DEFENSE}
+
+,X = yourCountry [Score: 5] 
+Derivation:
+ [case_dummy1_f10, case_dummy1_f9, srcIP(yourCountry,dummy1), attackOrigin(yourCountry,dummy1), case_dummy1_f8, bg_dummy2, motiveAndLocation(yourCountry,dummy1)]  {DEFENSE}
+|___[nonOrigin(yourCountry,dummy1), noLocEvidence(yourCountry,dummy1), p3_t]
+    |___[srcIP(yourCountry,dummy1), case_dummy1_f10, case_dummy1_f9, ass(neg(prefer(noLocEvidence(yourCountry,dummy1),srcIP(yourCountry,dummy1))))]  {DEFENSE}
+
+,X = yourCountry [Score: 5] 
+Derivation:
+ [case_dummy1_f10, case_dummy1_f9, srcIP(yourCountry,dummy1), attackOrigin(yourCountry,dummy1), bg_dummy2, loc(yourCountry,dummy1)]  {DEFENSE}
+|___[nonOrigin(yourCountry,dummy1), noLocEvidence(yourCountry,dummy1), p3_t]
+    |___[srcIP(yourCountry,dummy1), case_dummy1_f10, case_dummy1_f9, p4_t]  {DEFENSE}
+
+,X = yourCountry [Score: 6] 
+Derivation:
+ [case_dummy1_f10, case_dummy1_f9, srcIP(yourCountry,dummy1), attackOrigin(yourCountry,dummy1), bg_dummy2, loc(yourCountry,dummy1)]  {DEFENSE}
+|___[nonOrigin(yourCountry,dummy1), noLocEvidence(yourCountry,dummy1), p3_t]
+    |___[srcIP(yourCountry,dummy1), case_dummy1_f10, case_dummy1_f9, ass(neg(prefer(noLocEvidence(yourCountry,dummy1),srcIP(yourCountry,dummy1))))]  {DEFENSE}
+
+
+
+Abduced: [ass(notForBlackMarketUse(dummy1_m1)), ass(neg(prefer(noLocEvidence(yourCountry, dummy1), srcIP(yourCountry, dummy1)))), ass(notForBlackMarketUse(dummy1_m2))]
+
+Possible additional evidences needed:
+neg: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
+	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
+	rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
+	rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+	rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
+	rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
+	rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
+	rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C,T)]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(T,C)]).
+	rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
+	rule(noHistory(X,Att),      neg(isCulprit(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
+	rule(negAttackOrigin(X,Att),neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att))]).
+	rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
+	rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
+	rule(weakAttack(X,Att), 	neg(isCulprit(X,Att)), [hasResources(X), neg(requireHighResource(Att))]).
+	rule(targetItself(X,Att), 	neg(isCulprit(X,Att)), [target(X,Att)]).
+	rule(targetItself(X,Att),   neg(isCulprit(X,Att)), [targetCountry(X,Att)]).
+	rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
+	rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
+	rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).}
+notForBlackMarketUse: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+
+---------
+Start dummy2 derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(dummy2,X,D0)
+goal(dummy2,X,D0)
+told
+
+Total time for dummy2: 1.976256751
+
+Culprit(s): {dummy2}
+randomGroup [Highest score: 2, D: 1]
+
+X = randomGroup [Score: 2] 
+Derivation:
+ 
+[case_dummy2_f1, claimedResp(randomGroup,dummy2)]  {DEFENSE}
+
+
+
+---------
+Start dummy2b derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(dummy2b,X,D0)
+goal(dummy2b,X,D0)
+told
+
+Total time for dummy2b: 1.704817313
+
+Culprit(s): {dummy2b}
+randomGroup [Highest score: 2, D: 1]
+yourCountry [Highest score: 17, D: 2]
+
+X = randomGroup [Score: 2] 
+Derivation:
+ 
+[case_dummy2b_f1, claimedResp(randomGroup,dummy2b)]  {DEFENSE}
+
+,X = yourCountry [Score: 11] 
+Derivation:
+ 
+[case_dummy2b_f1, claimedResp(randomGroup,dummy2b)]  {DEFENSE}
+
+,X = yourCountry [Score: 17] 
+Derivation:
+ [case_dummy2b_f10, case_dummy2b_f9, srcIP(yourCountry,dummy2b), attackOrigin(yourCountry,dummy2b), case_dummy2b_f8, bg_dummy2, motiveAndLocation(yourCountry,dummy2b)]  {DEFENSE}
+|___[nonOrigin(yourCountry,dummy2b), noLocEvidence(yourCountry,dummy2b), p3_t]
+|   |___[srcIP(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, p4_t]  {DEFENSE}
+|___[targetItself(yourCountry,dummy2b), case_dummy2b_f2, p21d, ass(specificTarget(dummy2b))]
+|   |___[loc(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, srcIP(yourCountry,dummy2b), attackOrigin(yourCountry,dummy2b), bg_dummy2, ass(neg(prefer(targetItself(yourCountry,dummy2b),loc(yourCountry,dummy2b))))]  {DEFENSE}
+|       |___[targetItself(yourCountry,dummy2b), case_dummy2b_f2, p21e, ass(specificTarget(dummy2b))]
+|       |   |___[motiveAndLocation(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, srcIP(yourCountry,dummy2b), attackOrigin(yourCountry,dummy2b), case_dummy2b_f8, bg_dummy2, ass(neg(prefer(targetItself(yourCountry,dummy2b),motiveAndLocation(yourCountry,dummy2b))))]  {DEFENSE}
+|       |       |___[targetItself(yourCountry,dummy2b), case_dummy2b_f2, p21d, ass(specificTarget(dummy2b))]
+|       |       |   |___[loc(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, srcIP(yourCountry,dummy2b), attackOrigin(yourCountry,dummy2b), bg_dummy2, ass(neg(prefer(targetItself(yourCountry,dummy2b),loc(yourCountry,dummy2b))))]  {DEFENSE}
+|       |       |___[targetItself(yourCountry,dummy2b), case_dummy2b_f2, p21d, ass(specificTarget(dummy2b))]
+|       |       |   |___[loc(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, srcIP(yourCountry,dummy2b), attackOrigin(yourCountry,dummy2b), bg_dummy2, ass(neg(prefer(targetItself(yourCountry,dummy2b),loc(yourCountry,dummy2b))))]  {DEFENSE}
+|       |       |___[nonOrigin(yourCountry,dummy2b), noLocEvidence(yourCountry,dummy2b), p3_t]
+|       |       |   |___[srcIP(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, p4_t]  {DEFENSE}
+|       |       |___[p21d, ass(specificTarget(dummy2b))]
+|       |           |___[notTargetted, case_dummy2b_f2b, case_dummy2b_f2]  {DEFENSE}
+|       |___[targetItself(yourCountry,dummy2b), case_dummy2b_f2, p21e, ass(specificTarget(dummy2b))]
+|       |   |___[motiveAndLocation(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, srcIP(yourCountry,dummy2b), attackOrigin(yourCountry,dummy2b), case_dummy2b_f8, bg_dummy2, ass(neg(prefer(targetItself(yourCountry,dummy2b),motiveAndLocation(yourCountry,dummy2b))))]  {DEFENSE}
+|       |___[nonOrigin(yourCountry,dummy2b), noLocEvidence(yourCountry,dummy2b), p3_t]
+|       |   |___[srcIP(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, p4_t]  {DEFENSE}
+|       |___[p21e, ass(specificTarget(dummy2b))]
+|           |___[notTargetted, case_dummy2b_f2b, case_dummy2b_f2]  {DEFENSE}
+|___[targetItself(yourCountry,dummy2b), case_dummy2b_f2, p21d, ass(specificTarget(dummy2b))]
+    |___[loc(yourCountry,dummy2b), case_dummy2b_f10, case_dummy2b_f9, srcIP(yourCountry,dummy2b), attackOrigin(yourCountry,dummy2b), bg_dummy2, ass(neg(prefer(targetItself(yourCountry,dummy2b),loc(yourCountry,dummy2b))))]  {DEFENSE}
+
+
+
+Abduced: [ass(notForBlackMarketUse(dummy2b_m1)), ass(notForBlackMarketUse(dummy2b_m2)), ass(neg(prefer(targetItself(yourCountry, dummy2b), loc(yourCountry, dummy2b)))), ass(neg(prefer(targetItself(yourCountry, dummy2b), motiveAndLocation(yourCountry, dummy2b)))), ass(neg(prefer(targetItself(yourCountry, dummy2b), linkedMalware(yourCountry, dummy2b))))]
+
+Possible additional evidences needed:
+neg: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
+	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
+	rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
+	rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+	rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
+	rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
+	rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
+	rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C,T)]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(T,C)]).
+	rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
+	rule(noHistory(X,Att),      neg(isCulprit(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
+	rule(negAttackOrigin(X,Att),neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att))]).
+	rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
+	rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
+	rule(weakAttack(X,Att), 	neg(isCulprit(X,Att)), [hasResources(X), neg(requireHighResource(Att))]).
+	rule(targetItself(X,Att), 	neg(isCulprit(X,Att)), [target(X,Att)]).
+	rule(targetItself(X,Att),   neg(isCulprit(X,Att)), [targetCountry(X,Att)]).
+	rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
+	rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
+	rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).}
+notForBlackMarketUse: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+
+---------
+Start dummy3 derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(dummy3,X,D0)
+goal(dummy3,X,D0)
+told
+
+Total time for dummy3: 1.731591224
+
+Culprit(s): {dummy3}
+randomGroup [Highest score: 2, D: 1]
+
+X = randomGroup [Score: 2] 
+Derivation:
+ 
+[case_dummy3_f1, claimedResp(randomGroup,dummy3)]  {DEFENSE}
+
+
+
+---------
+Start dummy4 derivation
+consult(everything)
+consult(user_evidence)
+All
+tell('visual.log')
+goal(dummy4,X,D0)
+goal(dummy4,X,D0)
+told
+
+Total time for dummy4: 0.780236979
+
+Culprit(s): {dummy4}
+yourCountry [Highest score: 7, D: 4]
+
+X = yourCountry [Score: 7] 
+Derivation:
+ 
+[case_dummy4_f1, claimedResp(yourCountry,dummy4)]  {DEFENSE}
+|___[noHistory(yourCountry,dummy4), case_dummy4_f2, case_dummy4_f1, p1f]
+    |___[loc(yourCountry,dummy4), case_dummy4_f4, case_dummy4_f5, srcIP(yourCountry,dummy4), attackOrigin(yourCountry,dummy4), bg_dummy2, ass(neg(prefer(noHistory(yourCountry,dummy4),loc(yourCountry,dummy4))))]  {DEFENSE}
+        |___[nonOrigin(yourCountry,dummy4), noLocEvidence(yourCountry,dummy4), p3_t]
+            |___[srcIP(yourCountry,dummy4), case_dummy4_f4, case_dummy4_f5, p4_t]  {DEFENSE}
+
+,X = yourCountry [Score: 7] 
+Derivation:
+ [case_dummy4_f1, claimedResp(yourCountry,dummy4)]  {DEFENSE}
+|___[noHistory(yourCountry,dummy4), case_dummy4_f2, case_dummy4_f1, p1f]
+    |___[loc(yourCountry,dummy4), case_dummy4_f4, case_dummy4_f5, srcIP(yourCountry,dummy4), attackOrigin(yourCountry,dummy4), bg_dummy2, ass(neg(prefer(noHistory(yourCountry,dummy4),loc(yourCountry,dummy4))))]  {DEFENSE}
+        |___[nonOrigin(yourCountry,dummy4), noLocEvidence(yourCountry,dummy4), p3_t]
+            |___[srcIP(yourCountry,dummy4), case_dummy4_f4, case_dummy4_f5, p4_t]  {DEFENSE}
+
+,X = yourCountry [Score: 5] 
+Derivation:
+ [case_dummy4_f1, claimedResp(yourCountry,dummy4)]  {DEFENSE}
+|___[noHistory(yourCountry,dummy4), case_dummy4_f2, case_dummy4_f1, p1f]
+    |___[loc(yourCountry,dummy4), case_dummy4_f4, case_dummy4_f5, srcIP(yourCountry,dummy4), attackOrigin(yourCountry,dummy4), bg_dummy2, ass(neg(prefer(noHistory(yourCountry,dummy4),loc(yourCountry,dummy4))))]  {DEFENSE}
+        |___[nonOrigin(yourCountry,dummy4), noLocEvidence(yourCountry,dummy4), p3_t]
+            |___[srcIP(yourCountry,dummy4), case_dummy4_f4, case_dummy4_f5, ass(neg(prefer(noLocEvidence(yourCountry,dummy4),srcIP(yourCountry,dummy4))))]  {DEFENSE}
+
+,X = yourCountry [Score: 5] 
+Derivation:
+ [case_dummy4_f4, case_dummy4_f5, srcIP(yourCountry,dummy4), attackOrigin(yourCountry,dummy4), bg_dummy2, loc(yourCountry,dummy4)]  {DEFENSE}
+|___[nonOrigin(yourCountry,dummy4), noLocEvidence(yourCountry,dummy4), p3_t]
+    |___[srcIP(yourCountry,dummy4), case_dummy4_f4, case_dummy4_f5, p4_t]  {DEFENSE}
+
+
+
+Abduced: [ass(neg(prefer(noLocEvidence(yourCountry, dummy4), srcIP(yourCountry, dummy4)))), ass(neg(prefer(noHistory(yourCountry, dummy4), loc(yourCountry, dummy4))))]
+
+Possible additional evidences needed:
+neg: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
+	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
+	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
+	rule(attackOriginDefault, neg(attackOrigin(_X,_Att)), []).
+	rule(conflictingOrigin(X,Y,Att), neg(attackOrigin(X,Att)),    [country(X), country(Y), attackPossibleOrigin(X,Att), attackPossibleOrigin(Y,Att), X \= Y]).
+	rule(nonOrigin(X,Att), neg(attackOrigin(X,Att)),   [neg(attackPossibleOrigin(X,Att))]).
+	rule(notTargetted, neg(specificTarget(Att)),[targetCountry(T1, Att), targetCountry(T2, Att), T1 \= T2]). 
+	rule(hasCapability1, hasCapability(_X, Att), [neg(requireHighResource(Att))]).
+	rule(noCapability, neg(hasCapability(X, Att)), [requireHighResource(Att), neg(hasResources(X))]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C,T)]).
+	rule(geopolitics1(C,T), neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(T,C)]).
+	rule(noEvidence(X,Att), 	neg(isCulprit(X,Att)), []).
+	rule(noHistory(X,Att),      neg(isCulprit(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
+	rule(negAttackOrigin(X,Att),neg(isCulprit(X,Att)), [neg(attackOrigin(X, Att))]).
+	rule(noCapability(X,Att), 	neg(isCulprit(X,Att)), [neg(hasCapability(X,Att))]).
+	rule(noMotive(X,Att),       neg(isCulprit(X,Att)), [neg(hasMotive(X,Att))]).
+	rule(weakAttack(X,Att), 	neg(isCulprit(X,Att)), [hasResources(X), neg(requireHighResource(Att))]).
+	rule(targetItself(X,Att), 	neg(isCulprit(X,Att)), [target(X,Att)]).
+	rule(targetItself(X,Att),   neg(isCulprit(X,Att)), [targetCountry(X,Att)]).
+	rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
+	rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
+	rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).}
+
+
+Process finished with exit code 0
