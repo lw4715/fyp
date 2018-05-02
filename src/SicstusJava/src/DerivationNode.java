@@ -1,5 +1,6 @@
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
+import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -19,20 +20,19 @@ public class DerivationNode {
 
     private String result;
     private String rulename;
-    private List<DerivationNode> children;
+    private Set<DerivationNode> children;
     private int type;
     private List<String> args;
-
 
     public DerivationNode(String result, String rulename, List<String> args, int type) {
         this.result = result;
         this.rulename = rulename;
         this.args = args;
-        this.children = new ArrayList<>();
+        this.children = new HashSet<>();
         this.type = type;
     }
 
-    public DerivationNode(String result, String rulename, List<String> args, int type, List<DerivationNode> children) {
+    public DerivationNode(String result, String rulename, List<String> args, int type, Set<DerivationNode> children) {
         this.result = result;
         this.rulename = rulename;
         this.args = args;
@@ -48,19 +48,26 @@ public class DerivationNode {
         return this.rulename;
     }
 
-    void addChild(DerivationNode child) {
-        children.add(child);
+    public String getResult() {
+        return this.result;
     }
-
-    void createDiagram(String filename) {
+    static void createDiagram(String filename, DerivationNode mainNode, List<DerivationNode> prefs) {
         try {
             Graph g = graph(filename).directed()
-                    .with(this.createNode());
-            Graphviz.fromGraph(g).width(1000).render(Format.PNG).toFile(new File(filename));
+                    .with(mainNode.createNode());
+//            for (DerivationNode pref : prefs) {
+//                g = g.with(pref.createPrefNode());
+//            }
+            Graphviz.fromGraph(g).width(3000).render(Format.PNG).toFile(new File(filename));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+//    private Node createPrefNode() {
+//        Node node = node(result).with(Shape.NONE, Style.FILLED);
+//        return node;
+//    }
 
     Node createNode() {
         Color typeColour;
@@ -77,10 +84,13 @@ public class DerivationNode {
             default: // evidence
                 typeColour = Color.LIGHTGRAY;
         }
-        Node node = node(result).with(typeColour, Style.FILLED);
+        Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
         for (DerivationNode child : children) {
-            node = node.link(
-                    to(child.createNode()).with(Label.of(rulename)));
+            if (result.equals(child.getResult())) {
+                node = node.link(to(child.createNode()).with(Label.of(rulename), Style.INVIS));
+            } else {
+                node = node.link(to(child.createNode()).with(Label.of(rulename)));
+            }
         }
         return node;
     }
@@ -99,11 +109,28 @@ public class DerivationNode {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o instanceof DerivationNode) {
+            DerivationNode o1 = (DerivationNode) o;
+            return this.result.equals(o1.result) && this.rulename.equals(o1.rulename)
+                    && this.children.equals(o1.children) && this.args.equals(o1.args);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return result.hashCode() * rulename.hashCode() + children.hashCode() - args.hashCode();
+    }
+
     // TODO: time and then create to make more efficient and time again
-    public static DerivationNode createDerivationNode(List<String> names, List<List<String>> args) {
+    public static List<DerivationNode> createDerivationNode(List<String> names, List<List<String>> args) {
         Deque<DerivationNode> st = new ArrayDeque<>();
         List<DerivationNode> prefs = new ArrayList<>();
         List<Integer> ruleIndices = new ArrayList<>();
+        List<Integer> strRuleIndices = new ArrayList<>();
 
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i);
@@ -113,31 +140,59 @@ public class DerivationNode {
 
             String fullname = String.format("%s(%s)", name, sj.toString());
             if (Utils.isRule(name)) {
-                ruleIndices.add(i);
+                if (Utils.isStrRule(name)) {
+                    strRuleIndices.add(i);
+                } else {
+                    ruleIndices.add(i);
+                }
+            } else if (Utils.isPreference(fullname)) {
+                prefs.add(new DerivationNode(Utils.getHead(name, arg), name, arg, -1));
             } else if (Utils.isAss(name)) {
                 st.push(new DerivationNode(fullname, "ass", arg, -1));
-            } else if (Utils.isPreference(name)) {
-                prefs.add(new DerivationNode(Utils.getHead(name, arg), name, arg, -1));
+//            } else if (name.equals("isCulprit")) {
+//                st.push(new DerivationNode(name, "", arg, 2));
             } else {
                 st.push(new DerivationNode(Utils.getHead(name, arg), name, arg, -1));
             }
-//            System.out.println("stack:" + st);
         }
+
         for (int i : ruleIndices) {
             st = processRule(names.get(i), args.get(i), st);
         }
 
-        if (st.size() !=  1) {
-            System.out.println("Not finished popping! " + st.size() + " " + st);
+        for (int i : strRuleIndices) {
+            st = processRule(names.get(i), args.get(i), st);
         }
-        return st.pop();
+
+        while (st.size() > 1) {
+            st.push(combineFinalResult(st.pop(), st.pop()));
+        }
+
+        if (st.size() !=  1) {
+            System.err.println("ERROR: Not finished popping! " + st.size() + " " + st);
+        }
+
+        List<DerivationNode> ret = new ArrayList<>();
+        ret.add(st.pop());
+        ret.addAll(prefs);
+        return ret;
+    }
+
+    private static DerivationNode combineFinalResult(DerivationNode d1, DerivationNode d2) {
+        if (d1.getResult().equals(d2.getResult())) {
+            Set<DerivationNode> l = new HashSet<>();
+            l.add(d1);
+            l.add(d2);
+            return new DerivationNode(d1.getResult(), "", new ArrayList<>(), 2, l);
+        }
+        return d1;
     }
 
     // pop relevant evidences off from stack, push itself on and return remaining stack
     private static Deque<DerivationNode> processRule(String name, List<String> args,
                                                      Deque<DerivationNode> st) {
         List<String> bodyList = Utils.getBody(name);
-        List<DerivationNode> body = new ArrayList<>();
+        Set<DerivationNode> body = new HashSet<>();
         String elem;
         List<String> elemArgs;
         Stack<DerivationNode> tmp = new Stack<>();
@@ -178,20 +233,21 @@ public class DerivationNode {
         DerivationNode e1 = new DerivationNode("evidence1", "evidence id", l, -1);
         DerivationNode e2 = new DerivationNode("evidence2", "evidence id", l, -1);
         DerivationNode e3 = new DerivationNode("evidence3", "evidence id", l, -1);
-        List<DerivationNode> es = new ArrayList<>();
+        Set<DerivationNode> es = new HashSet<>();
         es.add(e1);
         es.add(e2);
         DerivationNode tech = new DerivationNode("tech result", "technical rulename", l, 0, es);
-        List<DerivationNode> es1 = new ArrayList<>();
+        Set<DerivationNode> es1 = new HashSet<>();
         es1.add(e3);
         DerivationNode op = new DerivationNode("op result", "operational rulename", l, 1, es1);
-        List<DerivationNode> es2 = new ArrayList<>();
+        Set<DerivationNode> es2 = new HashSet<>();
         es2.add(tech);
         es2.add(op);
         return new DerivationNode("str result (isCulprit)", "strategic rulename", l, 2, es2);
     }
 
-    public static void createDerivationAndSaveDiagram(Term t, String filename) {
+    public static void createDerivationAndSaveDiagram(Term t, String attack, String culprit, int count) {
+        String filename = String.format("%s_%s%d.png", attack, culprit, count);
         List<String> names = new ArrayList<>();
         List<List<String>> args = new ArrayList<>();
         if (t.isListPair()) {
@@ -204,12 +260,21 @@ public class DerivationNode {
                 args.add(l);
             }
         }
+//        names.add("isCulprit");
+//        List<String> l = new ArrayList<>();
+//        l.add(culprit);
+//        l.add(attack);
+//        args.add(l);
+
         final StringJoiner sj = new StringJoiner(",");
         names.forEach(x -> sj.add(x));
         System.out.println(filename + ": " + sj);
-        DerivationNode node = createDerivationNode(names, args);
-        System.out.println("node: " + node);
-        node.createDiagram("img/" + filename);
+        List<DerivationNode> res = createDerivationNode(names, args);
+        DerivationNode mainNode = res.get(0);
+        res.remove(0);
+        List<DerivationNode> prefs = res;
+        System.out.println("node: " + mainNode);
+        createDiagram("img/" + filename, mainNode, prefs);
     }
 }
 

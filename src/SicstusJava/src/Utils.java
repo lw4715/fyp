@@ -93,7 +93,7 @@ public class Utils {
             br.lines().skip(1).forEach(x -> sb.append(x + "\n"));
             return sb.toString();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            System.err.println("File not found " + USER_EVIDENCE_FILENAME);
             return "";
         }
     }
@@ -116,19 +116,23 @@ public class Utils {
         return s.startsWith("r_");
     }
 
+    public static boolean isStrRule(String s) {
+        return s.startsWith("r_str_");
+    }
+
     static boolean isAss(String s) {
         return s.startsWith("ass(") || s.equals("ass");
     }
 
     static boolean isPreference(String r) {
-        return r.startsWith("p");
+        return r.startsWith("p") || r.startsWith("ass(neg(prefer(");
     }
 
     static String getHead(String name, List<String> args) {
         boolean isInstantiated = name.startsWith("case") || name.startsWith("bg") || isPreference(name);
         if (isAss(name)) {
-            System.out.println(name);
-            System.out.println(args.get(0));
+//            System.out.println(name);
+//            System.out.println(args.get(0));
             return args.get(0);
         }
         String f = GetFilenameForRule(name);
@@ -171,16 +175,16 @@ public class Utils {
                                 .trim();
                         return head + ")";
                     } else {
-                        System.out.println("what is this? " + name);
+                        System.err.println("what is this? " + name);
                     }
                 }
                 line = br.readLine();
             }
         } catch (Exception e) {
-            System.out.println(f + " not found");
+            System.err.println(f + " not found");
             e.printStackTrace();
         }
-        System.out.println("Head not found: " + name + " file: " + f);
+        System.err.println("Head not found: " + name + " file: " + f);
         return "";
     }
 
@@ -226,7 +230,7 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Body not found: " + r + " file: " + f);
+        System.err.println("Body not found: " + r + " file: " + f);
         return null;
     }
 
@@ -245,7 +249,7 @@ public class Utils {
         } else if (r.startsWith("bg")) {
             return "backgroundgorgias_renumbered.pl";
         } else {
-            System.out.println(r + " which file?");
+            System.err.println(r + " which file?");
             return "";
         }
     }
