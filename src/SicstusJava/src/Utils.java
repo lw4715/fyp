@@ -81,7 +81,10 @@ public class Utils {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             br.lines().forEach(rule -> addRules(rule.split("%")[0]));
+            br.close();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -91,9 +94,13 @@ public class Utils {
             BufferedReader br = new BufferedReader(new FileReader(USER_EVIDENCE_FILENAME));
             StringBuilder sb = new StringBuilder();
             br.lines().skip(1).forEach(x -> sb.append(x + "\n"));
+            br.close();
             return sb.toString();
         } catch (FileNotFoundException e) {
             System.err.println("File not found " + USER_EVIDENCE_FILENAME);
+            return "";
+        } catch (IOException e) {
+            e.printStackTrace();
             return "";
         }
     }
@@ -180,6 +187,7 @@ public class Utils {
                 }
                 line = br.readLine();
             }
+            br.close();
         } catch (Exception e) {
             System.err.println(f + " not found");
             e.printStackTrace();
@@ -225,6 +233,7 @@ public class Utils {
                 }
                 line = br.readLine();
             }
+            br.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

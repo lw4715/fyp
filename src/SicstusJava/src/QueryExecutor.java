@@ -232,6 +232,7 @@ public class QueryExecutor {
             executeQueryString(String.format(CONSULT_STRING, Utils.TECH), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.OP), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.STR), 1);
+//            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.torIPFile), 1);
 //            executeQueryString(String.format(CONSULT_STRING, "everything"), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
         } catch (Exception e) {
@@ -290,14 +291,13 @@ public class QueryExecutor {
 //        qe.setDebug();
         int n = 1;
         try {
-//            System.out.println(Utils.getBody("r_str_linkedMalware"));
-//            System.out.println(qe.execute("stuxnetattack", false));
-//            System.out.println(Utils.isPreference("ass(neg(prefer(r_t_noLocEvidence(china, apt1)"));
+//            System.out.println(qe.execute("example5", false));
+
             for (int i = 0; i < n; i++) {
                 for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
                         System.out.println(qe.execute(c, false));
                 }
-                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4"}) {
+                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
                     System.out.println(qe.execute(c, false));
                 }
             }

@@ -1,4 +1,4 @@
-%% :- compile('utils.pl').
+:- compile('torCheckIPList.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
 
@@ -17,7 +17,8 @@ rule(r_t_highResource3(Att),requireHighResource(Att),		[highVolumeAttack(Att),lo
 rule(r_t_noLocEvidence(X,Att),neg(attackPossibleOrigin(X,Att)),[]).
 rule(r_t_srcIP1(X,Att),  attackPossibleOrigin(X,Att),     [attackSourceIP(IP,Att),ipGeoloc(X,IP)]).
 rule(r_t_srcIP2(X,Att),  attackPossibleOrigin(X,Att),     [majorityIpOrigin(X,Att)]).
-rule(r_t_spoofIP(X,Att),neg(attackPossibleOrigin(X,Att)),[attackSourceIP(IP,Att),spoofedIp(IP),ipGeoloc(X,IP)]).
+rule(r_t_spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)),[attackSourceIP(IP,Att),spoofedIP(IP),ipGeoloc(X,IP)]).
+rule(r_t_spoofIPtor(IP), spoofedIP(IP), [torIP(IP)]).
 rule(r_t_lang1(X,Att),  attackPossibleOrigin(X,Att),     [sysLanguage(L,Att),firstLanguage(L,X)]).
 rule(r_t_lang2(X,Att),  attackPossibleOrigin(X,Att),     [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(r_t_infra(X,Att),  attackPossibleOrigin(X,Att),     [infraUsed(Infra,Att),infraRegisteredIn(X,Infra)]).
@@ -60,7 +61,8 @@ rule(p5_t(),prefer(r_t_lang1(X,Att),r_t_noLocEvidence(X,Att)),[]).
 rule(p6_t(),prefer(r_t_lang2(X,Att),r_t_noLocEvidence(X,Att)),[]).
 rule(p7_t(),prefer(r_t_infra(X,Att),r_t_noLocEvidence(X,Att)),[]).
 rule(p8_t(),prefer(r_t_domain(X,Att),r_t_noLocEvidence(X,Att)),[]).
-rule(p9_t(),prefer(r_t_spoofIP(X,Att),r_t_srcIP(X,Att)),[]).
+rule(p9a_t(),prefer(r_t_spoofIP(X,Att),r_t_srcIP1(X,Att)),[]).
+rule(p9b_t(),prefer(r_t_spoofIP(X,Att),r_t_srcIP2(X,Att)),[]).
 rule(p10a_t(),prefer(r_t_highSkill1(Att),r_t_highSkill0(Att)),[]).
 rule(p10b_t(),prefer(r_t_highSkill2(Att),r_t_highSkill0(Att)),[]).
 rule(p10c_t(),prefer(r_t_highSkill4(Att),r_t_highSkill0(Att)),[]).

@@ -169,10 +169,18 @@ rule(case_example3_f13(),ipGeoloc(hisCountry,example3_ip1),[]).
 %% yourCountry (location)
 rule(case_example4_f1(),claimedResponsibility(yourCountry,example4),[]).
 rule(case_example4_f2(),noPriorHistory(yourCountry),[]).
-rule(case_example4_f2(),hasResources(yourCountry),[]).
-rule(case_example4_f3(),neg(requireHighResource(example4)),[]).
-rule(case_example4_f4(),ipGeoloc(yourCountry,example4_ip),[]).
-rule(case_example4_f5(),attackSourceIP(example4_ip,example4),[]).
+rule(case_example4_f3(),hasResources(yourCountry),[]).
+rule(case_example4_f4(),neg(requireHighResource(example4)),[]).
+rule(case_example4_f5(),ipGeoloc(yourCountry,example4_ip),[]).
+rule(case_example4_f6(),attackSourceIP(example4_ip,example4),[]).
 
 %% governmentLinked(P,C),identifiedIndividualInAttack(P,Att)
+
+%% example5
+%% exptected: someGroup
+%% torIP([103,1,206,100]) is true, 103.1.206.100 is a spoofed IP
+rule(case_example5_f1(),claimedResponsibility(someGroup,example5),[]).
+rule(case_example5_f2(),ipGeoloc(yourCountry,[103,1,206,100]),[]).
+rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5),[]).
+%% rule(case_example5_f3(),spoofedIP([103,1,206,100]),[]).
 
