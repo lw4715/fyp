@@ -126,7 +126,11 @@ public class Utils {
 
     static String getHead(String name, List<String> args) {
         boolean isInstantiated = name.startsWith("case") || name.startsWith("bg") || isPreference(name);
-        if (isAss(name)) return args.get(0);
+        if (isAss(name)) {
+            System.out.println(name);
+            System.out.println(args.get(0));
+            return args.get(0);
+        }
         String f = GetFilenameForRule(name);
 
         try {

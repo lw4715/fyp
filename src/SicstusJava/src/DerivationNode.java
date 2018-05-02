@@ -145,7 +145,7 @@ public class DerivationNode {
             DerivationNode n = st.peek();
             elem = n.getRulename();
             elemArgs = n.getArgs();
-//            System.out.println("elem:" + elem + " args: " + elemArgs + " head: " + Utils.getHead(elem, elemArgs).split("\\(")[0] + " body " + bodyList);
+//            System.out.println("name: " +name + " elem:" + elem + " args: " + elemArgs + " head: " + Utils.getHead(elem, elemArgs).split("\\(")[0] + " body " + bodyList);
             if (bodyList.contains(Utils.getHead(elem, elemArgs).split("\\(")[0])) {
                 body.add(st.pop());
             } else {
