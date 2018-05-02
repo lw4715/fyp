@@ -121,13 +121,13 @@ public class DerivationNode {
             } else {
                 st.push(new DerivationNode(Utils.getHead(name, arg), name, arg, -1));
             }
-            System.out.println("stack:" + st);
+//            System.out.println("stack:" + st);
         }
         for (int i : ruleIndices) {
             st = processRule(names.get(i), args.get(i), st);
         }
 
-        if (st.size() > 1) {
+        if (st.size() !=  1) {
             System.out.println("Not finished popping! " + st.size() + " " + st);
         }
         return st.pop();
@@ -145,7 +145,7 @@ public class DerivationNode {
             DerivationNode n = st.peek();
             elem = n.getRulename();
             elemArgs = n.getArgs();
-            System.out.println("elem:" + elem + " args: " + elemArgs + " head: " + Utils.getHead(elem, elemArgs).split("\\(")[0] + " body " + bodyList);
+//            System.out.println("elem:" + elem + " args: " + elemArgs + " head: " + Utils.getHead(elem, elemArgs).split("\\(")[0] + " body " + bodyList);
             if (bodyList.contains(Utils.getHead(elem, elemArgs).split("\\(")[0])) {
                 body.add(st.pop());
             } else {

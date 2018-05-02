@@ -187,12 +187,16 @@ public class QueryExecutor {
 //            } else {
 //                set = resultMap.get(culprit);
 //            }
-            List<String> d = convertToString(map.get("D0"));
-//            set.add(d);
+            Term t = map.get("D0");
 
-            DerivationNode.createDerivationAndSaveDiagram(map.get("D0"),
-                    String.format("%s_%s%d.png",caseName,culprit,count));
-            count++;
+            if (!t.toString().equals("'FAIL'")) {
+//                System.out.println("|" + t + "|");
+//              set.add(d);
+                List<String> d = convertToString(t);
+                DerivationNode.createDerivationAndSaveDiagram(t,
+                        String.format("%s_%s%d.png", caseName, culprit, count));
+                count++;
+            }
         }
         populateAbduced(resultMap);
         time = ((System.nanoTime() - time)/pow(10, 9));
@@ -285,18 +289,17 @@ public class QueryExecutor {
 
         QueryExecutor qe = QueryExecutor.getInstance();
 //        qe.setDebug();
-        int n = 1;
+        int n = 10;
         try {
-            System.out.println(qe.execute("apt1", false));
-//
-//            for (int i = 0; i < n; i++) {
-//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                        System.out.println(qe.execute(c, false));
-//                }
-//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4"}) {
-//                    System.out.println(qe.execute(c, false));
-//                }
-//            }
+//            System.out.println(qe.execute("apt1", false));
+            for (int i = 0; i < n; i++) {
+                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                        System.out.println(qe.execute(c, false));
+                }
+                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4"}) {
+                    System.out.println(qe.execute(c, false));
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
