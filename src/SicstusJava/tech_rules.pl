@@ -50,26 +50,26 @@ rule(r_t_similarFileChara3(C1,C2), similarFileChara(C1, C2), [fileChara(_,_,_,_,
 rule(r_t_similarFileChara4(C1,C2), similarFileChara(C1, C2), [fileChara(_,_,Size,CompileTime,_,Filetype,C1), fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
 % pref
-rule(p1_t, prefer(r_t_attackOrigin(X,Att), r_t_attackOriginDefault(X,Att)), []).
-rule(p2a_t, prefer(r_t_conflictingOrigin(X,_Y,Att), r_t_attackOrigin(X,Att)), []).
-rule(p2b_t, prefer(r_t_conflictingOrigin(_Y,X,Att), r_t_attackOrigin(X,Att)), []).
-rule(p3_t, prefer(r_t_nonOrigin(X,Att), r_t_attackOrigin(X,Att)), []).
-rule(p4a_t, prefer(r_t_srcIP1(X,Att), r_t_noLocEvidence(X,Att)), []).
-rule(p4b_t, prefer(r_t_srcIP2(X,Att), r_t_noLocEvidence(X,Att)), []).
-rule(p5_t, prefer(r_t_lang1(X,Att), r_t_noLocEvidence(X,Att)), []).
-rule(p6_t, prefer(r_t_lang2(X,Att), r_t_noLocEvidence(X,Att)), []).
-rule(p7_t, prefer(r_t_infra(X,Att), r_t_noLocEvidence(X,Att)), []).
-rule(p8_t, prefer(r_t_domain(X,Att), r_t_noLocEvidence(X,Att)), []).
-rule(p9_t, prefer(r_t_spoofIP(X,Att), r_t_srcIP(X,Att)), []).
-rule(p10a_t, prefer(r_t_highSkill1(Att), r_t_highSkill0(Att)), []).
-rule(p10b_t, prefer(r_t_highSkill2(Att), r_t_highSkill0(Att)), []).
-rule(p10c_t, prefer(r_t_highSkill4(Att), r_t_highSkill0(Att)), []).
-rule(p11a_t, prefer(r_t_highSkill3(Att), r_t_highSkill1(Att)), []).
-rule(p11b_t, prefer(r_t_highSkill3(Att), r_t_highSkill2(Att)), []).
-rule(p11c_t, prefer(r_t_highSkill3(Att), r_t_highSkill4(Att)), []).
-rule(p12a_t, prefer(r_t_highResource1(Att), r_t_highResource0(Att)), []).
-rule(p12b_t, prefer(r_t_highResource2(Att), r_t_highResource0(Att)), []).
-rule(p12c_t, prefer(r_t_highResource3(Att), r_t_highResource0(Att)), []).
+rule(p1_t(), prefer(r_t_attackOrigin(X,Att), r_t_attackOriginDefault(X,Att)), []).
+rule(p2a_t(), prefer(r_t_conflictingOrigin(X,_Y,Att), r_t_attackOrigin(X,Att)), []).
+rule(p2b_t(), prefer(r_t_conflictingOrigin(_Y,X,Att), r_t_attackOrigin(X,Att)), []).
+rule(p3_t(), prefer(r_t_nonOrigin(X,Att), r_t_attackOrigin(X,Att)), []).
+rule(p4a_t(), prefer(r_t_srcIP1(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p4b_t(), prefer(r_t_srcIP2(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p5_t(), prefer(r_t_lang1(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p6_t(), prefer(r_t_lang2(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p7_t(), prefer(r_t_infra(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p8_t(), prefer(r_t_domain(X,Att), r_t_noLocEvidence(X,Att)), []).
+rule(p9_t(), prefer(r_t_spoofIP(X,Att), r_t_srcIP(X,Att)), []).
+rule(p10a_t(), prefer(r_t_highSkill1(Att), r_t_highSkill0(Att)), []).
+rule(p10b_t(), prefer(r_t_highSkill2(Att), r_t_highSkill0(Att)), []).
+rule(p10c_t(), prefer(r_t_highSkill4(Att), r_t_highSkill0(Att)), []).
+rule(p11a_t(), prefer(r_t_highSkill3(Att), r_t_highSkill1(Att)), []).
+rule(p11b_t(), prefer(r_t_highSkill3(Att), r_t_highSkill2(Att)), []).
+rule(p11c_t(), prefer(r_t_highSkill3(Att), r_t_highSkill4(Att)), []).
+rule(p12a_t(), prefer(r_t_highResource1(Att), r_t_highResource0(Att)), []).
+rule(p12b_t(), prefer(r_t_highResource2(Att), r_t_highResource0(Att)), []).
+rule(p12c_t(), prefer(r_t_highResource3(Att), r_t_highResource0(Att)), []).
 
 
 

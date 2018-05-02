@@ -6,9 +6,9 @@ public class Utils {
     static final String USER_EVIDENCE_FILENAME = PROLOG_USER_EVIDENCE + ".pl";
     static final String VISUALLOG = "visual.log";
     private static String FILEPATH = "";
-    static final String TECH = Utils.FILEPATH + "tech_rules";
-    static final String OP = Utils.FILEPATH + "op_rules";
-    static final String STR = Utils.FILEPATH + "str_rules";
+    static final String TECH = FILEPATH + "tech_rules";
+    static final String OP = FILEPATH + "op_rules";
+    static final String STR = FILEPATH + "str_rules";
     int counter;
     Utils() {
         counter = 0;
@@ -117,72 +117,100 @@ public class Utils {
     }
 
     static boolean isAss(String s) {
-        return s.startsWith("ass(");
+        return s.startsWith("ass(") || s.equals("ass");
     }
 
-    static String getHead(String r) {
-        if (!(r.startsWith("case") || r.startsWith("bg") || r.startsWith("r_"))) return r;
+    static boolean isPreference(String r) {
+        return r.startsWith("p");
+    }
 
+    static String getHead(String name, List<String> args) {
+        boolean isInstantiated = name.startsWith("case") || name.startsWith("bg") || isPreference(name);
+        if (isAss(name)) return args.get(0);
+        String f = GetFilenameForRule(name);
 
-        String f = GetFilenameForRule(r);
         try {
-            String[] rule = r.split("\\(");
             Map<String, String> argsMap = new HashMap<>();
-            String[] args = rule[1].split(",");
 
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = br.readLine();
             while (line != null) {
-                if (line.startsWith("rule(" + rule[0])) {
+                if (line.startsWith("rule(" + name + "(")) {
                     String[] argVars = line.split("\\(")[2].split("\\)")[0].split(",");
 
-                    if (r.startsWith("r_")) {
+                    if (isPreference(name)) {
+                        String head = line.split("prefer\\(")[1]
+                                .split("\\[")[0]
+                                .trim();
+                        return "prefer(" + removeLastComma(head);
+                    } else if (!args.isEmpty()) {
                         // fill variables with constants from rulename
-                        String head = line.split("\\)")[1].split("\\(")[0].split(",")[1];
-                        String[] headVar = line.split("\\)")[1].split("\\(")[1].split(",");
+                        String[] s = line.split("\\)")[1].split("\\(");
+                        String head = s[0].split(",")[1];
+                        String[] headVar = s[1].split(",");
                         for (int i = 0; i < argVars.length; i++) {
                             String var = argVars[i];
-                            if (var.length() > 0)
-                                argsMap.put(var, args[i].replace(")", ""));
+                            if (!var.isEmpty()) {
+                                argsMap.put(var, args.get(i));
+                            }
                         }
                         StringJoiner sj = new StringJoiner(",");
                         for (String var : headVar) {
-                            sj.add(argsMap.get(var));
+                            String v = argsMap.get(var) == null ? var : argsMap.get(var);
+                            sj.add(v);
                         }
-                        return head.replace(" ", "") + "(" + sj + ")";
-                    } else if (r.startsWith("case") || r.startsWith("bg")) {
+                        return head.trim() + "(" + sj + ")";
+                    }  else if (isInstantiated) {
                         // variables are already instantiated
-                        String head = line.split("\\)")[1].replace(",","").replace(" ","");
+                        String head = line.split("\\)")[1]
+                                .replaceFirst(",","")
+                                .trim();
                         return head + ")";
                     } else {
-                        System.out.println("what is this? " + r);
+                        System.out.println("what is this? " + name);
                     }
                 }
                 line = br.readLine();
             }
         } catch (Exception e) {
+            System.out.println(f + " not found");
             e.printStackTrace();
         }
-        System.out.println(r + " file: " + f);
+        System.out.println("Head not found: " + name + " file: " + f);
         return "";
+    }
+
+    private static String removeLastComma(String head) {
+        return head.substring(0, head.lastIndexOf(","));
     }
 
     static List<String> getBody(String r) {
         String f = GetFilenameForRule(r);
         try {
             List<String> l = new ArrayList<>();
-            String[] rule = r.split("\\(");
+//            String[] rule = r.split("\\(");
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = br.readLine();
             while (line != null) {
-                if (line.startsWith("rule(" + rule[0])) {
-                    for (String b : line.split("\\[")[1].split("\\]")[0].split("\\)")) {
-                        b = b.split("\\(")[0];
-                        b = b.replace(" ", "");
-                        b = b.replace(",", "");
-                        b = b.replace("\t","");
-                        if (b.length() > 0) {
-                            l.add(b);
+                if (line.startsWith("rule(" + r + "(")) {
+                    if (isPreference(r)) {
+                        String[] s = getHead(r, new ArrayList<>()).replaceFirst("prefer\\(","").split("\\),");
+                        for (String s1 : s) {
+                            if (s1.charAt(0) == ',') {
+                                s1 = s1.substring(1, s1.length());
+                            }
+                            s1 = s1.trim();
+                            if (!s1.isEmpty()) {
+                                l.add(s1.split("\\(")[0]);
+                            }
+                        }
+
+                    } else {
+                        for (String b : line.split("\\[")[1].split("\\]")[0].split("\\)")) {
+                            b = b.split("\\(")[0].replaceFirst(",", "").trim();
+                            if (b.length() > 0) {
+                                l.add(b);
+                            }
                         }
                     }
                     return l;
@@ -194,18 +222,17 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(r + " file: " + f);
+        System.out.println("Body not found: " + r + " file: " + f);
         return null;
     }
 
 
-
     static String GetFilenameForRule(String r) {
-        if (r.startsWith("r_t_")) {
+        if (r.startsWith("r_t_") || (isPreference(r) && r.endsWith("t"))) {
             return TECH + ".pl";
-        } else if (r.startsWith("r_op_")) {
+        } else if (r.startsWith("r_op_") || (isPreference(r) && r.endsWith("op"))) {
             return OP + ".pl";
-        } else if (r.startsWith("r_str_")) {
+        } else if (r.startsWith("r_str_") || isPreference(r)) {
             return STR + ".pl";
         } else if (r.startsWith("case_user_f")) {
             return USER_EVIDENCE_FILENAME;

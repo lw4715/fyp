@@ -66,47 +66,47 @@ rule(r_str_lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
 
 
 % pref
-rule(p0a, prefer(r_str_claimedResp(X,A),r_str_noEvidence(X,A)), []). %With any evidence, we prefer to attribute the culprit accordingly
-rule(p0b, prefer(r_str_motiveAndCapability(X,A),r_str_noEvidence(X,A)), []).
-rule(p0c, prefer(r_str_motive(X,A),r_str_noEvidence(X,A)), []).
-rule(p0d, prefer(r_str_motiveAndLocation(X,A),r_str_noEvidence(X,A)), []).
-rule(p0e, prefer(r_str_loc(X,A),r_str_noEvidence(X,A)), []).
-rule(p0f, prefer(r_str_social(X,A),r_str_noEvidence(X,A)), []).
-rule(p0g, prefer(r_str_linkedMalware(X,A),r_str_noEvidence(X,A)), []).
+rule(p0a(), prefer(r_str_claimedResp(X,A),r_str_noEvidence(X,A)), []). %With any evidence, we prefer to attribute the culprit accordingly
+rule(p0b(), prefer(r_str_motiveAndCapability(X,A),r_str_noEvidence(X,A)), []).
+rule(p0c(), prefer(r_str_motive(X,A),r_str_noEvidence(X,A)), []).
+rule(p0d(), prefer(r_str_motiveAndLocation(X,A),r_str_noEvidence(X,A)), []).
+rule(p0e(), prefer(r_str_loc(X,A),r_str_noEvidence(X,A)), []).
+rule(p0f(), prefer(r_str_social(X,A),r_str_noEvidence(X,A)), []).
+rule(p0g(), prefer(r_str_linkedMalware(X,A),r_str_noEvidence(X,A)), []).
 
-rule(p1a, prefer(r_str_motiveAndCapability(_X,A), r_str_claimedResp(_Y,A)), []).   
-rule(p1b, prefer(r_str_motiveAndLocation(_X,A), r_str_claimedResp(_Y,A)), []). 
-rule(p1c, prefer(r_str_motive(_X,A),        r_str_claimedResp(_Y,A)), []). 
-rule(p1d, prefer(r_str_social(_X,A),        r_str_claimedResp(_Y,A)), []). 
-rule(p1e, prefer(r_str_linkedMalware(_X,A), r_str_claimedResp(_Y,A)), []). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
-rule(p1f, prefer(r_str_noHistory(X,A), r_str_claimedResp(X,A)), []).   
+rule(p1a(), prefer(r_str_motiveAndCapability(_X,A), r_str_claimedResp(_Y,A)), []).   
+rule(p1b(), prefer(r_str_motiveAndLocation(_X,A), r_str_claimedResp(_Y,A)), []). 
+rule(p1c(), prefer(r_str_motive(_X,A),        r_str_claimedResp(_Y,A)), []). 
+rule(p1d(), prefer(r_str_social(_X,A),        r_str_claimedResp(_Y,A)), []). 
+rule(p1e(), prefer(r_str_linkedMalware(_X,A), r_str_claimedResp(_Y,A)), []). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
+rule(p1f(), prefer(r_str_noHistory(X,A), r_str_claimedResp(X,A)), []).   
 
-rule(p6, prefer(r_str_noCapability(X,A),  r_str_claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
+rule(p6(), prefer(r_str_noCapability(X,A),  r_str_claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
 
-rule(p8, prefer(r_str_noCapability(X,A),  r_str_motive(X,A)), []).    
-rule(p9, prefer(r_str_noCapability(X,A),  r_str_motiveAndLocation(X,A)), []).    
-rule(p10, prefer(r_str_noCapability(X,A),  r_str_loc(X,A)), []).  
-rule(p11, prefer(r_str_noCapability(X,A), r_str_social(X,A)),[]). % social evidences e.g. twitter posts/ emails can be easily forged
-rule(p12, prefer(r_str_noCapability(X,A), r_str_linkedMalware(X,A)), []).
-rule(p13, prefer(r_str_lowGciTier(X,A),   r_str_linkedMalware(X,A)), []).  
+rule(p8(), prefer(r_str_noCapability(X,A),  r_str_motive(X,A)), []).    
+rule(p9(), prefer(r_str_noCapability(X,A),  r_str_motiveAndLocation(X,A)), []).    
+rule(p10(), prefer(r_str_noCapability(X,A),  r_str_loc(X,A)), []).  
+rule(p11(), prefer(r_str_noCapability(X,A), r_str_social(X,A)), []). % social evidences e.g. twitter posts/ emails can be easily forged
+rule(p12(), prefer(r_str_noCapability(X,A), r_str_linkedMalware(X,A)), []).
+rule(p13(), prefer(r_str_lowGciTier(X,A),   r_str_linkedMalware(X,A)), []).  
 
-rule(p18, prefer(r_str_linkedMalware(X,A), r_str_negAttackOrigin(X,A)), []).
+rule(p18(), prefer(r_str_linkedMalware(X,A), r_str_negAttackOrigin(X,A)), []).
 
-rule(p19, prefer(r_str_negAttackOrigin(X,A),  r_str_motive(X,A)), []).
-rule(p20, prefer(r_str_weakAttack(X,A),       r_str_motive(X,A)), []).
+rule(p19(), prefer(r_str_negAttackOrigin(X,A),  r_str_motive(X,A)), []).
+rule(p20(), prefer(r_str_weakAttack(X,A),       r_str_motive(X,A)), []).
 
-rule(p21a, prefer(r_str_targetItself(X,Att), r_str_claimedResp(X,Att)),         [specificTarget(Att)]).
-rule(p21b, prefer(r_str_targetItself(X,Att), r_str_motiveAndCapability(X,Att)), [specificTarget(Att)]).
-rule(p21c, prefer(r_str_targetItself(X,Att), r_str_motive(X,Att)),              [specificTarget(Att)]).
-rule(p21d, prefer(r_str_targetItself(X,Att), r_str_motiveAndLocation(X,Att)),   [specificTarget(Att)]).
-rule(p21e, prefer(r_str_targetItself(X,Att), r_str_loc(X,Att)),                 [specificTarget(Att)]).
-rule(p21f, prefer(r_str_targetItself(X,Att), r_str_social(X,Att)),              [specificTarget(Att)]).
-rule(p21g, prefer(r_str_targetItself(X,Att), r_str_linkedMalware(X,Att)),       [specificTarget(Att)]).
+rule(p21a(), prefer(r_str_targetItself(X,Att), r_str_claimedResp(X,Att)),         [specificTarget(Att)]).
+rule(p21b(), prefer(r_str_targetItself(X,Att), r_str_motiveAndCapability(X,Att)), [specificTarget(Att)]).
+rule(p21c(), prefer(r_str_targetItself(X,Att), r_str_motive(X,Att)),              [specificTarget(Att)]).
+rule(p21d(), prefer(r_str_targetItself(X,Att), r_str_motiveAndLocation(X,Att)),   [specificTarget(Att)]).
+rule(p21e(), prefer(r_str_targetItself(X,Att), r_str_loc(X,Att)),                 [specificTarget(Att)]).
+rule(p21f(), prefer(r_str_targetItself(X,Att), r_str_social(X,Att)),              [specificTarget(Att)]).
+rule(p21g(), prefer(r_str_targetItself(X,Att), r_str_linkedMalware(X,Att)),       [specificTarget(Att)]).
 
 
-rule(p22a, prefer(r_str_linkedMalware(X,A), r_str_noHistory(X,A)), []).
-rule(p22c, prefer(r_str_linkedMalware(X,A), r_str_noMotive(X,A)), []).
-rule(p22d, prefer(r_str_linkedMalware(X,A), r_str_weakAttack(X,A)), []).
+rule(p22a(), prefer(r_str_linkedMalware(X,A), r_str_noHistory(X,A)), []).
+rule(p22c(), prefer(r_str_linkedMalware(X,A), r_str_noMotive(X,A)), []).
+rule(p22d(), prefer(r_str_linkedMalware(X,A), r_str_weakAttack(X,A)), []).
 
 %% rule(r_str_p30, prefer(p8, p2), []).
 

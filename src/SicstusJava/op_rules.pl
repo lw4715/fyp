@@ -51,14 +51,14 @@ rule(r_op_date3(Y1,Y2), dateApplicable([Y1,_],[Y2,_]), [Y2 < Y1, Y2 > (Y1 - 3)])
 
 
 % prefer
-rule(p1a_op, prefer(r_op_ecMotive(C,T), r_op_nonGeopolitics1(C,T)), []).
-rule(p1b_op, prefer(r_op_ecMotive(C,T), r_op_nonGeopolitics2(C,T)), []).
-rule(p2a_op, prefer(r_op_conflict(C,T), r_op_nonGeopolitics1(C,T)), []).
-rule(p2b_op, prefer(r_op_conflict(C,T), r_op_nonGeopolitics2(C,T)), []).
-rule(p3a_op, prefer(r_op_conflict1(C,T), r_op_nonGeopolitics1(C,T)), []).
-rule(p3b_op, prefer(r_op_conflict1(C,T), r_op_nonGeopolitics2(C,T)), []).
-rule(p4a_op, prefer(r_op_pMotive(C,T), r_op_nonGeopolitics1(C,T)), []).
-rule(p4b_op, prefer(r_op_pMotive(C,T), r_op_nonGeopolitics2(C,T)), []).
+rule(p1a_op(), prefer(r_op_ecMotive(C,T), r_op_nonGeopolitics1(C,T)), []).
+rule(p1b_op(), prefer(r_op_ecMotive(C,T), r_op_nonGeopolitics2(C,T)), []).
+rule(p2a_op(), prefer(r_op_conflict(C,T), r_op_nonGeopolitics1(C,T)), []).
+rule(p2b_op(), prefer(r_op_conflict(C,T), r_op_nonGeopolitics2(C,T)), []).
+rule(p3a_op(), prefer(r_op_conflict1(C,T), r_op_nonGeopolitics1(C,T)), []).
+rule(p3b_op(), prefer(r_op_conflict1(C,T), r_op_nonGeopolitics2(C,T)), []).
+rule(p4a_op(), prefer(r_op_pMotive(C,T), r_op_nonGeopolitics1(C,T)), []).
+rule(p4b_op(), prefer(r_op_pMotive(C,T), r_op_nonGeopolitics2(C,T)), []).
 
 
 % output:

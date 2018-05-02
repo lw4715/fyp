@@ -10,6 +10,7 @@ import java.util.*;
 import static java.lang.Math.pow;
 import static java.util.Collections.max;
 
+
 @SuppressWarnings("ALL")
 public class QueryExecutor {
     List<Double> timings;
@@ -52,7 +53,8 @@ public class QueryExecutor {
         }
     }
 
-    public String culpritString(String attack, Map<String, LinkedHashSet<List<String>>> resultMap, Map<String, Set<List<String>>> negMap, Object[] visualTree) {
+    public String culpritString(String attack, Map<String, LinkedHashSet<List<String>>> resultMap,
+                                Map<String, Set<List<String>>> negMap, Object[] visualTree) {
         StringBuilder sb = new StringBuilder();
         StringJoiner sj = new StringJoiner(",");
         for (String c : resultMap.keySet()) {
@@ -61,6 +63,7 @@ public class QueryExecutor {
             for (List<String> d : ds) {
                 scores.add(getScore(d));
             }
+
             if (max(scores) > 0) {
                 sb.append(String.format("%s [Highest score: %d, D: %d]\n", c,
                         max(scores), ds.size()));
@@ -98,7 +101,6 @@ public class QueryExecutor {
                 goal = "goal";
             }
 
-            System.out.println("All");
             executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
             queryString = String.format("%s(%s,X,D0)", goal, caseName);
             queryMap = executeQueryString(queryString, 10);
@@ -125,34 +127,20 @@ public class QueryExecutor {
         return acc;
     }
 
-//    private String updateAbducibles(List<String> dSet, int mode, int count) {
-//        StringJoiner sj = new StringJoiner(",");
-//        for (String str : dSet) {
-//            sj.add(str);
-//            if (str.contains("ass(") && count == 1) {
-//                abduced.add(str);
-//            }
-//        }
-//
-//        // only add abducibles that are cautiously entailed
-//        for (String abd : abduced) {
-//            if (!dSet.contains(abd)) {
-//                abduced.remove(abd);
-//                break;
-//            }
-//        }
-//        return sj.toString();
-//    }
-
     private List<String> convertToString(Term d) {
         List<String> dList = new ArrayList<>();
         if (d.isListPair()) {
             for (Term term : d.toTermArray()) {
-                dList.add(term.toString());
+                if (term.arity() == 0) {
+                    dList.add(term.toString() + "()");
+                } else {
+                    dList.add(term.toString());
+                }
             }
         }
         return dList;
     }
+
 
     private int getScore(String deltaString) {
         if (deltaString.contains("case")) {
@@ -172,6 +160,8 @@ public class QueryExecutor {
         Map<String, Term>[] maps = this.executeQuery(caseName, verbose, all);
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
+        int count = 0;
+
         for (Map<String, Term> map : maps) {
             String culprit = map.get("X").name();
 
@@ -190,16 +180,20 @@ public class QueryExecutor {
 //            }
 //            negMap.put(culprit, negDerivations);
 
-            LinkedHashSet<List<String>> set;
-            if (resultMap.get(culprit) == null) {
-                set = new LinkedHashSet<>();
-                resultMap.put(culprit, set);
-            } else {
-                set = resultMap.get(culprit);
-            }
-            set.add(convertToString(map.get("D0")));
+//            LinkedHashSet<List<String>> set;
+//            if (resultMap.get(culprit) == null) {
+//                set = new LinkedHashSet<>();
+//                resultMap.put(culprit, set);
+//            } else {
+//                set = resultMap.get(culprit);
+//            }
+            List<String> d = convertToString(map.get("D0"));
+//            set.add(d);
+
+            DerivationNode.createDerivationAndSaveDiagram(map.get("D0"),
+                    String.format("%s_%s%d.png",caseName,culprit,count));
+            count++;
         }
-//        System.out.println("Results: " + resultMap);
         populateAbduced(resultMap);
         time = ((System.nanoTime() - time)/pow(10, 9));
         timings.add(time);
@@ -293,14 +287,16 @@ public class QueryExecutor {
 //        qe.setDebug();
         int n = 1;
         try {
-            for (int i = 0; i < n; i++) {
-                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                        System.out.println(qe.execute(c, false));
-                }
-                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4"}) {
-                    System.out.println(qe.execute(c, false));
-                }
-            }
+            System.out.println(qe.execute("apt1", false));
+//
+//            for (int i = 0; i < n; i++) {
+//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                        System.out.println(qe.execute(c, false));
+//                }
+//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4"}) {
+//                    System.out.println(qe.execute(c, false));
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
