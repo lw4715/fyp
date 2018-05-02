@@ -87,34 +87,3 @@ rule(p12c_t(),prefer(r_t_highResource3(Att),r_t_highResource0(Att)),[]).
 %% rule(spoofedIP1,spoofedIp(IP),[connection(IP,in),isInternalIP(IP),validIP(IP)]).
 %% rule(spoofedIP2,spoofedIp(IP),[connection(IP,out),isExternalIP(IP),validIP(IP)]).
 %% rule(abnormalIP,abnormalIP(IP),[domainName(IP,Domain),domainCountry(Domain,C1),ipGeoloc(IP,C2),C1 \= C2]).
-
-% output:
-% requireHighResource/1
-% attackOrigin/2 (strat)
-%  notForBlackMarketUse/1 (strat)
-% similar/2 (strat)
-
-%% goal(A,X,M,M2,M3,D1,D2,D3,D4,D5) :-
-%%   initFile('tech.pl'),
-%%   writeToFiles('tech.pl',requireHighResource(A),requireHighResource(A,D1),'tech_'),
-%%   writeToFiles('tech.pl',attackOrigin(X,A),attackOrigin(X,A,D2),'tech_'),
-%%   writeToFilesAbd('tech.pl',notForBlackMarketUse(M),notForBlackMarketUse(M,D3),'tech_'),
-%%   writeToFilesAbd('tech.pl',specificTarget(A),specificTarget(A,D4),'tech_'),
-%%   writeToFilesAbd('tech.pl',similar(M2,M3),similar(M2,M3,D5),'tech_').
-
-
-%% goal_all(A,X,M,M2,M3,D1,D2,D3,D4,D5) :-
-%%   initFile('tech.pl'),cleanFile('results.pl'),cleanFile('non_results.pl'),case(A),
-%%   writeToFilesAll('tech.pl',requireHighResource(A),requireHighResource(A,D1),'tech_'),
-%%   writeToFilesAll('tech.pl',attackOrigin(X,A),attackOrigin(X,A,D2),'tech_'),
-%%   writeToFilesAllAbd('tech.pl',notForBlackMarketUse(M),notForBlackMarketUse(M,D3),'tech_'),
-%%   writeToFilesAllAbd('tech.pl',specificTarget(A),specificTarget(A,D4),'tech_'),
-%%   writeToFilesAllAbd('tech.pl',similar(M2,M3),similar(M2,M3,D5),'tech_').
-
-
-%% requireHighResource(A,D) :- prove([requireHighResource(A)],D).
-%% attackOrigin(X,A,D) :- prove([attackOrigin(X,A)],D).
-%% notForBlackMarketUse(M,D) :- prove([notForBlackMarketUse(M)],D).
-%% similar(M1,M2,D) :- prove([similar(M1,M2)],D).
-%% specificTarget(A,D) :- prove([specificTarget(A)],D). % abducible
-%% malwareUsedInAttack(M,Att) :- prove([malwareUsedInAttack(M,Att)],_).

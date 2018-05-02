@@ -1,9 +1,9 @@
 :- multifile rule/3.
 
 %% for examples
-rule(bg_example1(),country(myCountry),[]).
-rule(bg_example2(),country(yourCountry),[]).
-rule(bg_example3(),country(hisCountry),[]).
+rule(bg_example1,country(myCountry),[]).
+rule(bg_example2,country(yourCountry),[]).
+rule(bg_example3,country(hisCountry),[]).
 
 attackTypeList([ddos,espionage,defacement,data_destruction,sabotage,doxing]).
 malwareTypeList([bot,ransomware,rootkit,spyware,trojan,virus,worm,keyloggers,grayware]).
@@ -12,19 +12,19 @@ attackMechanismList([zeroday,exploits,priviledgeEscalation,evasion,blended]).
 %% rule(bg2,target(X,Att),[targets(L,Att)]) :-  member(X,L),\+ is_list(X),is_list(L).
 
 
-natoCountriesList([belgium,canada,denmark,france,iceland,italy,luxembourg,netherlands,norway,portugal,uk,usa,greece,turkey,spain]).
-euCountriesList([austria,belgium,bulgaria,croatia,cyprus,czech_republic,denmark,estonia,finland,france,germany,greece,hungary,ireland,italy,latvia,lithuania,luxembourg,malta,netherlands,poland,portugal,romania,slovakia,slovenia,spain,sweden,uk]).
+natoCountriesList([belgium,canada,denmark,france,iceland,italy,luxembourg,netherlands,norway,portugal,united_kingdom,united_states_of_america,greece,turkey,spain]).
+euCountriesList([austria,belgium,bulgaria,croatia,cyprus,czech_republic,denmark,estonia,finland,france,germany,greece,hungary,ireland,italy,latvia,lithuania,luxembourg,malta,netherlands,poland,portugal,romania,slovakia,slovenia,spain,sweden,united_kingdom]).
 %% https://brilliantmaps.com/us-allies-enemies/
 %% https://www.msn.com/en-gb/news/photos/which-countries-are-allies-and-which-are-enemies/ss-BBBNVNJ
 %% https://today.yougov.com/topics/politics/articles-reports/2017/02/02/americas-friends-and-enemies
-poorRelationList(usa,[northkorea,iran,syria,iraq,afghanistan,russia,libya,somalia,pakistan,palestine]).
-poorRelationList(northkorea,[usa,southkorea]).
+poorRelationList(united_states_of_america,[north_korea,iran,syria,iraq,afghanistan,russia,libya,somalia,pakistan,palestine]).
+poorRelationList(north_korea,[united_states_of_america,south_korea]).
 rule(bg3,poorRelation(X,Y),[]) :- poorRelationList(X,L),member(Y,L).
 rule(bg3,poorRelation(X,russia),[]) :- natoCountriesList(L),member(X,L).
 rule(bg3,poorRelation(iran,saudi_arabia),[]).
 
-goodRelationList(usa,[canada,australia,uk,france,italy,ireland,israel,norway,sweden,germany,saudi_arabia,southkorea,cuba]).
-goodRelationList(china,[northkorea]).
+goodRelationList(united_states_of_america,[canada,australia,united_kingdom,france,italy,ireland,israel,norway,sweden,germany,saudi_arabia,south_korea,cuba]).
+goodRelationList(china,[north_korea]).
 rule(bg4,goodRelation(X,Y),[]) :- natoCountriesList(L),member(X,L),member(Y,L),X\=Y.
 rule(bg4,goodRelation(X,Y),[]) :- euCountriesList(L),member(X,L),member(Y,L),X\=Y.
 rule(bg3,goodRelation(X,Y),[]) :- goodRelationList(X,L),member(Y,L).
@@ -46,79 +46,79 @@ rule(bg_1_5,attackMechanism(notPetya,ransomware),[]).
 rule(bg_2_2,sha256(goldenEye,'027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b30f6b0d7d3a745'),[]).
 
 
-rule(bg2,prominentGroup( fancyBear ),[]).
-rule(bg3,groupOrigin( fancyBear ,russia ),[]).
-rule(bg4,pastMotives( fancyBear ,[ espionage,doxing ]),[]).
-rule(bg5,pastTargets( fancyBear ,[georgia,france,jordan,usa,hungary,world_antidoping_agency,
+rule(bg2,prominentGroup(fancyBear),[]).
+rule(bg3,groupOrigin(fancyBear ,russia),[]).
+rule(bg4,pastMotives(fancyBear ,[ espionage,doxing ]),[]).
+rule(bg5,pastTargets(fancyBear ,[georgia,france,jordan,united_states_of_america,hungary,world_antidoping_agency,
 	nato,ukraine,belgium,pakistan,asia_pacific_economic_cooperation,osce,united_kingdom,
 	germany,poland,european_commission]),[]).
 rule(bg6,targetCategory(fancyBear,government,military),[]).
 
-rule(bg7a,prominentGroup( cozyBear ),[]).
+rule(bg7a,prominentGroup(cozyBear),[]).
 rule(bg7b,groupOrigin(cozyBear,russia),[]).
-rule(bg7c,pastTargets(cozyBear,[government,diplomatic_organizations,defense,energy,financial,insurance,legal,pharmaceutical,research,technology,brazil,china,japan,mexico,new_zealand,southkorea,turkey]),[]).
+rule(bg7c,pastTargets(cozyBear,[government,diplomatic_organizations,defense,energy,financial,insurance,legal,pharmaceutical,research,technology,brazil,china,japan,mexico,new_zealand,south_korea,turkey]),[]).
 rule(bg7x,malwareLinkedTo(trojanMiniduke,cozyBear),[]).
 rule(bg7y,malwareLinkedTo(trojanCozyduke,cozyBear),[]).
 rule(bg7z,malwareLinkedTo(trojanSeaduke,cozyBear),[]).
 
 
-rule(bg8,prominentGroup( lazarusGrp ),[]).
-rule(bg9,groupOrigin( lazarusGrp ,northkorea ),[]).
-rule(bg10,malwareLinkedTo( backdoorDuuzer ,lazarusGrp ),[]).
-rule(bg11,malwareLinkedTo( backdoorDestover ,lazarusGrp ),[]).
-rule(bg12,malwareLinkedTo( infostealerFakepude ,lazarusGrp ),[]).
-rule(bg13,malwareLinkedTo( backdoorContopee ,lazarusGrp ),[]).
+rule(bg8,prominentGroup(lazarusGrp),[]).
+rule(bg9,groupOrigin(lazarusGrp ,north_korea),[]).
+rule(bg10,malwareLinkedTo(backdoorDuuzer ,lazarusGrp),[]).
+rule(bg11,malwareLinkedTo(backdoorDestover ,lazarusGrp),[]).
+rule(bg12,malwareLinkedTo(infostealerFakepude ,lazarusGrp),[]).
+rule(bg13,malwareLinkedTo(backdoorContopee ,lazarusGrp),[]).
 
-rule(bg16,prominentGroup( equationGrp ),[]).
-rule(bg17,groupOrigin( equationGrp ,usa ),[]).
-rule(bg18,pastTargets( equationGrp ,[ iran ,russia ,pakistan ,afghanistan ,india ,syria ,mali ]),[]).
+rule(bg16,prominentGroup(equationGrp),[]).
+rule(bg17,groupOrigin(equationGrp ,united_states_of_america),[]).
+rule(bg18,pastTargets(equationGrp ,[ iran ,russia ,pakistan ,afghanistan ,india ,syria ,mali ]),[]).
 
 %% https://www.trendmicro.com/vinfo/us/security/definition/exploit-kit
-%% rule(bg22,prominentGroup( anglerEK ),[]).
-%% rule(bg23,groupOrigin( anglerEK ,ussr ),[]).
-%% rule(bg24,groupAttackMethods( anglerEK ,[ driveByDownloads ]),[]).
-%% rule(bg25,pastMotives( anglerEK ,[ undergroundBusiness ]),[]).
+%% rule(bg22,prominentGroup(anglerEK),[]).
+%% rule(bg23,groupOrigin(anglerEK ,ussr),[]).
+%% rule(bg24,groupAttackMethods(anglerEK ,[ driveByDownloads ]),[]).
+%% rule(bg25,pastMotives(anglerEK ,[ undergroundBusiness ]),[]).
 
-rule(bg28,prominentGroup( deepPanda ),[]).
-rule(bg29,groupOrigin( deepPanda ,china ),[]).
-rule(bg30,groupAttackMethods( deepPanda ,[ zeroday ,wateringHole ,customMalware ]),[]).
-rule(bg31,pastTargets( deepPanda ,[usa]),[]).
-rule(bg31,targetCategory( deepPanda ,[ aerospace ,energy ,healthcare,military,privateSector ]),[]).
-rule(bg32,pastMotives( deepPanda ,[ cyberespionage ]),[]).
+rule(bg28,prominentGroup(deepPanda),[]).
+rule(bg29,groupOrigin(deepPanda ,china),[]).
+rule(bg30,groupAttackMethods(deepPanda ,[ zeroday ,wateringHole ,customMalware ]),[]).
+rule(bg31,pastTargets(deepPanda ,[united_states_of_america]),[]).
+rule(bg31,targetCategory(deepPanda ,[ aerospace ,energy ,healthcare,military,privateSector ]),[]).
+rule(bg32,pastMotives(deepPanda ,[ cyberespionage ]),[]).
 
-rule(bg34,prominentGroup( butterfly ),[]).
-rule(bg35,groupOrigin( butterfly ,china ),[]).
-rule(bg36,groupAttackMethods( butterfly ,[ zeroday ,customMalware ]),[]).
-rule(bg37,pastTargets( butterfly ,[ twitter ,facebook ,apple ,microsoft ,pharmaceutical,
+rule(bg34,prominentGroup(butterfly),[]).
+rule(bg35,groupOrigin(butterfly ,china),[]).
+rule(bg36,groupAttackMethods(butterfly ,[ zeroday ,customMalware ]),[]).
+rule(bg37,pastTargets(butterfly ,[ twitter ,facebook ,apple ,microsoft ,pharmaceutical,
 	technology ,law ,oil ,preciousMetalMining ]),[]).
-rule(bg38,pastMotives( butterfly ,[ cyberespionage ,undergroundBusiness ]),[]).
+rule(bg38,pastMotives(butterfly ,[ cyberespionage ,undergroundBusiness ]),[]).
 
-rule(bg41,prominentGroup( dragonfly ),[]).
-rule(bg42,groupOrigin( dragonfly ,eastEurope ),[]).
-rule(bg43,groupAttackMethods( dragonfly ,[ spamEmail ,wateringHole ,customMalware ]),[]).
-rule(bg44,pastTargets( dragonfly ,[ defense ,aerospace ,energy ]),[]).
-rule(bg45,pastMotives( dragonfly ,[ cyberespionage ,spy ,sabotage ]),[]).
+rule(bg41,prominentGroup(dragonfly),[]).
+rule(bg42,groupOrigin(dragonfly ,eastEurope),[]).
+rule(bg43,groupAttackMethods(dragonfly ,[ spamEmail ,wateringHole ,customMalware ]),[]).
+rule(bg44,pastTargets(dragonfly ,[ defense ,aerospace ,energy ]),[]).
+rule(bg45,pastMotives(dragonfly ,[ cyberespionage ,spy ,sabotage ]),[]).
 
 
-rule(bg47,prominentGroup( govRAT ),[]).
-rule(bg48,groupOrigin( govRAT ,china ),[]).
-rule(bg49,groupAttackMethods( govRAT ,[ clientSideExploits ]),[]).
-rule(bg50,pastTargets( govRAT ,[usa,taiwan,united_kingdom,singapore,india,canada,
-	japan,indonesia,hong_kong,united_nations,southkorea,switzerland,vietnam,germany,
+rule(bg47,prominentGroup(govRAT),[]).
+rule(bg48,groupOrigin(govRAT ,china),[]).
+rule(bg49,groupAttackMethods(govRAT ,[ clientSideExploits ]),[]).
+rule(bg50,pastTargets(govRAT ,[united_states_of_america,taiwan,united_kingdom,singapore,india,canada,
+	japan,indonesia,hong_kong,united_nations,south_korea,switzerland,vietnam,germany,
 	international_olympic_committee]),[]).
 rule(bg51,targetCategory([ govOfficials ,militaryOfficials ,enterprises ]),[]).
-rule(bg52,pastMotives( govRAT ,[ cyberespionage ]),[]).
+rule(bg52,pastMotives(govRAT ,[ cyberespionage ]),[]).
 
 
-rule(bg53,prominentGroup( pawnStorm ),[]).
-rule(bg54,groupAttackMethods( pawnStorm ,[ spearphishing ,phishingWebsites ,ios ,exploits ,zeroday ]),[]).
-rule(bg55,pastTargets( pawnStorm ,[ nato ,govOfficials ,militaryOfficials ,russia ,ukraine ]),[]).
-rule(bg56,pastMotives( pawnStorm ,[ cyberespionage ]),[]).
+rule(bg53,prominentGroup(pawnStorm),[]).
+rule(bg54,groupAttackMethods(pawnStorm ,[ spearphishing ,phishingWebsites ,ios ,exploits ,zeroday ]),[]).
+rule(bg55,pastTargets(pawnStorm ,[ nato ,govOfficials ,militaryOfficials ,russia ,ukraine ]),[]).
+rule(bg56,pastMotives(pawnStorm ,[ cyberespionage ]),[]).
 
-rule(bg58,prominentGroup( waterbug ),[]).
-rule(bg59,groupAttackMethods( waterbug ,[ zeroday ,email ,stolenCertificates ,wateringHole ]),[]).
-rule(bg60,pastTargets( waterbug ,[ govInstitutions ,embassies ,education ,research ]),[]).
-rule(bg61,pastMotives( waterbug ,[ cyberespionage ,spy ,intelligenceGathering ]),[]).
+rule(bg58,prominentGroup(waterbug),[]).
+rule(bg59,groupAttackMethods(waterbug ,[ zeroday ,email ,stolenCertificates ,wateringHole ]),[]).
+rule(bg60,pastTargets(waterbug ,[ govInstitutions ,embassies ,education ,research ]),[]).
+rule(bg61,pastMotives(waterbug ,[ cyberespionage ,spy ,intelligenceGathering ]),[]).
 
 
 
@@ -136,16 +136,16 @@ listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,
 	belarus,ireland,saudi_arabia,belgium,israel,senegal,botswana,italy,serbia ,brazil,jamaica,slovakia,brunei_darussalam,
 	kazakhstan,slovenia,bulgaria,kenya,southafrica,cameroon,laos,spain,chile,latvia,sri,lanka,china,lithuania,tanzania,
 	colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico,tunisia,croatia,moldova,turkey,cyprus,montenegro,
-	uganda,czech_republic,morocco,ukraine,northkorea,nigeria,united_arab_emirates,denmark,pakistan,uruguay,ecuador,
-	panama,venezuela,germany,paraguay,australia,japan,oman ,canada,southkorea,russia,egypt,malaysia,singapore,estonia,
-	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,usa]).
+	uganda,czech_republic,morocco,ukraine,north_korea,nigeria,united_arab_emirates,denmark,pakistan,uruguay,ecuador,
+	panama,venezuela,germany,paraguay,australia,japan,oman ,canada,south_korea,russia,egypt,malaysia,singapore,estonia,
+	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states_of_america]).
 
-cybersuperpowerlist([ china ,israel ,iran ,usa ,northkorea ]).
+cybersuperpowerlist([ china ,israel ,iran ,united_states_of_america ,north_korea ]).
 rule(bg65b,cybersuperpower(X),[]) :- cybersuperpowerlist(L),member(X,L).
 %% rule(bg65b,listNegHasResources([ indonesia,saudi_arabia,india,southafrica,turkey ]),[]).
 listIndustries([ infocomm ]).
 listChineseCountries([ china ]).
-listEnglishCountries([ usa ,united_kingdom ]).
+listEnglishCountries([ united_states_of_america ,united_kingdom ]).
 
 rule(bg70,country(X),[]) :- listCountries(L),member(X,L).
 rule(bg71,industry(X),[]) :- listIndustries(L),member(X,L).
@@ -156,27 +156,27 @@ rule(bg74,firstLanguage(english,X),[]) :- listEnglishCountries(L),member(X,L).
 
 %% part of nsa
 %% have support of us gov/ has relations
-rule(bg81,isInfrastructure( nuclear ),[]).
-rule(bg82,isInfrastructure( electricity ),[]).
-rule(bg83,isInfrastructure( water ),[]).
-rule(bg84,informationRich( banking ),[]).
-rule(bg85,informationRich( infocomm ),[]).
-rule(bg86,informationRich( consumer ),[]).
+rule(bg81,isInfrastructure(nuclear),[]).
+rule(bg82,isInfrastructure(electricity),[]).
+rule(bg83,isInfrastructure(water),[]).
+rule(bg84,informationRich(banking),[]).
+rule(bg85,informationRich(infocomm),[]).
+rule(bg86,informationRich(consumer),[]).
 
-rule(bg88,possibleMotive( sabotage ,Att),[isInfrastructure(Ind),industry(Ind,V),target(V,Att)]).
-rule(bg89,possibleMotive( espionage ,Att),[informationRich(Ind),industry(Ind,V),target(V,Att)]).
+rule(bg88,possibleMotive(sabotage ,Att),[isInfrastructure(Ind),industry(Ind,V),target(V,Att)]).
+rule(bg89,possibleMotive(espionage ,Att),[informationRich(Ind),industry(Ind,V),target(V,Att)]).
 
-%% rule(bg78,isCulprit( equationGroup ,flameattack ),[]). 
+%% rule(bg78,isCulprit(equationGroup ,flameattack),[]). 
 rule(bg78,malwareLinkedTo(flame,equationGrp),[]). 
 
-%% rule(bg94,isCulprit([ usa ,israel ],flameattack ),[]).
-rule(bg95,target( middleeast ,flameattack ),[]).
-rule(bg96,malwareUsedInAttack( flame ,flameattack ),[]).
-rule(bg97,ccServer( gowin7 ,flame ),[]).
-rule(bg98,ccServer( secuurity ,flame ),[]).
-rule(bg99,domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6 ),[]).
-rule(bg100,domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6 ),[]).
-rule(bg101,addressType( prinsen_gate_6 ,hotel ),[]).
+%% rule(bg94,isCulprit([ united_states_of_america ,israel ],flameattack),[]).
+rule(bg95,target(middleeast ,flameattack),[]).
+rule(bg96,malwareUsedInAttack(flame ,flameattack),[]).
+rule(bg97,ccServer(gowin7 ,flame),[]).
+rule(bg98,ccServer(secuurity ,flame),[]).
+rule(bg99,domainRegisteredDetails(gowin7 ,adolph_dybevek ,prinsen_gate_6),[]).
+rule(bg100,domainRegisteredDetails(secuurity ,adolph_dybevek ,prinsen_gate_6),[]).
+rule(bg101,addressType(prinsen_gate_6 ,hotel),[]).
 
 %% fireeye tech
 rule(bg104,fileCharaMalware(wannacry_filechara1,wannacry),[]).
@@ -202,10 +202,10 @@ list_gci_maturing([albania,ghana,peru,algeria,greece,philippines,argentina,hunga
 	azerbaijan,india,qatar,bahrain,indonesia,romania,bangladesh,iran,rwanda,belarus,ireland,saudi_arabia,belgium,israel,senegal,
 	botswana,italy,serbia,brazil,jamaica,slovakia,brunei_darussalam,kazakhstan,slovenia,bulgaria,kenya,southafrica,cameroon,laos,
 	spain,chile,latvia,sri,lanka,china,lithuania,tanzania,colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico,
-	tunisia,croatia,moldova,turkey,cyprus,montenegro,uganda,czech_republic,morocco,ukraine,northkorea,nigeria,
+	tunisia,croatia,moldova,turkey,cyprus,montenegro,uganda,czech_republic,morocco,ukraine,north_korea,nigeria,
 	united_arab_emirates,denmark,pakistan,uruguay,ecuador,panama,venezuela,germany,paraguay]).
-list_gci_leading([australia,japan,oman,canada,southkorea,russia,egypt,malaysia,singapore,estonia,mauritius,sweden,
-	finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,usa]).
+list_gci_leading([australia,japan,oman,canada,south_korea,russia,egypt,malaysia,singapore,estonia,mauritius,sweden,
+	finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states_of_america]).
 rule(bg115,gci_tier(X,initiating),[]) :- list_gci_initiating(L),member(X,L).
 rule(bg116,gci_tier(X,maturing),[]) :- list_gci_maturing(L),member(X,L).
 rule(bg117,gci_tier(X,leading),[]) :- list_gci_leading(L),member(X,L).
