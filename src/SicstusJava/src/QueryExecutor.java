@@ -54,10 +54,11 @@ public class QueryExecutor {
         }
     }
 
-    public String culpritString(String attack, Map<String, LinkedHashSet<List<String>>> resultMap,
-                                Map<String, Set<List<String>>> negMap, Object[] visualTree) {
-        StringBuilder sb = new StringBuilder();
-        StringJoiner sj = new StringJoiner(",");
+    public List<String> culpritString(String attack, Map<String, LinkedHashSet<List<String>>> resultMap,
+                                      Map<String, Set<List<String>>> negMap, Object[] visualTree) {
+        List<String> ret = new ArrayList<>();
+//        StringBuilder sb = new StringBuilder();
+//        StringJoiner sj = new StringJoiner(",");
         for (String c : resultMap.keySet()) {
             List<Integer> scores = new ArrayList<>();
             LinkedHashSet<List<String>> ds = resultMap.get(c);
@@ -67,12 +68,12 @@ public class QueryExecutor {
                 }
 
                 if (max(scores) > 0) {
-                    sb.append(String.format("%s [Highest score: %d, D: %d]\n", c,
+                    ret.add(String.format("%s [Highest score: %d, D: %d]\n", c,
                             max(scores), ds.size()));
                 }
                 for (int i = 0; i < ds.size(); i++) {
                     if (scores.get(i) > 0) {
-                        sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n %s" +
+                        ret.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n %s" +
 //                        "\nNegative Derivation: %s" +
                                         "\n\n", c, scores.get(i),
                                 ds.toArray()[i], visualTree[i]
@@ -84,7 +85,7 @@ public class QueryExecutor {
             }
 
         }
-        return "{" + attack + "}\n" + sb + "\n" + sj;
+        return ret;
     }
 
     Map<String, Term>[] executeQuery(String caseName, boolean verbose, boolean all) {
@@ -196,7 +197,8 @@ public class QueryExecutor {
 //                System.out.println("|" + t + "|");
 //              set.add(d);
                 List<String> d = convertToString(t);
-                DerivationNode.createDerivationAndSaveDiagram(t, caseName, culprit, count);
+                set.add(d);
+                DerivationNode.createDerivationAndSaveDiagram(t, caseName, count);
                 count++;
             }
         }
@@ -204,8 +206,8 @@ public class QueryExecutor {
         time = ((System.nanoTime() - time)/pow(10, 9));
         timings.add(time);
         System.out.println("\nTotal time for " + caseName + ": " + time );
-        String culpritString = culpritString(caseName, resultMap, negMap, getVisualTree().toArray());
-        return new Result(culpritString, abduced, getPredMap(abduced, true));
+        List<String> culpritString = culpritString(caseName, resultMap, negMap, getVisualTree().toArray());
+        return new Result(caseName, culpritString, abduced, getPredMap(abduced, true));
     }
 
     private <E> Set<E> toSet(E[] list) {

@@ -3,25 +3,24 @@ import java.util.Map;
 import java.util.Set;
 
 public class Result {
-
-    private String culpritString;
-    private Map<String, Integer> techMap;
-    private Map<String, Integer> opMap;
-    private Map<String, Integer> strMap;
+    private String attack;
+    private List<String> culpritString;
     private Set<String> abduced;
     private Map<String, List<String>> abducedMap;
 //    private Map<String, Term>[] derivations;
 
-    Result(String culpritString,
+    Result(String attack, List<String> culpritString,
            Set<String> abduced, Map<String,
             List<String>> abducedMap) {
+        this.attack = attack;
         this.culpritString = culpritString;
-        this.techMap = techMap;
-        this.opMap = opMap;
-        this.strMap = strMap;
         this.abduced = abduced;
         this.abducedMap = abducedMap;
 //        this.derivations = derivations;
+    }
+
+    public String getAttack() {
+        return this.attack;
     }
 
     boolean hasAbduced() {
@@ -31,10 +30,7 @@ public class Result {
 
     @Override
     public String toString() {
-//        String s = String.format("\nCulprit(s): %s\nTech: %s\nOp: %s\nStr: %s\n",
-//                this.culpritString, this.techMap, this.opMap, this.strMap);
-
-        String s = String.format("\nCulprit(s): %s\n", this.culpritString);
+        String s = String.format("\n%s\nCulprit(s): %s\n", attack, this.culpritString);
         if (abducedMap.isEmpty()) {
             return s;
         } else {
@@ -42,5 +38,13 @@ public class Result {
                     s, abduced, Utils.formatMap(abducedMap));
         }
 
+    }
+
+    public String getHeader() {
+        return this.culpritString.get(0);
+    }
+
+    public List<String> resultStrings() {
+        return this.culpritString.subList(1, culpritString.size() - 1);
     }
 }

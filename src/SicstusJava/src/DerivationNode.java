@@ -247,9 +247,12 @@ public class DerivationNode {
         return new DerivationNode("str result (isCulprit)", "strategic rulename", l, 2, es2);
     }
 
+    static String getDiagramFilename(String attack, int c) {
+        return String.format("%s_%d.svg", attack, c);
+    }
     // return list of prefs
-    public static List<DerivationNode> createDerivationAndSaveDiagram(Term t, String attack, String culprit, int count) {
-        String filename = String.format("%s_%s%d.svg", attack, culprit, count);
+    public static List<DerivationNode> createDerivationAndSaveDiagram(Term t, String attack, int count) {
+        String filename = getDiagramFilename(attack, count);
         List<String> names = new ArrayList<>();
         List<List<String>> args = new ArrayList<>();
         if (t.isListPair()) {

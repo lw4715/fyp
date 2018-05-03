@@ -262,4 +262,56 @@ public class Utils {
             return "";
         }
     }
+
+    public static void main(String[] args) {
+//        System.out.println(getAllPreds());
+        String[] preds = new String[] {"industry(T)","targetCountry(X,Att)","fileChara(Filename,MD5,Size,CompileTime,Desc,Filetype,C1)","poorRelation(C,T)","noPriorHistory(X)","infraUsed(Infra,Att)","hasResources(X)","majorityIpOrigin(X,Att)","stolenValidSignedCertificates(Att)","cybersuperpower(X)","espionage,doxing)","attackPeriod(Att,[Year,Month])","governmentLinked(P,C)","domainRegisteredDetails(Server,Name,Addr)","ipResolution(S,IP,D)","infectionMethod(usb,M)","attackOrigin(X,Att)","highLevelSkill(Att)","usesZeroDayVulnerabilities(M)","hasPoliticalMotive(C,T,Date2)","malwareUsedInAttack(M,Att)","news(News,T,Date2)","prominentGroup(X)","attackPossibleOrigin(X,Att)","notForBlackMarketUse(M)","similarCCServer(M1,M2)","publicCommentsRelatedToGov(P,C)","zeroday,customMalware)","gci_tier(X,leading)","torIP(IP)","malwareLinkedTo(M2,X)","sysLanguage(L,Att)","clientSideExploits)","eternalBlue)","spoofedIP(IP)","ipGeoloc(X,IP)","addressType(Addr,Type)","sophisticatedMalware(M)","identifiedIndividualInAttack(P,Att)","goodRelation(X,Y)","industry(Ind,X)","cyberespionage)","languageInCode(L,Att)","groupOrigin(Group,C)","hasCapability(X,Att)","isInfrastructure(Ind)","infraRegisteredIn(X,Infra)","informationRich(Ind)","hasResources(X)","fileCharaMalware(C2,M2)","claimedResponsibility(X,Att)","addrInCountry(Addr,X)","similarFileChara(C1,C2)","dateApplicable(Date1,Date2)","attackSourceIP(IP,M)","hijackCorporateClouds(Att)","highVolumeAttack(Att)","imposedSanctions(T,C,Date)","causeOfConflict(X,T,News)","ccServer(S,M)","specificConfigInMalware(M)","cyberespionage,undergroundBusiness)","specificTarget(Att)","simlarCodeObfuscation(M1,M2)","requireHighResource(Att)","target(X,Att)","hasMotive(X,Att)","similar(M1,M2)","hasEconomicMotive(C,T)","longDurationAttack(Att)","sharedCode(M1,M2)","commandAndControlEasilyFingerprinted(M)","highSecurity(T)","firstLanguage(L,X)","geolocatedInGovFacility(P,C)","country(X)","malwareModifiedFrom(M1,M2)","gci_tier(X,initiating)","gci_tier(X,maturing)","isCulprit(Group,Att)"};
+        Set<String> set = new HashSet<>();
+        for (String pred : preds) {
+            int size = set.size();
+            set.add(pred.split("\\(")[0]);
+            if (set.size() == size) {
+                System.out.println(pred);
+            }
+        }
+        System.out.println(set);
+        System.out.println(set.size());
+    }
+
+    private static String getAllPreds() {
+        BufferedReader br;
+        Set<String> preds = new HashSet<>();
+        String[] files = new String[] {TECH + ".pl", OP + ".pl", STR + ".pl", "backgroundgorgias_renumbered.pl"};
+        try {
+            for (String f : files) {
+                System.out.println(f);
+                br = new BufferedReader(new FileReader(f));
+                br.lines().forEach(line -> {
+                    line = line.split("%")[0];
+                    if (line.startsWith("rule(") && line.contains("[")) {
+                        String[] body = getBodyOfLine(line);
+//                        System.out.println("**" + line + " " + body[0]);
+                        for (String b : body) {
+                            if (b.startsWith(",")) {
+                                b = b.replaceFirst(",", "");
+                            }
+                            preds.add(b.trim() + ")");
+                        }
+                    }
+                });
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String pred : preds) {
+            sb.append(pred + "\n");
+        }
+        return sb.toString();
+    }
+
+    private static String[] getBodyOfLine(String line) {
+//        System.out.println(line);
+        return line.split("\\[")[1].split("\\]")[0].split("\\)");
+    }
 }

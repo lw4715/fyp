@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.List;
 
 @SuppressWarnings("ALL")
 class GUI {
@@ -23,6 +23,7 @@ class GUI {
     private static final String UPDATE = "Update";
     private static final String EXECUTEALL = "Execute all";
     private static final String EXECUTEALLINFO = "(Get a list of predicates that can be derived by current evidences)";
+//    private static final String VIEWDIAGRAM = "ViewDiagram_";
 
     private final Utils utils;
 
@@ -35,41 +36,71 @@ class GUI {
     private JTextField evidence;
     private JTextField attackName;
     private JTextArea currentEvidences;
+    private JScrollPane scrollPane;
     private JasperCallable jc;
     private Map<String, Result> accumulatedResults;
     private final JFileChooser fileChooser = new JFileChooser();
 
     private static final String[] placeholderItem = {"Select from existing predicates"};
 
-    private static final String[] techPredicates =
-            {
-                "highLevelSkill(<attack_id>)", "requireHighResource(<attack_id>)",
-                "attackSourceIP(<ip_id>, <attack_id>)","ipGeoloc(<country>,<ip_id>)",
-                "spoofedIp(<ip_id>)", "sysLanguage(<language>,<attack_id>)", "firstLanguage(<language>,<country>)",
-                "languageInCode(<language>,<attack_id>)", "infraUsed(<infra_id>, <attack_id>)",
-                "infraRegisteredIn(<country>,<infra_id>)", "forBlackMarketUse(<malware_id>)",
-                "infectionMethod(<infection_method>, <malware_id>)",
-                "controlAndCommandEasilyFingerprinted(<malware_id>)", "ccServer(<server_id>,<malware_id>)",
-                "similarCCServer(<malware_id>,<malware_id>)",
-                "domainRegisteredDetails(<server_id>,<name>,<address>)", "addressType(<address>,<type>)",
-                "simlarCodeObfuscation(<malware_id>,<malware_id>)", "sharedCode(<malware_id>,<malware_id>)",
-                "malwareModifiedFrom(<malware_id>,<malware_id>)",
-                "specificConfigInMalware(<malware_id>)", "malwareUsedInAttack(<malware_id>,<attack_id>)",
-                "usesZeroDayVulnerabilities(<malware_id>)", "sophisticatedMalware(<malware_id>)", "specificTarget(<attack_id>)",
-                "hasKillSwitch(<malware_id>)",
-//                    "numComputersAffected", "numCountriesAffected/2"
-        };
-    private static final String[] opPredicates =
-            {
-                "hasEconomicMotive/2", "target/2", "hasPoliticalMotive/2",
-                "imposedSanctions/3", "attackPeriod/2", "news/3", "causeOfConflict/3",
-                "geolocatedInGovFacility/2", "publicCommentsRelatedToGov/2",
-                "claimedResponsibility/2", "identifiedIndividualInAttack/2"
-            };
-    private static final String[] bgPredicates =
-            {
-                "prominentGroup/1", "pastTargets/2", "industry/1", "country/1", "hasPrecedence/2"
-            };
+    private static final String[] predicates = {"industry(<T>)","targetCountry(<X>>,<<Att>)",
+            "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)","poorRelation(<C>,<T>)",
+            "noPriorHistory(<X>)","infraUsed(<Infra>,<Att>)","hasResources(<X>)","majorityIpOrigin(<X>,<Att>)",
+            "stolenValidSignedCertificates(<Att>)","cybersuperpower(<X>)","espionage>,<doxing>)",
+            "attackPeriod(<Att>,<[Year>,<Month]>)","governmentLinked(<P>,<C>)",
+            "domainRegisteredDetails(<Server>,<Name>,<Addr>)","ipResolution(<S>,<IP>,<D>)",
+            "infectionMethod(<usb>,<M>)","attackOrigin(<X>,<Att>)","highLevelSkill(<Att>)",
+            "usesZeroDayVulnerabilities(<M>)","hasPoliticalMotive(<C>,<T>,<Date2>)",
+            "malwareUsedInAttack(<M>,<Att>)","news(<News>,<T>,<Date2>)","prominentGroup(<X>)",
+            "attackPossibleOrigin(<X>,<Att>)","notForBlackMarketUse(<M>)","similarCCServer(<M1>,<M2>)",
+            "publicCommentsRelatedToGov(<P>,<C>)","zeroday>,<customMalware>)","gci_tier(<X>,<leading>)",
+            "torIP(<IP>)","malwareLinkedTo(<M2>,<X>)","sysLanguage(<L>,<Att>)","clientSideExploits>)",
+            "eternalBlue>)","spoofedIP(<IP>)","ipGeoloc(<X>,<IP>)","addressType(<Addr>,<Type>)",
+            "sophisticatedMalware(<M>)","identifiedIndividualInAttack(<P>,<Att>)",
+            "goodRelation(<X>,<Y>)","industry(<Ind>,<X>)","cyberespionage>)",
+            "languageInCode(<L>,<Att>)","groupOrigin(<Group>,<C>)","hasCapability(<X>,<Att>)",
+            "isInfrastructure(<Ind>)","infraRegisteredIn(<X>,<Infra>)","informationRich(<Ind>)",
+            "hasResources(<X>)","fileCharaMalware(<C2>,<M2>)","claimedResponsibility(<X>,<Att>)",
+            "addrInCountry(<Addr>,<X>)","similarFileChara(<C1>,<C2>)","dateApplicable(<Date1>,<Date2>)",
+            "attackSourceIP(<IP>,<M>)","hijackCorporateClouds(<Att>)","highVolumeAttack(<Att>)",
+            "imposedSanctions(<T>,<C>,<Date>)","causeOfConflict(<X>,<T>,<News>)","ccServer(<S>,<M>)",
+            "specificConfigInMalware(<M>)","cyberespionage>,<undergroundBusiness>)",
+            "specificTarget(<Att>)","simlarCodeObfuscation(<M1>,<M2>)","requireHighResource(<Att>)",
+            "target(<X>,<Att>)","hasMotive(<X>,<Att>)","similar(<M1>,<M2>)","hasEconomicMotive(<C>,<T>)",
+            "longDurationAttack(<Att>)","sharedCode(<M1>,<M2>)","commandAndControlEasilyFingerprinted(<M>)",
+            "highSecurity(<T>)","firstLanguage(<L>,<X>)","geolocatedInGovFacility(<P>,<C>)","country(<X>)",
+            "malwareModifiedFrom(<M1>,<M2>)","gci_tier(<X>,<initiating>)","gci_tier(<X>,<maturing>)",
+            "isCulprit(<Group>,<Att>)"};
+
+//    private static final String[] techPredicates =
+//            {
+//                "highLevelSkill(<attack_id>)", "requireHighResource(<attack_id>)",
+//                "attackSourceIP(<ip_id>, <attack_id>)","ipGeoloc(<country>,<ip_id>)",
+//                "spoofedIp(<ip_id>)", "sysLanguage(<language>,<attack_id>)", "firstLanguage(<language>,<country>)",
+//                "languageInCode(<language>,<attack_id>)", "infraUsed(<infra_id>, <attack_id>)",
+//                "infraRegisteredIn(<country>,<infra_id>)", "forBlackMarketUse(<malware_id>)",
+//                "infectionMethod(<infection_method>, <malware_id>)",
+//                "controlAndCommandEasilyFingerprinted(<malware_id>)", "ccServer(<server_id>,<malware_id>)",
+//                "similarCCServer(<malware_id>,<malware_id>)",
+//                "domainRegisteredDetails(<server_id>,<name>,<address>)", "addressType(<address>,<type>)",
+//                "simlarCodeObfuscation(<malware_id>,<malware_id>)", "sharedCode(<malware_id>,<malware_id>)",
+//                "malwareModifiedFrom(<malware_id>,<malware_id>)",
+//                "specificConfigInMalware(<malware_id>)", "malwareUsedInAttack(<malware_id>,<attack_id>)",
+//                "usesZeroDayVulnerabilities(<malware_id>)", "sophisticatedMalware(<malware_id>)", "specificTarget(<attack_id>)",
+//                "hasKillSwitch(<malware_id>)",
+////                    "numComputersAffected", "numCountriesAffected/2"
+//        };
+//    private static final String[] opPredicates =
+//            {
+//                "hasEconomicMotive/2", "target/2", "hasPoliticalMotive/2",
+//                "imposedSanctions/3", "attackPeriod/2", "news/3", "causeOfConflict/3",
+//                "geolocatedInGovFacility/2", "publicCommentsRelatedToGov/2",
+//                "claimedResponsibility/2", "identifiedIndividualInAttack/2"
+//            };
+//    private static final String[] bgPredicates =
+//            {
+//                "prominentGroup/1", "pastTargets/2", "industry/1", "country/1", "hasPrecedence/2"
+//            };
 
 
     GUI() {
@@ -81,17 +112,13 @@ class GUI {
 
     private void prepareGUI() {
         mainFrame = new JFrame("Abduction-based Reasoner");
-        mainFrame.setSize(800,800);
 
-        mainFrame.setLayout(new GridLayout(0, 1));
+        mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.Y_AXIS));
 
         status = new JLabel("", JLabel.LEFT);
         status.setAutoscrolls(true);
 
-        JComboBox dropdown = new JComboBox(
-                Stream.of(placeholderItem, techPredicates, opPredicates, bgPredicates)
-                        .flatMap(Stream::of)
-                        .toArray(String[]::new));
+        JComboBox dropdown = new JComboBox(predicates);
         dropdown.addItemListener(arg0 -> {
             resetColours();
             status.setText("\t\tSelected: " + dropdown.getSelectedItem());
@@ -131,29 +158,28 @@ class GUI {
         panel4.setLayout(new FlowLayout());
 
         currentEvidences = new JTextArea(utils.getCurrentEvidence());
-//        JScrollPane scrollPane = new JScrollPane(currentEvidences);
-//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//        scrollPane.setPreferredSize(new Dimension(700, 200));
-//        scrollPane.setVisible(true);
+        currentEvidences.setRows(10);
+        scrollPane = new JScrollPane(currentEvidences);
+        scrollPane.setSize(0,300);
 
-        mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         panel1.add(dropdown);
         panel1.add(evidence);
-
         panel2.add(existsingAttacks);
         panel2.add(attackName);
 
+        mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         mainFrame.add(panel1);
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
-
         mainFrame.add(panel2);
         mainFrame.add(panel3);
-        mainFrame.add(new JLabel("\t\tEvidence so far:", JLabel.LEFT));
 
-        mainFrame.add(currentEvidences);
+        mainFrame.add(new JLabel("\t\tEvidence so far:", JLabel.LEFT));
+        mainFrame.add(scrollPane);
+
         mainFrame.add(panel4);
         mainFrame.add(status);
 
+        mainFrame.setSize(1000,750);
         mainFrame.setVisible(true);
     }
 
@@ -189,8 +215,8 @@ class GUI {
         panel1.add(submitButton);
         panel1.add(uploadButton);
         panel2.add(executeButton);
-        panel2.add(executeAllButton);
-        panel2.add(new JLabel(EXECUTEALLINFO, JLabel.LEFT)); // FIXME: attach info to corrent place?
+        panel3.add(executeAllButton);
+        panel3.add(new JLabel(EXECUTEALLINFO, JLabel.LEFT)); // FIXME: attach info to corrent place?
         panel4.add(updateButton);
         mainFrame.setVisible(true);
     }
@@ -229,10 +255,13 @@ class GUI {
                     status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
                     executeQuery(true);
                     break;
-                default:
+                case UPDATE:
                     status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
                     utils.updateEvidence(currentEvidences.getText());
                     accumulatedResults.clear();
+                    break;
+                default:
+                    SVGApplication.displayFile("img/" + command);
             }
         }
     }
@@ -266,8 +295,29 @@ class GUI {
                 if (executeResult.hasAbduced()) {
                     option = 2;
                 }
-                JOptionPane.showConfirmDialog(mainFrame, executeResult.toString(),
-                        "Execution result for " + attackName.getText(), JOptionPane.DEFAULT_OPTION, option);
+
+                JPanel p = new JPanel();
+                p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+                List<String> rs = executeResult.resultStrings();
+                int c = 0;
+                for (String r : rs) {
+                    JTextArea textArea = new JTextArea(40,0);
+                    textArea.setEditable(false);
+                    textArea.setText(r);
+                    JButton btn = new JButton("View diagram");
+                    String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
+                    btn.setActionCommand(filename);
+                    btn.addActionListener(new ButtonClickListener());
+                    p.add(textArea);
+                    p.add(btn);
+                    c++;
+                }
+                JScrollPane scrollPane = new JScrollPane(p);
+                JFrame f = new JFrame();
+                f.add(scrollPane);
+                f.setSize(1000,800);
+                f.setVisible(true);
+
             } else {
                 Set<String>[] res = readFromResultAndNonResultFiles();
                 JDialog dialog = new JDialog(mainFrame);
@@ -291,7 +341,7 @@ class GUI {
                 dialog.add(results);
                 dialog.add(nonresults);
                 dialog.add(possiblerules);
-                dialog.setSize(1600, 1000);
+                dialog.setSize(1200, 1000);
                 dialog.setVisible(true);
 //                dialog.setAlwaysOnTop(true); FIXME
                 dialog.setModal(true);
@@ -299,6 +349,7 @@ class GUI {
             }
         }
     }
+
 
     // elem at index 0 is combined predicates as one string read from RESULTFILENAME,
     // elem at index 1 .. n are individual predicates from NONRESULTFILENAME
@@ -344,5 +395,45 @@ class GUI {
 
     public static void main(String args[]) {
         GUI awt = new GUI();
+//        JScrollPaneDemo();
+    }
+
+
+    public static void JScrollPaneDemo() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                // create a jtextarea
+//                JPanel p = new JPanel();
+//                p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+////                JTextArea t = new JTextArea();
+////                t.setText("xx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\n");
+//                for (int i = 0; i < 10; i++) {
+//                    JTextArea textArea = new JTextArea();
+//                    textArea.setText("t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).");
+//                    p.add(textArea);
+//                }
+////                scrollPane.add(p);
+//                JScrollPane scrollPane = new JScrollPane(p);
+                JTextArea t = new JTextArea();
+                // now add the scrollpane to the jframe's content pane, specifically
+                // placing it in the center of the jframe's borderlayout
+                JFrame frame = new JFrame("JScrollPane Test");
+                frame.add(t, BorderLayout.LINE_START);
+                frame.add(t, BorderLayout.CENTER);
+//                frame.pack();
+//                JOptionPane.showConfirmDialog(frame, scrollPane);
+                // make it easy to close the application
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                // set the frame size (you'll usually want to call frame.pack())
+                frame.setSize(new Dimension(240, 180));
+
+                // center the frame
+                frame.setLocationRelativeTo(null);
+                frame.pack();
+                // make it visible to the user
+                frame.setVisible(true);
+            }
+        });
     }
 }
