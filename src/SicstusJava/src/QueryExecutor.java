@@ -17,7 +17,7 @@ public class QueryExecutor {
     private boolean verbose = false;
 
     private static final QueryExecutor instance = new QueryExecutor();
-    private static final String CONSULT_STRING = "consult(%s)";
+    private static final String CONSULT_STRING = "consult('%s')";
 
 
     private Set<String> abduced;
@@ -30,6 +30,7 @@ public class QueryExecutor {
         JPL.init();
         timings = new ArrayList<>();
         abduced = new HashSet<>();
+        loadFiles();
     }
 
     private LinkedHashSet<String> getVisualTree() {
@@ -60,23 +61,25 @@ public class QueryExecutor {
         for (String c : resultMap.keySet()) {
             List<Integer> scores = new ArrayList<>();
             LinkedHashSet<List<String>> ds = resultMap.get(c);
-            for (List<String> d : ds) {
-                scores.add(getScore(d));
-            }
+            if (!ds.isEmpty()) {
+                for (List<String> d : ds) {
+                    scores.add(getScore(d));
+                }
 
-            if (max(scores) > 0) {
-                sb.append(String.format("%s [Highest score: %d, D: %d]\n", c,
-                        max(scores), ds.size()));
-            }
-            for (int i = 0; i < ds.size(); i++) {
-                if (scores.get(i) > 0) {
-                    sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n %s" +
+                if (max(scores) > 0) {
+                    sb.append(String.format("%s [Highest score: %d, D: %d]\n", c,
+                            max(scores), ds.size()));
+                }
+                for (int i = 0; i < ds.size(); i++) {
+                    if (scores.get(i) > 0) {
+                        sj.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n %s" +
 //                        "\nNegative Derivation: %s" +
-                            "\n\n", c, scores.get(i),
-                            ds.toArray()[i], visualTree[i]
+                                        "\n\n", c, scores.get(i),
+                                ds.toArray()[i], visualTree[i]
 //                        ,negMap.get(c)
-                    ));
+                        ));
 //                    negMap.remove(c);
+                    }
                 }
             }
 
@@ -156,7 +159,6 @@ public class QueryExecutor {
     System.out.println(String.format("---------\nStart %s derivation", caseName));
 
         double time = System.nanoTime();
-        loadFiles();
         Map<String, Term>[] maps = this.executeQuery(caseName, verbose, all);
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
@@ -173,6 +175,7 @@ public class QueryExecutor {
 //                Term d = m.get("D");
 //                if (verbose) System.out.println(ms + " " + m);
 //                if (!d.toString().equals("'FAIL'")) {
+//                    System.out.println(convertToString(d));
 //                    negDerivations.add(convertToString(d));
 //                } else {
 //                    System.out.println("FAILED!");
@@ -180,13 +183,13 @@ public class QueryExecutor {
 //            }
 //            negMap.put(culprit, negDerivations);
 
-//            LinkedHashSet<List<String>> set;
-//            if (resultMap.get(culprit) == null) {
-//                set = new LinkedHashSet<>();
-//                resultMap.put(culprit, set);
-//            } else {
-//                set = resultMap.get(culprit);
-//            }
+            LinkedHashSet<List<String>> set;
+            if (resultMap.get(culprit) == null) {
+                set = new LinkedHashSet<>();
+                resultMap.put(culprit, set);
+            } else {
+                set = resultMap.get(culprit);
+            }
             Term t = map.get("D0");
 
             if (!t.toString().equals("'FAIL'")) {
@@ -232,7 +235,10 @@ public class QueryExecutor {
             executeQueryString(String.format(CONSULT_STRING, Utils.TECH), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.OP), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.STR), 1);
-//            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.torIPFile), 1);
+            for (String virusTotalFile : ToolIntegration.virusTotalFiles) {
+                executeQueryString(String.format(CONSULT_STRING, virusTotalFile), 1);
+            }
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.torIPFile), 1);
 //            executeQueryString(String.format(CONSULT_STRING, "everything"), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
         } catch (Exception e) {
@@ -292,6 +298,7 @@ public class QueryExecutor {
         int n = 1;
         try {
 //            System.out.println(qe.execute("example5", false));
+//            DerivationNode.createDiagram("img/example.svg", DerivationNode.getExampleNode(), new ArrayList<>());
 
             for (int i = 0; i < n; i++) {
                 for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {

@@ -51,17 +51,18 @@ public class DerivationNode {
     public String getResult() {
         return this.result;
     }
-    static void createDiagram(String filename, DerivationNode mainNode, List<DerivationNode> prefs) {
+
+    static List<DerivationNode> createDiagram(String filename, DerivationNode mainNode, List<DerivationNode> prefs) {
         try {
             Graph g = graph(filename).directed()
                     .with(mainNode.createNode());
-//            for (DerivationNode pref : prefs) {
-//                g = g.with(pref.createPrefNode());
-//            }
-            Graphviz.fromGraph(g).width(3000).render(Format.PNG).toFile(new File(filename));
+            Graphviz.fromGraph(g)
+//                    .width(500).render(Format.PNG).toFile(new File(filename));
+                .width(100).render(Format.SVG).toFile(new File(filename));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return prefs;
     }
 
 //    private Node createPrefNode() {
@@ -87,7 +88,7 @@ public class DerivationNode {
         Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
         for (DerivationNode child : children) {
             if (result.equals(child.getResult())) {
-                node = node.link(to(child.createNode()).with(Label.of(rulename), Style.INVIS));
+                node = node.link(to(child.createNode()).with(Label.of(rulename), Color.WHITE));
             } else {
                 node = node.link(to(child.createNode()).with(Label.of(rulename)));
             }
@@ -115,14 +116,14 @@ public class DerivationNode {
         if (o instanceof DerivationNode) {
             DerivationNode o1 = (DerivationNode) o;
             return this.result.equals(o1.result) && this.rulename.equals(o1.rulename)
-                    && this.children.equals(o1.children) && this.args.equals(o1.args);
+                   && this.args.equals(o1.args);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return result.hashCode() * rulename.hashCode() + children.hashCode() - args.hashCode();
+        return result.hashCode() * rulename.hashCode() - args.hashCode();
     }
 
     // TODO: time and then create to make more efficient and time again
@@ -228,7 +229,7 @@ public class DerivationNode {
         }
     }
 
-    private static DerivationNode getExampleNode() {
+    static DerivationNode getExampleNode() {
         List<String> l = new ArrayList<>();
         DerivationNode e1 = new DerivationNode("evidence1", "evidence id", l, -1);
         DerivationNode e2 = new DerivationNode("evidence2", "evidence id", l, -1);
@@ -246,8 +247,9 @@ public class DerivationNode {
         return new DerivationNode("str result (isCulprit)", "strategic rulename", l, 2, es2);
     }
 
-    public static void createDerivationAndSaveDiagram(Term t, String attack, String culprit, int count) {
-        String filename = String.format("%s_%s%d.png", attack, culprit, count);
+    // return list of prefs
+    public static List<DerivationNode> createDerivationAndSaveDiagram(Term t, String attack, String culprit, int count) {
+        String filename = String.format("%s_%s%d.svg", attack, culprit, count);
         List<String> names = new ArrayList<>();
         List<List<String>> args = new ArrayList<>();
         if (t.isListPair()) {
@@ -260,11 +262,6 @@ public class DerivationNode {
                 args.add(l);
             }
         }
-//        names.add("isCulprit");
-//        List<String> l = new ArrayList<>();
-//        l.add(culprit);
-//        l.add(attack);
-//        args.add(l);
 
         final StringJoiner sj = new StringJoiner(",");
         names.forEach(x -> sj.add(x));
@@ -274,7 +271,7 @@ public class DerivationNode {
         res.remove(0);
         List<DerivationNode> prefs = res;
         System.out.println("node: " + mainNode);
-        createDiagram("img/" + filename, mainNode, prefs);
+        return createDiagram("img/" + filename, mainNode, prefs);
     }
 }
 

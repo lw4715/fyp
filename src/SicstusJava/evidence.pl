@@ -110,12 +110,13 @@ rule(case_example0_f1(),claimedResponsibility(randomGroup,example0),[]).
 %% randomGroup (claimResp)
 %% yourCountry (location,linkedMalware)
 rule(case_example1_f1(),claimedResponsibility(randomGroup,example1),[]).
+rule(case_example1_f1a(),malwareUsedInAttack(example1m,example1),[]).
 rule(case_example1_f2(),targetCountry(myCountry,example1),[]).
 rule(case_example1_f3(),malwareUsedInAttack(example1_m1,example1),[]).
 rule(case_example1_f4(),simlarCodeObfuscation(example1_m1,example1_m2),[]).
 rule(case_example1_f5(),malwareLinkedTo(example1_m2,yourCountry),[]).
 rule(case_example1_f8(),hasMotive(yourCountry,example1),[]).
-rule(case_example1_f9(),attackSourceIP(example1_ip,example1),[]).
+rule(case_example1_f9(),attackSourceIP(example1_ip,example1m),[]).
 rule(case_example1_f10(),ipGeoloc(yourCountry,example1_ip),[]).
 
 %% example2
@@ -123,12 +124,13 @@ rule(case_example1_f10(),ipGeoloc(yourCountry,example1_ip),[]).
 %% randomGroup (claimResp)
 %% yourCountry is the only target,assume attacker won't target itself 
 rule(case_example2_f1(),claimedResponsibility(randomGroup,example2),[]).
+rule(case_example2_f1a(),malwareUsedInAttack(example2m,example2),[]).
 rule(case_example2_f2(),targetCountry(yourCountry,example2),[]).
 rule(case_example2_f3(),malwareUsedInAttack(example2_m1,example2),[]).
 rule(case_example2_f4(),simlarCodeObfuscation(example2_m1,example2_m2),[]).
 rule(case_example2_f5(),malwareLinkedTo(example2_m2,yourCountry),[]).
 rule(case_example2_f8(),hasMotive(yourCountry,example2),[]).
-rule(case_example2_f9(),attackSourceIP(example2_ip,example2),[]).
+rule(case_example2_f9(),attackSourceIP(example2_ip,example2m),[]).
 rule(case_example2_f10(),ipGeoloc(yourCountry,example2_ip),[]).
 
 %% example2b
@@ -137,13 +139,14 @@ rule(case_example2_f10(),ipGeoloc(yourCountry,example2_ip),[]).
 %% yourCountry
 %% (yourCountry is not the only target => not specific attack => yourCountry might be culprit) 
 rule(case_example2b_f1(),claimedResponsibility(randomGroup,example2b),[]).
+rule(case_example2b_f1a(),malwareUsedInAttack(example2bm,example2b),[]).
 rule(case_example2b_f2(),targetCountry(yourCountry,example2b),[]).
 rule(case_example2b_f2b(),targetCountry(myCountry,example2b),[]).
 rule(case_example2b_f3(),malwareUsedInAttack(example2b_m1,example2b),[]).
 rule(case_example2b_f4(),simlarCodeObfuscation(example2b_m1,example2b_m2),[]).
 rule(case_example2b_f5(),malwareLinkedTo(example2b_m2,yourCountry),[]).
 rule(case_example2b_f8(),hasMotive(yourCountry,example2b),[]).
-rule(case_example2b_f9(),attackSourceIP(example2b_ip,example2b),[]).
+rule(case_example2b_f9(),attackSourceIP(example2b_ip,example2bm),[]).
 rule(case_example2b_f10(),ipGeoloc(yourCountry,example2b_ip),[]).
 
 %% example3
@@ -152,6 +155,7 @@ rule(case_example2b_f10(),ipGeoloc(yourCountry,example2b_ip),[]).
 %% targetItself is preferred over linkedMalware
 %% more than one ipgeolocation doesnt give location information about attack 
 rule(case_example3_f1(),claimedResponsibility(randomGroup,example3),[]).
+rule(case_example3_f1(),malwareUsedInAttack(example3m,example3),[]).
 rule(case_example3_f2(),targetCountry(yourCountry,example3),[]).
 rule(case_example3_f3(),malwareUsedInAttack(example3_m1,example3),[]).
 rule(case_example3_f4(),simlarCodeObfuscation(example3_m1,example3_m2),[]).
@@ -159,7 +163,7 @@ rule(case_example3_f5(),malwareLinkedTo(example3_m2,yourCountry),[]).
 rule(case_example3_f8(),hasMotive(yourCountry,example3),[]).
 rule(case_example3_f9(),attackSourceIP(example3_ip,example3),[]).
 rule(case_example3_f10(),ipGeoloc(yourCountry,example3_ip),[]).
-rule(case_example3_f12(),attackSourceIP(example3_ip1,example3),[]).
+rule(case_example3_f12(),attackSourceIP(example3_ip1,example3m),[]).
 rule(case_example3_f13(),ipGeoloc(hisCountry,example3_ip1),[]).
 
 
@@ -168,11 +172,12 @@ rule(case_example3_f13(),ipGeoloc(hisCountry,example3_ip1),[]).
 %% expected: 
 %% yourCountry (location)
 rule(case_example4_f1(),claimedResponsibility(yourCountry,example4),[]).
+rule(case_example4_f1(),malwareUsedInAttack(example4m,example4),[]).
 rule(case_example4_f2(),noPriorHistory(yourCountry),[]).
 rule(case_example4_f3(),hasResources(yourCountry),[]).
 rule(case_example4_f4(),neg(requireHighResource(example4)),[]).
 rule(case_example4_f5(),ipGeoloc(yourCountry,example4_ip),[]).
-rule(case_example4_f6(),attackSourceIP(example4_ip,example4),[]).
+rule(case_example4_f6(),attackSourceIP(example4_ip,example4m),[]).
 
 %% governmentLinked(P,C),identifiedIndividualInAttack(P,Att)
 
@@ -180,7 +185,12 @@ rule(case_example4_f6(),attackSourceIP(example4_ip,example4),[]).
 %% exptected: someGroup
 %% torIP([103,1,206,100]) is true, 103.1.206.100 is a spoofed IP
 rule(case_example5_f1(),claimedResponsibility(someGroup,example5),[]).
+rule(case_example5_f1a(),malwareUsedInAttack(example5m,example5),[]).
 rule(case_example5_f2(),ipGeoloc(yourCountry,[103,1,206,100]),[]).
-rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5),[]).
-%% rule(case_example5_f3(),spoofedIP([103,1,206,100]),[]).
+rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5m),[]).
+
+%% example6
+rule(test(),attackSourceIP([69,195,124,58],test),[]).
+
+
 

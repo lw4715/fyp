@@ -50,8 +50,8 @@ rule(r_str_negAttackOrigin(X,Att),neg(isCulprit(X,Att)),[neg(attackOrigin(X,Att)
 rule(r_str_noCapability(X,Att),	neg(isCulprit(X,Att)),[neg(hasCapability(X,Att))]).
 rule(r_str_noMotive(X,Att),      neg(isCulprit(X,Att)),[neg(hasMotive(X,Att))]).
 rule(r_str_weakAttack(X,Att),	neg(isCulprit(X,Att)),[hasResources(X),neg(requireHighResource(Att))]).
-rule(r_str_targetItself(X,Att),	neg(isCulprit(X,Att)),[target(X,Att)]).
-rule(r_str_targetItself(X,Att),  neg(isCulprit(X,Att)),[targetCountry(X,Att)]).
+rule(r_str_targetItself1(X,Att),	neg(isCulprit(X,Att)),[target(X,Att)]).
+rule(r_str_targetItself2(X,Att),  neg(isCulprit(X,Att)),[targetCountry(X,Att)]).
 rule(r_str_lowGciTier(X,Att),	neg(isCulprit(X,Att)),[gci_tier(X,initiating)]).
 
 %% rule(r_str_oneCulprit(X,Att),	neg(isCulprit(X,Att,_)),[isCulprit(Y,Att,_),X \= Y]).
@@ -93,13 +93,21 @@ rule(p18(),prefer(r_str_linkedMalware(X,A),r_str_negAttackOrigin(X,A)),[]).
 rule(p19(),prefer(r_str_negAttackOrigin(X,A), r_str_motive(X,A)),[]).
 rule(p20(),prefer(r_str_weakAttack(X,A),      r_str_motive(X,A)),[]).
 
-rule(p21a(),prefer(r_str_targetItself(X,Att),r_str_claimedResp(X,Att)),        [specificTarget(Att)]).
-rule(p21b(),prefer(r_str_targetItself(X,Att),r_str_motiveAndCapability(X,Att)),[specificTarget(Att)]).
-rule(p21c(),prefer(r_str_targetItself(X,Att),r_str_motive(X,Att)),             [specificTarget(Att)]).
-rule(p21d(),prefer(r_str_targetItself(X,Att),r_str_motiveAndLocation(X,Att)),  [specificTarget(Att)]).
-rule(p21e(),prefer(r_str_targetItself(X,Att),r_str_loc(X,Att)),                [specificTarget(Att)]).
-rule(p21f(),prefer(r_str_targetItself(X,Att),r_str_social(X,Att)),             [specificTarget(Att)]).
-rule(p21g(),prefer(r_str_targetItself(X,Att),r_str_linkedMalware(X,Att)),      [specificTarget(Att)]).
+rule(p21a(),prefer(r_str_targetItself1(X,Att),r_str_claimedResp(X,Att)),        [specificTarget(Att)]).
+rule(p21b(),prefer(r_str_targetItself1(X,Att),r_str_motiveAndCapability(X,Att)),[specificTarget(Att)]).
+rule(p21c(),prefer(r_str_targetItself1(X,Att),r_str_motive(X,Att)),             [specificTarget(Att)]).
+rule(p21d(),prefer(r_str_targetItself1(X,Att),r_str_motiveAndLocation(X,Att)),  [specificTarget(Att)]).
+rule(p21e(),prefer(r_str_targetItself1(X,Att),r_str_loc(X,Att)),                [specificTarget(Att)]).
+rule(p21f(),prefer(r_str_targetItself1(X,Att),r_str_social(X,Att)),             [specificTarget(Att)]).
+rule(p21g(),prefer(r_str_targetItself1(X,Att),r_str_linkedMalware(X,Att)),      [specificTarget(Att)]).
+
+rule(p22a(),prefer(r_str_targetItself2(X,Att),r_str_claimedResp(X,Att)),        [specificTarget(Att)]).
+rule(p22b(),prefer(r_str_targetItself2(X,Att),r_str_motiveAndCapability(X,Att)),[specificTarget(Att)]).
+rule(p22c(),prefer(r_str_targetItself2(X,Att),r_str_motive(X,Att)),             [specificTarget(Att)]).
+rule(p22d(),prefer(r_str_targetItself2(X,Att),r_str_motiveAndLocation(X,Att)),  [specificTarget(Att)]).
+rule(p22e(),prefer(r_str_targetItself2(X,Att),r_str_loc(X,Att)),                [specificTarget(Att)]).
+rule(p22f(),prefer(r_str_targetItself2(X,Att),r_str_social(X,Att)),             [specificTarget(Att)]).
+rule(p22g(),prefer(r_str_targetItself2(X,Att),r_str_linkedMalware(X,Att)),      [specificTarget(Att)]).
 
 
 rule(p22a(),prefer(r_str_linkedMalware(X,A),r_str_noHistory(X,A)),[]).

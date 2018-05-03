@@ -15,14 +15,23 @@ rule(r_t_highResource3(Att),requireHighResource(Att),		[highVolumeAttack(Att),lo
 
 
 rule(r_t_noLocEvidence(X,Att),neg(attackPossibleOrigin(X,Att)),[]).
-rule(r_t_srcIP1(X,Att),  attackPossibleOrigin(X,Att),     [attackSourceIP(IP,Att),ipGeoloc(X,IP)]).
+rule(r_t_srcIP1(X,Att),  attackPossibleOrigin(X,Att),     [malwareUsedInAttack(M,Att),attackSourceIP(IP,M),ipGeoloc(X,IP)]).
 rule(r_t_srcIP2(X,Att),  attackPossibleOrigin(X,Att),     [majorityIpOrigin(X,Att)]).
-rule(r_t_spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)),[attackSourceIP(IP,Att),spoofedIP(IP),ipGeoloc(X,IP)]).
+rule(r_t_spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)),[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),spoofedIP(IP),ipGeoloc(X,IP)]).
+
+rule(r_t_IPdomain1(S,M), ccServer(S,M),					[attackSourceIP(IP,M),ipResolution(S,IP,_D)]).
+rule(r_t_IPdomain2(S,M), neg(ccServer(S,M)),			[attackSourceIP(IP,M),ipResolution(S,IP,_D),spoofedIP(IP)]).
+rule(r_t_IPdomain3(S,M), neg(ccServer(S,M)),			[attackSourceIP(IP,M),ipResolution(S,IP,D),malwareUsedInAttack(M,Att),attackPeriod(Att,D1),neg(recent(D,D1))]).
+
 rule(r_t_spoofIPtor(IP), spoofedIP(IP), [torIP(IP)]).
 rule(r_t_lang1(X,Att),  attackPossibleOrigin(X,Att),     [sysLanguage(L,Att),firstLanguage(L,X)]).
 rule(r_t_lang2(X,Att),  attackPossibleOrigin(X,Att),     [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(r_t_infra(X,Att),  attackPossibleOrigin(X,Att),     [infraUsed(Infra,Att),infraRegisteredIn(X,Infra)]).
 rule(r_t_domain(X,Att), attackPossibleOrigin(X,Att),     [malwareUsedInAttack(M,Att),ccServer(S,M),domainRegisteredDetails(S,_,Addr),addrInCountry(Addr,X)]).
+
+rule(r_t_recent1(Y), recent([Y,_],[Y,_]), []).
+rule(r_t_recent2(Y1,Y2,M1,M2), recent([Y1,M1],[Y2,M2]), [Y1 is Y2 - 1,M1 > M2]).
+rule(r_t_recent3(Y1,Y2,M1,M2), recent([Y1,M1],[Y2,M2]), [Y2 is Y1 - 1,M2 > M1]).
 
 rule(r_t_attackOriginDefault(X,Att),neg(attackOrigin(X,Att)),[]).
 rule(r_t_attackOrigin(X,Att),attackOrigin(X,Att),             	[attackPossibleOrigin(X,Att)]).
@@ -72,8 +81,8 @@ rule(p11c_t(),prefer(r_t_highSkill3(Att),r_t_highSkill4(Att)),[]).
 rule(p12a_t(),prefer(r_t_highResource1(Att),r_t_highResource0(Att)),[]).
 rule(p12b_t(),prefer(r_t_highResource2(Att),r_t_highResource0(Att)),[]).
 rule(p12c_t(),prefer(r_t_highResource3(Att),r_t_highResource0(Att)),[]).
-
-
+rule(p13a_t(),prefer(r_t_IPdomain2(S,M),r_t_IPdomain1(S,M)),[]).
+rule(p13b_t(),prefer(r_t_IPdomain3(S,M),r_t_IPdomain1(S,M)),[]).
 
 %% TODO: do more stuff with IP?
 %% rule(externalIP,isExternalIP(_IP),[]).
