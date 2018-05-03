@@ -43,7 +43,7 @@ class GUI {
 
     private static final String[] placeholderItem = {"Select from existing predicates"};
 
-    private static final String[] predicates = {"industry(<T>)","targetCountry(<X>>,<<Att>)",
+    private static final String[] predicates = {"industry(<T>)","targetCountry(<X>,<Att>)",
             "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)","poorRelation(<C>,<T>)",
             "noPriorHistory(<X>)","infraUsed(<Infra>,<Att>)","hasResources(<X>)","majorityIpOrigin(<X>,<Att>)",
             "stolenValidSignedCertificates(<Att>)","cybersuperpower(<X>)","espionage>,<doxing>)",
@@ -160,6 +160,7 @@ class GUI {
         panel4.setLayout(new FlowLayout());
 
         currentEvidences = new JTextArea(utils.getCurrentEvidence());
+        currentEvidences.setColumns(60);
         currentEvidences.setRows(10);
         scrollPane = new JScrollPane(currentEvidences);
         scrollPane.setSize(0,300);
@@ -327,29 +328,42 @@ class GUI {
             } else {
                 Set<String>[] res = readFromResultAndNonResultFiles();
                 JDialog dialog = new JDialog(mainFrame);
-                dialog.setLayout(new GridLayout(1, 3));
+                JPanel row1 = new JPanel();
+                row1.setLayout(new FlowLayout());
+
+                dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
                 StringJoiner sj = new StringJoiner("\n");
                 for (String s : res[0]) {
                     sj.add(s);
                 }
                 JTextArea results = new JTextArea("Results:\n" + sj);
-
                 results.setEditable(false);
+                results.setRows(22);
+                results.setColumns(45);
+
+                JScrollPane row1col1 = new JScrollPane(results);
+                row1.add(row1col1);
+
                 sj = new StringJoiner("\n");
                 for (String s : res[1]) {
                     sj.add(s);
                 }
                 JTextArea nonresults = new JTextArea("Other possible predicates:\n" + sj);
-
+                JScrollPane row1col2 = new JScrollPane(nonresults);
                 nonresults.setEditable(false);
+                nonresults.setRows(22);
+                nonresults.setColumns(45);
+                row1.add(row1col2);
+
                 JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
                 possiblerules.setEditable(false);
-                dialog.add(results);
-                dialog.add(nonresults);
-                dialog.add(possiblerules);
+                possiblerules.setColumns(90);
+                JScrollPane row2 = new JScrollPane(possiblerules);
+
+                dialog.add(row1);
+                dialog.add(row2);
                 dialog.setSize(1200, 1000);
                 dialog.setVisible(true);
-//                dialog.setAlwaysOnTop(true); FIXME
                 dialog.setModal(true);
 
             }

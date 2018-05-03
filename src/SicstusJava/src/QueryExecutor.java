@@ -101,20 +101,25 @@ public class QueryExecutor {
             String goal;
             if (all) {
                 goal = "goal_all";
+                queryString = String.format("goal_all(%s,X, M, M2, M3, D1, D2, D3, D4, D5)", caseName);
+                System.out.println(queryString);
+                executeQueryString(queryString, 100);
+                queryString = String.format("goal_all(%s,X, X1, D1, D2)", caseName);
+                System.out.println(queryString);
+                executeQueryString(queryString, 100);
             } else {
-                goal = "goal";
+                executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
+                queryString = String.format("goal(%s,X,D0)", caseName);
+                queryMap = executeQueryString(queryString, 10);
+                System.out.println(queryString);
+                executeQueryString("told", 1);
+                return queryMap;
             }
-
-            executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
-            queryString = String.format("%s(%s,X,D0)", goal, caseName);
-            queryMap = executeQueryString(queryString, 10);
-            System.out.println(queryString);
-            executeQueryString("told", 1);
-            return queryMap;
         } catch ( Exception e ) {
             e.printStackTrace();
             return null;
         }
+        return new Map[0];
     }
 
     private Map<String, Term>[] executeQueryString(String query, int limit) throws Exception {

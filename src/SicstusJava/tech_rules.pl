@@ -96,3 +96,19 @@ rule(p13b_t(),prefer(r_t_IPdomain3(S,M),r_t_IPdomain1(S,M)),[]).
 %% rule(spoofedIP1,spoofedIp(IP),[connection(IP,in),isInternalIP(IP),validIP(IP)]).
 %% rule(spoofedIP2,spoofedIp(IP),[connection(IP,out),isExternalIP(IP),validIP(IP)]).
 %% rule(abnormalIP,abnormalIP(IP),[domainName(IP,Domain),domainCountry(Domain,C1),ipGeoloc(IP,C2),C1 \= C2]).
+
+goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
+  initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'),
+  writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
+  writeToFilesAll('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
+  writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
+  writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
+  writeToFilesAllAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
+
+
+requireHighResource(A, D) :- prove([requireHighResource(A)], D).
+attackOrigin(X, A, D) :- prove([attackOrigin(X, A)], D).
+notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
+similar(M1, M2, D) :- prove([similar(M1, M2)], D).
+specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
+malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).

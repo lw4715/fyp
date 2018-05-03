@@ -58,3 +58,11 @@ rule(p4a_op(),prefer(r_op_pMotive(C,T),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4b_op(),prefer(r_op_pMotive(C,T),r_op_nonGeopolitics2(C,T)),[]).
 rule(p4c_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4d_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics2(C,T)),[]).
+
+goal_all(A, X, X1, D0, D1) :-
+  initFile('op.pl'), 
+  %% writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
+  writeToFilesAll('op.pl', hasMotive(X1,A), hasMotive(X1,A,D1), 'op_').
+
+%% hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
+hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
