@@ -10,6 +10,10 @@ import org.jpl7.Term;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static guru.nidi.graphviz.model.Factory.graph;
@@ -59,16 +63,20 @@ public class DerivationNode {
             Graphviz.fromGraph(g)
 //                    .width(500).render(Format.PNG).toFile(new File(filename));
                 .width(100).render(Format.SVG).toFile(new File(filename));
+
+            rewriteTransparentStroke(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return prefs;
     }
 
-//    private Node createPrefNode() {
-//        Node node = node(result).with(Shape.NONE, Style.FILLED);
-//        return node;
-//    }
+    private static void rewriteTransparentStroke(String filename) throws IOException {
+        Path path = Paths.get(filename);
+        List<String> fileContent = new ArrayList<>(Files.readAllLines(path, StandardCharsets.UTF_8));
+        fileContent.set(4, fileContent.get(4).replace("transparent", "#FFFFFF"));
+        Files.write(path, fileContent, StandardCharsets.UTF_8);
+    }
 
     Node createNode() {
         Color typeColour;
@@ -90,7 +98,7 @@ public class DerivationNode {
             if (result.equals(child.getResult())) {
                 node = node.link(to(child.createNode()).with(Label.of(rulename), Color.WHITE));
             } else {
-                node = node.link(to(child.createNode()).with(Label.of(rulename)));
+                node = node.link(to(child.createNode()).with(Label.of(rulename), Color.BLACK));
             }
         }
         return node;
@@ -250,6 +258,7 @@ public class DerivationNode {
     static String getDiagramFilename(String attack, int c) {
         return String.format("%s_%d.svg", attack, c);
     }
+
     // return list of prefs
     public static List<DerivationNode> createDerivationAndSaveDiagram(Term t, String attack, int count) {
         String filename = getDiagramFilename(attack, count);

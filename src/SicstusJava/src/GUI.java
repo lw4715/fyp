@@ -125,13 +125,15 @@ class GUI {
             evidence.setText(dropdown.getSelectedItem().toString());
 
         });
+        dropdown.setSize(70,0);
 
         evidence = new JTextField(placeholderItem[0]);
         evidence.setColumns(35);
         attackName = new JTextField(JTextField.LEFT);
         attackName.setColumns(15);
 
-        JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks", "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"});
+        JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks",
+                "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
             status.setText("\t\tSelected attack: " + existsingAttacks.getSelectedItem());
@@ -216,7 +218,7 @@ class GUI {
         panel1.add(uploadButton);
         panel2.add(executeButton);
         panel3.add(executeAllButton);
-        panel3.add(new JLabel(EXECUTEALLINFO, JLabel.LEFT)); // FIXME: attach info to corrent place?
+        panel3.add(new JLabel(EXECUTEALLINFO, JLabel.RIGHT));
         panel4.add(updateButton);
         mainFrame.setVisible(true);
     }
@@ -301,21 +303,25 @@ class GUI {
                 List<String> rs = executeResult.resultStrings();
                 int c = 0;
                 for (String r : rs) {
-                    JTextArea textArea = new JTextArea(40,0);
+                    JTextArea textArea = new JTextArea();
+                    textArea.setColumns(50);
+//                    textArea.setRows(10);
                     textArea.setEditable(false);
                     textArea.setText(r);
+                    textArea.setLineWrap(true);
                     JButton btn = new JButton("View diagram");
                     String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
                     btn.setActionCommand(filename);
                     btn.addActionListener(new ButtonClickListener());
                     p.add(textArea);
-                    p.add(btn);
+                    p.add(btn, Panel.LEFT_ALIGNMENT);
                     c++;
                 }
                 JScrollPane scrollPane = new JScrollPane(p);
+                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
                 JFrame f = new JFrame();
                 f.add(scrollPane);
-                f.setSize(1000,800);
+                f.setSize(1200,800);
                 f.setVisible(true);
 
             } else {
