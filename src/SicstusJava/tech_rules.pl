@@ -40,7 +40,8 @@ rule(r_t_nonOrigin(X,Att),neg(attackOrigin(X,Att)),  			[neg(attackPossibleOrigi
 
 rule(r_t_bm(M),notForBlackMarketUse(M),[infectionMethod(usb,M),commandAndControlEasilyFingerprinted(M)]). 
 
-rule(r_t_similar(M1,M2),similar(M1,M2),        [similarCCServer(M1,M2),M1 \= M2]).
+rule(r_t_similarDefault(M1,M2),neg(similar(M1,M2)), []).
+rule(r_t_similar(M1,M2),similar(M1,M2),       [similarCCServer(M1,M2),M1 \= M2]).
 rule(r_t_simCC1(M1,M2),similarCCServer(M1,M2),[ccServer(S,M1),ccServer(S,M2)]).
 rule(r_t_simCC2(M1,M2),similarCCServer(M1,M2),[ccServer(S1,M1),ccServer(S2,M2),S1 \= S2,domainRegisteredDetails(S1,_,A),domainRegisteredDetails(S2,_,A)]).
 rule(r_t_simCC3(M1,M2),similarCCServer(M1,M2),[ccServer(S1,M1),ccServer(S2,M2),S1 \= S2,domainRegisteredDetails(S1,Name,_),domainRegisteredDetails(S2,Name,_)]).
@@ -83,6 +84,13 @@ rule(p12b_t(),prefer(r_t_highResource2(Att),r_t_highResource0(Att)),[]).
 rule(p12c_t(),prefer(r_t_highResource3(Att),r_t_highResource0(Att)),[]).
 rule(p13a_t(),prefer(r_t_IPdomain2(S,M),r_t_IPdomain1(S,M)),[]).
 rule(p13b_t(),prefer(r_t_IPdomain3(S,M),r_t_IPdomain1(S,M)),[]).
+
+rule(p14a_t(),prefer(r_t_similar(M1,M2),r_t_similarDefault(M1,M2)),[]).
+rule(p14b_t(),prefer(r_t_simCC1(M1,M2),r_t_similarDefault(M1,M2)),[]).
+rule(p14c_t(),prefer(r_t_simCC2(M1,M2),r_t_similarDefault(M1,M2)),[]).
+rule(p14d_t(),prefer(r_t_simCC3(M1,M2),r_t_similarDefault(M1,M2)),[]).
+
+
 
 %% TODO: do more stuff with IP?
 %% rule(externalIP,isExternalIP(_IP),[]).

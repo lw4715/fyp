@@ -31,10 +31,9 @@ rule(r_str_claimedResp(X,Att),		isCulprit(X,Att),	[claimedResponsibility(X,Att)]
 rule(r_str_motiveAndCapability(C,Att),	isCulprit(C,Att),  [hasMotive(C,Att),hasCapability(C,Att)]).
 rule(r_str_motive(C,Att),				isCulprit(C,Att),  [country(C),prominentGroup(Group),isCulprit(Group,Att),groupOrigin(Group,C),hasMotive(C,Att)]).
 rule(r_str_motiveAndLocation(C,Att),	isCulprit(C,Att),  [country(C),hasMotive(C,Att),attackOrigin(C,Att)]).
-rule(r_str_loc(C,Att),	 				isCulprit(C,Att),	[country(C),attackOrigin(C,Att)]).
+rule(r_str_loc(C,Att),	 				isCulprit(C,Att),  [country(C),attackOrigin(C,Att)]).
 rule(r_str_social(C,Att),				isCulprit(C,Att),  [country(C),governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
-rule(r_str_linkedMalware(X,A1),	 		isCulprit(X,A1),   [malwareUsedInAttack(M1,A1),similar(M1,M2), malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
-rule(r_str_linkedMalware(X,A1),      	isCulprit(X,A1),   [malwareUsedInAttack(M1,A1),similar(M2,M1), malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
+rule(r_str_linkedMalware(X,A1),	 		isCulprit(X,A1),   [malwareUsedInAttack(M1,A1),similar(M1,M2),malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 
 %% culprit not from,notculprit rule,add pref
 %% make example case with spoof ip,use tor

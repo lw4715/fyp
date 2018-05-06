@@ -191,6 +191,7 @@ rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5m),[]).
 
 %% example6
 rule(test(),attackSourceIP([69,195,124,58],test),[]).
+rule(test(),targetServerIP([173,194,36,104],test),[]).
 
 
 
