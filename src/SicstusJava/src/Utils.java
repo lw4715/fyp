@@ -9,6 +9,7 @@ public class Utils {
     static final String TECH = FILEPATH + "tech_rules";
     static final String OP = FILEPATH + "op_rules";
     static final String STR = FILEPATH + "str_rules";
+    static final String EVIDENCE_FILENAME = FILEPATH + "evidence.pl";
     int counter;
     Utils() {
         counter = 0;
@@ -53,7 +54,7 @@ public class Utils {
                 sj.add(split[i]);
             }
             String body = sj.toString();
-            bw.write(String.format("rule(case_user_f%d, %s, [%s]).\n", counter, head, body));
+            bw.write(String.format("rule(case_user_f%d(), %s, [%s]).\n", counter, head, body));
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -313,5 +314,9 @@ public class Utils {
     private static String[] getBodyOfLine(String line) {
 //        System.out.println(line);
         return line.split("\\[")[1].split("\\]")[0].split("\\)");
+    }
+
+    static String getHeadOfLine(String line) {
+        return line.split("\\)")[1].replaceFirst(",", "") + ")";
     }
 }

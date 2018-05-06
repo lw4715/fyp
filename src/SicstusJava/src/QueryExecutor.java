@@ -1,14 +1,14 @@
-import org.jpl7.*;
+import org.jpl7.JPL;
+import org.jpl7.Query;
+import org.jpl7.Term;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.lang.Integer;
 import java.util.*;
 
 import static java.lang.Math.pow;
-import static java.util.Collections.max;
 
 
 @SuppressWarnings("ALL")
@@ -54,40 +54,6 @@ public class QueryExecutor {
         }
     }
 
-    public List<String> culpritString(String attack, Map<String, LinkedHashSet<List<String>>> resultMap,
-                                      Map<String, Set<List<String>>> negMap, Object[] visualTree) {
-        List<String> ret = new ArrayList<>();
-//        StringBuilder sb = new StringBuilder();
-//        StringJoiner sj = new StringJoiner(",");
-        for (String c : resultMap.keySet()) {
-            List<Integer> scores = new ArrayList<>();
-            LinkedHashSet<List<String>> ds = resultMap.get(c);
-            if (!ds.isEmpty()) {
-                for (List<String> d : ds) {
-                    scores.add(getScore(d));
-                }
-
-                if (max(scores) > 0) {
-                    ret.add(String.format("%s [Highest score: %d, D: %d]\n", c,
-                            max(scores), ds.size()));
-                }
-                for (int i = 0; i < ds.size(); i++) {
-                    if (scores.get(i) > 0) {
-                        ret.add(String.format("X = %s [Score: %d] \nDerivation:\n %s\n %s" +
-//                        "\nNegative Derivation: %s" +
-                                        "\n\n", c, scores.get(i),
-                                ds.toArray()[i], visualTree[i]
-//                        ,negMap.get(c)
-                        ));
-//                    negMap.remove(c);
-                    }
-                }
-            }
-
-        }
-        return ret;
-    }
-
     Map<String, Term>[] executeQuery(String caseName, boolean verbose, boolean all) {
         Map<String, Integer> accMap;
         int res;
@@ -104,7 +70,7 @@ public class QueryExecutor {
                 queryString = String.format("goal_all(%s,X, M, M2, M3, D1, D2, D3, D4, D5)", caseName);
                 System.out.println(queryString);
                 executeQueryString(queryString, 100);
-                queryString = String.format("goal_all(%s,X, X1, D1, D2)", caseName);
+                queryString = String.format("goal_all(%s, X1, D1)", caseName);
                 System.out.println(queryString);
                 executeQueryString(queryString, 100);
             } else {
@@ -128,7 +94,7 @@ public class QueryExecutor {
         return q.nSolutions(limit);
     }
 
-    private int getScore(List<String> ds) {
+    static int getScore(List<String> ds) {
         int acc = 0;
         for (int i = 0; i < ds.size(); i++) {
              acc += getScore(ds.get(i));
@@ -151,7 +117,7 @@ public class QueryExecutor {
     }
 
 
-    private int getScore(String deltaString) {
+    private static int getScore(String deltaString) {
         if (deltaString.contains("case")) {
             return 2;
         } else if (deltaString.contains("bg")) {
@@ -169,25 +135,11 @@ public class QueryExecutor {
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
         int count = 0;
+        Set<String> culprits = new HashSet<>();
 
         for (Map<String, Term> map : maps) {
             String culprit = map.get("X").name();
-
-            Set<List<String>> negDerivations = new HashSet<>();
-//            Map<String, Term>[] ms =
-//                executeQueryString(
-//                    String.format("prove([neg(isCulprit(%s, %s))], D)", culprit, caseName), 5);
-//            for (Map<String, Term> m: ms) {
-//                Term d = m.get("D");
-//                if (verbose) System.out.println(ms + " " + m);
-//                if (!d.toString().equals("'FAIL'")) {
-//                    System.out.println(convertToString(d));
-//                    negDerivations.add(convertToString(d));
-//                } else {
-//                    System.out.println("FAILED!");
-//                }
-//            }
-//            negMap.put(culprit, negDerivations);
+            culprits.add(culprit);
 
             LinkedHashSet<List<String>> set;
             if (resultMap.get(culprit) == null) {
@@ -199,20 +151,49 @@ public class QueryExecutor {
             Term t = map.get("D0");
 
             if (!t.toString().equals("'FAIL'")) {
-//                System.out.println("|" + t + "|");
-//              set.add(d);
                 List<String> d = convertToString(t);
                 set.add(d);
                 DerivationNode.createDerivationAndSaveDiagram(t, caseName, count);
                 count++;
             }
         }
+
+        Set<List<String>> negDerivations = new HashSet<>();
+        for (String culprit : culprits) {
+            String negQueryString = String.format("prove([neg(isCulprit(%s, %s))], D)", culprit, caseName);
+            Map<String, Term>[] ms =
+                executeQueryString(
+                    negQueryString, 5);
+            for (Map<String, Term> m: ms) {
+                Term d = m.get("D");
+                if (verbose) System.out.println(ms + " " + m);
+                if (!d.toString().equals("'FAIL'")) {
+                    System.out.println(convertToString(d));
+                    negDerivations.add(convertToString(d));
+                } else {
+                    System.out.println("FAILED!");
+                }
+            }
+            if (!negDerivations.isEmpty()) {
+                negMap.put(culprit, negDerivations);
+            }
+        }
+
         populateAbduced(resultMap);
         time = ((System.nanoTime() - time)/pow(10, 9));
         timings.add(time);
         System.out.println("\nTotal time for " + caseName + ": " + time );
-        List<String> culpritString = culpritString(caseName, resultMap, negMap, getVisualTree().toArray());
-        return new Result(caseName, culpritString, abduced, getPredMap(abduced, true));
+        Result r = new Result(caseName, resultMap, getVisualTree().toArray(),
+                abduced, getPredMap(abduced, true), negMap);
+        if (verbose) {
+            for (String s : r.resultStrings()) {
+                System.out.println(s);
+            }
+            for (String neg : r.negDerivationFor(culprits.toArray()[0].toString())) {
+                System.out.println(neg);
+            }
+        }
+        return r;
     }
 
     private <E> Set<E> toSet(E[] list) {
@@ -305,7 +286,7 @@ public class QueryExecutor {
         int n = 1;
         try {
 //            System.out.println(qe.execute("example5", false));
-//            DerivationNode.createDiagram("img/example.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
 
             for (int i = 0; i < n; i++) {
                 for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {

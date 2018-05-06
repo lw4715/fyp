@@ -1,5 +1,5 @@
+import guru.nidi.graphviz.attribute.Arrow;
 import guru.nidi.graphviz.attribute.Color;
-import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.engine.Format;
@@ -94,14 +94,21 @@ public class DerivationNode {
                 typeColour = Color.LIGHTGRAY;
         }
         Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
+        Node rulenameNode = node(rulename).with(typeColour);
+//        Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
         for (DerivationNode child : children) {
+//            Node rulenameNode = node(rulename).link(to(child.createNode()).with(Color.WHITE, Arrow.CROW));
             if (result.equals(child.getResult())) {
-                node = node.link(to(child.createNode()).with(Label.of(rulename), Color.WHITE));
+                rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.WHITE, Arrow.CROW));
             } else {
-                node = node.link(to(child.createNode()).with(Label.of(rulename), Color.BLACK));
+                rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.BLACK, Arrow.CROW));
             }
         }
+        node = node.link(to(rulenameNode).with(Arrow.CROW));
         return node;
+//        if (parentRulename.length() == 0) return node;
+//        Node rulenameNode = node(parentRulename).with(parentTypeColour).link(to(node).with(Arrow.CROW));
+//        return rulenameNode;
     }
 
     @Override
@@ -239,9 +246,9 @@ public class DerivationNode {
 
     static DerivationNode getExampleNode() {
         List<String> l = new ArrayList<>();
-        DerivationNode e1 = new DerivationNode("evidence1", "evidence id", l, -1);
-        DerivationNode e2 = new DerivationNode("evidence2", "evidence id", l, -1);
-        DerivationNode e3 = new DerivationNode("evidence3", "evidence id", l, -1);
+        DerivationNode e1 = new DerivationNode("evidence1", "evidence1 id", l, -1);
+        DerivationNode e2 = new DerivationNode("evidence2", "evidence2 id", l, -1);
+        DerivationNode e3 = new DerivationNode("evidence3", "evidence3 id", l, -1);
         Set<DerivationNode> es = new HashSet<>();
         es.add(e1);
         es.add(e2);

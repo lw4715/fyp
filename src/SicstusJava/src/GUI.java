@@ -41,7 +41,7 @@ class GUI {
     private Map<String, Result> accumulatedResults;
     private final JFileChooser fileChooser = new JFileChooser();
 
-    private static final String[] placeholderItem = {"Select from existing predicates"};
+    private static final String placeholderItem = "Select from existing predicates";
 
     private static final String[] predicates = {"industry(<T>)","targetCountry(<X>,<Att>)",
             "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)","poorRelation(<C>,<T>)",
@@ -52,7 +52,7 @@ class GUI {
             "infectionMethod(<usb>,<M>)","attackOrigin(<X>,<Att>)","highLevelSkill(<Att>)",
             "usesZeroDayVulnerabilities(<M>)","hasPoliticalMotive(<C>,<T>,<Date2>)",
             "malwareUsedInAttack(<M>,<Att>)","news(<News>,<T>,<Date2>)","prominentGroup(<X>)",
-            "attackPossibleOrigin(<X>,<Att>)","notForBlackMarketUse(<M>)","similarCCServer(<M1>,<M2>)",
+            "attackPossibleOrigin(<X>,<Att>)","notForBlackMarket        Use(<M>)","similarCCServer(<M1>,<M2>)",
             "publicCommentsRelatedToGov(<P>,<C>)","zeroday>,<customMalware>)","gci_tier(<X>,<leading>)",
             "torIP(<IP>)","malwareLinkedTo(<M2>,<X>)","sysLanguage(<L>,<Att>)","clientSideExploits>)",
             "eternalBlue>)","spoofedIP(<IP>)","ipGeoloc(<X>,<IP>)","addressType(<Addr>,<Type>)",
@@ -118,7 +118,10 @@ class GUI {
         status = new JLabel("", JLabel.LEFT);
         status.setAutoscrolls(true);
 
-        JComboBox dropdown = new JComboBox(predicates);
+        ArrayList predList = new ArrayList();
+        predList.add(placeholderItem);
+        Collections.addAll(predList, predicates);
+        JComboBox dropdown = new JComboBox(predList.toArray());
         dropdown.addItemListener(arg0 -> {
             resetColours();
             status.setText("\t\tSelected: " + dropdown.getSelectedItem());
@@ -127,13 +130,14 @@ class GUI {
         });
         dropdown.setSize(70,0);
 
-        evidence = new JTextField(placeholderItem[0]);
+        evidence = new JTextField(placeholderItem);
         evidence.setColumns(35);
         attackName = new JTextField(JTextField.LEFT);
         attackName.setColumns(15);
 
         JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks",
-                "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack"});
+                "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack",
+                "example0", "example1", "example2", "example2b", "example3", "example4"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
             status.setText("\t\tSelected attack: " + existsingAttacks.getSelectedItem());
@@ -303,10 +307,19 @@ class GUI {
                 p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
                 List<String> rs = executeResult.resultStrings();
                 int c = 0;
+
+                p.add(new JLabel("Summary:"));
+                JTextArea ta = new JTextArea();
+                ta.setColumns(50);
+                ta.setEditable(false);
+                ta.setLineWrap(true);
+                ta.setText(executeResult.getCulpritsSummary());
+                p.add(ta);
+
+                p.add(new JLabel("Derivations:"));
                 for (String r : rs) {
                     JTextArea textArea = new JTextArea();
                     textArea.setColumns(50);
-//                    textArea.setRows(10);
                     textArea.setEditable(false);
                     textArea.setText(r);
                     textArea.setLineWrap(true);
@@ -314,9 +327,28 @@ class GUI {
                     String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
                     btn.setActionCommand(filename);
                     btn.addActionListener(new ButtonClickListener());
+                    textArea.setCaretPosition(0);
                     p.add(textArea);
                     p.add(btn, Panel.LEFT_ALIGNMENT);
                     c++;
+                }
+
+                if (executeResult.hasNegDerivations()) {
+                    p.add(new JLabel("Negative Derivations: " + executeResult.getNegMap().size()));
+                }
+
+                for (String culprit : executeResult.getCulprits()) {
+//                    System.out.println("at culprit: " + culprit);
+                    for (String nd : executeResult.negDerivationFor(culprit)) {
+                        p.add(new JLabel(String.format("neg(isCulprit(%s,%s))", culprit, attackName.getText())));
+                        JTextArea textArea = new JTextArea();
+                        textArea.setEditable(false);
+                        textArea.setText(nd);
+                        textArea.setLineWrap(true);
+                        textArea.setCaretPosition(0);
+                        p.add(textArea);
+                        String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
+                    }
                 }
                 JScrollPane scrollPane = new JScrollPane(p);
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -340,7 +372,7 @@ class GUI {
                 results.setEditable(false);
                 results.setRows(22);
                 results.setColumns(45);
-
+                results.setCaretPosition(0);
                 JScrollPane row1col1 = new JScrollPane(results);
                 row1.add(row1col1);
 
@@ -349,6 +381,7 @@ class GUI {
                     sj.add(s);
                 }
                 JTextArea nonresults = new JTextArea("Other possible predicates:\n" + sj);
+                nonresults.setCaretPosition(0);
                 JScrollPane row1col2 = new JScrollPane(nonresults);
                 nonresults.setEditable(false);
                 nonresults.setRows(22);
@@ -358,6 +391,7 @@ class GUI {
                 JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
                 possiblerules.setEditable(false);
                 possiblerules.setColumns(90);
+                possiblerules.setCaretPosition(0);
                 JScrollPane row2 = new JScrollPane(possiblerules);
 
                 dialog.add(row1);
@@ -393,7 +427,7 @@ class GUI {
     }
 
     private boolean checkArgs() {
-        if (evidence.getText().equals(placeholderItem[0]) ||
+        if (evidence.getText().equals(placeholderItem) ||
                 evidence.getText().contains("<") || evidence.getText().contains(">")) {
             status.setText("\t\tSelect predicate and replace \"<argument>\" with argument");
             highlightElement(evidence);

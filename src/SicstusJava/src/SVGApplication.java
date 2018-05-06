@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 
 public class SVGApplication {
 
+    private static final String fileTextArea = "File saved at: ";
+
     public static void main(String[] args) {
         displayFile("img/apt1_china5.svg");
     }
@@ -19,28 +21,31 @@ public class SVGApplication {
         f.setVisible(true);
     }
 
-    protected JFrame frame;
-    protected JTextArea label = new JTextArea();
-    protected JSVGCanvas svgCanvas = new JSVGCanvas();
+    private JFrame frame;
+    private JTextArea textArea = new JTextArea();
+    private JSVGCanvas svgCanvas = new JSVGCanvas();
+    private JButton helpBtn;
+    String filename;
 
     public SVGApplication(JFrame f) {
         frame = f;
     }
 
     public JComponent createComponents(String filename) {
+        this.filename = filename;
         final JPanel panel = new JPanel(new BorderLayout());
 
         JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        label.setText("File saved at: " + filename);
-        label.setColumns(70);
-        label.setRows(3);
-        label.setEditable(false);
-        p.add(label);
+        textArea.setText(fileTextArea + filename);
+        textArea.setColumns(80);
+        textArea.setRows(7);
+        textArea.setEditable(false);
+        p.add(textArea);
         panel.add("North", p);
         panel.add("Center", svgCanvas);
         svgCanvas.setURI("file:" + filename);
 
-        JButton helpBtn = new JButton("Help");
+        helpBtn = new JButton("Help");
         helpBtn.setActionCommand("Help");
         helpBtn.addActionListener(new ButtonClickListener());
 
@@ -51,17 +56,25 @@ public class SVGApplication {
     }
 
     private class ButtonClickListener implements ActionListener {
+        private String previousURI;
 
         @Override
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
-
             switch (command) {
                 case "Help":
                     svgCanvas.setURI("file:img/_sample.svg");
-                    label.setText("Sample diagram:\n" +
+                    textArea.setText("Sample diagram:\n" +
                             "Red boxes - strategic results (isCulprit), Yellow boxes - operational results, Blue boxes - technical results\n" +
                             "Rules are labelled at arrows, arrow direction indicates direction of derivation");
+                    helpBtn.setText("Back to diagram");
+                    helpBtn.setActionCommand("Back");
+                    break;
+                case "Back":
+                    svgCanvas.setURI("file:" + filename);
+                    textArea.setText(fileTextArea + filename);
+                    helpBtn.setText("Help");
+                    helpBtn.setActionCommand("Help");
                     break;
                 default:
                     SVGApplication.displayFile("img/" + command);
