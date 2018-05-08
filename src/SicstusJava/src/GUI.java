@@ -268,11 +268,11 @@ class GUI {
                     currentEvidences.setText(utils.getCurrentEvidence());
                     break;
                 case EXECUTE:
-                    executeQuery(false, false);
+                    executeQuery(false);
                     break;
                 case EXECUTEALL:
                     status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
-                    executeQuery(true, false);
+                    executeQuery(true);
                     break;
                 case UPDATE:
                     status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
@@ -349,7 +349,7 @@ class GUI {
                         String[] s = command.split(":")[1].split(">");
                         utils.writePrefToFile(String.format("prefer(%s,%s)", s[0], s[1]));
                         currentEvidences.setText(utils.getCurrentEvidence());
-                        executeQuery(false, true);
+                        executeQuery(false);
                     } else {
                         // display svg
                         SVGApplication.displayFile("img/" + command);
@@ -358,33 +358,28 @@ class GUI {
         }
     }
 
-    private void executeQuery(boolean all, boolean reload) {
+    private void executeQuery(boolean all) {
         if (attackName.getText().isEmpty()) {
             status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
             highlightElement(attackName);
             return;
         } else {
-            if (reload) {
-                accumulatedResults.clear();
-            }
+            accumulatedResults.clear();
             Result executeResult = null;
-            if (!all && accumulatedResults.containsKey(attackName.getText())) {
-                executeResult = accumulatedResults.get(attackName.getText());
-            } else {
-                status.setText(String.format("\t\tExecuted isCulprit(%s, X)...", attackName.getText()));
-                try {
-                    if (jc == null) {
-                        jc = new JasperCallable();
-                    }
-                    jc.setName(attackName.getText());
-                    jc.setReload(reload);
-                    jc.setAll(all);
-                    executeResult = jc.call();
-                    accumulatedResults.put(attackName.getText(), executeResult);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+            status.setText(String.format("\t\tExecuted isCulprit(%s, X)...", attackName.getText()));
+            try {
+                if (jc == null) {
+                    jc = new JasperCallable();
                 }
+                jc.setName(attackName.getText());
+                jc.setReload(true);
+                jc.setAll(all);
+                executeResult = jc.call();
+                accumulatedResults.put(attackName.getText(), executeResult);
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
+
 
             if (!all) {
                 int option = 1;

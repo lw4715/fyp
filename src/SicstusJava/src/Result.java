@@ -142,8 +142,10 @@ public class Result {
 
     public int getNumNegDerivations() {
         int r = 0;
-        for (Set<List<String>> lists : negMap.values()) {
-            r += lists.size();
+        System.out.println("negmap: " + negMap);
+        for (Set<List<String>> s : negMap.values()) {
+            System.out.println(s);
+            r += s.size();
         }
         return r;
     }

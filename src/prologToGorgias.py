@@ -78,7 +78,7 @@ def renumberRules(filename):
     counter = 0
     r = ""
     for line in f:
-        if line.startswith("rule("):
+        if line.startswith("rule(") and !line.startswith("rule(bg_port_num_"):
             split = line.split("(")
             head = split[0]
             label = split[1].split(",")
@@ -92,6 +92,24 @@ def renumberRules(filename):
     f_w = open(filename + '_renumbered.pl', 'w')
     f_w.write(r)
 
+def extract_port_number_info(filename):
+    f = open(filename)
+    r = ""
+    f_w = open("tmp/" + filename + "output_rule.pl", 'w')
+    counter = 0;
+    for line in f:
+        s = line.split(",")
+        service_name = s[0]
+        port = s[1]
+        transport_protocol = s[2]
+        if service_name != "":
+            print(service_name, port, transport_protocol)
+            r = "well_known_port(\"" + service_name + "\"," + port + "," + transport_protocol + ")"
+            f_w.write("rule(bg_port_num_" + str(counter) + ", " + r + ", []).\n")
+            counter += 1
+    return r
+
+
 if __name__ == "__main__":
     # convertPredicateToOutputRule(["requireHighResource(A)", "culpritIsFrom(X, A)", "forBlackMarketUse(M)"])
     # convertPrefFile()
@@ -100,8 +118,9 @@ if __name__ == "__main__":
 
     #if rules:
     # convertRulesFile()
-    renumberRules('SicstusJava/backgroundgorgias')
+    # renumberRules('SicstusJava/backgroundgorgias')
     #if pref:
     #    convertPrefFile(pref)
     # convertRulesFile()
     # convertPrefFile()
+    extract_port_number_info("service-names-port-numbers.csv")

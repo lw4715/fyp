@@ -170,7 +170,6 @@ public class QueryExecutor {
 
         for (Map<String, Term> map : maps) {
             String culprit = map.get("X").name();
-            culprits.add(culprit);
 
             LinkedHashSet<List<String>> set;
             if (resultMap.get(culprit) == null) {
@@ -179,9 +178,11 @@ public class QueryExecutor {
             } else {
                 set = resultMap.get(culprit);
             }
+
             Term t = map.get("D0");
 
             if (!t.toString().equals("'FAIL'")) {
+                culprits.add(culprit);
                 List<String> d = convertToString(t);
                 set.add(d);
 //                allterms.add(t);
