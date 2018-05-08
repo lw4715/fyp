@@ -78,7 +78,7 @@ def renumberRules(filename):
     counter = 0
     r = ""
     for line in f:
-        if line.startswith("rule(") and !line.startswith("rule(bg_port_num_"):
+        if line.startswith("rule(") and not(line.startswith("rule(bg_port_num_")):
             split = line.split("(")
             head = split[0]
             label = split[1].split(",")
@@ -102,11 +102,18 @@ def extract_port_number_info(filename):
         service_name = s[0]
         port = s[1]
         transport_protocol = s[2]
-        if service_name != "":
-            print(service_name, port, transport_protocol)
-            r = "well_known_port(\"" + service_name + "\"," + port + "," + transport_protocol + ")"
-            f_w.write("rule(bg_port_num_" + str(counter) + ", " + r + ", []).\n")
-            counter += 1
+        if service_name != "" and transport_protocol != "":
+            if "-" in port:
+                for i in range(int(port.split("-")[0]), int(port.split("-")[1])):
+                    port_num = i
+                    r = "well_known_port(\"" + service_name + "\"," + str(port_num) + "," + transport_protocol + ")"
+                    f_w.write("rule(bg_port_num_" + str(counter) + "(), " + r + ", []).\n")
+                    counter += 1
+            else:
+                print(service_name, port, transport_protocol)
+                r = "well_known_port(\"" + service_name + "\"," + port + "," + transport_protocol + ")"
+                f_w.write("rule(bg_port_num_" + str(counter) + "(), " + r + ", []).\n")
+                counter += 1
     return r
 
 
