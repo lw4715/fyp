@@ -26,7 +26,8 @@ rule(r_str_emptyHasCap(Att),		 	hasCapability([],Att),	[]).
 rule(r_str_allHaveCap([X|L],Att),		hasCapability([X|L],Att),	[\+ is_list(X),is_list(L),hasCapability(X,Att),hasCapability(L,Att)]).
 rule(r_str_prominentGrpHasCap(X,Att),	hasCapability(X,Att),		[prominentGroup(X)]).
 
-rule(r_str_claimedResp(X,Att),		isCulprit(X,Att),	[claimedResponsibility(X,Att)]).
+%% rule(r_str_claimedResp(X,Att),		isCulprit(X,Att),	[claimedResponsibility(X,Att)]).
+rule(r_str_claimedResp(X,Att),		isCulprit(X,Att),	[existingGroupClaimedResponsibility(X,Att)]).
 
 rule(r_str_motiveAndCapability(C,Att),	isCulprit(C,Att),  [hasMotive(C,Att),hasCapability(C,Att)]).
 rule(r_str_motive(C,Att),				isCulprit(C,Att),  [country(C),prominentGroup(Group),isCulprit(Group,Att),groupOrigin(Group,C),hasMotive(C,Att)]).
@@ -44,7 +45,7 @@ rule(r_str_linkedMalware(X,A1),	 		isCulprit(X,A1),   [malwareUsedInAttack(M1,A1
 
 %% GUI: analyst add rules and preferences
 rule(r_str_noEvidence(X,Att),	neg(isCulprit(X,Att)),[]).
-rule(r_str_noHistory(X,Att),     neg(isCulprit(X,Att)),[claimedResponsibility(X,Att),noPriorHistory(X)]).
+rule(r_str_noHistory(X,Att),     neg(isCulprit(X,Att)),[neg(existingGroupClaimedResponsibility(X,Att))]).
 rule(r_str_negAttackOrigin(X,Att),neg(isCulprit(X,Att)),[neg(attackOrigin(X,Att))]).
 rule(r_str_noCapability(X,Att),	neg(isCulprit(X,Att)),[neg(hasCapability(X,Att))]).
 rule(r_str_noMotive(X,Att),      neg(isCulprit(X,Att)),[neg(hasMotive(X,Att))]).
@@ -76,7 +77,7 @@ rule(p1b(),prefer(r_str_motiveAndLocation(_X,A),r_str_claimedResp(_Y,A)),[]).
 rule(p1c(),prefer(r_str_motive(_X,A),       r_str_claimedResp(_Y,A)),[]). 
 rule(p1d(),prefer(r_str_social(_X,A),       r_str_claimedResp(_Y,A)),[]). 
 rule(p1e(),prefer(r_str_linkedMalware(_X,A),r_str_claimedResp(_Y,A)),[]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
-rule(p1f(),prefer(r_str_noHistory(X,A),r_str_claimedResp(X,A)),[]).   
+%% rule(p1f(),prefer(r_str_noHistory(X,A),r_str_claimedResp(X,A)),[]).   
 
 rule(p6(),prefer(r_str_noCapability(X,A), r_str_claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
 

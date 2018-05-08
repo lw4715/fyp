@@ -40,6 +40,9 @@ rule(r_op_geopolitics2(C,T),	hasMotive(C,Att),	 [target(T,Att),country(T),countr
 rule(r_op_nonGeopolitics1(C,T),neg(hasMotive(C,Att)),[target(T,Att),country(T),country(C),goodRelation(C,T)]).
 rule(r_op_nonGeopolitics2(C,T),neg(hasMotive(C,Att)),[target(T,Att),country(T),country(C),goodRelation(T,C)]).
 
+rule(r_op_claimResp0(X,Att), existingGroupClaimedResponsibility(X,Att), [claimedResponsibility(X,Att)]).
+rule(r_op_claimResp1(X,Att), neg(existingGroupClaimedResponsibility(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
+
 %% Y2 M2 is before Y1 M1 but recent enough (within 2 years)
 rule(r_op_date(ongoing),dateApplicable(_,ongoing),[]).
 rule(r_op_date1(Y,M),dateApplicable([Y,M],[Y,M]),[]).
@@ -58,6 +61,7 @@ rule(p4a_op(),prefer(r_op_pMotive(C,T),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4b_op(),prefer(r_op_pMotive(C,T),r_op_nonGeopolitics2(C,T)),[]).
 rule(p4c_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4d_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics2(C,T)),[]).
+rule(p5_op(),prefer(r_op_claimResp1(X,A),r_op_claimResp0(X,A)),[]).
 
 goal_all(A, X, D) :-
   initFile('op.pl'), 
