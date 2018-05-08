@@ -1,3 +1,5 @@
+import org.jpl7.Term;
+
 import java.util.*;
 
 import static java.util.Collections.max;
@@ -8,24 +10,41 @@ public class Result {
     private Set<String> abduced;
     private Map<String, List<String>> abducedMap;
     private Map<String, Set<List<String>>> negMap;
+    private LinkedHashSet<Term> allterms;
 
     private List<String> culprits;
     private List<Integer> maxScores;
     private List<Integer> numDs;
-    private LinkedHashSet<List<String>> ds;
+    private Map<String, LinkedHashSet<List<String>>> resultMap;
+
 
     public Result(String attack, Map<String, LinkedHashSet<List<String>>> resultMap,
-                  Object[] trees, Set<String> abduced, Map<String,
-            List<String>> abducedMap, Map<String, Set<List<String>>> negMap) {
+                  Object[] trees, Set<String> abduced,
+                  Map<String, List<String>> abducedMap, Map<String, Set<List<String>>> negMap) {
         this.attack = attack;
+        this.resultMap = resultMap;
         this.abduced = abduced;
         this.abducedMap = abducedMap;
         this.negMap = negMap;
+        this.allterms = allterms;
+
         culprits = new ArrayList<>();
         maxScores = new ArrayList<>();
         numDs = new ArrayList<>();
         derivations = new ArrayList<>();
         processCulpritInfo(resultMap, trees);
+
+//        System.out.println(negMap);
+//        for (String c : negMap.keySet()) {
+//            System.out.println("\n" + c + ":");
+//            for (List<String> strings : negMap.get(c)) {
+//                System.out.println("\t{");
+//                for (String string : strings) {
+//                    System.out.print(string + ",");
+//                }
+//                System.out.println("}");
+//            }
+//        }
     }
 
     public String getAttack() {
@@ -43,7 +62,7 @@ public class Result {
     public void processCulpritInfo(Map<String, LinkedHashSet<List<String>>> resultMap, Object[] trees) {
         for (String c : resultMap.keySet()) {
             List<Integer> scores = new ArrayList<>();
-            ds = resultMap.get(c);
+            LinkedHashSet<List<String>> ds = resultMap.get(c);
             if (!ds.isEmpty()) {
                 for (List<String> d : ds) {
                     scores.add(QueryExecutor.getScore(d));
@@ -68,13 +87,9 @@ public class Result {
         }
     }
 
-//    String getDerivation(int i) {
-//        return ds.toArray()[i].toString();
-//    }
-
-    String getAllDerivations() {
+    String getDerivationsForCulprit(String c) {
         StringJoiner sj = new StringJoiner("#");
-        for (List<String> d : ds) {
+        for (List<String> d : resultMap.get(c)) {
             sj.add(d.toString());
         }
         return sj.toString();
@@ -125,7 +140,26 @@ public class Result {
         return !negMap.isEmpty();
     }
 
-    public Map<String, Set<List<String>>> getNegMap() {
-        return negMap;
+    public int getNumNegDerivations() {
+        int r = 0;
+        for (Set<List<String>> lists : negMap.values()) {
+            r += lists.size();
+        }
+        return r;
     }
+
+//    void generateDiagram(String filename) {
+//        String attack = filename.split("_")[0];
+//        int count = Integer.parseInt(filename.split("_")[1].split(".")[0]);
+//        int c = 0;
+//        Term t = null;
+//        for (Term term : allterms) {
+//            if (c == count) {
+//               t = term;
+//                break;
+//            }
+//            c++;
+//        }
+//        DerivationNode.createDerivationAndSaveDiagram(t, attack, count);
+//    }
 }

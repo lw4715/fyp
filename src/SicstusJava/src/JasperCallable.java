@@ -5,6 +5,7 @@ public class JasperCallable implements Callable {
     private String name;
     private QueryExecutor qe;
     private boolean all;
+    private boolean reload;
 
 
     JasperCallable() {
@@ -23,6 +24,10 @@ public class JasperCallable implements Callable {
 
     @Override
     public Result call() throws Exception {
-        return qe.execute(name, all);
+        return qe.execute(name, all, reload);
+    }
+
+    public void setReload(boolean reload) {
+        this.reload = reload;
     }
 }

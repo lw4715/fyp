@@ -2,17 +2,24 @@ import java.io.*;
 import java.util.*;
 
 public class Utils {
+    private static final String CASE_USER_F = "case_user_f";
+    private static final String P_USER_ = "p_user_";
+    private static String FILEPATH = "";
+
     static final String PROLOG_USER_EVIDENCE = "user_evidence";
     static final String USER_EVIDENCE_FILENAME = PROLOG_USER_EVIDENCE + ".pl";
     static final String VISUALLOG = "visual.log";
-    private static String FILEPATH = "";
     static final String TECH = FILEPATH + "tech_rules";
     static final String OP = FILEPATH + "op_rules";
     static final String STR = FILEPATH + "str_rules";
     static final String EVIDENCE_FILENAME = FILEPATH + "evidence.pl";
-    int counter;
+
+    private int counter;
+    private int prefCount;
+
     Utils() {
         counter = 0;
+        prefCount = 0;
         clearFile(USER_EVIDENCE_FILENAME);
     }
 
@@ -23,7 +30,7 @@ public class Utils {
         counter++;
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
-            bw.write(String.format("rule(case_user_f%d(), %s, []).\n", counter, evidence));
+            bw.write(String.format("rule(%s%d(), %s, []).\n", CASE_USER_F, counter, evidence));
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -249,7 +256,7 @@ public class Utils {
             return OP + ".pl";
         } else if (r.startsWith("r_str_") || isPreference(r)) {
             return STR + ".pl";
-        } else if (r.startsWith("case_user_f")) {
+        } else if (r.startsWith(CASE_USER_F) || r.startsWith(P_USER_)) {
             return USER_EVIDENCE_FILENAME;
         } else if (r.startsWith("case")) {
             return "evidence.pl";
@@ -349,5 +356,16 @@ public class Utils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public void writePrefToFile(String preference) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
+            bw.write(String.format("rule(%s%d, %s, []).\n", P_USER_, prefCount, preference));
+            bw.close();
+            prefCount++;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -26,7 +26,6 @@ class GUI {
     private static final String EXECUTEALLINFO = "(Get a list of predicates that can be derived by current evidences)";
 
     private final Utils utils;
-    private int prefCount = 0;
 
     private JFrame mainFrame;
     private JLabel status;
@@ -190,7 +189,7 @@ class GUI {
         mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         mainFrame.add(panel1);
 
-        mainFrame.add(new JLabel("\t\tEvidence so far:", JLabel.LEFT));
+        mainFrame.add(new JLabel("\t\tCustom input so far:", JLabel.LEFT));
         mainFrame.add(scrollPane);
 
         mainFrame.add(panel5);
@@ -269,11 +268,11 @@ class GUI {
                     currentEvidences.setText(utils.getCurrentEvidence());
                     break;
                 case EXECUTE:
-                    executeQuery(false);
+                    executeQuery(false, false);
                     break;
                 case EXECUTEALL:
                     status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
-                    executeQuery(true);
+                    executeQuery(true, false);
                     break;
                 case UPDATE:
                     status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
@@ -286,7 +285,7 @@ class GUI {
                     JTextArea textArea = new JTextArea();
                     textArea.setText(QueryExecutor.executeCustomQuery(customQuery));
                     textArea.setEditable(false);
-                    textArea.setRows(70);
+                    textArea.setRows(40);
                     textArea.setCaretPosition(0);
                     textArea.setLineWrap(true);
 
@@ -311,7 +310,7 @@ class GUI {
                         String[] posDers = s[1].split("#");
 
                         JTextArea ntf = new JTextArea(negDer);
-                        ntf.setColumns(40);
+                        ntf.setColumns(30);
                         ntf.setLineWrap(true);
 
 
@@ -324,14 +323,14 @@ class GUI {
                             List<String> conflictingRules = QueryExecutor.getConflictingRule(posDer, negDer);
                             JButton choosePos = new JButton("Prefer " + conflictingRules.get(0));
                             JButton chooseNeg = new JButton("Prefer " + conflictingRules.get(1));
-                            choosePos.setActionCommand("Choose:" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
-                            chooseNeg.setActionCommand("Choose:" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
+                            choosePos.setActionCommand("Choose0:" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
+                            chooseNeg.setActionCommand("Choose1:" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
                             choosePos.addActionListener(new ButtonClickListener());
                             chooseNeg.addActionListener(new ButtonClickListener());
 
 
                             JTextArea ptf = new JTextArea(posDer);
-                            ptf.setColumns(40);
+                            ptf.setColumns(30);
                             ptf.setLineWrap(true);
 
                             prefP.add(ptf);
@@ -342,30 +341,32 @@ class GUI {
                         JScrollPane prefSP = new JScrollPane(prefP);
                         JFrame prefFrame = new JFrame();
                         prefFrame.add(prefSP);
-                        prefFrame.setSize(800, 800);
+                        prefFrame.setSize(1000, 800);
                         prefFrame.setVisible(true);
 
-                    } else if (command.startsWith("Choose:")) {
+                    } else if (command.startsWith("Choose")) {
+                        // create preference rule
                         String[] s = command.split(":")[1].split(">");
-                        String preferredRule = s[0];
-                        String notPreferredRule = s[1];
-                        String preference = String.format("rule(p_user_%d, prefer(%s,%s), []).", prefCount, preferredRule, notPreferredRule);
-                        prefCount++;
-                        System.out.println(preference);
-
+                        utils.writePrefToFile(String.format("prefer(%s,%s)", s[0], s[1]));
+                        currentEvidences.setText(utils.getCurrentEvidence());
+                        executeQuery(false, true);
                     } else {
+                        // display svg
                         SVGApplication.displayFile("img/" + command);
                     }
             }
         }
     }
 
-    private void executeQuery(boolean all) {
+    private void executeQuery(boolean all, boolean reload) {
         if (attackName.getText().isEmpty()) {
             status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
             highlightElement(attackName);
             return;
         } else {
+            if (reload) {
+                accumulatedResults.clear();
+            }
             Result executeResult = null;
             if (!all && accumulatedResults.containsKey(attackName.getText())) {
                 executeResult = accumulatedResults.get(attackName.getText());
@@ -376,6 +377,7 @@ class GUI {
                         jc = new JasperCallable();
                     }
                     jc.setName(attackName.getText());
+                    jc.setReload(reload);
                     jc.setAll(all);
                     executeResult = jc.call();
                     accumulatedResults.put(attackName.getText(), executeResult);
@@ -423,10 +425,8 @@ class GUI {
                 }
 
                 if (executeResult.hasNegDerivations()) {
-                    p.add(new JLabel("Negative Derivations: " + executeResult.getNegMap().size()));
+                    p.add(new JLabel("Negative Derivations: " + executeResult.getNumNegDerivations()));
                 }
-
-
 
                 for (String culprit : executeResult.getCulprits()) {
                     for (String nd : executeResult.negDerivationFor(culprit)) {
@@ -438,7 +438,7 @@ class GUI {
                         textArea.setCaretPosition(0);
                         p.add(textArea);
                         JButton addPrefBtn = new JButton("Add rule preference");
-                        addPrefBtn.setActionCommand(nd + "*" + executeResult.getAllDerivations());
+                        addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit));
                         addPrefBtn.addActionListener(new ButtonClickListener());
                         p.add(addPrefBtn);
 //                        String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);

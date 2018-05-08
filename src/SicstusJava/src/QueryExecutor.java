@@ -152,16 +152,21 @@ public class QueryExecutor {
         return 0;
     }
 
-    public Result execute(String caseName, boolean all) throws Exception {
-    abduced.clear();
-    System.out.println(String.format("---------\nStart %s derivation", caseName));
+    public Result execute(String caseName, boolean all, boolean reload) throws Exception {
+        System.out.println("Executing for " + caseName);
+        if (reload) reloadUserFile();
+
+        abduced.clear();
+        System.out.println(String.format("---------\nStart %s derivation", caseName));
 
         double time = System.nanoTime();
+        int count = 0;
         Map<String, Term>[] maps = this.executeQuery(caseName, verbose, all);
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
-        int count = 0;
         Set<String> culprits = new HashSet<>();
+
+//        LinkedHashSet<Term> allterms = new LinkedHashSet<>();
 
         for (Map<String, Term> map : maps) {
             String culprit = map.get("X").name();
@@ -179,13 +184,14 @@ public class QueryExecutor {
             if (!t.toString().equals("'FAIL'")) {
                 List<String> d = convertToString(t);
                 set.add(d);
+//                allterms.add(t);
                 DerivationNode.createDerivationAndSaveDiagram(t, caseName, count);
                 count++;
             }
         }
 
-        Set<List<String>> negDerivations = new HashSet<>();
         for (String culprit : culprits) {
+            Set<List<String>> negDerivations = new HashSet<>();
             String negQueryString = String.format("prove([neg(isCulprit(%s, %s))], D)", culprit, caseName);
             Map<String, Term>[] ms =
                 executeQueryString(
@@ -242,6 +248,14 @@ public class QueryExecutor {
         }
     }
 
+    private void reloadUserFile() {
+        try {
+            executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void loadFiles() {
         try {
             executeQueryString(String.format(CONSULT_STRING, "utils"), 1);
@@ -252,7 +266,6 @@ public class QueryExecutor {
                 executeQueryString(String.format(CONSULT_STRING, virusTotalFile), 1);
             }
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.torIPFile), 1);
-//            executeQueryString(String.format(CONSULT_STRING, "everything"), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
             ti.torIntegration();
         } catch (Exception e) {

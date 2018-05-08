@@ -284,7 +284,7 @@ public class DerivationNode {
         DerivationNode mainNode = res.get(0);
         res.remove(0);
         List<DerivationNode> prefs = res;
-        System.out.println("node: " + mainNode);
+//        System.out.println("node: " + mainNode);
         return createDiagram("img/" + filename, mainNode, prefs);
     }
 }
