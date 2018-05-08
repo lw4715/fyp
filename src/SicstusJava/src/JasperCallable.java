@@ -8,7 +8,6 @@ public class JasperCallable implements Callable {
 
 
     JasperCallable() {
-        System.out.println("Callable created " + this);
         this.qe = QueryExecutor.getInstance();
     }
 
@@ -24,7 +23,6 @@ public class JasperCallable implements Callable {
 
     @Override
     public Result call() throws Exception {
-        System.out.println("Running... " + name);
         return qe.execute(name, all);
     }
 }

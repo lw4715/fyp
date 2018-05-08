@@ -22,10 +22,11 @@ class GUI {
     private static final String EXECUTE = "Execute";
     private static final String UPDATE = "Update";
     private static final String EXECUTEALL = "Execute all";
+    private static final String CUSTOMEXECUTE = "Custom execute";
     private static final String EXECUTEALLINFO = "(Get a list of predicates that can be derived by current evidences)";
-//    private static final String VIEWDIAGRAM = "ViewDiagram_";
 
     private final Utils utils;
+    private int prefCount = 0;
 
     private JFrame mainFrame;
     private JLabel status;
@@ -33,6 +34,8 @@ class GUI {
     private JPanel panel2;
     private JPanel panel3;
     private JPanel panel4;
+    private JPanel panel5;
+    private JTextField customQueryString;
     private JTextField evidence;
     private JTextField attackName;
     private JTextArea currentEvidences;
@@ -153,15 +156,14 @@ class GUI {
         });
         panel1 = new JPanel();
         panel1.setLayout(new FlowLayout());
-
         panel2 = new JPanel();
         panel2.setLayout(new FlowLayout());
-
         panel3 = new JPanel();
         panel3.setLayout(new FlowLayout());
-
         panel4 = new JPanel();
         panel4.setLayout(new FlowLayout());
+        panel5 = new JPanel();
+        panel5.setLayout(new FlowLayout());
 
         currentEvidences = new JTextArea(utils.getCurrentEvidence());
         currentEvidences.setColumns(60);
@@ -169,21 +171,29 @@ class GUI {
         scrollPane = new JScrollPane(currentEvidences);
         scrollPane.setSize(0,300);
 
+        customQueryString = new JTextField("prove([<list of predicates to prove>], D)");
+        customQueryString.setColumns(60);
+
         panel1.add(dropdown);
         panel1.add(evidence);
         panel2.add(existsingAttacks);
         panel2.add(attackName);
+        panel4.add(new JLabel("Custom query string"));
+        panel4.add(customQueryString);
 
-        mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
-        mainFrame.add(panel1);
+
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
         mainFrame.add(panel2);
         mainFrame.add(panel3);
+        mainFrame.add(panel4);
+
+        mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
+        mainFrame.add(panel1);
 
         mainFrame.add(new JLabel("\t\tEvidence so far:", JLabel.LEFT));
         mainFrame.add(scrollPane);
 
-        mainFrame.add(panel4);
+        mainFrame.add(panel5);
         mainFrame.add(status);
 
         mainFrame.setSize(1000,750);
@@ -206,30 +216,33 @@ class GUI {
         JButton executeButton = new JButton(EXECUTE);
         JButton executeAllButton = new JButton(EXECUTEALL);
         JButton updateButton = new JButton(UPDATE);
+        JButton customQueryExecuteButton = new JButton(EXECUTE);
 
         submitButton.setActionCommand(SUBMIT);
         uploadButton.setActionCommand(UPLOAD);
         executeButton.setActionCommand(EXECUTE);
         executeAllButton.setActionCommand(EXECUTEALL);
         updateButton.setActionCommand(UPDATE);
+        customQueryExecuteButton.setActionCommand(CUSTOMEXECUTE);
 
         submitButton.addActionListener(new ButtonClickListener());
         uploadButton.addActionListener(new ButtonClickListener());
         executeButton.addActionListener(new ButtonClickListener());
         executeAllButton.addActionListener(new ButtonClickListener());
         updateButton.addActionListener(new ButtonClickListener());
+        customQueryExecuteButton.addActionListener(new ButtonClickListener());
 
         panel1.add(submitButton);
         panel1.add(uploadButton);
         panel2.add(executeButton);
         panel3.add(executeAllButton);
         panel3.add(new JLabel(EXECUTEALLINFO, JLabel.RIGHT));
-        panel4.add(updateButton);
+        panel4.add(customQueryExecuteButton);
+        panel5.add(updateButton);
         mainFrame.setVisible(true);
     }
 
     private class ButtonClickListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
@@ -267,8 +280,82 @@ class GUI {
                     utils.updateEvidence(currentEvidences.getText());
                     accumulatedResults.clear();
                     break;
+                case CUSTOMEXECUTE:
+                    String customQuery = customQueryString.getText();
+                    status.setText("Executing custom query string: " + customQuery);
+                    JTextArea textArea = new JTextArea();
+                    textArea.setText(QueryExecutor.executeCustomQuery(customQuery));
+                    textArea.setEditable(false);
+                    textArea.setRows(70);
+                    textArea.setCaretPosition(0);
+                    textArea.setLineWrap(true);
+
+                    JPanel p = new JPanel();
+                    p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+                    p.add(new JLabel("Custom query result for " + customQuery, JLabel.RIGHT));
+                    p.add(textArea);
+
+                    JScrollPane sp = new JScrollPane(p);
+                    sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+                    JFrame f = new JFrame();
+                    f.add(sp);
+                    f.setSize(1200,1000);
+                    f.setVisible(true);
+                    break;
                 default:
-                    SVGApplication.displayFile("img/" + command);
+                    // add pref
+                    if (command.startsWith("[")) {
+                        String[] s = command.split("\\*");
+                        String negDer = s[0];
+                        String[] posDers = s[1].split("#");
+
+                        JTextArea ntf = new JTextArea(negDer);
+                        ntf.setColumns(40);
+                        ntf.setLineWrap(true);
+
+
+                        JPanel prefP = new JPanel();
+                        prefP.setLayout(new BoxLayout(prefP, BoxLayout.Y_AXIS));
+                        prefP.add(new JLabel("Negative derivation:"));
+                        prefP.add(ntf);
+                        prefP.add(new JLabel("Positive derivations:"));
+                        for (String posDer : posDers) {
+                            List<String> conflictingRules = QueryExecutor.getConflictingRule(posDer, negDer);
+                            JButton choosePos = new JButton("Prefer " + conflictingRules.get(0));
+                            JButton chooseNeg = new JButton("Prefer " + conflictingRules.get(1));
+                            choosePos.setActionCommand("Choose:" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
+                            chooseNeg.setActionCommand("Choose:" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
+                            choosePos.addActionListener(new ButtonClickListener());
+                            chooseNeg.addActionListener(new ButtonClickListener());
+
+
+                            JTextArea ptf = new JTextArea(posDer);
+                            ptf.setColumns(40);
+                            ptf.setLineWrap(true);
+
+                            prefP.add(ptf);
+                            prefP.add(choosePos);
+                            prefP.add(chooseNeg);
+                        }
+
+                        JScrollPane prefSP = new JScrollPane(prefP);
+                        JFrame prefFrame = new JFrame();
+                        prefFrame.add(prefSP);
+                        prefFrame.setSize(800, 800);
+                        prefFrame.setVisible(true);
+
+                    } else if (command.startsWith("Choose:")) {
+                        String[] s = command.split(":")[1].split(">");
+                        String preferredRule = s[0];
+                        String notPreferredRule = s[1];
+                        String preference = String.format("rule(p_user_%d, prefer(%s,%s), []).", prefCount, preferredRule, notPreferredRule);
+                        prefCount++;
+                        System.out.println(preference);
+
+                    } else {
+                        SVGApplication.displayFile("img/" + command);
+                    }
             }
         }
     }
@@ -314,10 +401,12 @@ class GUI {
                 ta.setEditable(false);
                 ta.setLineWrap(true);
                 ta.setText(executeResult.getCulpritsSummary());
+                ta.setCaretPosition(0);
                 p.add(ta);
-
                 p.add(new JLabel("Derivations:"));
-                for (String r : rs) {
+
+                for (int i = 0; i < rs.size(); i++) {
+                    String r = rs.get(i);
                     JTextArea textArea = new JTextArea();
                     textArea.setColumns(50);
                     textArea.setEditable(false);
@@ -337,8 +426,9 @@ class GUI {
                     p.add(new JLabel("Negative Derivations: " + executeResult.getNegMap().size()));
                 }
 
+
+
                 for (String culprit : executeResult.getCulprits()) {
-//                    System.out.println("at culprit: " + culprit);
                     for (String nd : executeResult.negDerivationFor(culprit)) {
                         p.add(new JLabel(String.format("neg(isCulprit(%s,%s))", culprit, attackName.getText())));
                         JTextArea textArea = new JTextArea();
@@ -347,7 +437,11 @@ class GUI {
                         textArea.setLineWrap(true);
                         textArea.setCaretPosition(0);
                         p.add(textArea);
-                        String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
+                        JButton addPrefBtn = new JButton("Add rule preference");
+                        addPrefBtn.setActionCommand(nd + "*" + executeResult.getAllDerivations());
+                        addPrefBtn.addActionListener(new ButtonClickListener());
+                        p.add(addPrefBtn);
+//                        String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
                     }
                 }
                 JScrollPane scrollPane = new JScrollPane(p);
@@ -449,45 +543,9 @@ class GUI {
 
     public static void main(String args[]) {
         GUI awt = new GUI();
-//        JScrollPaneDemo();
-    }
-
-
-    public static void JScrollPaneDemo() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // create a jtextarea
-//                JPanel p = new JPanel();
-//                p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-////                JTextArea t = new JTextArea();
-////                t.setText("xx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\nxx\n");
-//                for (int i = 0; i < 10; i++) {
-//                    JTextArea textArea = new JTextArea();
-//                    textArea.setText("t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).");
-//                    p.add(textArea);
-//                }
-////                scrollPane.add(p);
-//                JScrollPane scrollPane = new JScrollPane(p);
-                JTextArea t = new JTextArea();
-                // now add the scrollpane to the jframe's content pane, specifically
-                // placing it in the center of the jframe's borderlayout
-                JFrame frame = new JFrame("JScrollPane Test");
-                frame.add(t, BorderLayout.LINE_START);
-                frame.add(t, BorderLayout.CENTER);
-//                frame.pack();
-//                JOptionPane.showConfirmDialog(frame, scrollPane);
-                // make it easy to close the application
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-                // set the frame size (you'll usually want to call frame.pack())
-                frame.setSize(new Dimension(240, 180));
-
-                // center the frame
-                frame.setLocationRelativeTo(null);
-                frame.pack();
-                // make it visible to the user
-                frame.setVisible(true);
-            }
-        });
+//        String la = "[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), r_t_highSkill0(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry, example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), r_t_highSkill0(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry, example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), case_example2b_f8(), bg1(), r_str_motiveAndLocation(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), case_example2b_f8(), bg1(), r_str_motiveAndLocation(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), bg1(), r_str_loc(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), bg1(), r_str_loc(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]";
+//        System.out.println(la.split("|"));
+//        System.out.println(la.split("|").length);
+//        System.out.println(la.split("|")[0]);
     }
 }

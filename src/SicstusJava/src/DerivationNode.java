@@ -1,7 +1,4 @@
-import guru.nidi.graphviz.attribute.Arrow;
-import guru.nidi.graphviz.attribute.Color;
-import guru.nidi.graphviz.attribute.Shape;
-import guru.nidi.graphviz.attribute.Style;
+import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
@@ -95,16 +92,14 @@ public class DerivationNode {
         }
         Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
         Node rulenameNode = node(rulename).with(typeColour);
-//        Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
         for (DerivationNode child : children) {
-//            Node rulenameNode = node(rulename).link(to(child.createNode()).with(Color.WHITE, Arrow.CROW));
             if (result.equals(child.getResult())) {
                 rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.WHITE, Arrow.CROW));
             } else {
                 rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.BLACK, Arrow.CROW));
             }
         }
-        node = node.link(to(rulenameNode).with(Arrow.CROW));
+        node = node.link(to(rulenameNode).with(Arrow.CROW, Label.of(Utils.getRuleFromFile(rulename, type))));
         return node;
 //        if (parentRulename.length() == 0) return node;
 //        Node rulenameNode = node(parentRulename).with(parentTypeColour).link(to(node).with(Arrow.CROW));
@@ -164,7 +159,7 @@ public class DerivationNode {
             } else if (Utils.isPreference(fullname)) {
                 prefs.add(new DerivationNode(Utils.getHead(name, arg), name, arg, -1));
             } else if (Utils.isAss(name)) {
-                st.push(new DerivationNode(fullname, "ass", arg, -1));
+                st.push(new DerivationNode(fullname, "abducible", arg, -1));
 //            } else if (name.equals("isCulprit")) {
 //                st.push(new DerivationNode(name, "", arg, 2));
             } else {

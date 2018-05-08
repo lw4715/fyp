@@ -15,6 +15,7 @@ import static java.lang.Math.pow;
 public class QueryExecutor {
     List<Double> timings;
     private boolean verbose = false;
+    private ToolIntegration ti;
 
     private static final QueryExecutor instance = new QueryExecutor();
     private static final String CONSULT_STRING = "consult('%s')";
@@ -30,6 +31,7 @@ public class QueryExecutor {
         JPL.init();
         timings = new ArrayList<>();
         abduced = new HashSet<>();
+        ti = new ToolIntegration();
         loadFiles();
     }
 
@@ -94,6 +96,28 @@ public class QueryExecutor {
         return q.nSolutions(limit);
     }
 
+    private String formatQueryOutput(Map<String, Term>[] output) {
+        StringBuilder sb = new StringBuilder();
+        for (Map<String, Term> stringTermMap : output) {
+            for (String term : stringTermMap.keySet()) {
+                Term d = stringTermMap.get(term);
+                sb.append(term + "=" + convertToString(d) + "\n");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    static String executeCustomQuery(String query) {
+        try {
+            QueryExecutor qe = getInstance();
+            return qe.formatQueryOutput(qe.executeQueryString(query, 20));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     static int getScore(List<String> ds) {
         int acc = 0;
         for (int i = 0; i < ds.size(); i++) {
@@ -112,6 +136,8 @@ public class QueryExecutor {
                     dList.add(term.toString());
                 }
             }
+        } else {
+            dList.add(d.toString());
         }
         return dList;
     }
@@ -168,7 +194,6 @@ public class QueryExecutor {
                 Term d = m.get("D");
                 if (verbose) System.out.println(ms + " " + m);
                 if (!d.toString().equals("'FAIL'")) {
-                    System.out.println(convertToString(d));
                     negDerivations.add(convertToString(d));
                 } else {
                     System.out.println("FAILED!");
@@ -229,6 +254,7 @@ public class QueryExecutor {
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.torIPFile), 1);
 //            executeQueryString(String.format(CONSULT_STRING, "everything"), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
+            ti.torIntegration();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -267,6 +293,34 @@ public class QueryExecutor {
         return r;
     }
 
+    static List<String> getConflictingRule(String posDer, String negDer) {
+        List<String> l = new ArrayList<>();
+        String[] posRules = posDer.replace("\\[", "").replace("\\]", "").split("\\)");
+        String[] negRules = negDer.replace("\\[", "").replace("\\]", "").split("\\)");
+
+        String posStrRule = null;
+        String negStrRule = null;
+
+        for (String pr : posRules) {
+            String prTrimmed = pr.trim();
+            if (prTrimmed.contains("r_str_")) {
+                prTrimmed = prTrimmed.substring(prTrimmed.indexOf("r_str_"), prTrimmed.length());
+                posStrRule = prTrimmed + ")";
+            }
+        }
+        l.add(posStrRule);
+
+        for (String nr : negRules) {
+            String nrTrimmed = nr.trim();
+            if (nrTrimmed.contains("r_str_")) {
+                nrTrimmed = nrTrimmed.substring(nrTrimmed.indexOf("r_str_"), nrTrimmed.length());
+                negStrRule = nrTrimmed + ")";
+            }
+        }
+        l.add(negStrRule);
+        return l;
+    }
+
     private static double mean(List<Double> timings) {
         double acc = 0;
         for (Double t : timings) {
@@ -280,28 +334,30 @@ public class QueryExecutor {
     }
 
     public static void main(String[] args) {
+        getConflictingRule("[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]",
+                "[case_example2b_f2(),r_str_targetItself2(yourCountry, example2b)]");
 
-        QueryExecutor qe = QueryExecutor.getInstance();
+//        QueryExecutor qe = QueryExecutor.getInstance();
 //        qe.setDebug();
-        int n = 1;
-        try {
-//            System.out.println(qe.execute("example5", false));
-            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
-
-            for (int i = 0; i < n; i++) {
-                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                        System.out.println(qe.execute(c, false));
-                }
-                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
-                    System.out.println(qe.execute(c, false));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        assert (n == qe.timings.size());
-        System.out.println("Mean total runtime over " + n + " times: " + mean(qe.timings));
+//        int n = 1;
+//        try {
+////            System.out.println(qe.execute("example5", false));
+//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+//
+//            for (int i = 0; i < n; i++) {
+//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                        System.out.println(qe.execute(c, false));
+//                }
+//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
+//                    System.out.println(qe.execute(c, false));
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        assert (n == qe.timings.size());
+//        System.out.println("Mean total runtime over " + n + " times: " + mean(qe.timings));
 
     }
 

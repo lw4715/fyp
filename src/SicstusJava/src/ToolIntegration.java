@@ -1,13 +1,10 @@
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Stream;
 //import
 
@@ -18,39 +15,35 @@ public class ToolIntegration {
     static final String virusTotalLogFileTemplate = "virustotal_res_";
     static final List<String> virusTotalFiles = new ArrayList<>();
 
-    static void torIntegration() {
-        List<String[]> ips = getTargetServerIP(Utils.EVIDENCE_FILENAME);
+    private int torCount = 0;
+
+
+    void torIntegration() {
+        if (torCount == 0) {
+            Utils.clearFile(torIPFile + ".pl");
+        }
+
+        Set<String[]> ips = getTargetServerIP(Utils.EVIDENCE_FILENAME);
+        ips.addAll(getTargetServerIP(Utils.USER_EVIDENCE_FILENAME));
+
         System.out.println(ips.size() + " server IPs found!");
         for (String[] ip : ips) {
             String ipPredString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
             String ipString = String.format("%s.%s.%s.%s", ip[0], ip[1], ip[2], ip[3]);
-            System.out.println(ipString);
+//            System.out.println(ipString);
             processTorCheckFile(getTorFile(ipString), ipPredString);
         }
     }
 
     private static Stream<String> getTorFile(String ipString) {
-        URL torURL = null;
-        try {
-            String url = String.format("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s&port=", ipString);
-            torURL = new URL(url);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(torURL.openStream()));
-            in.lines().forEach(x -> System.out.println(x));
-            return in.lines();
-        } catch (MalformedURLException e) {
-            System.err.println("Malformed");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("IO exception!");
-            e.printStackTrace();
-        }
+        String domainName = String.format("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s&port=", ipString);
+        String command = "curl " + domainName;
+        return executeCommand(command);
 
-        return null;
     }
 
-    static List<String[]> getTargetServerIP(String filename) {
-        List<String[]> ips = new ArrayList<>();
+    static Set<String[]> getTargetServerIP(String filename) {
+        Set<String[]> ips = new HashSet<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             br.lines().forEach(line -> {
@@ -68,13 +61,12 @@ public class ToolIntegration {
 
 //    TODO: use Selenium to interact with web browser, do automatically after scanning prolog file (write report!)
 //      use imperial ip as example, write result in evidence
-    static void processTorCheckFile(Stream<String> lines, String serverIP) {
+    void processTorCheckFile(Stream<String> lines, String serverIP) {
         try {
-            final int[] count = {0};
+            final int[] count = {torCount};
             final StringJoiner sj = new StringJoiner("\n");
             lines.forEach(line -> {
                 if (!line.startsWith("#") && !line.startsWith("<!")) {
-                    System.out.println(line);
                     String[] ipStrings = line.split("\\.");
                     String fact = String.format("torIP([%s,%s,%s,%s], %s)",
                             ipStrings[0], ipStrings[1], ipStrings[2], ipStrings[3], serverIP);
@@ -82,7 +74,7 @@ public class ToolIntegration {
                     count[0]++;
                 }
             });
-
+            torCount = count[0];
             Files.write(Paths.get(torIPFile + ".pl"), sj.toString().getBytes(), StandardOpenOption.APPEND);
 
         } catch (IOException e) {
@@ -104,7 +96,7 @@ public class ToolIntegration {
         try {
             urlcon.connect();
             InputStream is = urlcon.getInputStream();
-            int c = 0;
+            int c;
             String s = "";
             while((c = is.read()) != -1) s+= (char)c;
             is.close();
@@ -185,7 +177,6 @@ public class ToolIntegration {
     }
 
 //    TODO: Wireshark, can it find spoofed IP? what can we use??
-//
 
 //    public static void main(String[] args) {
 ////        processTorCheckFile("check_tor.txt", "72.111.1.30");
@@ -194,7 +185,42 @@ public class ToolIntegration {
 //    }
 
 
+//    public static void main(String[] args) {
+////        torIntegration();
+//        int n = 2;
+//        Process p = null;
+//        try {
+//            p = Runtime.getRuntime().exec("python test1.py " + n);
+//            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            in.lines().forEach(x -> System.out.println(x));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     public static void main(String[] args) {
-        torIntegration();
+        ToolIntegration ti = new ToolIntegration();
+        ti.torIntegration();
+//        getTorFile("173.194.36.104");
     }
+
+    private static Stream<String> executeCommand(String command) {
+
+        StringBuffer output = new StringBuffer();
+
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(command);
+            p.waitFor();
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            return reader.lines();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
