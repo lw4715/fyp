@@ -23,7 +23,8 @@ class GUI {
     private static final String UPDATE = "Update";
     private static final String EXECUTEALL = "Execute all";
     private static final String CUSTOMEXECUTE = "Custom execute";
-    private static final String EXECUTEALLINFO = "(Get a list of predicates that can be derived by current evidences)";
+    private static final String EXECUTEALLINFO = "Get a list of predicates that can be derived by current evidences: ";
+    private static final String EXECUTED_IS_CULPRIT = "\t\tExecuted isCulprit(%s, X)...";
 
     private final Utils utils;
 
@@ -32,15 +33,16 @@ class GUI {
     private JPanel panel1;
     private JPanel panel2;
     private JPanel panel3;
+    private JPanel panel3b;
     private JPanel panel4;
     private JPanel panel5;
     private JTextField customQueryString;
     private JTextField evidence;
     private JTextField attackName;
+    private JTextField possibleCulprits;
     private JTextArea currentEvidences;
     private JScrollPane scrollPane;
     private JasperCallable jc;
-    private Map<String, Result> accumulatedResults;
     private final JFileChooser fileChooser = new JFileChooser();
 
     private static final String placeholderItem = "Select from existing predicates";
@@ -107,7 +109,6 @@ class GUI {
 
     GUI() {
         utils = new Utils();
-        accumulatedResults = new HashMap<>();
         prepareGUI();
         addButtonsToPanel();
     }
@@ -159,6 +160,8 @@ class GUI {
         panel2.setLayout(new FlowLayout());
         panel3 = new JPanel();
         panel3.setLayout(new FlowLayout());
+        panel3b = new JPanel();
+        panel3b.setLayout(new FlowLayout());
         panel4 = new JPanel();
         panel4.setLayout(new FlowLayout());
         panel5 = new JPanel();
@@ -184,6 +187,7 @@ class GUI {
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
         mainFrame.add(panel2);
         mainFrame.add(panel3);
+        mainFrame.add(panel3b);
         mainFrame.add(panel4);
 
         mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
@@ -231,11 +235,16 @@ class GUI {
         updateButton.addActionListener(new ButtonClickListener());
         customQueryExecuteButton.addActionListener(new ButtonClickListener());
 
+        possibleCulprits = new JTextField("countryX, countryY");
+        possibleCulprits.setColumns(20);
+
         panel1.add(submitButton);
         panel1.add(uploadButton);
         panel2.add(executeButton);
-        panel3.add(executeAllButton);
         panel3.add(new JLabel(EXECUTEALLINFO, JLabel.RIGHT));
+        panel3.add(executeAllButton);
+        panel3b.add(new JLabel("Possible culprits (separate by commas):"));
+        panel3b.add(possibleCulprits);
         panel4.add(customQueryExecuteButton);
         panel5.add(updateButton);
         mainFrame.setVisible(true);
@@ -255,7 +264,6 @@ class GUI {
                         utils.addEvidence(evidenceText);
                         currentEvidences.setText(utils.getCurrentEvidence());
                     }
-                    accumulatedResults.clear();
                     break;
                 case UPLOAD:
                     int returnVal = fileChooser.showOpenDialog(mainFrame);
@@ -271,13 +279,18 @@ class GUI {
                     executeQuery(false);
                     break;
                 case EXECUTEALL:
+                    String[] cs = possibleCulprits.getText().split(",");
+                    List<String> csList = new ArrayList<>();
+                    for (String c : cs) {
+                        csList.add(c.trim());
+                    }
+
                     status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
-                    executeQuery(true);
+                    executeQueryAllWithCulprits(csList);
                     break;
                 case UPDATE:
                     status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
                     utils.updateEvidence(currentEvidences.getText());
-                    accumulatedResults.clear();
                     break;
                 case CUSTOMEXECUTE:
                     String customQuery = customQueryString.getText();
@@ -358,15 +371,40 @@ class GUI {
         }
     }
 
+    private void executeQueryAllWithCulprits(List<String> culpritsToConsider) {
+        if (attackName.getText().isEmpty()) {
+            status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
+            highlightElement(attackName);
+            return;
+        } else {
+            Result executeResult = null;
+            status.setText(String.format(EXECUTED_IS_CULPRIT, attackName.getText()));
+            try {
+                if (jc == null) {
+                    jc = new JasperCallable();
+                }
+                jc.setName(attackName.getText());
+                jc.setReload(true);
+                jc.setAll(true);
+                jc.setCulpritsList(culpritsToConsider);
+                executeResult = jc.call();
+
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+
+            displayResultsAndNonResults();
+        }
+    }
+
     private void executeQuery(boolean all) {
         if (attackName.getText().isEmpty()) {
             status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
             highlightElement(attackName);
             return;
         } else {
-            accumulatedResults.clear();
             Result executeResult = null;
-            status.setText(String.format("\t\tExecuted isCulprit(%s, X)...", attackName.getText()));
+            status.setText(String.format(EXECUTED_IS_CULPRIT, attackName.getText()));
             try {
                 if (jc == null) {
                     jc = new JasperCallable();
@@ -375,142 +413,149 @@ class GUI {
                 jc.setReload(true);
                 jc.setAll(all);
                 executeResult = jc.call();
-                accumulatedResults.put(attackName.getText(), executeResult);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
 
-
             if (!all) {
-                int option = 1;
-                if (executeResult.hasAbduced()) {
-                    option = 2;
-                }
-
-                JPanel p = new JPanel();
-                p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-                List<String> rs = executeResult.resultStrings();
-                int c = 0;
-
-                p.add(new JLabel("Summary:"));
-                JTextArea ta = new JTextArea();
-                ta.setColumns(50);
-                ta.setEditable(false);
-                ta.setLineWrap(true);
-                ta.setText(executeResult.getCulpritsSummary());
-                ta.setCaretPosition(0);
-                p.add(ta);
-                p.add(new JLabel("Derivations:"));
-
-                for (int i = 0; i < rs.size(); i++) {
-                    String r = rs.get(i);
-                    JTextArea textArea = new JTextArea();
-                    textArea.setColumns(50);
-                    textArea.setEditable(false);
-                    textArea.setText(r);
-                    textArea.setLineWrap(true);
-                    JButton btn = new JButton("View diagram");
-                    String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
-                    btn.setActionCommand(filename);
-                    btn.addActionListener(new ButtonClickListener());
-                    textArea.setCaretPosition(0);
-                    p.add(textArea);
-                    p.add(btn, Panel.LEFT_ALIGNMENT);
-                    c++;
-                }
-
-                if (executeResult.hasNegDerivations()) {
-                    p.add(new JLabel("Negative Derivations: " + executeResult.getNumNegDerivations()));
-                }
-
-                for (String culprit : executeResult.getCulprits()) {
-                    for (String nd : executeResult.negDerivationFor(culprit)) {
-                        p.add(new JLabel(String.format("neg(isCulprit(%s,%s))", culprit, attackName.getText())));
-                        JTextArea textArea = new JTextArea();
-                        textArea.setEditable(false);
-                        textArea.setText(nd);
-                        textArea.setLineWrap(true);
-                        textArea.setCaretPosition(0);
-                        p.add(textArea);
-                        JButton addPrefBtn = new JButton("Add rule preference");
-                        addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit));
-                        addPrefBtn.addActionListener(new ButtonClickListener());
-                        p.add(addPrefBtn);
-//                        String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
-                    }
-                }
-                JScrollPane scrollPane = new JScrollPane(p);
-                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                JFrame f = new JFrame();
-                f.add(scrollPane);
-                f.setSize(1200,800);
-                f.setVisible(true);
-
+                displayExecutionResult(executeResult);
             } else {
-                Set<String>[] res = readFromResultAndNonResultFiles();
-                JDialog dialog = new JDialog(mainFrame);
-                JPanel row1 = new JPanel();
-                row1.setLayout(new FlowLayout());
-
-                dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
-                StringJoiner sj = new StringJoiner("\n");
-                for (String s : res[0]) {
-                    sj.add(s);
-                }
-                JTextArea results = new JTextArea("Results:\n" + sj);
-                results.setEditable(false);
-                results.setRows(22);
-                results.setColumns(45);
-                results.setCaretPosition(0);
-                JScrollPane row1col1 = new JScrollPane(results);
-                row1.add(row1col1);
-
-                sj = new StringJoiner("\n");
-                for (String s : res[1]) {
-                    sj.add(s);
-                }
-                JTextArea nonresults = new JTextArea("Other possible predicates:\n" + sj);
-                nonresults.setCaretPosition(0);
-                JScrollPane row1col2 = new JScrollPane(nonresults);
-                nonresults.setEditable(false);
-                nonresults.setRows(22);
-                nonresults.setColumns(45);
-                row1.add(row1col2);
-
-                JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
-                possiblerules.setEditable(false);
-                possiblerules.setColumns(90);
-                possiblerules.setCaretPosition(0);
-                JScrollPane row2 = new JScrollPane(possiblerules);
-
-                dialog.add(row1);
-                dialog.add(row2);
-                dialog.setSize(1200, 1000);
-                dialog.setVisible(true);
-                dialog.setModal(true);
+                displayResultsAndNonResults();
 
             }
         }
     }
 
+    private void displayExecutionResult(Result executeResult) {
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        List<String> rs = executeResult.resultStrings();
+        int c = 0;
+
+        p.add(new JLabel("Summary:"));
+        JTextArea ta = new JTextArea();
+        ta.setColumns(50);
+        ta.setEditable(false);
+        ta.setLineWrap(true);
+        ta.setText(executeResult.getCulpritsSummary());
+        ta.setCaretPosition(0);
+        p.add(ta);
+        p.add(new JLabel("Derivations:"));
+
+        for (int i = 0; i < rs.size(); i++) {
+            String r = rs.get(i);
+            JTextArea textArea = new JTextArea();
+            textArea.setColumns(50);
+            textArea.setEditable(false);
+            textArea.setText(r);
+            textArea.setLineWrap(true);
+            JButton btn = new JButton("View diagram");
+            String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
+            btn.setActionCommand(filename);
+            btn.addActionListener(new ButtonClickListener());
+            textArea.setCaretPosition(0);
+            p.add(textArea);
+            p.add(btn, Panel.LEFT_ALIGNMENT);
+            c++;
+        }
+
+        if (executeResult.hasNegDerivations()) {
+            p.add(new JLabel("Negative Derivations: " + executeResult.getNumNegDerivations()));
+        }
+
+        for (String culprit : executeResult.getCulprits()) {
+            for (String nd : executeResult.negDerivationFor(culprit)) {
+                p.add(new JLabel(String.format("neg(isCulprit(%s,%s))", culprit, attackName.getText())));
+                JTextArea textArea = new JTextArea();
+                textArea.setEditable(false);
+                textArea.setText(nd);
+                textArea.setLineWrap(true);
+                textArea.setCaretPosition(0);
+                p.add(textArea);
+                JButton addPrefBtn = new JButton("Add rule preference");
+                addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit));
+                addPrefBtn.addActionListener(new ButtonClickListener());
+                p.add(addPrefBtn);
+            }
+        }
+        JScrollPane scrollPane = new JScrollPane(p);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        JFrame f = new JFrame();
+        f.add(scrollPane);
+        f.setSize(1200,800);
+        f.setVisible(true);
+    }
+
+    private void displayResultsAndNonResults() {
+        List<String>[] res = readFromResultAndNonResultFiles();
+        JDialog dialog = new JDialog(mainFrame);
+        JPanel row1 = new JPanel();
+        row1.setLayout(new FlowLayout());
+
+        dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
+        StringJoiner sj = new StringJoiner("\n");
+        for (String s : res[0]) {
+            sj.add(s);
+        }
+        JTextArea results = new JTextArea("Results:\n" + sj);
+        results.setEditable(false);
+        results.setRows(22);
+        results.setColumns(45);
+        results.setCaretPosition(0);
+        JScrollPane row1col1 = new JScrollPane(results);
+        row1.add(row1col1);
+
+        sj = new StringJoiner("\n");
+        for (String s : res[1]) {
+            sj.add(s);
+        }
+        JTextArea nonresults = new JTextArea("Other possible predicates:\n" + sj);
+        nonresults.setCaretPosition(0);
+        JScrollPane row1col2 = new JScrollPane(nonresults);
+        nonresults.setEditable(false);
+        nonresults.setRows(22);
+        nonresults.setColumns(45);
+        row1.add(row1col2);
+
+        JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
+        possiblerules.setEditable(false);
+        possiblerules.setColumns(90);
+        possiblerules.setCaretPosition(0);
+        JScrollPane row2 = new JScrollPane(possiblerules);
+
+        dialog.add(row1);
+        dialog.add(row2);
+        dialog.setSize(1200, 1000);
+        dialog.setVisible(true);
+        dialog.setModal(true);
+    }
+
 
     // elem at index 0 is combined predicates as one string read from RESULTFILENAME,
     // elem at index 1 .. n are individual predicates from NONRESULTFILENAME
-    private static Set<String>[] readFromResultAndNonResultFiles() {
-        Set<String>[] res = new Set[2];
+    private static List<String>[] readFromResultAndNonResultFiles() {
+        Set<String>[] setRes = new Set[2];
         try {
             BufferedReader br = new BufferedReader(new FileReader(RESULTFILENAME));
             Set<String> set = new HashSet<>();
             final StringBuilder sb = new StringBuilder();
             br.lines().forEach(x -> set.add(x));
-            res[0] = set;
+            setRes[0] = set;
 
             Set<String> set1 = new HashSet<>();
             br = new BufferedReader(new FileReader(NONRESULTFILENAME));
             br.lines().forEach(x -> set1.add(x));
-            res[1] = set1;
+            setRes[1] = set1;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+
+        List<String>[] res = new List[2];
+        for (int i = 0; i < res.length; i++) {
+            ArrayList<String> l = new ArrayList<>();
+            l.addAll(setRes[i]);
+            Collections.sort(l);
+            res[i] = l;
         }
         return res;
     }

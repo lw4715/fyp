@@ -56,7 +56,7 @@ public class QueryExecutor {
         }
     }
 
-    Map<String, Term>[] executeQuery(String caseName, boolean verbose, boolean all) {
+    Map<String, Term>[] executeQuery(String caseName, boolean verbose, boolean all, List<String> culpritsList) {
         Map<String, Integer> accMap;
         int res;
         int numDeltas;
@@ -69,12 +69,25 @@ public class QueryExecutor {
             String goal;
             if (all) {
                 goal = "goal_all";
+                // tech
                 queryString = String.format("goal_all(%s,X, M, M2, M3, D1, D2, D3, D4, D5)", caseName);
                 System.out.println(queryString);
-                executeQueryString(queryString, 100);
-                queryString = String.format("goal_all(%s, X1, D1)", caseName);
+                executeQueryString(queryString, 200);
+
+                // op
+                if (!culpritsList.isEmpty()) {
+                    for (String c : culpritsList) {
+                        String s = String.format("hasCapability(%s,%s, D)", c, caseName);
+                        String s1 = String.format("hasCapability(%s,%s)", c, caseName);
+                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
+                        s = String.format("hasMotive(%s,%s, D)", c, caseName);
+                        s1 = String.format("hasMotive(%s,%s)", c, caseName);
+                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
+                    }
+                }
+                queryString = String.format("goal_all(%s, X1, D1, D2, D3, D4)", caseName);
                 System.out.println(queryString);
-                executeQueryString(queryString, 100);
+                executeQueryString(queryString, 200);
             } else {
                 executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
                 queryString = String.format("goal(%s,X,D0)", caseName);
@@ -152,7 +165,16 @@ public class QueryExecutor {
         return 0;
     }
 
-    public Result execute(String caseName, boolean all, boolean reload) throws Exception {
+
+    public Result executeAll(String caseName, List<String> culpritsList) {
+        System.out.println("Executing for " + caseName);
+        reloadUserFile();
+        abduced.clear();
+        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, true, culpritsList);
+        return null;
+    }
+
+    public Result execute(String caseName, boolean reload, List<String> culpritsList) throws Exception {
         System.out.println("Executing for " + caseName);
         if (reload) reloadUserFile();
 
@@ -161,12 +183,10 @@ public class QueryExecutor {
 
         double time = System.nanoTime();
         int count = 0;
-        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, all);
+        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, false, culpritsList);
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
         Set<String> culprits = new HashSet<>();
-
-//        LinkedHashSet<Term> allterms = new LinkedHashSet<>();
 
         for (Map<String, Term> map : maps) {
             String culprit = map.get("X").name();
@@ -185,7 +205,6 @@ public class QueryExecutor {
                 culprits.add(culprit);
                 List<String> d = convertToString(t);
                 set.add(d);
-//                allterms.add(t);
                 DerivationNode.createDerivationAndSaveDiagram(t, caseName, count);
                 count++;
             }
@@ -225,6 +244,7 @@ public class QueryExecutor {
                 System.out.println(neg);
             }
         }
+
         return r;
     }
 
@@ -274,7 +294,7 @@ public class QueryExecutor {
         }
     }
 
-    static Map<String, List<String>> getPredMap(Set<String> preds, boolean isAbducibles) {
+    static Map<String, List<String>> getPredMap(Collection<String> preds, boolean isAbducibles) {
         Map<String, List<String>> map = new HashMap<>();
         for (String pred : preds) {
             String key;
@@ -348,30 +368,30 @@ public class QueryExecutor {
     }
 
     public static void main(String[] args) {
-        getConflictingRule("[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]",
-                "[case_example2b_f2(),r_str_targetItself2(yourCountry, example2b)]");
+//        getConflictingRule("[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]",
+//                "[case_example2b_f2(),r_str_targetItself2(yourCountry, example2b)]");
 
-//        QueryExecutor qe = QueryExecutor.getInstance();
-//        qe.setDebug();
-//        int n = 1;
-//        try {
-////            System.out.println(qe.execute("example5", false));
+        QueryExecutor qe = QueryExecutor.getInstance();
+        qe.setDebug();
+        int n = 1;
+        try {
+//            System.out.println(qe.execute("example5", false));
 //            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
-//
-//            for (int i = 0; i < n; i++) {
-//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                        System.out.println(qe.execute(c, false));
-//                }
-//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
-//                    System.out.println(qe.execute(c, false));
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        assert (n == qe.timings.size());
-//        System.out.println("Mean total runtime over " + n + " times: " + mean(qe.timings));
+
+            for (int i = 0; i < n; i++) {
+                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                        System.out.println(qe.execute(c, false, new ArrayList<>()));
+                }
+                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
+                    System.out.println(qe.execute(c, false, new ArrayList<>()));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assert (n == qe.timings.size());
+        System.out.println("Mean total runtime over " + n + " times: " + mean(qe.timings));
 
     }
 
