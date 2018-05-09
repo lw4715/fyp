@@ -26,7 +26,6 @@ public class Result {
         this.abduced = abduced;
         this.abducedMap = abducedMap;
         this.negMap = negMap;
-        this.allterms = allterms;
 
         culprits = new ArrayList<>();
         maxScores = new ArrayList<>();
@@ -53,6 +52,10 @@ public class Result {
 
     public List<String> getCulprits() {
         return this.culprits;
+    }
+
+    public String getAbducedInfo() {
+        return "Abduced predicates:\n" + abduced + "\n\nRules to prove abducibles:\n" + Utils.formatMap(abducedMap);
     }
 
     boolean hasAbduced() {

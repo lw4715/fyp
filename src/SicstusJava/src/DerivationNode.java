@@ -19,12 +19,26 @@ import static guru.nidi.graphviz.model.Link.to;
 
 public class DerivationNode {
 
+    // for argumentation tree
+    private int level;
+
     private String result;
     private String rulename;
     private Set<DerivationNode> children;
     private int type;
     private List<String> args;
 
+    // for argumentation tree
+    public DerivationNode(String d, int level, int type) {
+        result = d;
+        this.level = level;
+        this.type = type;
+        children = new HashSet<>();
+        rulename = "";
+        args = new ArrayList<>();
+    }
+
+    // for derivation graph
     public DerivationNode(String result, String rulename, List<String> args, int type) {
         this.result = result;
         this.rulename = rulename;
@@ -33,6 +47,7 @@ public class DerivationNode {
         this.type = type;
     }
 
+    // for derivation graph
     public DerivationNode(String result, String rulename, List<String> args, int type, Set<DerivationNode> children) {
         this.result = result;
         this.rulename = rulename;
@@ -53,12 +68,19 @@ public class DerivationNode {
         return this.result;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    private void addChild(DerivationNode child) {
+        this.children.add(child);
+    }
+
     static List<DerivationNode> createDiagram(String filename, DerivationNode mainNode, List<DerivationNode> prefs) {
         try {
             Graph g = graph(filename).directed()
                     .with(mainNode.createNode());
             Graphviz.fromGraph(g)
-//                    .width(500).render(Format.PNG).toFile(new File(filename));
                 .width(100).render(Format.SVG).toFile(new File(filename));
 
             rewriteTransparentStroke(filename);
@@ -77,7 +99,7 @@ public class DerivationNode {
 
     Node createNode() {
         Color typeColour;
-        switch (type) {
+        switch(type) {
             case 0: // tech
                 typeColour = Color.SKYBLUE1;
                 break;
@@ -87,35 +109,44 @@ public class DerivationNode {
             case 2: // str
                 typeColour = Color.SALMON;
                 break;
+            case 3:
+                typeColour = Color.GREENYELLOW;
+                break;
             default: // evidence
                 typeColour = Color.LIGHTGRAY;
         }
         Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
-        Node rulenameNode = node(rulename).with(typeColour);
-        for (DerivationNode child : children) {
-            if (result.equals(child.getResult())) {
-                rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.WHITE, Arrow.CROW));
-            } else {
-                rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.BLACK, Arrow.CROW));
+
+        if (rulename.length() > 0) {
+            Node rulenameNode = node(rulename).with(typeColour);
+            for (DerivationNode child : children) {
+                if (result.equals(child.getResult())) {
+                    rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.WHITE, Arrow.CROW));
+                } else {
+                    rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.BLACK, Arrow.CROW));
+                }
+            }
+            node = node.link(to(rulenameNode).with(Arrow.CROW, Label.of(Utils.getRuleFromFile(rulename, type))));
+
+        } else {
+            // argumentation tree
+            for (DerivationNode child : children) {
+                node = node.link(to(child.createNode()));
             }
         }
-        node = node.link(to(rulenameNode).with(Arrow.CROW, Label.of(Utils.getRuleFromFile(rulename, type))));
         return node;
-//        if (parentRulename.length() == 0) return node;
-//        Node rulenameNode = node(parentRulename).with(parentTypeColour).link(to(node).with(Arrow.CROW));
-//        return rulenameNode;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s (%s)", result, rulename));
+        sb.append(String.format("Tree >> %s (%s) %d", result, rulename, level));
         if (!children.isEmpty()) {
             sb.append("{" + children.size() + "}");
             sb.append("\n");
         }
         for (DerivationNode child : children) {
-            sb.append(child.toString() + "\t");
+            sb.append(child + "\t");
         }
         return sb.toString();
     }
@@ -160,8 +191,6 @@ public class DerivationNode {
                 prefs.add(new DerivationNode(Utils.getHead(name, arg), name, arg, -1));
             } else if (Utils.isAss(name)) {
                 st.push(new DerivationNode(fullname, "abducible", arg, -1));
-//            } else if (name.equals("isCulprit")) {
-//                st.push(new DerivationNode(name, "", arg, 2));
             } else {
                 st.push(new DerivationNode(Utils.getHead(name, arg), name, arg, -1));
             }
@@ -211,7 +240,6 @@ public class DerivationNode {
             DerivationNode n = st.peek();
             elem = n.getRulename();
             elemArgs = n.getArgs();
-//            System.out.println("name: " +name + " elem:" + elem + " args: " + elemArgs + " head: " + Utils.getHead(elem, elemArgs).split("\\(")[0] + " body " + bodyList);
             if (bodyList.contains(Utils.getHead(elem, elemArgs).split("\\(")[0])) {
                 body.add(st.pop());
             } else {
@@ -284,8 +312,86 @@ public class DerivationNode {
         DerivationNode mainNode = res.get(0);
         res.remove(0);
         List<DerivationNode> prefs = res;
-//        System.out.println("node: " + mainNode);
         return createDiagram("img/" + filename, mainNode, prefs);
     }
+
+    public static void createArgumentTreeDiagram(String tree, String filename) {
+        String[] lines = tree.split("\n");
+//        Color colour;
+//        Node curr;
+        int type;
+        Stack<DerivationNode> st = new Stack<>();
+        for (int i = lines.length - 1; i >= 0; i--) {
+            System.out.println("STACK: " + st);
+            String line = lines[i];
+            if (line.contains("DEFENSE")) {
+                type = 3;
+            } else {
+                type = 2;
+            }
+            DerivationNode node;
+            int level;
+            if (line.contains("[")) {
+                level = line.indexOf('[') / 4;
+                System.out.println("line: " + line + " level: " + level);
+                String d = line.split("\\[")[1].split("\\]")[0];
+                String d2 = d.substring(0, line.length()/2) + "\n" + d.substring(line.length()/2);
+                node = new DerivationNode(d2, level, type);
+
+                if (st.isEmpty()) {
+                    st.push(node);
+                } else {
+                    while (!st.isEmpty() && st.peek().getLevel() == level + 1) {
+                        node.addChild(st.pop());
+                    }
+                    st.push(node);
+                }
+            }
+        }
+
+        if (st.size() != 1) {
+            System.err.println("Stack not finished popping " + st);
+        }
+
+        try {
+            Graph g = graph(filename).directed()
+                    .with(st.pop().createNode());
+            Graphviz.fromGraph(g)
+                    .width(100).render(Format.SVG).toFile(new File(filename + ".svg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static void main(String[] args) {
+//        String tree = "[r_t_highSkill0(stuxnetattack), r_t_highResource0(stuxnetattack), r_op_hasCapability1(united_states_of_america,stuxnetattack), case4_f13(), case4_f12(), r_t_targetted(stuxnetattack), case4_f9(), r_op_date(ongoing), case4_f8(), case4_f11(), case4_f6(), r_op_conflict(united_states_of_america,iran), r_str_motiveAndCapability(united_states_of_america,stuxnetattack)]  {DEFENSE}\n" +
+//                "|___[r_t_highSkill2(stuxnetattack), case4_f7(), r_t_zeroday(stuxnet), case4_f12(), p10b_t()]\n" +
+//                "|   |___{NO DEFENSE}\n" +
+//                "|___[r_t_highSkill4(stuxnetattack), case4_f4(), p10c_t()]\n" +
+//                "|   |___{NO DEFENSE}\n" +
+//                "|___[r_t_highResource1(stuxnetattack), case4_f7(), r_t_zeroday(stuxnet), case4_f12(), r_t_highSkill2(stuxnetattack), p12a_t()]\n" +
+//                "|   |___{NO DEFENSE}\n" +
+//                "|___[r_t_highResource1(stuxnetattack), case4_f4(), r_t_highSkill4(stuxnetattack), p12a_t()]\n" +
+//                "    |___{NO DEFENSE}";
+        String tree =
+                "[r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry,example2b)]  {DEFENSE}\n" +
+                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
+                "    |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
+                "        |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22d(), ass(specificTarget(example2b))]\n" +
+                "        |   |___[r_str_motiveAndCapability(yourCountry,example2b), r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndCapability(yourCountry,example2b))))]  {DEFENSE}\n" +
+                "        |       |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
+                "        |       |   |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
+                "        |       |___[p22b(), ass(specificTarget(example2b))]\n" +
+                "        |           |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}\n" +
+                "        |___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
+                "        |   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
+                "        |___[p22d(), ass(specificTarget(example2b))]\n" +
+                "            |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
+
+        createArgumentTreeDiagram(tree, "testArgTree");
+    }
+
 }
 

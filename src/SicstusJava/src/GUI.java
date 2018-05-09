@@ -19,9 +19,9 @@ class GUI {
 
     private static final String SUBMIT = "Submit";
     private static final String UPLOAD = "Upload";
-    private static final String EXECUTE = "Execute";
+    private static final String EXECUTE = "Prove";
     private static final String UPDATE = "Update";
-    private static final String EXECUTEALL = "Execute all";
+    private static final String EXECUTEALL = "Prove all possible predicates";
     private static final String CUSTOMEXECUTE = "Custom execute";
     private static final String EXECUTEALLINFO = "Get a list of predicates that can be derived by current evidences: ";
     private static final String EXECUTED_IS_CULPRIT = "\t\tExecuted isCulprit(%s, X)...";
@@ -133,7 +133,7 @@ class GUI {
         });
         dropdown.setSize(70,0);
 
-        evidence = new JTextField(placeholderItem);
+        evidence = new JTextField();
         evidence.setColumns(35);
         attackName = new JTextField(JTextField.LEFT);
         attackName.setColumns(15);
@@ -174,7 +174,7 @@ class GUI {
         scrollPane.setSize(0,300);
 
         customQueryString = new JTextField("prove([<list of predicates to prove>], D)");
-        customQueryString.setColumns(60);
+        customQueryString.setColumns(50);
 
         panel1.add(dropdown);
         panel1.add(evidence);
@@ -193,7 +193,7 @@ class GUI {
         mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         mainFrame.add(panel1);
 
-        mainFrame.add(new JLabel("\t\tCustom input so far:", JLabel.LEFT));
+        mainFrame.add(new JLabel("\t\tInput so far:", JLabel.LEFT));
         mainFrame.add(scrollPane);
 
         mainFrame.add(panel5);
@@ -216,10 +216,10 @@ class GUI {
     private void addButtonsToPanel(){
         JButton submitButton = new JButton(SUBMIT);
         JButton uploadButton = new JButton(UPLOAD);
-        JButton executeButton = new JButton(EXECUTE);
+        JButton executeButton = new JButton(EXECUTE + " isCulprit(X,A)");
         JButton executeAllButton = new JButton(EXECUTEALL);
         JButton updateButton = new JButton(UPDATE);
-        JButton customQueryExecuteButton = new JButton(EXECUTE);
+        JButton customQueryExecuteButton = new JButton(CUSTOMEXECUTE);
 
         submitButton.setActionCommand(SUBMIT);
         uploadButton.setActionCommand(UPLOAD);
@@ -235,7 +235,7 @@ class GUI {
         updateButton.addActionListener(new ButtonClickListener());
         customQueryExecuteButton.addActionListener(new ButtonClickListener());
 
-        possibleCulprits = new JTextField("countryX, countryY");
+        possibleCulprits = new JTextField();
         possibleCulprits.setColumns(20);
 
         panel1.add(submitButton);
@@ -296,7 +296,11 @@ class GUI {
                     String customQuery = customQueryString.getText();
                     status.setText("Executing custom query string: " + customQuery);
                     JTextArea textArea = new JTextArea();
-                    textArea.setText(QueryExecutor.executeCustomQuery(customQuery));
+                    String res = QueryExecutor.executeCustomQuery(customQuery);
+                    if (res == null || res.equals("")) {
+                        res = "False. No result for: " + customQuery;
+                    }
+                    textArea.setText(res);
                     textArea.setEditable(false);
                     textArea.setRows(40);
                     textArea.setCaretPosition(0);
@@ -440,6 +444,16 @@ class GUI {
         ta.setText(executeResult.getCulpritsSummary());
         ta.setCaretPosition(0);
         p.add(ta);
+
+        if (executeResult.hasAbduced()) {
+            p.add(new JLabel("Assumptions:"));
+            JTextArea abduced = new JTextArea(executeResult.getAbducedInfo());
+            abduced.setColumns(50);
+            abduced.setEditable(false);
+            abduced.setLineWrap(true);
+            p.add(abduced);
+        }
+
         p.add(new JLabel("Derivations:"));
 
         for (int i = 0; i < rs.size(); i++) {
@@ -453,7 +467,7 @@ class GUI {
             String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
             btn.setActionCommand(filename);
             btn.addActionListener(new ButtonClickListener());
-            textArea.setCaretPosition(0);
+//            textArea.setCaretPosition(0);
             p.add(textArea);
             p.add(btn, Panel.LEFT_ALIGNMENT);
             c++;
@@ -470,7 +484,7 @@ class GUI {
                 textArea.setEditable(false);
                 textArea.setText(nd);
                 textArea.setLineWrap(true);
-                textArea.setCaretPosition(0);
+//                textArea.setCaretPosition(0);
                 p.add(textArea);
                 JButton addPrefBtn = new JButton("Add rule preference");
                 addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit));
@@ -497,7 +511,7 @@ class GUI {
         for (String s : res[0]) {
             sj.add(s);
         }
-        JTextArea results = new JTextArea("Results:\n" + sj);
+        JTextArea results = new JTextArea("Results (proven):\n\n" + sj);
         results.setEditable(false);
         results.setRows(22);
         results.setColumns(45);
@@ -509,7 +523,7 @@ class GUI {
         for (String s : res[1]) {
             sj.add(s);
         }
-        JTextArea nonresults = new JTextArea("Other possible predicates:\n" + sj);
+        JTextArea nonresults = new JTextArea("Other possible predicates (not proven):\n\n" + sj);
         nonresults.setCaretPosition(0);
         JScrollPane row1col2 = new JScrollPane(nonresults);
         nonresults.setEditable(false);
@@ -517,7 +531,7 @@ class GUI {
         nonresults.setColumns(45);
         row1.add(row1col2);
 
-        JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
+        JTextArea possiblerules = new JTextArea("Possible rules:\n\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
         possiblerules.setEditable(false);
         possiblerules.setColumns(90);
         possiblerules.setCaretPosition(0);

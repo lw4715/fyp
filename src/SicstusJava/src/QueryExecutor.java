@@ -318,7 +318,7 @@ public class QueryExecutor {
             BufferedReader br = new BufferedReader(new FileReader(filename + ".pl"));
             br.lines().forEach(line -> {
                 if (line.contains(pred) && line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%')) {
-                    r.add(line);
+                    r.add(line.replace("\t",""));
                 }
             });
         } catch (FileNotFoundException e) {
@@ -372,7 +372,7 @@ public class QueryExecutor {
 //                "[case_example2b_f2(),r_str_targetItself2(yourCountry, example2b)]");
 
         QueryExecutor qe = QueryExecutor.getInstance();
-        qe.setDebug();
+//        qe.setDebug();
         int n = 1;
         try {
 //            System.out.println(qe.execute("example5", false));
