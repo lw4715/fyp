@@ -34,14 +34,17 @@ writeToFiles(Filename, X, D, Prefix) :-
   (D, writeToFile(Filename, X, Prefix));
     (\+ D, writeToFile(Filename, neg(X), Prefix)).
 
-writeToFilesAll(Filename, X, D, Prefix) :-
-  (D, writeToFile(Filename, X, Prefix), writeResultsToFile(X));
-    (\+ D, writeToFile(Filename, neg(X), Prefix), writeNonResultsToFile(X)).
-
-writeToFilesAbd(Filename, X, D, Prefix) :-
-  (D, writeToFile(Filename, X, Prefix));
-    (\+ D).
-
-writeToFilesAllAbd(Filename, X, D, Prefix) :-
-  (D, writeToFile(Filename, X, Prefix), writeResultsToFile(X));
+writeToFilesAll(X, D) :-
+  (D, writeResultsToFile(X));
     (\+ D, writeNonResultsToFile(X)).
+
+%% writeToFilesAbd(Filename, X, D, Prefix) :-
+%%   (D, writeToFile(Filename, X, Prefix));
+%%     (\+ D).
+
+%% writeToFilesAllAbd(Filename, X, D, Prefix) :-
+%%   (D, writeToFile(Filename, X, Prefix), writeResultsToFile(X));
+%%     (\+ D, writeNonResultsToFile(X)).
+
+writeToFilesPos(X, D) :-
+  D, writeResultsToFile(X); \+ D.

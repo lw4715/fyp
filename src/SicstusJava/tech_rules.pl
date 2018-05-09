@@ -60,6 +60,8 @@ rule(r_t_similarFileChara2(C1,C2),similarFileChara(C1,C2),[fileChara(_,MD5,_,_,_
 rule(r_t_similarFileChara3(C1,C2),similarFileChara(C1,C2),[fileChara(_,_,_,_,Desc,_,C1),fileChara(_,_,_,_,Desc,_,C2)]).
 rule(r_t_similarFileChara4(C1,C2),similarFileChara(C1,C2),[fileChara(_,_,Size,CompileTime,_,Filetype,C1),fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
+rule(r_t_squid_log(IP),  attackSourceIP(IP,M),   [squid_log(IP,_Port,_ResultCode,M)]).
+
 % pref
 rule(p1_t(),prefer(r_t_attackOrigin(X,Att),r_t_attackOriginDefault(X,Att)),[]).
 rule(p2a_t(),prefer(r_t_conflictingOrigin(X,_Y,Att),r_t_attackOrigin(X,Att)),[]).
@@ -106,12 +108,12 @@ rule(p14d_t(),prefer(r_t_simCC3(M1,M2),r_t_similarDefault(M1,M2)),[]).
 %% rule(abnormalIP,abnormalIP(IP),[domainName(IP,Domain),domainCountry(Domain,C1),ipGeoloc(IP,C2),C1 \= C2]).
 
 goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
-  initFile('tech.pl'), cleanFile('results.pl'), cleanFile('non_results.pl'),
-  writeToFilesAll('tech.pl', requireHighResource(A), requireHighResource(A, D1), 'tech_'),
-  writeToFilesAll('tech.pl', attackOrigin(X,A), attackOrigin(X,A,D2), 'tech_'),
-  writeToFilesAllAbd('tech.pl', notForBlackMarketUse(M), notForBlackMarketUse(M, D3), 'tech_'),
-  writeToFilesAllAbd('tech.pl', specificTarget(A), specificTarget(A, D4), 'tech_'),
-  writeToFilesAllAbd('tech.pl', similar(M2, M3), similar(M2, M3, D5), 'tech_').
+  cleanFile('results.pl'), cleanFile('non_results.pl'),
+  writeToFilesAll(requireHighResource(A), requireHighResource(A, D1)),
+  writeToFilesAll(attackOrigin(X,A), attackOrigin(X,A,D2)),
+  writeToFilesAll(notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
+  writeToFilesAll(specificTarget(A), specificTarget(A, D4)),
+  writeToFilesAll(similar(M2, M3), similar(M2, M3, D5)).
 
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).

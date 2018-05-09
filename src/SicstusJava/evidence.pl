@@ -9,6 +9,9 @@ rule(case1_f4(),hijackCorporateClouds(usbankhack),[]).
 rule(case1_f5(),sophisticatedMalware(itsoknoproblembro),[]).
 rule(case1_f6(),malwareUsedInAttack(itsoknoproblembro, usbankhack),[]).
 rule(case1_f7(),attackPeriod(usbankhack,[2012,9]),[]).
+rule(case1_f7(),target(us_banks, usbankhack),[]).
+rule(case1_f8(),industry(banking, us_banks),[]).
+
 
 % APT1
 %% expected: china (social,location,hasMotive)
@@ -60,6 +63,8 @@ rule(case4_f11(),attackPeriod(stuxnetattack,[2010,7]),[]).
 rule(case4_f12(),malwareUsedInAttack(stuxnet, stuxnetattack),[]).
 rule(case4_f13(),specificConfigInMalware(stuxnet),[]).
 rule(case4_f14(),infectionMethod(usb,stuxnet),[]).
+rule(case4_f15(),target(iran_nuclear_facilities, stuxnetattack),[]).
+rule(case4_f16(),industry(nuclear, iran_nuclear_facilities),[]).
 
 
 %  sony 

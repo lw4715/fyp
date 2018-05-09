@@ -96,7 +96,7 @@ def extract_port_number_info(filename):
     f = open(filename)
     r = ""
     f_w = open("tmp/" + filename + "output_rule.pl", 'w')
-    counter = 0;
+    counter = 0
     for line in f:
         s = line.split(",")
         service_name = s[0]
@@ -114,7 +114,33 @@ def extract_port_number_info(filename):
                 r = "well_known_port(\"" + service_name + "\"," + port + "," + transport_protocol + ")"
                 f_w.write("rule(bg_port_num_" + str(counter) + "(), " + r + ", []).\n")
                 counter += 1
-    return r
+    return
+
+def parseNetstatLog(filename):
+    f = open(filename)
+    f_w = open("tmp/" + filename + "output_rule.pl", "w")
+    counter = 0
+    num_args = 10
+
+    for line in f:
+        if (not(line.startswith('#'))):
+            s = line.split()
+            r = "rule(case_netstat_log_" + str(counter) + "(), netstat_log("
+            if len(s) == num_args:
+                for i in range(num_args):
+                    r += "'" + s[i].strip() + "',"
+            else:
+                for i in range(num_args):
+                    if i == 5:
+                        r += "'',"
+                    elif i < 5:
+                        r += "'" + s[i].strip() + "',"
+                    else:
+                        r += "'" + s[i-1].strip() + "',"
+            r = r[:-1] + "), []).\n"
+            f_w.write(r)
+            counter += 1
+    return
 
 
 if __name__ == "__main__":
@@ -125,9 +151,10 @@ if __name__ == "__main__":
 
     #if rules:
     # convertRulesFile()
-    # renumberRules('SicstusJava/backgroundgorgias')
+    renumberRules('SicstusJava/backgroundgorgias')
     #if pref:
     #    convertPrefFile(pref)
     # convertRulesFile()
     # convertPrefFile()
-    extract_port_number_info("service-names-port-numbers.csv")
+    # extract_port_number_info("service-names-port-numbers.csv")
+    # parseNetstatLog("netstat.log")

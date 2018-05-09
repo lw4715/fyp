@@ -14,7 +14,6 @@
 % malwareUsedInAttack/2 (past)
 
 abducible(notForBlackMarketUse(_),[]).
-%% abducible(hasCapability(_,_),[]).
 
 complement(isCulprit(X,Att),isCulprit(Y,Att)) :- X \= Y.
 

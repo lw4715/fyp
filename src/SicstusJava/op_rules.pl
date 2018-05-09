@@ -1,24 +1,11 @@
-%% :- compile('utils.pl').
-%% :- compile('tech.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
 
-% input from tech:
-% hasResources/1
-% requireHighResource/1
 
-% input (evidence):
-% hasPoliticalMotive/3
-% target/2
-% imposedSanctions/2
-% hasEconomicMotive/2
-% highSecurity/1
-% geolocatedInGovFacility/2
-% publicCommentsRelatedToGov/2
-
-% input (background):
-% industry/1
+%% Main rules:
 abducible(specificTarget(_Att),[]).
+abducible(contextOfAttack(political,_Att),[]).
+abducible(contextOfAttack(economic,_Att),[]).
 
 rule(r_op_hasResources1(X),hasResources(X),[gci_tier(X,leading)]).
 rule(r_op_hasResources2(X),hasResources(X),[cybersuperpower(X)]).
@@ -30,8 +17,8 @@ rule(r_op_hasCapability1(X,Att),hasCapability(X,Att),[neg(requireHighResource(At
 rule(r_op_hasCapability2(X,Att),hasCapability(X,Att),[requireHighResource(Att),hasResources(X)]).
 rule(r_op_noCapability(X,Att),neg(hasCapability(X,Att)),[requireHighResource(Att),neg(hasResources(X))]).
 
-rule(r_op_ecMotive(C,T),	hasMotive(C,Att),		 [industry(T),target(T,Att),hasEconomicMotive(C,T),specificTarget(Att)]).
-rule(r_op_pMotive(C,T),   	hasMotive(C,Att),		 [targetCountry(T,Att),attackPeriod(Att,Date1),hasPoliticalMotive(C,T,Date2),dateApplicable(Date1,Date2),specificTarget(Att)]).
+rule(r_op_ecMotive(C,T),	hasMotive(C,Att),		 [industry(T),target(T,Att),contextOfAttack(economic,Att),hasEconomicMotive(C,T),specificTarget(Att)]).
+rule(r_op_pMotive(C,T),   	hasMotive(C,Att),		 [targetCountry(T,Att),attackPeriod(Att,Date1),contextOfAttack(political,Att),hasPoliticalMotive(C,T,Date2),dateApplicable(Date1,Date2),specificTarget(Att)]).
 rule(r_op_pMotive1(C,T,Date),hasPoliticalMotive(C,T,Date),[imposedSanctions(T,C,Date)]).
 rule(r_op_conflict(X,T),	hasMotive(X,Att),		 [targetCountry(T,Att),attackPeriod(Att,Date1),news(News,T,Date2),dateApplicable(Date1,Date2),causeOfConflict(X,T,News),specificTarget(Att)]).
 rule(r_op_conflict1(X,T),  hasMotive(X,Att),		 [target(T,Att),attackPeriod(Att,Date1),news(News,T,Date2),dateApplicable(Date1,Date2),causeOfConflict(X,T,News),specificTarget(Att)]).
@@ -43,6 +30,13 @@ rule(r_op_nonGeopolitics2(C,T),neg(hasMotive(C,Att)),[target(T,Att),country(T),c
 rule(r_op_claimResp0(X,Att), existingGroupClaimedResponsibility(X,Att), [claimedResponsibility(X,Att)]).
 rule(r_op_claimResp1(X,Att), neg(existingGroupClaimedResponsibility(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
 
+
+%% politicalIndustries are industries that are closely related to well-being of country/sensitive to national interests
+rule(r_op_context(economic,Att), contextOfAttack(economic,Att), [target(T,Att), industry(Ind,T), normalIndustry(Ind)]).
+rule(r_op_context(political,Att), contextOfAttack(political,Att), [target(T,Att), country(T)]).
+rule(r_op_context(political,Att), contextOfAttack(political,Att), [target(T,Att), industry(Ind,T), politicalIndustry(Ind)]).
+
+%% Auxilliary rules
 %% Y2 M2 is before Y1 M1 but recent enough (within 2 years)
 rule(r_op_date(ongoing),dateApplicable(_,ongoing),[]).
 rule(r_op_date1(Y,M),dateApplicable([Y,M],[Y,M]),[]).
@@ -63,10 +57,12 @@ rule(p4c_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4d_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics2(C,T)),[]).
 rule(p5_op(),prefer(r_op_claimResp1(X,A),r_op_claimResp0(X,A)),[]).
 
-goal_all(A, X, D) :-
-  initFile('op.pl'), 
-  %% writeToFilesAll('op.pl', hasCapability(X,A), hasCapability(X,A,D0), 'op_'),
-  writeToFilesAll('op.pl', hasMotive(X,A), hasMotive(X,A,D), 'op_').
+goal_all(A, X, D, D1, D2, D3) :-
+  writeToFilesPos(hasCapability(X,A), hasCapability(X,A,D)),
+  writeToFilesPos(hasMotive(X,A), hasMotive(X,A,D1)),
+  writeToFilesAll(contextOfAttack(political,A), contextOfAttack(political,A,D2)),
+  writeToFilesAll(contextOfAttack(economic,A), contextOfAttack(economic,A,D3)).
 
-%% hasCapability(X,A,D0) :- prove([hasCapability(X,A)], D0).
-hasMotive(X,A,D1) :- prove([hasMotive(X,A)], D1).
+hasCapability(X,A,D) :- prove([hasCapability(X,A)], D).
+hasMotive(X,A,D) :- prove([hasMotive(X,A)], D).
+contextOfAttack(Context,A,D) :- prove([contextOfAttack(Context,A)], D).
