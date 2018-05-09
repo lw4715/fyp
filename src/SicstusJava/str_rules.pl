@@ -115,6 +115,6 @@ rule(p22d(),prefer(r_str_linkedMalware(X,A),r_str_weakAttack(X,A)),[]).
 
 %% rule(r_str_p30,prefer(p8,p2),[]).
 
-goal(A,X,D) :- visual_prove([isCulprit(X,A)],D,[failed(true)]).
+goal(A,X,D) :- visual_prove([isCulprit(X,A)],D,[]).
 neg_goal(A,X,D) :- prove([neg(isCulprit(X,A))],D).
 

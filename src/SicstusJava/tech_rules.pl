@@ -2,7 +2,7 @@
 :- multifile rule/3.
 :- multifile abducible/2.
 
-rule(r_t_highSkill0(Att),neg(highLevelSkill(Att)),    []).
+rule(r_t_neghighSkill(Att),neg(highLevelSkill(Att)),    []).
 rule(r_t_highSkill1(Att),highLevelSkill(Att),    	[hijackCorporateClouds(Att)]).
 rule(r_t_highSkill2(Att),highLevelSkill(Att),    	[malwareUsedInAttack(M,Att),sophisticatedMalware(M)]).
 rule(r_t_highSkill3(Att),neg(highLevelSkill(Att)),	[malwareUsedInAttack(M,Att),neg(notForBlackMarketUse(M))]).
@@ -75,9 +75,9 @@ rule(p7_t(),prefer(r_t_infra(X,Att),r_t_noLocEvidence(X,Att)),[]).
 rule(p8_t(),prefer(r_t_domain(X,Att),r_t_noLocEvidence(X,Att)),[]).
 rule(p9a_t(),prefer(r_t_spoofIP(X,Att),r_t_srcIP1(X,Att)),[]).
 rule(p9b_t(),prefer(r_t_spoofIP(X,Att),r_t_srcIP2(X,Att)),[]).
-rule(p10a_t(),prefer(r_t_highSkill1(Att),r_t_highSkill0(Att)),[]).
-rule(p10b_t(),prefer(r_t_highSkill2(Att),r_t_highSkill0(Att)),[]).
-rule(p10c_t(),prefer(r_t_highSkill4(Att),r_t_highSkill0(Att)),[]).
+rule(p10a_t(),prefer(r_t_highSkill1(Att),r_t_neghighSkill(Att)),[]).
+rule(p10b_t(),prefer(r_t_highSkill2(Att),r_t_neghighSkill(Att)),[]).
+rule(p10c_t(),prefer(r_t_highSkill4(Att),r_t_neghighSkill(Att)),[]).
 rule(p11a_t(),prefer(r_t_highSkill3(Att),r_t_highSkill1(Att)),[]).
 rule(p11b_t(),prefer(r_t_highSkill3(Att),r_t_highSkill2(Att)),[]).
 rule(p11c_t(),prefer(r_t_highSkill3(Att),r_t_highSkill4(Att)),[]).

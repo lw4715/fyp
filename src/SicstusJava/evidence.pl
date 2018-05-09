@@ -198,5 +198,13 @@ rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5m),[]).
 rule(test(),attackSourceIP([69,195,124,58],test),[]).
 rule(test(),targetServerIP([173,194,36,104],test),[]).
 
+%% example7
+%% expected: 
+%% yourCountry
+rule(case_example7_f1a(),malwareUsedInAttack(example7m,example7),[]).
+rule(case_example7_f2b(),targetCountry(myCountry,example7),[]).
+rule(case_example7_f3(),malwareUsedInAttack(example7_m1,example7),[]).
+rule(case_example7_f4(),simlarCodeObfuscation(example7_m1,example7_m2),[]).
+rule(case_example7_f5(),malwareLinkedTo(example7_m2,yourCountry),[]).
 
 
