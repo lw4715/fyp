@@ -26,6 +26,8 @@ class GUI {
     private static final String EXECUTEALLINFO = "Get a list of predicates that can be derived by current evidences: ";
     private static final String EXECUTED_IS_CULPRIT = "\t\tExecuted isCulprit(%s, X)...";
     private static final String ARG_TREE = "ArgTree:";
+    private static final String UPLOAD_SQUID_LOG = "Upload squid log";
+    private static final String OPEN_TOOL_INTEGRATION = "Open tool integration";
 
     private final Utils utils;
 
@@ -41,12 +43,15 @@ class GUI {
     private JTextField evidence;
     private JTextField attackName;
     private JTextField possibleCulprits;
+    private JTextField squidLogAttackname;
     private JTextArea currentEvidences;
     private JScrollPane scrollPane;
     private JasperCallable jc;
 
     private JFrame executeResultFrame;
     private JFrame prefFrame;
+    private JFrame toolIntegrationFrame;
+    private JLabel toolIntegrationStatus;
 
     private final JFileChooser fileChooser = new JFileChooser();
 
@@ -188,6 +193,11 @@ class GUI {
         panel4.add(new JLabel("Custom query string"));
         panel4.add(customQueryString);
 
+        JButton toolIntegrationBtn = new JButton("Tool integration");
+        toolIntegrationBtn.setActionCommand(OPEN_TOOL_INTEGRATION);
+        toolIntegrationBtn.addActionListener(new ButtonClickListener());
+
+        mainFrame.add(toolIntegrationBtn);
 
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
         mainFrame.add(panel2);
@@ -207,16 +217,6 @@ class GUI {
         mainFrame.setSize(1000,750);
         mainFrame.setVisible(true);
     }
-
-//    private String formatPredicate(String s) {
-//        String[] split = s.split("/");
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("<arg>");
-//        for (int i = 1; i < Integer.parseInt(split[1]); i++) {
-//            sb.append(", <arg>");
-//        }
-//        return split[0] + '(' + sb + ')';
-//    }
 
     private void addButtonsToPanel(){
         JButton submitButton = new JButton(SUBMIT);
@@ -324,48 +324,31 @@ class GUI {
                     f.setSize(1200,1000);
                     f.setVisible(true);
                     break;
+                case UPLOAD_SQUID_LOG:
+                    if (squidLogAttackname.getText().length() == 0) {
+                        toolIntegrationStatus.setText("\t\tPlease input attack name associated with squid log");
+                        highlightElement(squidLogAttackname);
+                        return;
+                    }
+
+                    returnVal = fileChooser.showOpenDialog(toolIntegrationFrame);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+                        System.out.println("Opening: " + file.getName());
+                        ToolIntegration.parseSquidLogFile(file.getName(), squidLogAttackname.getText());
+                        toolIntegrationFrame.dispose();
+                        status.setText("Processed squid file, updated prolog file: " + ToolIntegration.SQUID_LOG_RULES_PL);
+                    }
+                    break;
+                case OPEN_TOOL_INTEGRATION:
+                    System.out.println("Opening tool integation");
+                    openToolIntegrationWindow();
+                    break;
                 default:
                     // add pref
                     if (command.startsWith("[")) {
-                        String[] s = command.split("\\*");
-                        String negDer = s[0];
-                        String[] posDers = s[1].split("#");
-
-                        JTextArea ntf = new JTextArea(negDer);
-                        ntf.setColumns(30);
-                        ntf.setLineWrap(true);
-
-
-                        JPanel prefP = new JPanel();
-                        prefP.setLayout(new BoxLayout(prefP, BoxLayout.Y_AXIS));
-                        prefP.add(new JLabel("Negative derivation:"));
-                        prefP.add(ntf);
-                        prefP.add(new JLabel("Positive derivations:"));
-                        for (String posDer : posDers) {
-                            List<String> conflictingRules = QueryExecutor.getConflictingRule(posDer, negDer);
-                            JButton choosePos = new JButton("Prefer " + conflictingRules.get(0));
-                            JButton chooseNeg = new JButton("Prefer " + conflictingRules.get(1));
-                            choosePos.setActionCommand("Choose0:" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
-                            chooseNeg.setActionCommand("Choose1:" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
-                            choosePos.addActionListener(new ButtonClickListener());
-                            chooseNeg.addActionListener(new ButtonClickListener());
-
-
-                            JTextArea ptf = new JTextArea(posDer);
-                            ptf.setColumns(30);
-                            ptf.setLineWrap(true);
-
-                            prefP.add(ptf);
-                            prefP.add(choosePos);
-                            prefP.add(chooseNeg);
-                        }
-
-                        JScrollPane prefSP = new JScrollPane(prefP);
-                        prefFrame = new JFrame();
-                        prefFrame.add(prefSP);
-                        prefFrame.setSize(1000, 800);
-                        prefFrame.setVisible(true);
-
+                        choosePreferenceAction(command);
 
                     } else if (command.startsWith("Choose")) {
                         // create preference rule
@@ -380,12 +363,75 @@ class GUI {
                         String[] s = command.split(":");
                         DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
                         SVGApplication.displayFile("img/" + s[1]);
+
                     } else {
                         // display svg
                         SVGApplication.displayFile("img/" + command);
                     }
             }
         }
+    }
+
+    private void choosePreferenceAction(String command) {
+        String[] s = command.split("\\*");
+        String negDer = s[0];
+        String[] posDers = s[1].split("#");
+
+        JTextArea ntf = new JTextArea(negDer);
+        ntf.setColumns(30);
+        ntf.setLineWrap(true);
+
+
+        JPanel prefP = new JPanel();
+        prefP.setLayout(new BoxLayout(prefP, BoxLayout.Y_AXIS));
+        prefP.add(new JLabel("Negative derivation:"));
+        prefP.add(ntf);
+        prefP.add(new JLabel("Positive derivations:"));
+        for (String posDer : posDers) {
+            List<String> conflictingRules = QueryExecutor.getConflictingRule(posDer, negDer);
+
+            JButton choosePos = new JButton("Prefer " + conflictingRules.get(0));
+            JButton chooseNeg = new JButton("Prefer " + conflictingRules.get(1));
+            choosePos.setActionCommand("Choose0:" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
+            chooseNeg.setActionCommand("Choose1:" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
+            choosePos.addActionListener(new ButtonClickListener());
+            chooseNeg.addActionListener(new ButtonClickListener());
+
+            JTextArea ptf = new JTextArea(posDer);
+            ptf.setColumns(30);
+            ptf.setLineWrap(true);
+
+            JPanel btnPanel = new JPanel();
+            btnPanel.setLayout(new FlowLayout());
+            btnPanel.add(chooseNeg);
+            btnPanel.add(choosePos);
+
+            prefP.add(ptf);
+            prefP.add(btnPanel);
+        }
+
+        JScrollPane prefSP = new JScrollPane(prefP);
+        prefFrame = new JFrame();
+        prefFrame.add(prefSP);
+        prefFrame.setSize(1000, 800);
+        prefFrame.setVisible(true);
+    }
+
+    private void openToolIntegrationWindow() {
+        squidLogAttackname = new JTextField();
+        toolIntegrationStatus = new JLabel();
+        JButton btn = new JButton("Upload SQUID log");
+        btn.setActionCommand(UPLOAD_SQUID_LOG);
+        btn.addActionListener(new ButtonClickListener());
+
+        toolIntegrationFrame = new JFrame();
+        toolIntegrationFrame.setLayout(new BoxLayout(toolIntegrationFrame.getContentPane(), BoxLayout.Y_AXIS));
+        toolIntegrationFrame.add(new JLabel("Attack name associated with log:"));
+        toolIntegrationFrame.add(squidLogAttackname);
+        toolIntegrationFrame.add(toolIntegrationStatus);
+        toolIntegrationFrame.add(btn);
+        toolIntegrationFrame.setSize(400,200);
+        toolIntegrationFrame.setVisible(true);
     }
 
     private void executeQueryAllWithCulprits(List<String> culpritsToConsider) {

@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -6,16 +7,61 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
-//import
+
 
 public class ToolIntegration {
     static final String targetServerIPPredicate = "targetServerIP";
     static final String torIPFile = "torCheckIPList";
     static final String virusTotalPrologFileTemplate = "virustotal_";
     static final String virusTotalLogFileTemplate = "virustotal_res_";
+    static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
     static final List<String> virusTotalFiles = new ArrayList<>();
 
     private int torCount = 0;
+
+    /*
+        * User upload HIDS notification (OSSEC format)
+        * Filter for keyword: TCP_DENIED/407, TCP_MISS/404
+        * Repeated access to same extension (last in html) e.g. "xxx3.php"
+        *
+        * Extract: IP, port, code, unixTimestamp
+        * */
+    private static String parseSquidLog(String line, int count, String malware) {
+        String[] ss = line.split(" ");
+        String resultCode = ss[3];
+        String forwardedAddr = ss[6];
+        String[] ip = forwardedAddr.split(":")[0].split("\\.");
+        if (ip.length == 4) {
+            String port = forwardedAddr.split(":")[1];
+            String ipString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
+            return String.format("rule(case_squid_log_%d, squid_log(%s,%s,'%s',%s),[]).",
+                    count, ipString, port, resultCode, malware);
+        } else {
+            System.out.println(forwardedAddr + " is not valid IP");
+        }
+        return "";
+    }
+
+    public static void parseSquidLogFile(String filename, String malware) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            StringBuilder sb = new StringBuilder();
+            final int[] c = {0};
+            br.lines().forEach(x -> {
+                sb.append(ToolIntegration.parseSquidLog(x, c[0], malware) + "\n");
+                c[0]++;
+            });
+
+            FileWriter w = new FileWriter(SQUID_LOG_RULES_PL);
+            w.write(":- multifile rule/3.\n");
+            w.write(sb.toString());
+            w.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     void torIntegration() {
@@ -38,7 +84,7 @@ public class ToolIntegration {
     private static Stream<String> getTorFile(String ipString) {
         String domainName = String.format("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s&port=", ipString);
         String command = "curl " + domainName;
-        return executeCommand(command);
+        return executeUNIXCommand(command);
 
     }
 
@@ -122,10 +168,10 @@ public class ToolIntegration {
         return s.toLowerCase().replace(" ", "_");
     }
 
-//    static void getVirustotalReportAndProcess(String ip) {
-//        getIPAddressReport(ip);
-//        processVirusTotalFile(virusTotalLogFileTemplate + ip, ip);
-//    }
+    static void getVirustotalReportAndProcess(String ip) {
+        GetIPAddressReport.getIPAddressReport(ip, virusTotalLogFileTemplate);
+        processVirusTotalFile(virusTotalLogFileTemplate + ip, ip);
+    }
 
 
     static void processVirusTotalFile(String filename, String ip) {
@@ -178,36 +224,8 @@ public class ToolIntegration {
 
 //    TODO: Wireshark, can it find spoofed IP? what can we use??
 
-//    public static void main(String[] args) {
-////        processTorCheckFile("check_tor.txt", "72.111.1.30");
-////        System.out.println(ipGeolocation("82.8.188.204"));
-//        processVirusTotalFile("/Users/linna/FYP/fyp/Virustotal-Public-API-V2.0-Client/virustotal_res_69.195.124.58", "69.195.124.58");
-//    }
 
-
-//    public static void main(String[] args) {
-////        torIntegration();
-//        int n = 2;
-//        Process p = null;
-//        try {
-//            p = Runtime.getRuntime().exec("python test1.py " + n);
-//            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            in.lines().forEach(x -> System.out.println(x));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    public static void main(String[] args) {
-        ToolIntegration ti = new ToolIntegration();
-        ti.torIntegration();
-//        getTorFile("173.194.36.104");
-    }
-
-    private static Stream<String> executeCommand(String command) {
-
-        StringBuffer output = new StringBuffer();
-
+    private static Stream<String> executeUNIXCommand(String command) {
         Process p;
         try {
             p = Runtime.getRuntime().exec(command);
@@ -221,6 +239,15 @@ public class ToolIntegration {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+//        ToolIntegration ti = new ToolIntegration();
+//        ti.torIntegration();
+
+//        getVirustotalReportAndProcess("173.194.36.104");
+        parseSquidLogFile("squid_logs", "testagain");
+
     }
 
 }

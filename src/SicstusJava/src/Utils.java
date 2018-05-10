@@ -355,52 +355,7 @@ public class Utils {
         }
     }
 
-    /*
-    * User upload HIDS notification (OSSEC format)
-    * Filter for keyword: TCP_DENIED/407, TCP_MISS/404
-    * Repeated access to same extension (last in html) e.g. "xxx3.php"
-    *
-    * Extract: IP, port, code, unixTimestamp
-    * */
-    private static String parseSquidLog(String line, int count, String malware) {
-        String[] ss = line.split(" ");
-        String resultCode = ss[3];
-        String forwardedAddr = ss[6];
-        String[] ip = forwardedAddr.split(":")[0].split("\\.");
-        if (ip.length == 4) {
-            String port = forwardedAddr.split(":")[1];
-            String ipString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
-            return String.format("rule(case_squid_log_%d, squid_log(%s,%s,'%s',%s),[]).",
-                    count, ipString, port, resultCode, malware);
-        } else {
-            System.out.println(forwardedAddr + " is not valid IP");
-        }
-        return "";
-    }
-
-    public static void parseSquidLogFile(String filename, String malware) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-            StringBuilder sb = new StringBuilder();
-            final int[] c = {0};
-            br.lines().forEach(x -> {
-                sb.append(parseSquidLog(x, c[0], malware) + "\n");
-                c[0]++;
-            });
-
-            FileWriter w = new FileWriter(filename + "_rules.pl");
-            w.write(sb.toString());
-            w.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) {
-//        System.out.println(parseSquidLog("0 192.168.2.135 TCP_DENIED/403 1382 CONNECT 65.54.245.104:25 - NONE/- text/html", 0, "example6"));
-        parseSquidLogFile("squid_logs", "test");
 
 //        String[] preds = new String[] {"industry(T)","targetCountry(X,Att)","fileChara(Filename,MD5,Size,CompileTime,Desc,Filetype,C1)","poorRelation(C,T)","noPriorHistory(X)","infraUsed(Infra,Att)","hasResources(X)","majorityIpOrigin(X,Att)","stolenValidSignedCertificates(Att)","cybersuperpower(X)","espionage,doxing)","attackPeriod(Att,[Year,Month])","governmentLinked(P,C)","domainRegisteredDetails(Server,Name,Addr)","ipResolution(S,IP,D)","infectionMethod(usb,M)","attackOrigin(X,Att)","highLevelSkill(Att)","usesZeroDayVulnerabilities(M)","hasPoliticalMotive(C,T,Date2)","malwareUsedInAttack(M,Att)","news(News,T,Date2)","prominentGroup(X)","attackPossibleOrigin(X,Att)","notForBlackMarketUse(M)","similarCCServer(M1,M2)","publicCommentsRelatedToGov(P,C)","zeroday,customMalware)","gci_tier(X,leading)","torIP(IP)","malwareLinkedTo(M2,X)","sysLanguage(L,Att)","clientSideExploits)","eternalBlue)","spoofedIP(IP)","ipGeoloc(X,IP)","addressType(Addr,Type)","sophisticatedMalware(M)","identifiedIndividualInAttack(P,Att)","goodRelation(X,Y)","industry(Ind,X)","cyberespionage)","languageInCode(L,Att)","groupOrigin(Group,C)","hasCapability(X,Att)","isInfrastructure(Ind)","infraRegisteredIn(X,Infra)","informationRich(Ind)","hasResources(X)","fileCharaMalware(C2,M2)","claimedResponsibility(X,Att)","addrInCountry(Addr,X)","similarFileChara(C1,C2)","dateApplicable(Date1,Date2)","attackSourceIP(IP,M)","hijackCorporateClouds(Att)","highVolumeAttack(Att)","imposedSanctions(T,C,Date)","causeOfConflict(X,T,News)","ccServer(S,M)","specificConfigInMalware(M)","cyberespionage,undergroundBusiness)","specificTarget(Att)","simlarCodeObfuscation(M1,M2)","requireHighResource(Att)","target(X,Att)","hasMotive(X,Att)","similar(M1,M2)","hasEconomicMotive(C,T)","longDurationAttack(Att)","sharedCode(M1,M2)","commandAndControlEasilyFingerprinted(M)","highSecurity(T)","firstLanguage(L,X)","geolocatedInGovFacility(P,C)","country(X)","malwareModifiedFrom(M1,M2)","gci_tier(X,initiating)","gci_tier(X,maturing)","isCulprit(Group,Att)"};
 //        Set<String> set = new HashSet<>();

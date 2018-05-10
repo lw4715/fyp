@@ -140,7 +140,6 @@ public class DerivationNode {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("Tree >> %s (%s) %d", result, rulename, level));
         if (!children.isEmpty()) {
             sb.append("{" + children.size() + "}");
             sb.append("\n");
@@ -338,7 +337,6 @@ public class DerivationNode {
                     node.addChild(st.pop());
                 }
                 st.push(node);
-                System.out.println("STACK: " + st);
             }
         }
 

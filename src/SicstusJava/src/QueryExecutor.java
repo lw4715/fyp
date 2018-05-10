@@ -288,6 +288,7 @@ public class QueryExecutor {
             }
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.torIPFile), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
             ti.torIntegration();
         } catch (Exception e) {
             e.printStackTrace();
