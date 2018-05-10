@@ -329,8 +329,10 @@ public class QueryExecutor {
 
     static List<String> getConflictingRule(String posDer, String negDer) {
         List<String> l = new ArrayList<>();
-        String[] posRules = posDer.replace("\\[", "").replace("\\]", "").split("\\)");
-        String[] negRules = negDer.replace("\\[", "").replace("\\]", "").split("\\)");
+        posDer = posDer + "$";
+        negDer = negDer + "$";
+        String[] posRules = posDer.replaceFirst("\\[", "").replace("\\]$", "").split("\\)");
+        String[] negRules = negDer.replaceFirst("\\[", "").replace("\\]$", "").split("\\)");
 
         String posStrRule = null;
         String negStrRule = null;

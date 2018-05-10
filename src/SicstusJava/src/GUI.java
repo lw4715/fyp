@@ -44,6 +44,10 @@ class GUI {
     private JTextArea currentEvidences;
     private JScrollPane scrollPane;
     private JasperCallable jc;
+
+    private JFrame executeResultFrame;
+    private JFrame prefFrame;
+
     private final JFileChooser fileChooser = new JFileChooser();
 
     private static final String placeholderItem = "Select from existing predicates";
@@ -357,17 +361,21 @@ class GUI {
                         }
 
                         JScrollPane prefSP = new JScrollPane(prefP);
-                        JFrame prefFrame = new JFrame();
+                        prefFrame = new JFrame();
                         prefFrame.add(prefSP);
                         prefFrame.setSize(1000, 800);
                         prefFrame.setVisible(true);
+
 
                     } else if (command.startsWith("Choose")) {
                         // create preference rule
                         String[] s = command.split(":")[1].split(">");
                         utils.writePrefToFile(String.format("prefer(%s,%s)", s[0], s[1]));
                         currentEvidences.setText(utils.getCurrentEvidence());
+                        executeResultFrame.dispose();
                         executeQuery(false);
+                        prefFrame.dispose();
+
                     } else if (command.startsWith(ARG_TREE)) {
                         String[] s = command.split(":");
                         DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
@@ -496,7 +504,7 @@ class GUI {
                 textArea.setEditable(false);
                 textArea.setText(nd);
                 textArea.setLineWrap(true);
-//                textArea.setCaretPosition(0);
+                textArea.setCaretPosition(0);
                 p.add(textArea);
                 JButton addPrefBtn = new JButton("Add rule preference");
                 addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit));
@@ -506,10 +514,10 @@ class GUI {
         }
         JScrollPane scrollPane = new JScrollPane(p);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        JFrame f = new JFrame();
-        f.add(scrollPane);
-        f.setSize(1200,800);
-        f.setVisible(true);
+        executeResultFrame = new JFrame();
+        executeResultFrame.add(scrollPane);
+        executeResultFrame.setSize(1200,800);
+        executeResultFrame.setVisible(true);
     }
 
     private void displayResultsAndNonResults() {
