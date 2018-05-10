@@ -1,5 +1,3 @@
-import org.jpl7.Term;
-
 import java.util.*;
 
 import static java.util.Collections.max;
@@ -10,7 +8,7 @@ public class Result {
     private Set<String> abduced;
     private Map<String, List<String>> abducedMap;
     private Map<String, Set<List<String>>> negMap;
-    private LinkedHashSet<Term> allterms;
+    private final Object[] trees;
 
     private List<String> culprits;
     private List<Integer> maxScores;
@@ -26,6 +24,7 @@ public class Result {
         this.abduced = abduced;
         this.abducedMap = abducedMap;
         this.negMap = negMap;
+        this.trees = trees;
 
         culprits = new ArrayList<>();
         maxScores = new ArrayList<>();
@@ -56,6 +55,10 @@ public class Result {
 
     public String getAbducedInfo() {
         return "Abduced predicates:\n" + abduced + "\n\nRules to prove abducibles:\n" + Utils.formatMap(abducedMap);
+    }
+
+    public String getTree(int i) {
+        return trees[i].toString();
     }
 
     boolean hasAbduced() {

@@ -315,14 +315,12 @@ public class DerivationNode {
         return createDiagram("img/" + filename, mainNode, prefs);
     }
 
-    public static void createArgumentTreeDiagram(String tree, String filename) {
+    public static void createArgumentTreeDiagram(String tree, String f) {
         String[] lines = tree.split("\n");
-//        Color colour;
-//        Node curr;
-        int type;
         Stack<DerivationNode> st = new Stack<>();
+        int type;
+
         for (int i = lines.length - 1; i >= 0; i--) {
-            System.out.println("STACK: " + st);
             String line = lines[i];
             if (line.contains("DEFENSE")) {
                 type = 3;
@@ -333,19 +331,14 @@ public class DerivationNode {
             int level;
             if (line.contains("[")) {
                 level = line.indexOf('[') / 4;
-                System.out.println("line: " + line + " level: " + level);
-                String d = line.split("\\[")[1].split("\\]")[0];
+                String d = line.substring(line.indexOf('['), line.lastIndexOf(']'));
                 String d2 = d.substring(0, line.length()/2) + "\n" + d.substring(line.length()/2);
                 node = new DerivationNode(d2, level, type);
-
-                if (st.isEmpty()) {
-                    st.push(node);
-                } else {
-                    while (!st.isEmpty() && st.peek().getLevel() == level + 1) {
-                        node.addChild(st.pop());
-                    }
-                    st.push(node);
+                while (!st.isEmpty() && st.peek().getLevel() == level + 1) {
+                    node.addChild(st.pop());
                 }
+                st.push(node);
+                System.out.println("STACK: " + st);
             }
         }
 
@@ -354,15 +347,15 @@ public class DerivationNode {
         }
 
         try {
+            String filename = "img/" + f;
             Graph g = graph(filename).directed()
                     .with(st.pop().createNode());
             Graphviz.fromGraph(g)
-                    .width(100).render(Format.SVG).toFile(new File(filename + ".svg"));
+                    .width(100).render(Format.SVG).toFile(new File(filename));
+            rewriteTransparentStroke(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static void main(String[] args) {
@@ -375,22 +368,28 @@ public class DerivationNode {
 //                "|   |___{NO DEFENSE}\n" +
 //                "|___[r_t_highResource1(stuxnetattack), case4_f4(), r_t_highSkill4(stuxnetattack), p12a_t()]\n" +
 //                "    |___{NO DEFENSE}";
-        String tree =
-                "[r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry,example2b)]  {DEFENSE}\n" +
-                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
-                "    |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
-                "        |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22d(), ass(specificTarget(example2b))]\n" +
-                "        |   |___[r_str_motiveAndCapability(yourCountry,example2b), r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndCapability(yourCountry,example2b))))]  {DEFENSE}\n" +
-                "        |       |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
-                "        |       |   |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
-                "        |       |___[p22b(), ass(specificTarget(example2b))]\n" +
-                "        |           |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}\n" +
-                "        |___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
-                "        |   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
-                "        |___[p22d(), ass(specificTarget(example2b))]\n" +
-                "            |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
 
-        createArgumentTreeDiagram(tree, "testArgTree");
+//        String tree =
+//                "[r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry,example2b)]  {DEFENSE}\n" +
+//                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
+//                "    |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
+//                "        |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22d(), ass(specificTarget(example2b))]\n" +
+//                "        |   |___[r_str_motiveAndCapability(yourCountry,example2b), r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndCapability(yourCountry,example2b))))]  {DEFENSE}\n" +
+//                "        |       |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
+//                "        |       |   |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
+//                "        |       |___[p22b(), ass(specificTarget(example2b))]\n" +
+//                "        |           |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}\n" +
+//                "        |___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
+//                "        |   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
+//                "        |___[p22d(), ass(specificTarget(example2b))]\n" +
+//                "            |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
+
+        String tree = " [case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), bg1(), r_str_loc(yourCountry,example2b)]  {DEFENSE}\n" +
+                "|___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
+                "|   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
+                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22e(), ass(specificTarget(example2b))]\n" +
+                "    |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
+        createArgumentTreeDiagram(tree, "test.svg");
     }
 
 }

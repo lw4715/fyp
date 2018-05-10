@@ -25,6 +25,7 @@ class GUI {
     private static final String CUSTOMEXECUTE = "Custom execute";
     private static final String EXECUTEALLINFO = "Get a list of predicates that can be derived by current evidences: ";
     private static final String EXECUTED_IS_CULPRIT = "\t\tExecuted isCulprit(%s, X)...";
+    private static final String ARG_TREE = "ArgTree:";
 
     private final Utils utils;
 
@@ -367,6 +368,10 @@ class GUI {
                         utils.writePrefToFile(String.format("prefer(%s,%s)", s[0], s[1]));
                         currentEvidences.setText(utils.getCurrentEvidence());
                         executeQuery(false);
+                    } else if (command.startsWith(ARG_TREE)) {
+                        String[] s = command.split(":");
+                        DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
+                        SVGApplication.displayFile("img/" + s[1]);
                     } else {
                         // display svg
                         SVGApplication.displayFile("img/" + command);
@@ -463,13 +468,20 @@ class GUI {
             textArea.setEditable(false);
             textArea.setText(r);
             textArea.setLineWrap(true);
-            JButton btn = new JButton("View diagram");
+            JButton viewDiagBtn = new JButton("View Diagram");
             String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
-            btn.setActionCommand(filename);
-            btn.addActionListener(new ButtonClickListener());
-//            textArea.setCaretPosition(0);
+            viewDiagBtn.setActionCommand(filename);
+            viewDiagBtn.addActionListener(new ButtonClickListener());
+
+            JButton viewTreeBtn = new JButton("View Argumentation Tree");
+            viewTreeBtn.setActionCommand(ARG_TREE + "arg_tree_" + i + ".svg:" +  executeResult.getTree(i));
+            viewTreeBtn.addActionListener(new ButtonClickListener());
+
+            textArea.setCaretPosition(0);
+
             p.add(textArea);
-            p.add(btn, Panel.LEFT_ALIGNMENT);
+            p.add(viewDiagBtn, Panel.LEFT_ALIGNMENT);
+            p.add(viewTreeBtn, Panel.RIGHT_ALIGNMENT);
             c++;
         }
 
@@ -597,9 +609,5 @@ class GUI {
 
     public static void main(String args[]) {
         GUI awt = new GUI();
-//        String la = "[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), r_t_highSkill0(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry, example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), r_t_highSkill0(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry, example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), case_example2b_f8(), bg1(), r_str_motiveAndLocation(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), case_example2b_f8(), bg1(), r_str_motiveAndLocation(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), bg1(), r_str_loc(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), p4a_t(), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry, example2b), r_t_attackOrigin(yourCountry, example2b), bg1(), r_str_loc(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]|[r_op_notTargetted(example2b), case_example2b_f2(), case_example2b_f2b(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]";
-//        System.out.println(la.split("|"));
-//        System.out.println(la.split("|").length);
-//        System.out.println(la.split("|")[0]);
     }
 }
