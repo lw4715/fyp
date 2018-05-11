@@ -6,12 +6,11 @@ public class Utils {
     private static final String P_USER_ = "p_user_";
     private static String FILEPATH = "";
 
-    static final String PROLOG_USER_EVIDENCE = "user_evidence";
-    static final String USER_EVIDENCE_FILENAME = PROLOG_USER_EVIDENCE + ".pl";
+    static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
     static final String VISUALLOG = "visual.log";
-    static final String TECH = FILEPATH + "tech_rules";
-    static final String OP = FILEPATH + "op_rules";
-    static final String STR = FILEPATH + "str_rules";
+    static final String TECH = FILEPATH + "tech_rules.pl";
+    static final String OP = FILEPATH + "op_rules.pl";
+    static final String STR = FILEPATH + "str_rules.pl";
     static final String EVIDENCE_FILENAME = FILEPATH + "evidence.pl";
 
     private int counter;
@@ -258,17 +257,21 @@ public class Utils {
 
     static String GetFilenameForRule(String r) {
         if (r.startsWith("r_t_") || (isPreference(r) && r.endsWith("t"))) {
-            return TECH + ".pl";
+            return TECH;
         } else if (r.startsWith("r_op_") || (isPreference(r) && r.endsWith("op"))) {
-            return OP + ".pl";
+            return OP;
         } else if (r.startsWith("r_str_") || isPreference(r)) {
-            return STR + ".pl";
+            return STR;
         } else if (r.startsWith(CASE_USER_F) || r.startsWith(P_USER_)) {
             return USER_EVIDENCE_FILENAME;
         } else if (r.startsWith("case")) {
             return "evidence.pl";
         } else if (r.startsWith("bg")) {
             return "backgroundgorgias_renumbered.pl";
+        } else if (r.startsWith(ToolIntegration.RULE_CASE_SQUID_LOG)) {
+            return ToolIntegration.SQUID_LOG_RULES_PL;
+        } else if (r.startsWith(ToolIntegration.RULE_CASE_TOR_CHECK)) {
+            return ToolIntegration.TOR_IP_FILE;
         } else {
             System.err.println(r + " which file?");
             return "";
@@ -278,7 +281,7 @@ public class Utils {
     private static String getAllPreds() {
         BufferedReader br;
         Set<String> preds = new HashSet<>();
-        String[] files = new String[] {TECH + ".pl", OP + ".pl", STR + ".pl", "backgroundgorgias_renumbered.pl"};
+        String[] files = new String[] {TECH, OP, STR, "backgroundgorgias_renumbered.pl"};
         try {
             for (String f : files) {
                 br = new BufferedReader(new FileReader(f));
@@ -317,13 +320,13 @@ public class Utils {
         String filename;
         switch(file) {
             case 0:
-                filename = TECH + ".pl";
+                filename = TECH;
                 break;
             case 1:
-                filename = OP + ".pl";
+                filename = OP;
                 break;
             case 2:
-                filename = STR + ".pl";
+                filename = STR;
                 break;
             case -1:
                 filename = USER_EVIDENCE_FILENAME;

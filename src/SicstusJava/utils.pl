@@ -38,13 +38,5 @@ writeToFilesAll(X, D) :-
   (D, writeResultsToFile(X));
     (\+ D, writeNonResultsToFile(X)).
 
-%% writeToFilesAbd(Filename, X, D, Prefix) :-
-%%   (D, writeToFile(Filename, X, Prefix));
-%%     (\+ D).
-
-%% writeToFilesAllAbd(Filename, X, D, Prefix) :-
-%%   (D, writeToFile(Filename, X, Prefix), writeResultsToFile(X));
-%%     (\+ D, writeNonResultsToFile(X)).
-
 writeToFilesPos(X, D) :-
   D, writeResultsToFile(X); \+ D.

@@ -11,11 +11,19 @@ import java.util.stream.Stream;
 
 public class ToolIntegration {
     static final String targetServerIPPredicate = "targetServerIP";
-    static final String torIPFile = "torCheckIPList";
+    static final String TOR_IP_FILE = "torCheckIPList.pl";
+
     static final String virusTotalPrologFileTemplate = "virustotal_";
     static final String virusTotalLogFileTemplate = "virustotal_res_";
-    static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
     static final List<String> virusTotalFiles = new ArrayList<>();
+
+    static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
+    static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
+
+    static final String RULE_CASE_SQUID_LOG = "rule(case_squid_log_%d(), squid_log(%s,%s,'%s',%s),[]).";
+    static final String RULE_CASE_TOR_CHECK = "rule(case_torCheck%d(), %s, []).";
+    static final String RULE_CASE_SQUID_LOG1 = "\nrule(case_squid_log1_%d(), ip(%s),[]).";
+
 
     private int torCount = 0;
 
@@ -34,8 +42,8 @@ public class ToolIntegration {
         if (ip.length == 4) {
             String port = forwardedAddr.split(":")[1];
             String ipString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
-            return String.format("rule(case_squid_log_%d, squid_log(%s,%s,'%s',%s),[]).",
-                    count, ipString, port, resultCode, malware);
+            return String.format(RULE_CASE_SQUID_LOG + RULE_CASE_SQUID_LOG1,
+                    count, ipString, port, resultCode, malware, count, ipString);
         } else {
             System.out.println(forwardedAddr + " is not valid IP");
         }
@@ -66,7 +74,7 @@ public class ToolIntegration {
 
     void torIntegration() {
         if (torCount == 0) {
-            Utils.clearFile(torIPFile + ".pl");
+            Utils.clearFile(TOR_IP_FILE);
         }
 
         Set<String[]> ips = getTargetServerIP(Utils.EVIDENCE_FILENAME);
@@ -116,16 +124,21 @@ public class ToolIntegration {
                     String[] ipStrings = line.split("\\.");
                     String fact = String.format("torIP([%s,%s,%s,%s], %s)",
                             ipStrings[0], ipStrings[1], ipStrings[2], ipStrings[3], serverIP);
-                    sj.add(String.format("rule(case_torCheck%d(), %s, []).", count[0], fact));
+                    sj.add(String.format(RULE_CASE_TOR_CHECK, count[0], fact));
                     count[0]++;
                 }
             });
             torCount = count[0];
-            Files.write(Paths.get(torIPFile + ".pl"), sj.toString().getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(TOR_IP_FILE), sj.toString().getBytes(), StandardOpenOption.APPEND);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // convert [a,b,c,d] to a.b.c.d
+    static String convertPrologIPToString(String ip) {
+        return ip.substring(ip.indexOf('[') + 1, ip.lastIndexOf(']')).replace(",", ".").replace(" ", "");
     }
 
     // make automatic
@@ -176,11 +189,11 @@ public class ToolIntegration {
 
     static void processVirusTotalFile(String filename, String ip) {
         try {
-            String writeFile = virusTotalPrologFileTemplate + ip;
+            String writeFile = virusTotalPrologFileTemplate + ip + ".pl";
             virusTotalFiles.add(writeFile);
 
             BufferedReader br = new BufferedReader(new FileReader(filename));
-            FileWriter w = new FileWriter(writeFile + ".pl");
+            FileWriter w = new FileWriter(writeFile);
             String line = br.readLine();
 
             StringJoiner sj = new StringJoiner(",");
@@ -246,8 +259,49 @@ public class ToolIntegration {
 //        ti.torIntegration();
 
 //        getVirustotalReportAndProcess("173.194.36.104");
-        parseSquidLogFile("squid_logs", "testagain");
 
+//        parseSquidLogFile("squid_logs", "testagain");
+
+        String s = "{abc}";
+        System.out.println(s.substring(s.indexOf('{') +1, s.lastIndexOf('}')));
+    }
+
+
+    // automated geolocation of ip addresses
+    static void preprocessFiles(List<String> allFiles) {
+        List<String> ips = new ArrayList<>();
+        for (String f : allFiles) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+
+                br.lines().forEach(line -> {
+                    if (line.contains("ip([")) {
+                        String head = Utils.getHeadOfLine(line);
+                        ips.add(head.substring(head.indexOf('(') + 1, head.lastIndexOf(')')));
+                    }
+                });
+                br.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL);
+            int c = 0;
+            for (String ip : ips) {
+                String ipString = convertPrologIPToString(ip);
+                String country = ipGeolocation(ipString);
+                String rule = String.format("rule(case_autogen_geolocation%d(), ipGeoloc(%s,%s), []).\n", c, country, ip);
+                c++;
+                f_w.write(rule);
+            }
+            f_w.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

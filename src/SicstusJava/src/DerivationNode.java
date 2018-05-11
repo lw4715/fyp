@@ -346,7 +346,7 @@ public class DerivationNode {
             int level;
             if (line.contains("[")) {
                 level = line.indexOf('[') / 4;
-                String d = line.substring(line.indexOf('['), line.lastIndexOf(']'));
+                String d = line.substring(line.indexOf('[') + 1, line.lastIndexOf(']'));
                 node = new DerivationNode(d, level, type);
                 while (!st.isEmpty() && st.peek().getLevel() == level + 1) {
                     node.addChild(st.pop());

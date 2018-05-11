@@ -113,12 +113,12 @@ goal_all(A, X, M, M2, M3, D1, D2, D3, D4, D5) :-
   writeToFilesAll(attackOrigin(X,A), attackOrigin(X,A,D2)),
   writeToFilesAll(notForBlackMarketUse(M), notForBlackMarketUse(M, D3)),
   writeToFilesAll(specificTarget(A), specificTarget(A, D4)),
-  writeToFilesAll(similar(M2, M3), similar(M2, M3, D5)).
+  writeToFilesAll(similar(M2, M3), similar(M2, M3, A, D5)).
 
 
 requireHighResource(A, D) :- prove([requireHighResource(A)], D).
 attackOrigin(X, A, D) :- prove([attackOrigin(X, A)], D).
 notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
-similar(M1, M2, D) :- prove([similar(M1, M2)], D).
+similar(M1, M2, A, D) :- prove([malwareUsedInAttack(M1, A), similar(M1, M2)], D).
 specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
 malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).

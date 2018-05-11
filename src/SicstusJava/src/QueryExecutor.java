@@ -22,6 +22,7 @@ public class QueryExecutor {
 
 
     private Set<String> abduced;
+    private ArrayList<String> allFiles;
 
     public static QueryExecutor getInstance() {
         return instance;
@@ -272,29 +273,51 @@ public class QueryExecutor {
 
     private void reloadUserFile() {
         try {
-            executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
+            ToolIntegration.preprocessFiles(allFiles);
+            executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void clearLeftoverFiles() {
+        for (String virusTotalFile : ToolIntegration.virusTotalFiles) {
+            Utils.clearFile(virusTotalFile);
+        }
+        Utils.clearFile(Utils.USER_EVIDENCE_FILENAME);
+        Utils.clearFile(ToolIntegration.SQUID_LOG_RULES_PL);
+        Utils.clearFile(ToolIntegration.AUTOMATED_GEOLOCATION_PL);
+        Utils.clearFile(ToolIntegration.TOR_IP_FILE);
+    }
+
     private void loadFiles() {
+        allFiles = new ArrayList<>();
+        allFiles.add("utils.pl");
+        allFiles.add("evidence.pl");
+        allFiles.add(Utils.USER_EVIDENCE_FILENAME);
+        allFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
+        ToolIntegration.preprocessFiles(allFiles);
+
         try {
-            executeQueryString(String.format(CONSULT_STRING, "utils"), 1);
+            executeQueryString(String.format(CONSULT_STRING, "utils.pl"), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.TECH), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.OP), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.STR), 1);
+
             for (String virusTotalFile : ToolIntegration.virusTotalFiles) {
                 executeQueryString(String.format(CONSULT_STRING, virusTotalFile), 1);
             }
-            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.torIPFile), 1);
-            executeQueryString(String.format(CONSULT_STRING, Utils.PROLOG_USER_EVIDENCE), 1);
+
+            executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.TOR_IP_FILE), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.AUTOMATED_GEOLOCATION_PL), 1);
             ti.torIntegration();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     static Map<String, List<String>> getPredMap(Collection<String> preds, boolean isAbducibles) {
         Map<String, List<String>> map = new HashMap<>();
@@ -317,7 +340,7 @@ public class QueryExecutor {
     private static List<String> scanFileForPredicate(String filename, String pred) {
         List<String> r = new ArrayList<>();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filename + ".pl"));
+            BufferedReader br = new BufferedReader(new FileReader(filename));
             br.lines().forEach(line -> {
                 if (line.contains(pred) && line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%')) {
                     r.add(line.replace("\t",""));

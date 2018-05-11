@@ -257,7 +257,10 @@ class GUI {
                     String[] cs = possibleCulprits.getText().split(",");
                     List<String> csList = new ArrayList<>();
                     for (String c : cs) {
-                        csList.add(c.trim());
+                        c = c.trim();
+                        if (c.length() > 0) {
+                            csList.add(c);
+                        }
                     }
 
                     status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
@@ -421,7 +424,9 @@ class GUI {
                 jc.setName(attackName.getText());
                 jc.setReload(true);
                 jc.setAll(true);
-                jc.setCulpritsList(culpritsToConsider);
+                if (culpritsToConsider.size() > 0) {
+                    jc.setCulpritsList(culpritsToConsider);
+                }
                 executeResult = jc.call();
 
             } catch (Exception e1) {
@@ -467,12 +472,16 @@ class GUI {
         List<String> rs = executeResult.resultStrings();
         int c = 0;
 
+        String summary = executeResult.getCulpritsSummary();
+        if (summary.trim().length() == 0) {
+            summary = "No results for execution. Try clicking 'Prove all possible predicates' to see what other evidence can be provided.";
+        }
         p.add(new JLabel("Summary:"));
         JTextArea ta = new JTextArea();
         ta.setColumns(50);
         ta.setEditable(false);
         ta.setLineWrap(true);
-        ta.setText(executeResult.getCulpritsSummary());
+        ta.setText(summary);
         ta.setCaretPosition(0);
         p.add(ta);
 
@@ -551,7 +560,7 @@ class GUI {
         }
         JTextArea results = new JTextArea("Results (proven):\n\n" + sj);
         results.setEditable(false);
-        results.setRows(22);
+        results.setRows(17);
         results.setColumns(45);
         results.setCaretPosition(0);
         JScrollPane row1col1 = new JScrollPane(results);
@@ -565,13 +574,14 @@ class GUI {
         nonresults.setCaretPosition(0);
         JScrollPane row1col2 = new JScrollPane(nonresults);
         nonresults.setEditable(false);
-        nonresults.setRows(22);
+        nonresults.setRows(17);
         nonresults.setColumns(45);
         row1.add(row1col2);
 
         JTextArea possiblerules = new JTextArea("Possible rules:\n\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
         possiblerules.setEditable(false);
         possiblerules.setColumns(90);
+        possiblerules.setRows(25);
         possiblerules.setCaretPosition(0);
         JScrollPane row2 = new JScrollPane(possiblerules);
 
