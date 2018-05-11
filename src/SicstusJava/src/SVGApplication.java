@@ -6,15 +6,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SVGApplication {
+    public static void main(String[] args) {
+        displayFile("img/usbankhack_1.svg");
+    }
 
     private static final String fileTextArea = "File saved at: ";
 
-    public static void main(String[] args) {
-        displayFile("img/apt1_china5.svg");
-    }
 
     static void displayFile(String filename) {
         JFrame f = new JFrame("Derivation");
+        f.setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
         SVGApplication app = new SVGApplication(f);
         f.getContentPane().add(app.createComponents(filename));
         f.setSize(1200, 800);
@@ -22,13 +23,31 @@ public class SVGApplication {
     }
 
     private JFrame frame;
-    private JTextArea textArea = new JTextArea();
-    private JSVGCanvas svgCanvas = new JSVGCanvas();
+    private JTextArea textArea;
+    private JSVGCanvas svgCanvas;
     private JButton helpBtn;
     String filename;
 
     public SVGApplication(JFrame f) {
         frame = f;
+        textArea = new JTextArea();
+        svgCanvas = new JSVGCanvas();
+
+        Action zoomInAction =
+                svgCanvas.getActionMap().get(JSVGCanvas.ZOOM_IN_ACTION);
+        Action zoomOutAction =
+                svgCanvas.getActionMap().get(JSVGCanvas.ZOOM_OUT_ACTION);
+
+        JButton zoomInButton = new JButton("Zoom in (Ctrl+I)");
+        zoomInButton.addActionListener(zoomInAction);
+        JButton zoomOutButton = new JButton("Zoom out (Ctrl+O)");
+        zoomOutButton.addActionListener(zoomOutAction);
+
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new FlowLayout());
+        btnPanel.add(zoomInButton);
+        btnPanel.add(zoomOutButton);
+        f.getContentPane().add(btnPanel);
     }
 
     public JComponent createComponents(String filename) {
@@ -40,16 +59,16 @@ public class SVGApplication {
         textArea.setColumns(80);
         textArea.setRows(7);
         textArea.setEditable(false);
-        p.add(textArea);
-        panel.add("North", p);
-        panel.add("Center", svgCanvas);
         svgCanvas.setURI("file:" + filename);
 
         helpBtn = new JButton("Help");
         helpBtn.setActionCommand("Help");
         helpBtn.addActionListener(new ButtonClickListener());
 
+        p.add(textArea);
         p.add(helpBtn, Panel.RIGHT_ALIGNMENT);
+
+        panel.add("Center", svgCanvas);
         panel.add("South", p);
 
         return panel;

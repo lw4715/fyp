@@ -21,16 +21,15 @@ public class ToolIntegration {
     static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
 
     static final String RULE_CASE_SQUID_LOG = "rule(case_squid_log_%d(), squid_log(%s,%s,'%s',%s),[]).";
-    static final String RULE_CASE_TOR_CHECK = "rule(case_torCheck%d(), %s, []).";
     static final String RULE_CASE_SQUID_LOG1 = "\nrule(case_squid_log1_%d(), ip(%s),[]).";
-
+    static final String RULE_CASE_TOR_CHECK = "rule(case_torCheck%d(), %s, []).";
+    static final String RULE_CASE_TOR_CHECK1 = "rule(case_torCheck1%d(), ip(%s), []).";
 
     private int torCount = 0;
 
     /*
         * User upload HIDS notification (OSSEC format)
         * Filter for keyword: TCP_DENIED/407, TCP_MISS/404
-        * Repeated access to same extension (last in html) e.g. "xxx3.php"
         *
         * Extract: IP, port, code, unixTimestamp
         * */
@@ -56,7 +55,7 @@ public class ToolIntegration {
             StringBuilder sb = new StringBuilder();
             final int[] c = {0};
             br.lines().forEach(x -> {
-                sb.append(ToolIntegration.parseSquidLog(x, c[0], malware) + "\n");
+                sb.append(parseSquidLog(x, c[0], malware) + "\n");
                 c[0]++;
             });
 
@@ -81,10 +80,10 @@ public class ToolIntegration {
         ips.addAll(getTargetServerIP(Utils.USER_EVIDENCE_FILENAME));
 
         System.out.println(ips.size() + " server IPs found!");
+
         for (String[] ip : ips) {
             String ipPredString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
             String ipString = String.format("%s.%s.%s.%s", ip[0], ip[1], ip[2], ip[3]);
-//            System.out.println(ipString);
             processTorCheckFile(getTorFile(ipString), ipPredString);
         }
     }
@@ -113,7 +112,6 @@ public class ToolIntegration {
         return ips;
     }
 
-//    TODO: use Selenium to interact with web browser, do automatically after scanning prolog file (write report!)
 //      use imperial ip as example, write result in evidence
     void processTorCheckFile(Stream<String> lines, String serverIP) {
         try {
@@ -122,9 +120,10 @@ public class ToolIntegration {
             lines.forEach(line -> {
                 if (!line.startsWith("#") && !line.startsWith("<!")) {
                     String[] ipStrings = line.split("\\.");
-                    String fact = String.format("torIP([%s,%s,%s,%s], %s)",
-                            ipStrings[0], ipStrings[1], ipStrings[2], ipStrings[3], serverIP);
+                    String ipString = String.format("[%s,%s,%s,%s]", ipStrings[0], ipStrings[1], ipStrings[2], ipStrings[3]);
+                    String fact = String.format("torIP(%s, %s)", ipString, serverIP);
                     sj.add(String.format(RULE_CASE_TOR_CHECK, count[0], fact));
+                    sj.add(String.format(RULE_CASE_TOR_CHECK1, count[0], ipString));
                     count[0]++;
                 }
             });
@@ -255,15 +254,13 @@ public class ToolIntegration {
     }
 
     public static void main(String[] args) {
-//        ToolIntegration ti = new ToolIntegration();
-//        ti.torIntegration();
+        ToolIntegration ti = new ToolIntegration();
+        ti.torIntegration();
 
 //        getVirustotalReportAndProcess("173.194.36.104");
 
 //        parseSquidLogFile("squid_logs", "testagain");
 
-        String s = "{abc}";
-        System.out.println(s.substring(s.indexOf('{') +1, s.lastIndexOf('}')));
     }
 
 

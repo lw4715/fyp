@@ -23,6 +23,7 @@ rule(r_t_IPdomain1(S,M), ccServer(S,M),					[attackSourceIP(IP,M),ipResolution(S
 rule(r_t_IPdomain2(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),ipResolution(S,IP,_D),spoofedIP(IP,Att)]).
 rule(r_t_IPdomain3(S,M), neg(ccServer(S,M)),			[attackSourceIP(IP,M),ipResolution(S,IP,D),malwareUsedInAttack(M,Att),attackPeriod(Att,D1),neg(recent(D,D1))]).
 
+
 rule(r_t_spoofIPtor(IP), spoofedIP(IP,Att), [malwareUsedInAttack(M,Att), attackSourceIP(IP,M), targetServerIP(TargetServerIP,Att), torIP(IP, TargetServerIP)]).
 rule(r_t_lang1(X,Att),  attackPossibleOrigin(X,Att),     [sysLanguage(L,Att),firstLanguage(L,X)]).
 rule(r_t_lang2(X,Att),  attackPossibleOrigin(X,Att),     [languageInCode(L,Att),firstLanguage(L,X)]).
