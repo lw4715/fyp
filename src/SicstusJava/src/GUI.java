@@ -94,7 +94,7 @@ class GUI {
     }
 
     private void prepareGUI() {
-        mainFrame = new JFrame("Abduction-based Reasoner");
+        mainFrame = new JFrame("Argumentation-Based Reasoner (ABR)");
 
         mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.Y_AXIS));
 
@@ -532,7 +532,7 @@ class GUI {
         }
         JScrollPane scrollPane = new JScrollPane(p);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        executeResultFrame = new JFrame();
+        executeResultFrame = new JFrame("Execution Result for " + attackName.getText());
         executeResultFrame.add(scrollPane);
         executeResultFrame.setSize(1200,800);
         executeResultFrame.setVisible(true);

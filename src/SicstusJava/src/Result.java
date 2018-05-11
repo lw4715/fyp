@@ -45,6 +45,7 @@ public class Result {
         return "Abduced predicates:\n" + abduced + "\n\nRules to prove abducibles:\n" + Utils.formatMap(abducedMap);
     }
 
+    // int i iterates over *all* culprits
     public String getTree(int i) {
         return trees[i].toString();
     }
