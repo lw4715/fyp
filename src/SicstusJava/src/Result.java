@@ -31,18 +31,6 @@ public class Result {
         numDs = new ArrayList<>();
         derivations = new ArrayList<>();
         processCulpritInfo(resultMap, trees);
-
-//        System.out.println(negMap);
-//        for (String c : negMap.keySet()) {
-//            System.out.println("\n" + c + ":");
-//            for (List<String> strings : negMap.get(c)) {
-//                System.out.println("\t{");
-//                for (String string : strings) {
-//                    System.out.print(string + ",");
-//                }
-//                System.out.println("}");
-//            }
-//        }
     }
 
     public String getAttack() {
@@ -66,6 +54,7 @@ public class Result {
     }
 
     public void processCulpritInfo(Map<String, LinkedHashSet<List<String>>> resultMap, Object[] trees) {
+        int acc = 0;
         for (String c : resultMap.keySet()) {
             List<Integer> scores = new ArrayList<>();
             LinkedHashSet<List<String>> ds = resultMap.get(c);
@@ -86,15 +75,16 @@ public class Result {
                 for (int i = 0; i < ds.size(); i++) {
                     if (scores.get(i) > 0) {
                         derivations.add(String.format("X = %s, Score:%d\n\nDerivation:\n%s\n\nArgumentation Tree:\n %s",
-                                c, scores.get(i), dsArray[i], trees[i]));
+                                c, scores.get(i), dsArray[i], trees[acc]));
                     }
+                    acc++;
                 }
             }
         }
     }
 
-    String getDerivationsForCulprit(String c) {
-        StringJoiner sj = new StringJoiner("#");
+    String getDerivationsForCulprit(String c, String separator) {
+        StringJoiner sj = new StringJoiner(separator);
         for (List<String> d : resultMap.get(c)) {
             sj.add(d.toString());
         }
@@ -103,7 +93,7 @@ public class Result {
 
     @Override
     public String toString() {
-        String s = String.format("\n%s\nCulprit(s): %s\n", attack, culprits);
+        String s = String.format("\n%s\nCulprit(s): %s\nTree:\n%s", attack, culprits, trees);
         if (abducedMap.isEmpty()) {
             return s;
         } else {
@@ -148,9 +138,7 @@ public class Result {
 
     public int getNumNegDerivations() {
         int r = 0;
-        System.out.println("negmap: " + negMap);
         for (Set<List<String>> s : negMap.values()) {
-            System.out.println(s);
             r += s.size();
         }
         return r;

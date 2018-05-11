@@ -1,4 +1,3 @@
-%% :- compile('utils.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
 
@@ -17,7 +16,6 @@ abducible(notForBlackMarketUse(_),[]).
 
 complement(isCulprit(X,Att),isCulprit(Y,Att)) :- X \= Y.
 
-
 rule(r_str_social1(P,C),governmentLinked(P,C),[geolocatedInGovFacility(P,C)]).
 rule(r_str_social2(P,C),governmentLinked(P,C),[publicCommentsRelatedToGov(P,C)]).
 
@@ -25,34 +23,25 @@ rule(r_str_emptyHasCap(Att),		 	hasCapability([],Att),	[]).
 rule(r_str_allHaveCap([X|L],Att),		hasCapability([X|L],Att),	[\+ is_list(X),is_list(L),hasCapability(X,Att),hasCapability(L,Att)]).
 rule(r_str_prominentGrpHasCap(X,Att),	hasCapability(X,Att),		[prominentGroup(X)]).
 
-%% rule(r_str_claimedResp(X,Att),		isCulprit(X,Att),	[claimedResponsibility(X,Att)]).
-rule(r_str_claimedResp(X,Att),		isCulprit(X,Att),	[existingGroupClaimedResponsibility(X,Att)]).
+rule(r_str__claimedResp(X,Att),		isCulprit(X,Att),	[existingGroupClaimedResponsibility(X,Att)]).
 
-rule(r_str_motiveAndCapability(C,Att),	isCulprit(C,Att),  [hasMotive(C,Att),hasCapability(C,Att)]).
-rule(r_str_motive(C,Att),				isCulprit(C,Att),  [country(C),prominentGroup(Group),isCulprit(Group,Att),groupOrigin(Group,C),hasMotive(C,Att)]).
-rule(r_str_motiveAndLocation(C,Att),	isCulprit(C,Att),  [country(C),hasMotive(C,Att),attackOrigin(C,Att)]).
-rule(r_str_loc(C,Att),	 				isCulprit(C,Att),  [country(C),attackOrigin(C,Att)]).
-rule(r_str_social(C,Att),				isCulprit(C,Att),  [country(C),governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
-rule(r_str_linkedMalware(X,A1),	 		isCulprit(X,A1),   [malwareUsedInAttack(M1,A1),similar(M1,M2),malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
-
-%% culprit not from,notculprit rule,add pref
-%% make example case with spoof ip,use tor
-%% more negation rules
-%% pref of pref
-%% mixed version of score and pref
-%% add base rule: no info means not culprit
+rule(r_str__motiveAndCapability(C,Att),	isCulprit(C,Att),  [hasMotive(C,Att),hasCapability(C,Att)]).
+rule(r_str__motive(C,Att),				isCulprit(C,Att),  [country(C),prominentGroup(Group),isCulprit(Group,Att),groupOrigin(Group,C),hasMotive(C,Att)]).
+rule(r_str__motiveAndLocation(C,Att),	isCulprit(C,Att),  [country(C),hasMotive(C,Att),attackOrigin(C,Att)]).
+rule(r_str__loc(C,Att),	 				isCulprit(C,Att),  [country(C),attackOrigin(C,Att)]).
+rule(r_str__social(C,Att),				isCulprit(C,Att),  [country(C),governmentLinked(P,C),identifiedIndividualInAttack(P,Att)]).
+rule(r_str__linkedMalware(X,A1),	 	isCulprit(X,A1),   [malwareUsedInAttack(M1,A1),similar(M1,M2),malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 
 %% GUI: analyst add rules and preferences
-rule(r_str_noEvidence(X,Att),	neg(isCulprit(X,Att)),[]).
-rule(r_str_noHistory(X,Att),     neg(isCulprit(X,Att)),[neg(existingGroupClaimedResponsibility(X,Att))]).
-rule(r_str_negAttackOrigin(X,Att),neg(isCulprit(X,Att)),[neg(attackOrigin(X,Att))]).
-rule(r_str_noCapability(X,Att),	neg(isCulprit(X,Att)),[neg(hasCapability(X,Att))]).
-rule(r_str_noMotive(X,Att),      neg(isCulprit(X,Att)),[neg(hasMotive(X,Att))]).
-rule(r_str_weakAttack(X,Att),	neg(isCulprit(X,Att)),[hasResources(X),neg(requireHighResource(Att))]).
-rule(r_str_targetItself1(X,Att),	neg(isCulprit(X,Att)),[target(X,Att)]).
-rule(r_str_targetItself2(X,Att),  neg(isCulprit(X,Att)),[targetCountry(X,Att)]).
-rule(r_str_lowGciTier(X,Att),	neg(isCulprit(X,Att)),[gci_tier(X,initiating)]).
-
+rule(r_str__noEvidence(X,Att),		neg(isCulprit(X,Att)),[]).
+rule(r_str__noHistory(X,Att),     	neg(isCulprit(X,Att)),[neg(existingGroupClaimedResponsibility(X,Att))]).
+rule(r_str__negAttackOrigin(X,Att),	neg(isCulprit(X,Att)),[neg(attackOrigin(X,Att))]).
+rule(r_str__noCapability(X,Att),	neg(isCulprit(X,Att)),[neg(hasCapability(X,Att))]).
+rule(r_str__noMotive(X,Att),      	neg(isCulprit(X,Att)),[neg(hasMotive(X,Att))]).
+rule(r_str__weakAttack(X,Att),		neg(isCulprit(X,Att)),[hasResources(X),neg(requireHighResource(Att))]).
+rule(r_str__targetItself1(X,Att),	neg(isCulprit(X,Att)),[target(X,Att)]).
+rule(r_str__targetItself2(X,Att),  	neg(isCulprit(X,Att)),[targetCountry(X,Att)]).
+rule(r_str__lowGciTier(X,Att),		neg(isCulprit(X,Att)),[gci_tier(X,initiating)]).
 %% rule(r_str_oneCulprit(X,Att),	neg(isCulprit(X,Att,_)),[isCulprit(Y,Att,_),X \= Y]).
 
 
@@ -76,10 +65,8 @@ rule(p1b(),prefer(r_str_motiveAndLocation(_X,A),r_str_claimedResp(_Y,A)),[]).
 rule(p1c(),prefer(r_str_motive(_X,A),       r_str_claimedResp(_Y,A)),[]). 
 rule(p1d(),prefer(r_str_social(_X,A),       r_str_claimedResp(_Y,A)),[]). 
 rule(p1e(),prefer(r_str_linkedMalware(_X,A),r_str_claimedResp(_Y,A)),[]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
-%% rule(p1f(),prefer(r_str_noHistory(X,A),r_str_claimedResp(X,A)),[]).   
 
 rule(p6(),prefer(r_str_noCapability(X,A), r_str_claimedResp(X,A)),[]). % hacker group might claim responsibility for attack backed by nation state
-
 rule(p8(),prefer(r_str_noCapability(X,A), r_str_motive(X,A)),[]).    
 rule(p9(),prefer(r_str_noCapability(X,A), r_str_motiveAndLocation(X,A)),[]).    
 rule(p10(),prefer(r_str_noCapability(X,A), r_str_loc(X,A)),[]).  
@@ -109,9 +96,9 @@ rule(p22f(),prefer(r_str_targetItself2(X,Att),r_str_social(X,Att)),             
 rule(p22g(),prefer(r_str_targetItself2(X,Att),r_str_linkedMalware(X,Att)),      [specificTarget(Att)]).
 
 
-rule(p22a(),prefer(r_str_linkedMalware(X,A),r_str_noHistory(X,A)),[]).
-rule(p22c(),prefer(r_str_linkedMalware(X,A),r_str_noMotive(X,A)),[]).
-rule(p22d(),prefer(r_str_linkedMalware(X,A),r_str_weakAttack(X,A)),[]).
+rule(p23a(),prefer(r_str_linkedMalware(X,A),r_str_noHistory(X,A)),[]).
+rule(p23c(),prefer(r_str_linkedMalware(X,A),r_str_noMotive(X,A)),[]).
+rule(p23d(),prefer(r_str_linkedMalware(X,A),r_str_weakAttack(X,A)),[]).
 
 %% rule(r_str_p30,prefer(p8,p2),[]).
 

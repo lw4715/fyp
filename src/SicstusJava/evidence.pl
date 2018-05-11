@@ -113,7 +113,7 @@ rule(case_example0_f1(),claimedResponsibility(randomGroup,example0),[]).
 %% example1 
 %% expected: 
 %% randomGroup (claimResp)
-%% yourCountry (location,linkedMalware)
+%% yourCountry (motive and location,linkedMalware)
 rule(case_example1_f1(),claimedResponsibility(randomGroup,example1),[]).
 rule(case_example1_f1a(),malwareUsedInAttack(example1m,example1),[]).
 rule(case_example1_f2(),targetCountry(myCountry,example1),[]).
@@ -206,5 +206,6 @@ rule(case_example7_f2b(),targetCountry(myCountry,example7),[]).
 rule(case_example7_f3(),malwareUsedInAttack(example7_m1,example7),[]).
 rule(case_example7_f4(),simlarCodeObfuscation(example7_m1,example7_m2),[]).
 rule(case_example7_f5(),malwareLinkedTo(example7_m2,yourCountry),[]).
+
 
 

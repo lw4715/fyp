@@ -72,6 +72,18 @@ public class DerivationNode {
         return level;
     }
 
+    static String getPref(String derivation) {
+        String[] s = derivation.split("\\)");
+        for (String s1 : s) {
+            s1 = s1.replaceFirst(",","").replace("(", "");
+            if (Utils.isPreference(s1)) {
+                String l  = Utils.getHead(s1, new ArrayList<>());
+                return l;
+            }
+        }
+        return "";
+    }
+
     private void addChild(DerivationNode child) {
         this.children.add(child);
     }
@@ -115,9 +127,10 @@ public class DerivationNode {
             default: // evidence
                 typeColour = Color.LIGHTGRAY;
         }
-        Node node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
 
+        Node node;
         if (rulename.length() > 0) {
+            node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
             Node rulenameNode = node(rulename).with(typeColour);
             for (DerivationNode child : children) {
                 if (result.equals(child.getResult())) {
@@ -130,8 +143,11 @@ public class DerivationNode {
 
         } else {
             // argumentation tree
+            String splitResult = result.substring(0, result.length()/2) + "\n" + result.substring(result.length()/2);
+            node = node(splitResult).with(Shape.RECTANGLE, typeColour, Style.FILLED);
+
             for (DerivationNode child : children) {
-                node = node.link(to(child.createNode()));
+                node = node.link(to(child.createNode()).with(Label.of(getPref(child.getResult()))));
             }
         }
         return node;
@@ -331,8 +347,7 @@ public class DerivationNode {
             if (line.contains("[")) {
                 level = line.indexOf('[') / 4;
                 String d = line.substring(line.indexOf('['), line.lastIndexOf(']'));
-                String d2 = d.substring(0, line.length()/2) + "\n" + d.substring(line.length()/2);
-                node = new DerivationNode(d2, level, type);
+                node = new DerivationNode(d, level, type);
                 while (!st.isEmpty() && st.peek().getLevel() == level + 1) {
                     node.addChild(st.pop());
                 }

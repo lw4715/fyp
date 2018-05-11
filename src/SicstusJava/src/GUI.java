@@ -28,6 +28,7 @@ class GUI {
     private static final String ARG_TREE = "ArgTree:";
     private static final String UPLOAD_SQUID_LOG = "Upload squid log";
     private static final String OPEN_TOOL_INTEGRATION = "Open tool integration";
+    private static final String SEPARATOR = "#";
 
     private final Utils utils;
 
@@ -85,37 +86,6 @@ class GUI {
             "highSecurity(<T>)","firstLanguage(<L>,<X>)","geolocatedInGovFacility(<P>,<C>)","country(<X>)",
             "malwareModifiedFrom(<M1>,<M2>)","gci_tier(<X>,<initiating>)","gci_tier(<X>,<maturing>)",
             "isCulprit(<Group>,<Att>)"};
-
-//    private static final String[] techPredicates =
-//            {
-//                "highLevelSkill(<attack_id>)", "requireHighResource(<attack_id>)",
-//                "attackSourceIP(<ip_id>, <attack_id>)","ipGeoloc(<country>,<ip_id>)",
-//                "spoofedIp(<ip_id>)", "sysLanguage(<language>,<attack_id>)", "firstLanguage(<language>,<country>)",
-//                "languageInCode(<language>,<attack_id>)", "infraUsed(<infra_id>, <attack_id>)",
-//                "infraRegisteredIn(<country>,<infra_id>)", "forBlackMarketUse(<malware_id>)",
-//                "infectionMethod(<infection_method>, <malware_id>)",
-//                "controlAndCommandEasilyFingerprinted(<malware_id>)", "ccServer(<server_id>,<malware_id>)",
-//                "similarCCServer(<malware_id>,<malware_id>)",
-//                "domainRegisteredDetails(<server_id>,<name>,<address>)", "addressType(<address>,<type>)",
-//                "simlarCodeObfuscation(<malware_id>,<malware_id>)", "sharedCode(<malware_id>,<malware_id>)",
-//                "malwareModifiedFrom(<malware_id>,<malware_id>)",
-//                "specificConfigInMalware(<malware_id>)", "malwareUsedInAttack(<malware_id>,<attack_id>)",
-//                "usesZeroDayVulnerabilities(<malware_id>)", "sophisticatedMalware(<malware_id>)", "specificTarget(<attack_id>)",
-//                "hasKillSwitch(<malware_id>)",
-////                    "numComputersAffected", "numCountriesAffected/2"
-//        };
-//    private static final String[] opPredicates =
-//            {
-//                "hasEconomicMotive/2", "target/2", "hasPoliticalMotive/2",
-//                "imposedSanctions/3", "attackPeriod/2", "news/3", "causeOfConflict/3",
-//                "geolocatedInGovFacility/2", "publicCommentsRelatedToGov/2",
-//                "claimedResponsibility/2", "identifiedIndividualInAttack/2"
-//            };
-//    private static final String[] bgPredicates =
-//            {
-//                "prominentGroup/1", "pastTargets/2", "industry/1", "country/1", "hasPrecedence/2"
-//            };
-
 
     GUI() {
         utils = new Utils();
@@ -353,11 +323,13 @@ class GUI {
                     } else if (command.startsWith("Choose")) {
                         // create preference rule
                         String[] s = command.split(":")[1].split(">");
-                        utils.writePrefToFile(String.format("prefer(%s,%s)", s[0], s[1]));
+                        String pref = String.format("prefer(%s,%s)", s[0], s[1]);
+                        utils.writePrefToFile(pref);
                         currentEvidences.setText(utils.getCurrentEvidence());
                         executeResultFrame.dispose();
                         executeQuery(false);
                         prefFrame.dispose();
+                        status.setText("Added  " + pref + " to " + Utils.USER_EVIDENCE_FILENAME);
 
                     } else if (command.startsWith(ARG_TREE)) {
                         String[] s = command.split(":");
@@ -375,7 +347,7 @@ class GUI {
     private void choosePreferenceAction(String command) {
         String[] s = command.split("\\*");
         String negDer = s[0];
-        String[] posDers = s[1].split("#");
+        String[] posDers = s[1].split(SEPARATOR);
 
         JTextArea ntf = new JTextArea(negDer);
         ntf.setColumns(30);
@@ -553,7 +525,7 @@ class GUI {
                 textArea.setCaretPosition(0);
                 p.add(textArea);
                 JButton addPrefBtn = new JButton("Add rule preference");
-                addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit));
+                addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit, SEPARATOR));
                 addPrefBtn.addActionListener(new ButtonClickListener());
                 p.add(addPrefBtn);
             }

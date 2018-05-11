@@ -49,6 +49,7 @@ public class QueryExecutor {
                 String s = split[i];
                 set.add(s);
             }
+            System.out.println("Size of visual tree=" + set.size());
             return set;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

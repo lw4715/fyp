@@ -131,8 +131,12 @@ public class Utils {
         return s.startsWith("r_");
     }
 
-    public static boolean isStrRule(String s) {
+    static boolean isStrRule(String s) {
         return s.startsWith("r_str_");
+    }
+
+    static boolean isFinalStrRule(String s) {
+        return s.startsWith("r_str__");
     }
 
     static boolean isAss(String s) {
@@ -140,10 +144,12 @@ public class Utils {
     }
 
     static boolean isPreference(String r) {
+        r = r.trim();
         return r.startsWith("p") || r.startsWith("ass(neg(prefer(");
     }
 
     static String getHead(String name, List<String> args) {
+        name = name.trim();
         boolean isInstantiated = name.startsWith("case") || name.startsWith("bg") || isPreference(name);
         if (isAss(name)) {
             return args.get(0);
@@ -206,6 +212,7 @@ public class Utils {
         return head.substring(0, head.lastIndexOf(","));
     }
 
+    // returns body of rule corresponding to rulename
     static List<String> getBody(String r) {
         String f = GetFilenameForRule(r);
         try {
@@ -299,7 +306,7 @@ public class Utils {
     }
 
     private static String[] getBodyOfLine(String line) {
-        return line.split("\\[")[1].split("\\]")[0].split("\\)");
+        return line.substring(line.indexOf('['), line.lastIndexOf(']')).split("\\)");
     }
 
     static String getHeadOfLine(String line) {
@@ -357,16 +364,5 @@ public class Utils {
 
     public static void main(String[] args) {
 
-//        String[] preds = new String[] {"industry(T)","targetCountry(X,Att)","fileChara(Filename,MD5,Size,CompileTime,Desc,Filetype,C1)","poorRelation(C,T)","noPriorHistory(X)","infraUsed(Infra,Att)","hasResources(X)","majorityIpOrigin(X,Att)","stolenValidSignedCertificates(Att)","cybersuperpower(X)","espionage,doxing)","attackPeriod(Att,[Year,Month])","governmentLinked(P,C)","domainRegisteredDetails(Server,Name,Addr)","ipResolution(S,IP,D)","infectionMethod(usb,M)","attackOrigin(X,Att)","highLevelSkill(Att)","usesZeroDayVulnerabilities(M)","hasPoliticalMotive(C,T,Date2)","malwareUsedInAttack(M,Att)","news(News,T,Date2)","prominentGroup(X)","attackPossibleOrigin(X,Att)","notForBlackMarketUse(M)","similarCCServer(M1,M2)","publicCommentsRelatedToGov(P,C)","zeroday,customMalware)","gci_tier(X,leading)","torIP(IP)","malwareLinkedTo(M2,X)","sysLanguage(L,Att)","clientSideExploits)","eternalBlue)","spoofedIP(IP)","ipGeoloc(X,IP)","addressType(Addr,Type)","sophisticatedMalware(M)","identifiedIndividualInAttack(P,Att)","goodRelation(X,Y)","industry(Ind,X)","cyberespionage)","languageInCode(L,Att)","groupOrigin(Group,C)","hasCapability(X,Att)","isInfrastructure(Ind)","infraRegisteredIn(X,Infra)","informationRich(Ind)","hasResources(X)","fileCharaMalware(C2,M2)","claimedResponsibility(X,Att)","addrInCountry(Addr,X)","similarFileChara(C1,C2)","dateApplicable(Date1,Date2)","attackSourceIP(IP,M)","hijackCorporateClouds(Att)","highVolumeAttack(Att)","imposedSanctions(T,C,Date)","causeOfConflict(X,T,News)","ccServer(S,M)","specificConfigInMalware(M)","cyberespionage,undergroundBusiness)","specificTarget(Att)","simlarCodeObfuscation(M1,M2)","requireHighResource(Att)","target(X,Att)","hasMotive(X,Att)","similar(M1,M2)","hasEconomicMotive(C,T)","longDurationAttack(Att)","sharedCode(M1,M2)","commandAndControlEasilyFingerprinted(M)","highSecurity(T)","firstLanguage(L,X)","geolocatedInGovFacility(P,C)","country(X)","malwareModifiedFrom(M1,M2)","gci_tier(X,initiating)","gci_tier(X,maturing)","isCulprit(Group,Att)"};
-//        Set<String> set = new HashSet<>();
-//        for (String pred : preds) {
-//            int size = set.size();
-//            set.add(pred.split("\\(")[0]);
-//            if (set.size() == size) {
-//                System.out.println(pred);
-//            }
-//        }
-//        System.out.println(set);
-//        System.out.println(set.size());
     }
 }
