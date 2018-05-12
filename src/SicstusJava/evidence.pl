@@ -216,5 +216,11 @@ rule(case_example7_f3(),malwareUsedInAttack(example7_m1,example7),[]).
 rule(case_example7_f4(),simlarCodeObfuscation(example7_m1,example7_m2),[]).
 rule(case_example7_f5(),malwareLinkedTo(example7_m2,yourCountry),[]).
 
+%% example8
+%% expected: 
+%% yourCountry (hasMotiveAndCapability)
+rule(case_example8_f1(),targetCountry(myCountry,example8),[]).
+rule(case_example8_f2(),imposedSanctions(myCountry, yourCountry, ongoing),[]).
+rule(case_example8_f3(),attackPeriod(example8,[2018,5]),[]).
 
 

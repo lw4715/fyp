@@ -105,3 +105,9 @@ rule(p23d(),prefer(r_str__linkedMalware(X,A),r_str__weakAttack(X,A)),[]).
 goal(A,X,D) :- visual_prove([isCulprit(X,A)],D,[]).
 neg_goal(A,X,D) :- prove([neg(isCulprit(X,A))],D).
 
+goal_all(A,X,D) :-
+  writeToFilesPos(isCulprit(X,A), isCulprit(X,A,D)).
+
+isCulprit(X,A,D) :- prove([isCulprit(X,A)],D).
+
+

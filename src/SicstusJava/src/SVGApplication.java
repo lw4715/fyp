@@ -47,6 +47,7 @@ public class SVGApplication {
         btnPanel.setLayout(new FlowLayout());
         btnPanel.add(zoomInButton);
         btnPanel.add(zoomOutButton);
+        btnPanel.add(new JLabel("(Press arrow keys to move)"));
         f.getContentPane().add(btnPanel);
     }
 

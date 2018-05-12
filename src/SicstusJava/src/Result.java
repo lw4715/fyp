@@ -75,8 +75,8 @@ public class Result {
 
                 for (int i = 0; i < ds.size(); i++) {
                     if (scores.get(i) > 0) {
-                        derivations.add(String.format("X = %s, Score:%d\n\nDerivation:\n%s\n\nArgumentation Tree:\n %s",
-                                c, scores.get(i), dsArray[i], trees[acc]));
+                        derivations.add(String.format("X = %s, Score:%d\nFinal strategic rule used: %s\n\nDerivation:\n%s\n\nArgumentation Tree:\n %s",
+                                c, scores.get(i), getFinalRule((List<String>) dsArray[i]), dsArray[i], trees[acc]));
                     }
                     acc++;
                 }
@@ -91,6 +91,7 @@ public class Result {
         }
         return sj.toString();
     }
+
 
     @Override
     public String toString() {
@@ -112,6 +113,17 @@ public class Result {
         }
         return sb.toString();
     }
+
+    private String getFinalRule(List<String> ds) {
+        for (int i = ds.size() - 1; i >= 0 ; i--) {
+            String d1 = ds.get(i);
+            if (Utils.isFinalStrRule(d1)) {
+                return d1;
+            }
+        }
+        return null;
+    }
+    
 
     public List<String> resultStrings() {
         return derivations;

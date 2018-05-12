@@ -90,6 +90,11 @@ public class QueryExecutor {
                 queryString = String.format("goal_all(%s, X1, D1, D2, D3, D4)", caseName);
                 System.out.println(queryString);
                 executeQueryString(queryString, 200);
+
+                queryString = String.format("goal_all(%s, X, D)", caseName);
+                System.out.println(queryString);
+                executeQueryString(queryString, 50);
+
             } else {
                 executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
                 queryString = String.format("goal(%s,X,D0)", caseName);
@@ -403,16 +408,18 @@ public class QueryExecutor {
         int n = 1;
         try {
 //            System.out.println(qe.execute("example5", false));
-//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
 
-            for (int i = 0; i < n; i++) {
-                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                        System.out.println(qe.execute(c, false, new ArrayList<>()));
-                }
-                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
-                    System.out.println(qe.execute(c, false, new ArrayList<>()));
-                }
-            }
+//            for (int i = 0; i < n; i++) {
+//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                    Result r = qe.execute(c, false, new ArrayList<>());
+//                    System.out.println(r);
+//                }
+//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
+//                    Result r = qe.execute(c, false, new ArrayList<>());
+//                    System.out.println(r);
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
