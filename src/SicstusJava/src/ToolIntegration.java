@@ -11,11 +11,11 @@ import java.util.stream.Stream;
 
 public class ToolIntegration {
     static final String targetServerIPPredicate = "targetServerIP";
-    static final String TOR_IP_FILE = "torCheckIPList.pl";
+    static final String TOR_IP_FILE = "tor_ip_list.pl";
 
-    static final String virusTotalPrologFileTemplate = "virustotal_";
-    static final String virusTotalLogFileTemplate = "virustotal_res_";
-    static final List<String> virusTotalFiles = new ArrayList<>();
+    static final String VIRUS_TOTAL_PROLOG_FILE = "virustotal/virustotal.pl";
+    static final String virusTotalLogFileTemplate = "virustotal/virustotal_report_";
+
 
     static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
     static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
@@ -25,7 +25,13 @@ public class ToolIntegration {
     static final String RULE_CASE_TOR_CHECK = "rule(case_torCheck%d(), %s, []).";
     static final String RULE_CASE_TOR_CHECK1 = "rule(case_torCheck1%d(), ip(%s), []).";
 
+    private List<String> virustotalFinishedScanningIP;
     private int torCount = 0;
+
+    public ToolIntegration() {
+        Utils.clearFile(VIRUS_TOTAL_PROLOG_FILE);
+        virustotalFinishedScanningIP = new ArrayList<>();
+    }
 
     /*
         * User upload HIDS notification (OSSEC format)
@@ -180,19 +186,49 @@ public class ToolIntegration {
         return s.toLowerCase().replace(" ", "_");
     }
 
-    static void getVirustotalReportAndProcess(String ip) {
-        GetIPAddressReport.getIPAddressReport(ip, virusTotalLogFileTemplate);
-        processVirusTotalFile(virusTotalLogFileTemplate + ip, ip);
+    void getVirustotalReportAndProcess(String ip) {
+        System.out.println("Processing " + ip);
+        File virusTotalReportFile = new File(virusTotalLogFileTemplate + ip);
+        if (!virustotalFinishedScanningIP.contains(ip)) {
+//            GetIPAddressReport.getIPAddressReport(ip, virusTotalLogFileTemplate);
+            List<String[]> res = GetIPAddressReport.getIPResolution(ip);
+            if (res != null) {
+                processVirusTotalFile(res, ip);
+                virustotalFinishedScanningIP.add(ip);
+            }
+        } else {
+            System.out.println(virusTotalReportFile + " already exists.");
+        }
     }
 
+    static void processVirusTotalFile(List<String[]> res, String ip) {
+        try {
+            FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
+
+            for (int i = 0; i < res.size(); i++) {
+                String[] r = res.get(i);
+                String[] ips = ip.split("\\.");
+                String ipString = String.format("[%s,%s,%s,%s]", ips[0], ips[1], ips[2], ips[3]);
+                String hostname = r[0];
+                String dateString = r[1];
+                String[] d = dateString.split(" ")[0].split("-");
+                String date = String.format("[%d,%d]", Integer.parseInt(d[0]), Integer.parseInt(d[1]));
+
+                String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, date);
+                w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", i, fact));
+            }
+            w.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     static void processVirusTotalFile(String filename, String ip) {
         try {
-            String writeFile = virusTotalPrologFileTemplate + ip + ".pl";
-            virusTotalFiles.add(writeFile);
-
             BufferedReader br = new BufferedReader(new FileReader(filename));
-            FileWriter w = new FileWriter(writeFile);
+            FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
             String line = br.readLine();
 
             StringJoiner sj = new StringJoiner(",");
@@ -227,7 +263,7 @@ public class ToolIntegration {
             br.close();
 
         } catch (FileNotFoundException e) {
-            System.err.println(filename + " not found");
+            System.err.println(filename + " not found (processVirusTotalFile)");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -253,19 +289,8 @@ public class ToolIntegration {
         return null;
     }
 
-    public static void main(String[] args) {
-        ToolIntegration ti = new ToolIntegration();
-        ti.torIntegration();
-
-//        getVirustotalReportAndProcess("173.194.36.104");
-
-//        parseSquidLogFile("squid_logs", "testagain");
-
-    }
-
-
-    // automated geolocation of ip addresses
-    static void preprocessFiles(List<String> allFiles) {
+    // automated geolocation of ip addresses, resolution
+    void preprocessFiles(List<String> allFiles) {
         List<String> ips = new ArrayList<>();
         for (String f : allFiles) {
             try {
@@ -286,7 +311,7 @@ public class ToolIntegration {
         }
 
         try {
-            FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL);
+            FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL, true);
             int c = 0;
             for (String ip : ips) {
                 String ipString = convertPrologIPToString(ip);
@@ -294,6 +319,8 @@ public class ToolIntegration {
                 String rule = String.format("rule(case_autogen_geolocation%d(), ipGeoloc(%s,%s), []).\n", c, country, ip);
                 c++;
                 f_w.write(rule);
+
+                getVirustotalReportAndProcess(ipString);
             }
             f_w.close();
         } catch (IOException e) {
@@ -301,4 +328,11 @@ public class ToolIntegration {
         }
     }
 
+    public static void main(String[] args) {
+//        ToolIntegration ti = new ToolIntegration();
+//        ti.torIntegration();
+//        preprocessFiles();
+//        getVirustotalReportAndProcess("74.125.224.72");
+
+    }
 }

@@ -33,6 +33,7 @@ public class QueryExecutor {
         timings = new ArrayList<>();
         abduced = new HashSet<>();
         ti = new ToolIntegration();
+        clearLeftoverFiles();
         loadFiles();
     }
 
@@ -278,7 +279,7 @@ public class QueryExecutor {
 
     private void reloadUserFile() {
         try {
-            ToolIntegration.preprocessFiles(allFiles);
+            ti.preprocessFiles(allFiles);
             executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -286,13 +287,11 @@ public class QueryExecutor {
     }
 
     private void clearLeftoverFiles() {
-        for (String virusTotalFile : ToolIntegration.virusTotalFiles) {
-            Utils.clearFile(virusTotalFile);
-        }
         Utils.clearFile(Utils.USER_EVIDENCE_FILENAME);
         Utils.clearFile(ToolIntegration.SQUID_LOG_RULES_PL);
         Utils.clearFile(ToolIntegration.AUTOMATED_GEOLOCATION_PL);
         Utils.clearFile(ToolIntegration.TOR_IP_FILE);
+        Utils.clearFile(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE);
     }
 
     private void loadFiles() {
@@ -301,7 +300,7 @@ public class QueryExecutor {
         allFiles.add("evidence.pl");
         allFiles.add(Utils.USER_EVIDENCE_FILENAME);
         allFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
-        ToolIntegration.preprocessFiles(allFiles);
+        ti.preprocessFiles(allFiles);
 
         try {
             executeQueryString(String.format(CONSULT_STRING, "utils.pl"), 1);
@@ -309,15 +308,12 @@ public class QueryExecutor {
             executeQueryString(String.format(CONSULT_STRING, Utils.OP), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.STR), 1);
 
-            for (String virusTotalFile : ToolIntegration.virusTotalFiles) {
-                executeQueryString(String.format(CONSULT_STRING, virusTotalFile), 1);
-            }
-
+            ti.torIntegration();
             executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.TOR_IP_FILE), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.AUTOMATED_GEOLOCATION_PL), 1);
-            ti.torIntegration();
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.VIRUS_TOTAL_PROLOG_FILE), 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -408,18 +404,18 @@ public class QueryExecutor {
         int n = 1;
         try {
 //            System.out.println(qe.execute("example5", false));
-            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
 
-//            for (int i = 0; i < n; i++) {
-//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-//                }
-//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
-//                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-//                }
-//            }
+            for (int i = 0; i < n; i++) {
+                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                    Result r = qe.execute(c, false, new ArrayList<>());
+                    System.out.println(r);
+                }
+                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
+                    Result r = qe.execute(c, false, new ArrayList<>());
+                    System.out.println(r);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

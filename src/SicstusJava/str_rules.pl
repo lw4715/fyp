@@ -1,23 +1,38 @@
 :- multifile rule/3.
 :- multifile abducible/2.
 
-% input (evidence):
-% claimedResponsibility/2
-% identifiedIndividualInAttack/2
-% malwareUsedInAttack/2 (current)
-% target/2
+%% input
+%% tech:
+%% notForBlackMarketUse 
+%% similar
+%% requireHighResource
 
-% input (bg):
-% country
-% isCulprit/2 (past attacks)
-% malwareUsedInAttack/2 (past)
+%% bg:
+%% prominentGroup
+%% country
+%% isCulprit
+%% groupOrigin
+%% malwareLinkedTo
+%% gci_tier
+
+%% evidence:
+%% attackOrigin
+%% identifiedIndividualInAttack
+%% malwareUsedInAttack
+%% target
+%% targetCountry
+
+%% op:
+%% existingGroupClaimedResponsibility
+%% hasMotive
+%% hasCapability
+%% hasResources
+
+
 
 abducible(notForBlackMarketUse(_),[]).
 
 complement(isCulprit(X,Att),isCulprit(Y,Att)) :- X \= Y.
-
-rule(r_str_social1(P,C),governmentLinked(P,C),[geolocatedInGovFacility(P,C)]).
-rule(r_str_social2(P,C),governmentLinked(P,C),[publicCommentsRelatedToGov(P,C)]).
 
 rule(r_str_emptyHasCap(Att),		 	hasCapability([],Att),	[]).
 rule(r_str_allHaveCap([X|L],Att),		hasCapability([X|L],Att),	[\+ is_list(X),is_list(L),hasCapability(X,Att),hasCapability(L,Att)]).
@@ -45,9 +60,6 @@ rule(r_str__lowGciTier(X,Att),		neg(isCulprit(X,Att)),[gci_tier(X,initiating)]).
 %% rule(r_str_oneCulprit(X,Att),	neg(isCulprit(X,Att,_)),[isCulprit(Y,Att,_),X \= Y]).
 
 
-%% rule(r_str_similarMalware,isCulprit(X,A1),
-%% 	[malwareUsedInAttack(M1,A1),similar(M1,M2),malwareUsedInAttack(M2,A2),
-	%% isCulprit(X,A2),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).
 %% rule(r_str_grpPastTargets,hasMotive(Group,Att),[target(T,Att),prominentGroup(Group),pastTargets(Group,Ts),member(T,Ts)]). %WEAK RULE
 
 

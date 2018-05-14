@@ -123,7 +123,7 @@ public class Result {
         }
         return null;
     }
-    
+
 
     public List<String> resultStrings() {
         return derivations;

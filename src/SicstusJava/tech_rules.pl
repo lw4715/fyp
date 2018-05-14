@@ -1,6 +1,66 @@
-:- compile('torCheckIPList.pl').
 :- multifile rule/3.
 :- multifile abducible/2.
+
+%% evidence:
+%% hijackCorporateClouds(Att)
+%% malwareUsedInAttack(M,Att)
+%% notForBlackMarketUse(M)
+%% stolenValidSignedCertificates(Att)
+%% highSecurity(T)
+%% target(T,Att)
+%% highVolumeAttack(Att)
+%% longDurationAttack(Att)
+%% majorityIpOrigin(X,Att)
+%% attackPeriod(Att,D1)
+%% targetServerIP(TargetServerIP,Att)
+%% sysLanguage(L,Att)
+%% languageInCode(L,Att)
+%% infraUsed(Infra,Att)
+%% infraRegisteredIn(X,Infra)
+%% ccServer(S,M)
+%% domainRegisteredDetails(S,_,Addr)
+%% addrInCountry(Addr,X)
+%% infectionMethod(usb,M)
+%% commandAndControlEasilyFingerprinted(M)
+%% simlarCodeObfuscation(M1,M2)
+%% sharedCode(M1,M2)
+%% malwareModifiedFrom(M1,M2)
+%% fileCharaMalware(C2,M2)
+%% specificConfigInMalware(M)
+%% usesZeroDayVulnerabilities(M)
+%% fileChara(Filename,_,_,_,_,_,C2)
+
+%% bg:
+%% firstLanguage(L,X)
+%% country(Y)
+%% addressType(Addr,Type) TODO: remove??
+
+
+%% tech:
+%% sophisticatedMalware(M)
+%% highLevelSkill(Att)
+%% attackSourceIP(IP,M)
+%% recent(D,D1)
+%% attackPossibleOrigin(X,Att)
+%% similarCCServer(M1,M2)
+%% similarFileChara(C1,C2)
+
+%% auto:
+%% ipGeoloc(X,IP)
+%% spoofedIP(IP,Att)
+%% torIP(IP, TargetServerIP)
+
+%% uploaded:
+%% squid_log(IP,_Port,_ResultCode,M)
+
+%% ipResolution(S,IP,_D) TODO: get this??
+
+
+
+
+
+
+%% --------
 
 rule(r_t_neghighSkill(Att),neg(highLevelSkill(Att)),    []).
 rule(r_t_highSkill1(Att),highLevelSkill(Att),    	[hijackCorporateClouds(Att)]).

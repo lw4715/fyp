@@ -1,6 +1,41 @@
 :- multifile rule/3.
 :- multifile abducible/2.
 
+%% input:
+%% bg:
+%% gci_tier(X,leading)
+%% cybersuperpower(X)
+%% industry(T)
+%% poorRelation(C,T)
+%% goodRelation(C,T)
+%% industry(Ind,T)
+%% normalIndustry(Ind)
+%% politicalIndustry(Ind)
+
+%% evidence:
+%% targetCountry(T1,Att)
+%% target(T,Att)
+%% hasEconomicMotive(C,T)
+%% targetCountry(T,Att)
+%% attackPeriod(Att,Date1)
+%% hasPoliticalMotive(C,T,Date2)
+%% imposedSanctions(T,C,Date).
+%% news(News,T,Date2)
+%% causeOfConflict(X,T,News)
+%% claimedResponsibility(X,Att)
+%% noPriorHistory(X)
+%% geolocatedInGovFacility(P,C)
+%% publicCommentsRelatedToGov(P,C)
+
+%% tech:
+%% requireHighResource(Att)
+%% specificTarget(Att)
+
+%% op:
+%% hasResources(X)
+%% contextOfAttack(economic,Att)
+%% contextOfAttack(political,Att)
+
 
 %% Main rules:
 abducible(specificTarget(_Att),[]).
@@ -30,6 +65,9 @@ rule(r_op_nonGeopolitics2(C,T),neg(hasMotive(C,Att)),[target(T,Att),country(T),c
 rule(r_op_claimResp0(X,Att), existingGroupClaimedResponsibility(X,Att), [claimedResponsibility(X,Att)]).
 rule(r_op_claimResp1(X,Att), neg(existingGroupClaimedResponsibility(X,Att)), [claimedResponsibility(X,Att), noPriorHistory(X)]).
 
+
+rule(r_op_social1(P,C),governmentLinked(P,C),[geolocatedInGovFacility(P,C)]).
+rule(r_op_social2(P,C),governmentLinked(P,C),[publicCommentsRelatedToGov(P,C)]).
 
 %% politicalIndustries are industries that are closely related to well-being of country/sensitive to national interests
 rule(r_op_context(economic,Att), contextOfAttack(economic,Att), [target(T,Att), industry(Ind,T), normalIndustry(Ind)]).
