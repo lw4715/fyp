@@ -3,8 +3,8 @@
 % us bank hack evidences
 %% expected: iran (hasMotive)
 %% https://www.aljazeera.com/news/middleeast/2012/02/20122616342323385.html
-rule(case1_f1(),targetCountry(united_states_of_america, usbankhack),[]).
-rule(case1_f3(),imposedSanctions(united_states_of_america,iran,[2012,2]),[]).
+rule(case1_f1(),targetCountry(united_states, usbankhack),[]).
+rule(case1_f3(),imposedSanctions(united_states,iran,[2012,2]),[]).
 rule(case1_f4(),hijackCorporateClouds(usbankhack),[]).
 rule(case1_f5(),sophisticatedMalware(itsoknoproblembro),[]).
 rule(case1_f6(),malwareUsedInAttack(itsoknoproblembro, usbankhack),[]).
@@ -48,7 +48,7 @@ rule(case3_f19(),domainRegisteredDetails(secuurity, adolph_dybevek, prinsen_gate
 rule(case3_f20(),attackPeriod(gaussattack,[2011,9]),[]).
 
 %  stuxnet 
-%% expected: united_states_of_america,israel (hasMotive,hasCapability)
+%% expected: united_states,israel (hasMotive,hasCapability)
 rule(case4_f0(),industry(nuclear,iranian_org),[]).
 rule(case4_f1(),target(iranian_org,stuxnetattack),[]).
 rule(case4_f2(),infectionMethod(usb,stuxnetattack),[]).
@@ -57,7 +57,7 @@ rule(case4_f4(),stolenValidSignedCertificates(stuxnetattack),[]).
 rule(case4_f6(),targetCountry(iran,stuxnetattack),[]).
 rule(case4_f7(),usesZeroDayVulnerabilities(stuxnet),[]).
 rule(case4_f8(),news(nuclear,iran,ongoing),[]).
-rule(case4_f9(),causeOfConflict(united_states_of_america, iran, nuclear),[]).
+rule(case4_f9(),causeOfConflict(united_states, iran, nuclear),[]).
 rule(case4_f10(),causeOfConflict(israel, iran, nuclear),[]).
 rule(case4_f11(),attackPeriod(stuxnetattack,[2010,7]),[]).
 rule(case4_f12(),malwareUsedInAttack(stuxnet, stuxnetattack),[]).
@@ -71,7 +71,7 @@ rule(case4_f16(),industry(nuclear, iran_nuclear_facilities),[]).
 %% expected: guardiansOfPeace (claimResponsibility),north_korea (hasMotive,location)
 rule(case5_f1(),claimedResponsibility(guardiansOfPeace, sonyhack),[]).
 rule(case5_f2(),target(sony, sonyhack),[]).
-rule(case5_f3(),targetCountry(united_states_of_america, sonyhack),[]).
+rule(case5_f3(),targetCountry(united_states, sonyhack),[]).
 rule(case5_f4(),news(theInterview, sony,[2013,10]),[]).
 rule(case5_f5(),attackPeriod(sonyhack,[2014,11]),[]).
 rule(case5_f6(),causeOfConflict(north_korea, sony, theInterview),[]).
@@ -113,7 +113,7 @@ rule(case_example0_f1(),claimedResponsibility(randomGroup,example0),[]).
 %% example1 
 %% expected: 
 %% randomGroup (claimResp)
-%% yourCountry (motive and location,linkedMalware)
+%% china (motive and location,linkedMalware)
 rule(case_example1_f1(),claimedResponsibility(randomGroup,example1),[]).
 rule(case_example1_f1a(),malwareUsedInAttack(example1m,example1),[]).
 rule(case_example1_f2(),targetCountry(myCountry,example1),[]).
@@ -123,7 +123,8 @@ rule(case_example1_f5(),malwareLinkedTo(example1_m2,yourCountry),[]).
 rule(case_example1_f8(),hasMotive(yourCountry,example1),[]).
 rule(case_example1_f9(),attackSourceIP([123,123,123,102],example1m),[]).
 rule(case_example1_f10(),ipGeoloc(yourCountry,[123,123,123,102]),[]).
-rule(case_example1_f11(),ip([123,123,123,102]),[]).
+
+%% rule(case_example1_f11(),ip([123,123,123,102]),[]).
 
 %% example2
 %% expected: 
@@ -138,7 +139,7 @@ rule(case_example2_f5(),malwareLinkedTo(example2_m2,yourCountry),[]).
 rule(case_example2_f8(),hasMotive(yourCountry,example2),[]).
 rule(case_example2_f9(),attackSourceIP([123,123,123,100],example2m),[]).
 rule(case_example2_f10(),ipGeoloc(yourCountry,[123,123,123,100]),[]).
-rule(case_example2_f11(),ip([123,123,123,100]),[]).
+%% rule(case_example2_f11(),ip([123,123,123,100]),[]).
 
 %% example2b
 %% expected: 
@@ -155,7 +156,7 @@ rule(case_example2b_f5(),malwareLinkedTo(example2b_m2,yourCountry),[]).
 rule(case_example2b_f8(),hasMotive(yourCountry,example2b),[]).
 rule(case_example2b_f9(),attackSourceIP([123,123,123,125],example2bm),[]).
 rule(case_example2b_f10(),ipGeoloc(yourCountry,[123,123,123,125]),[]).
-rule(case_example2b_f11(),ip([123,123,123,125]),[]).
+%% rule(case_example2b_f11(),ip([123,123,123,125]),[]).
 
 %% example3
 %% expected: 
@@ -173,8 +174,8 @@ rule(case_example3_f9(),attackSourceIP([123,123,123,123],example3),[]).
 rule(case_example3_f10(),ipGeoloc(yourCountry,[123,123,123,123]),[]).
 rule(case_example3_f12(),attackSourceIP([103,1,206,109],example3m),[]).
 rule(case_example3_f13(),ipGeoloc(hisCountry,[103,1,206,109]),[]).
-rule(case_example3_f14(),ip([123,123,123,123]),[]).
-rule(case_example3_f15(),ip([103,1,206,109]),[]).
+%% rule(case_example3_f14(),ip([123,123,123,123]),[]).
+%% rule(case_example3_f15(),ip([103,1,206,109]),[]).
 
 
 
@@ -188,39 +189,68 @@ rule(case_example4_f3(),hasResources(yourCountry),[]).
 rule(case_example4_f4(),neg(requireHighResource(example4)),[]).
 rule(case_example4_f5(),ipGeoloc(yourCountry,[103,5,206,109]),[]).
 rule(case_example4_f6(),attackSourceIP([103,5,206,109],example4m),[]).
-rule(case_example4_f7(),ip([103,5,206,109]),[]).
+%% rule(case_example4_f7(),ip([103,5,206,109]),[]).
 
-%% governmentLinked(P,C),identifiedIndividualInAttack(P,Att)
+%% %% governmentLinked(P,C),identifiedIndividualInAttack(P,Att)
 
 %% example5
 %% exptected: someGroup
 %% torIP([103,1,206,100]) is true, 103.1.206.100 is a spoofed IP
 rule(case_example5_f1(),claimedResponsibility(someGroup,example5),[]).
 rule(case_example5_f1a(),malwareUsedInAttack(example5m,example5),[]).
-rule(case_example5_f2(),ipGeoloc(yourCountry,[103,1,206,101]),[]).
-rule(case_example5_f3(),attackSourceIP([103,1,206,101],example5m),[]).
-rule(case_example5_f4(),ip([103,1,206,101]),[]).
+rule(case_example5_f2(),ipGeoloc(yourCountry,[103,1,206,100]),[]).
+rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5m),[]).
+%% rule(case_example5_f4(),ip([103,1,206,100]),[]).
 
-%% example6
-rule(case_example6_f1(),attackSourceIP([69,195,124,58],test),[]).
-rule(case_example6_f2(),targetServerIP([173,194,36,104],test),[]).
-rule(case_example6_f3(),ip([69,195,124,58]),[]).
-rule(case_example6_f4(),ip([173,194,36,104]),[]).
-
-%% example7
-%% expected: 
-%% yourCountry
+%% %% example7
+%% %% expected: 
+%% %% yourCountry
 rule(case_example7_f1a(),malwareUsedInAttack(example7m,example7),[]).
 rule(case_example7_f2b(),targetCountry(myCountry,example7),[]).
 rule(case_example7_f3(),malwareUsedInAttack(example7_m1,example7),[]).
 rule(case_example7_f4(),simlarCodeObfuscation(example7_m1,example7_m2),[]).
 rule(case_example7_f5(),malwareLinkedTo(example7_m2,yourCountry),[]).
 
-%% example8
-%% expected: 
-%% yourCountry (hasMotiveAndCapability)
+%% %% example8
+%% %% expected: 
+%% %% yourCountry (hasMotiveAndCapability)
 rule(case_example8_f1(),targetCountry(myCountry,example8),[]).
 rule(case_example8_f2(),imposedSanctions(myCountry, yourCountry, ongoing),[]).
 rule(case_example8_f3(),attackPeriod(example8,[2018,5]),[]).
+
+%% auto geolocation example
+%% expected: hong_kong (loc)
+rule(case_autogeoloc_ex_f0(),malwareUsedInAttack(autogeoloc_ex_malware, autogeoloc_ex),[]).
+rule(case_autogeoloc_ex_f1(),attackSourceIP([103,234,220,195],autogeoloc_ex_malware),[]).
+rule(case_autogeoloc_ex_f3(),ip([103,234,220,195]),[]).
+rule(case_autogeoloc_ex_f4(),claimedResponsibility(countryX, autogeoloc_ex),[]).
+
+%% tor_ex
+%% expected: no culprit (spoof)
+rule(case_tor_ex_f1(), malwareUsedInAttack(tor_ex_malware,tor_ex), []).
+rule(case_tor_ex_f2(), attackSourceIP([103,234,220,195],tor_ex_malware), []).
+rule(case_tor_ex_f3(), ip([103,234,220,195]), []).
+rule(case_tor_ex_f4(), targetServerIP([72,111,1,30], tor_ex), []).
+rule(case_tor_ex_f5(), claimedResponsibility(countryX, tor_ex),[]).
+
+
+%% squid example
+%% expected: united_states (loc)
+rule(case_squid_ex_f1(), malwareUsedInAttack(squid_ex_malware,squid_ex), []).
+%% rule(case_tor_ex_f2(), attackSourceIP([103,1,206,100],tor_ex_malware), []).
+%% rule(case_tor_ex_f3(), targetServerIP([72,111,1,30], tor_ex), []).
+
+
+%% virustotal_ex
+%% expected: us (loc)
+rule(case_virustotal_ex_f0(),malwareUsedInAttack(virustotal_ex_malware, virustotal_ex),[]).
+rule(case_virustotal_ex_f1(),attackSourceIP([8,8,8,8],virustotal_ex_malware),[]).
+rule(case_virustotal_ex_f2(),ip([8,8,8,8]),[]).
+
+%% rule(case_virustotal_ex_f2(),ccServer('smart2home.kz', example_past_attack),[]).
+%% rule(case_virustotal_ex_f3(),isCulprit(myCountry, example_past_attack),[]).
+
+
+
 
 

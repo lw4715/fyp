@@ -1,4 +1,6 @@
 
+import javafx.util.Pair;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,13 +22,18 @@ public class ToolIntegration {
     static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
     static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
 
-    static final String RULE_CASE_SQUID_LOG = "rule(case_squid_log_%d(), squid_log(%s,%s,'%s',%s),[]).";
-    static final String RULE_CASE_SQUID_LOG1 = "\nrule(case_squid_log1_%d(), ip(%s),[]).";
-    static final String RULE_CASE_TOR_CHECK = "rule(case_torCheck%d(), %s, []).";
-    static final String RULE_CASE_TOR_CHECK1 = "rule(case_torCheck1%d(), ip(%s), []).";
+    static final String CASE_SQUID_LOG = "case_squid_log_";
+    static final String RULE_CASE_SQUID_LOG = "rule(" + CASE_SQUID_LOG + "%d(), squid_log(%s,%s,'%s',%s),[]).\n";
+    static final String RULE_CASE_SQUID_LOG1 = "\nrule(" + CASE_SQUID_LOG + "1_%d(), ip(%s),[]).\n";
+    static final String CASE_TOR_CHECK = "case_torCheck";
+    static final String RULE_CASE_TOR_CHECK = "rule(" + CASE_TOR_CHECK + "%d(), %s, []).\n";
+    static final String RULE_CASE_TOR_CHECK1 = "rule(" + CASE_TOR_CHECK + "1_%d(), ip(%s), []).\n";
+    static final String CASE_AUTOGEN_GEOLOCATION = "case_autogen_geolocation_";
+    static final String RULE_CASE_AUTOGEN_GEOLOCATION = "rule(" + CASE_AUTOGEN_GEOLOCATION + "%d(), ipGeoloc(%s,%s), []).\n";
 
     private List<String> virustotalFinishedScanningIP;
     private int torCount = 0;
+    private int virusTotalCount = 0;
 
     public ToolIntegration() {
         Utils.clearFile(VIRUS_TOTAL_PROLOG_FILE);
@@ -55,9 +62,10 @@ public class ToolIntegration {
         return "";
     }
 
-    public static void parseSquidLogFile(String filename, String malware) {
+    public static void parseSquidLogFile(File file, String malware) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
+            System.out.println("Processing squid log: " + file);
+            BufferedReader br = new BufferedReader(new FileReader(file));
             StringBuilder sb = new StringBuilder();
             final int[] c = {0};
             br.lines().forEach(x -> {
@@ -65,8 +73,8 @@ public class ToolIntegration {
                 c[0]++;
             });
 
-            FileWriter w = new FileWriter(SQUID_LOG_RULES_PL);
-            w.write(":- multifile rule/3.\n");
+            FileWriter w = new FileWriter(SQUID_LOG_RULES_PL, true);
+//            w.write(":- multifile rule/3.\n");
             w.write(sb.toString());
             w.close();
         } catch (FileNotFoundException e) {
@@ -122,19 +130,19 @@ public class ToolIntegration {
     void processTorCheckFile(Stream<String> lines, String serverIP) {
         try {
             final int[] count = {torCount};
-            final StringJoiner sj = new StringJoiner("\n");
+            final StringBuilder sb = new StringBuilder("\n");
             lines.forEach(line -> {
                 if (!line.startsWith("#") && !line.startsWith("<!")) {
                     String[] ipStrings = line.split("\\.");
                     String ipString = String.format("[%s,%s,%s,%s]", ipStrings[0], ipStrings[1], ipStrings[2], ipStrings[3]);
                     String fact = String.format("torIP(%s, %s)", ipString, serverIP);
-                    sj.add(String.format(RULE_CASE_TOR_CHECK, count[0], fact));
-                    sj.add(String.format(RULE_CASE_TOR_CHECK1, count[0], ipString));
+                    sb.append(String.format(RULE_CASE_TOR_CHECK, count[0], fact));
+                    sb.append(String.format(RULE_CASE_TOR_CHECK1, count[0], ipString));
                     count[0]++;
                 }
             });
             torCount = count[0];
-            Files.write(Paths.get(TOR_IP_FILE), sj.toString().getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(TOR_IP_FILE), sb.toString().getBytes(), StandardOpenOption.APPEND);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -191,7 +199,7 @@ public class ToolIntegration {
         File virusTotalReportFile = new File(virusTotalLogFileTemplate + ip);
         if (!virustotalFinishedScanningIP.contains(ip)) {
 //            GetIPAddressReport.getIPAddressReport(ip, virusTotalLogFileTemplate);
-            List<String[]> res = GetIPAddressReport.getIPResolution(ip);
+            List<Pair<Pair<Integer, Integer>, String>> res = GetIPAddressReport.getIPResolution(ip);
             if (res != null) {
                 processVirusTotalFile(res, ip);
                 virustotalFinishedScanningIP.add(ip);
@@ -201,21 +209,40 @@ public class ToolIntegration {
         }
     }
 
-    static void processVirusTotalFile(List<String[]> res, String ip) {
+    public static Comparator<Pair<Pair<Integer, Integer>, String>> PairComparator
+            = new Comparator<Pair<Pair<Integer, Integer>, String>>() {
+        @Override
+        public int compare(Pair<Pair<Integer, Integer>, String> o1, Pair<Pair<Integer, Integer>, String> o2) {
+            int keykeyCompare = o1.getKey().getKey().compareTo(o2.getKey().getKey());
+            if (keykeyCompare == 0) {
+                int keyvalueCompare = o1.getKey().getValue().compareTo(o2.getKey().getValue());
+                if (keyvalueCompare == 0) {
+                    return o1.getValue().compareTo(o2.getValue());
+                } else {
+                    return keyvalueCompare;
+                }
+            } else {
+                return keykeyCompare;
+            }
+        }
+    };
+
+    void processVirusTotalFile(List<Pair<Pair<Integer, Integer>, String>> res, String ip) {
         try {
             FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
-
+            Collections.sort(res, PairComparator);
             for (int i = 0; i < res.size(); i++) {
-                String[] r = res.get(i);
+                Pair<Pair<Integer, Integer>, String> r = res.get(i);
                 String[] ips = ip.split("\\.");
                 String ipString = String.format("[%s,%s,%s,%s]", ips[0], ips[1], ips[2], ips[3]);
-                String hostname = r[0];
-                String dateString = r[1];
-                String[] d = dateString.split(" ")[0].split("-");
-                String date = String.format("[%d,%d]", Integer.parseInt(d[0]), Integer.parseInt(d[1]));
+                String hostname = r.getValue();
+                Pair<Integer, Integer> datePair = r.getKey();
+//                String[] d = dateString.split(" ")[0].split("-");
+                String date = String.format("[%d,%d]", datePair.getKey(), datePair.getValue());
 
                 String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, date);
-                w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", i, fact));
+                w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", virusTotalCount, fact));
+                virusTotalCount++;
             }
             w.close();
         } catch (FileNotFoundException e) {
@@ -291,13 +318,13 @@ public class ToolIntegration {
 
     // automated geolocation of ip addresses, resolution
     void preprocessFiles(List<String> allFiles) {
-        List<String> ips = new ArrayList<>();
+        Set<String> ips = new HashSet<>();
         for (String f : allFiles) {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(f));
 
                 br.lines().forEach(line -> {
-                    if (line.contains("ip([")) {
+                    if (line.split("%")[0].contains("ip([")) {
                         String head = Utils.getHeadOfLine(line);
                         ips.add(head.substring(head.indexOf('(') + 1, head.lastIndexOf(')')));
                     }
@@ -316,11 +343,11 @@ public class ToolIntegration {
             for (String ip : ips) {
                 String ipString = convertPrologIPToString(ip);
                 String country = ipGeolocation(ipString);
-                String rule = String.format("rule(case_autogen_geolocation%d(), ipGeoloc(%s,%s), []).\n", c, country, ip);
+                String rule = String.format(RULE_CASE_AUTOGEN_GEOLOCATION, c, country, ip);
                 c++;
                 f_w.write(rule);
 
-                getVirustotalReportAndProcess(ipString);
+//                getVirustotalReportAndProcess(ipString);
             }
             f_w.close();
         } catch (IOException e) {

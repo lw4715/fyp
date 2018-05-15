@@ -120,6 +120,7 @@ class GUI {
 
         JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks",
                 "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack",
+                "autogeoloc_ex", "tor_ex", "squid_ex",
                 "example0", "example1", "example2", "example2b", "example3", "example4"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
@@ -186,6 +187,7 @@ class GUI {
 
         mainFrame.setSize(1000,750);
         mainFrame.setVisible(true);
+        System.out.println("Ready!");
     }
 
     private void addButtonsToPanel(){
@@ -244,8 +246,8 @@ class GUI {
                     int returnVal = fileChooser.showOpenDialog(mainFrame);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
-                        System.out.println("Opening: " + file.getName() + ".");
-                        status.setText("Uploaded file: " + file.getName());
+                        System.out.println("Opening: " + file.getPath() + ".");
+                        status.setText("Uploaded file: " + file.getPath());
                         utils.updateRule(file);
                     }
                     currentEvidences.setText(utils.getCurrentEvidence());
@@ -299,7 +301,7 @@ class GUI {
                     break;
                 case UPLOAD_SQUID_LOG:
                     if (squidLogAttackname.getText().length() == 0) {
-                        toolIntegrationStatus.setText("\t\tPlease input attack name associated with squid log");
+                        toolIntegrationStatus.setText("\t\tPlease input malware name associated with squid log");
                         highlightElement(squidLogAttackname);
                         return;
                     }
@@ -308,14 +310,15 @@ class GUI {
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
-                        System.out.println("Opening: " + file.getName());
-                        ToolIntegration.parseSquidLogFile(file.getName(), squidLogAttackname.getText());
+                        System.out.println("Opening: " + file.getPath());
+                        ToolIntegration.parseSquidLogFile(file, squidLogAttackname.getText());
                         toolIntegrationFrame.dispose();
-                        status.setText("Processed squid file, updated prolog file: " + ToolIntegration.SQUID_LOG_RULES_PL);
+                        status.setText("Processed squid file, updated prolog file: "
+                                + ToolIntegration.SQUID_LOG_RULES_PL + " for attack: " + squidLogAttackname.getText());
                     }
                     break;
                 case OPEN_TOOL_INTEGRATION:
-                    System.out.println("Opening tool integation");
+                    System.out.println("Opening tool integration");
                     openToolIntegrationWindow();
                     break;
                 default:

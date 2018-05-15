@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Utils {
-    private static final String CASE_USER_F = "case_user_f";
+    private static final String CASE_USER_F = "case_user_";
     private static final String P_USER_ = "p_user_";
     private static String FILEPATH = "";
 
@@ -262,16 +262,18 @@ public class Utils {
             return OP;
         } else if (r.startsWith("r_str_") || isPreference(r)) {
             return STR;
+        } else if (r.startsWith(ToolIntegration.CASE_SQUID_LOG)) {
+            return ToolIntegration.SQUID_LOG_RULES_PL;
+        } else if (r.startsWith(ToolIntegration.CASE_TOR_CHECK)) {
+            return ToolIntegration.TOR_IP_FILE;
+        } else if (r.startsWith(ToolIntegration.CASE_AUTOGEN_GEOLOCATION)) {
+            return ToolIntegration.AUTOMATED_GEOLOCATION_PL;
         } else if (r.startsWith(CASE_USER_F) || r.startsWith(P_USER_)) {
             return USER_EVIDENCE_FILENAME;
         } else if (r.startsWith("case")) {
             return "evidence.pl";
         } else if (r.startsWith("bg")) {
             return "backgroundgorgias_renumbered.pl";
-        } else if (r.startsWith(ToolIntegration.RULE_CASE_SQUID_LOG)) {
-            return ToolIntegration.SQUID_LOG_RULES_PL;
-        } else if (r.startsWith(ToolIntegration.RULE_CASE_TOR_CHECK)) {
-            return ToolIntegration.TOR_IP_FILE;
         } else {
             System.err.println(r + " which file?");
             return "";

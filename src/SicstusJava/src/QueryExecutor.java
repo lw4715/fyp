@@ -23,6 +23,7 @@ public class QueryExecutor {
 
     private Set<String> abduced;
     private ArrayList<String> allFiles;
+    private ArrayList<String> reloadFiles;
 
     public static QueryExecutor getInstance() {
         return instance;
@@ -35,6 +36,9 @@ public class QueryExecutor {
         ti = new ToolIntegration();
         clearLeftoverFiles();
         loadFiles();
+        reloadFiles = new ArrayList<>();
+        reloadFiles.add(Utils.USER_EVIDENCE_FILENAME);
+        reloadFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
     }
 
     private LinkedHashSet<String> getVisualTree() {
@@ -130,8 +134,10 @@ public class QueryExecutor {
     }
 
     static String executeCustomQuery(String query) {
+        System.out.println("Executing custom query: " + query);
         try {
             QueryExecutor qe = getInstance();
+            qe.loadFiles();
             return qe.formatQueryOutput(qe.executeQueryString(query, 20));
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,7 +190,8 @@ public class QueryExecutor {
 
     public Result execute(String caseName, boolean reload, List<String> culpritsList) throws Exception {
         System.out.println("Executing for " + caseName);
-        if (reload) reloadUserFile();
+//        if (reload)
+        reloadUserFile();
 
         abduced.clear();
         System.out.println(String.format("---------\nStart %s derivation", caseName));
@@ -279,7 +286,8 @@ public class QueryExecutor {
 
     private void reloadUserFile() {
         try {
-            ti.preprocessFiles(allFiles);
+            ti.preprocessFiles(reloadFiles);
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
         } catch (Exception e) {
             e.printStackTrace();

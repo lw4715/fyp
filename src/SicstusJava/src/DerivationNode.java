@@ -372,7 +372,7 @@ public class DerivationNode {
     }
 
     public static void main(String[] args) {
-//        String tree = "[r_t_highSkill0(stuxnetattack), r_t_highResource0(stuxnetattack), r_op_hasCapability1(united_states_of_america,stuxnetattack), case4_f13(), case4_f12(), r_t_targetted(stuxnetattack), case4_f9(), r_op_date(ongoing), case4_f8(), case4_f11(), case4_f6(), r_op_conflict(united_states_of_america,iran), r_str_motiveAndCapability(united_states_of_america,stuxnetattack)]  {DEFENSE}\n" +
+//        String tree = "[r_t_highSkill0(stuxnetattack), r_t_highResource0(stuxnetattack), r_op_hasCapability1(united_states,stuxnetattack), case4_f13(), case4_f12(), r_t_targetted(stuxnetattack), case4_f9(), r_op_date(ongoing), case4_f8(), case4_f11(), case4_f6(), r_op_conflict(united_states,iran), r_str_motiveAndCapability(united_states,stuxnetattack)]  {DEFENSE}\n" +
 //                "|___[r_t_highSkill2(stuxnetattack), case4_f7(), r_t_zeroday(stuxnet), case4_f12(), p10b_t()]\n" +
 //                "|   |___{NO DEFENSE}\n" +
 //                "|___[r_t_highSkill4(stuxnetattack), case4_f4(), p10c_t()]\n" +

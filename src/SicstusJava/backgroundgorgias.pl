@@ -12,18 +12,18 @@ attackMechanismList([zeroday,exploits,priviledgeEscalation,evasion,blended]).
 %% rule(bg2,target(X,Att),[targets(L,Att)]) :-  member(X,L),\+ is_list(X),is_list(L).
 
 
-natoCountriesList([belgium,canada,denmark,france,iceland,italy,luxembourg,netherlands,norway,portugal,united_kingdom,united_states_of_america,greece,turkey,spain]).
+natoCountriesList([belgium,canada,denmark,france,iceland,italy,luxembourg,netherlands,norway,portugal,united_kingdom,united_states,greece,turkey,spain]).
 euCountriesList([austria,belgium,bulgaria,croatia,cyprus,czech_republic,denmark,estonia,finland,france,germany,greece,hungary,ireland,italy,latvia,lithuania,luxembourg,malta,netherlands,poland,portugal,romania,slovakia,slovenia,spain,sweden,united_kingdom]).
 %% https://brilliantmaps.com/us-allies-enemies/
 %% https://www.msn.com/en-gb/news/photos/which-countries-are-allies-and-which-are-enemies/ss-BBBNVNJ
 %% https://today.yougov.com/topics/politics/articles-reports/2017/02/02/americas-friends-and-enemies
-poorRelationList(united_states_of_america,[north_korea,iran,syria,iraq,afghanistan,russia,libya,somalia,pakistan,palestine]).
-poorRelationList(north_korea,[united_states_of_america,south_korea]).
+poorRelationList(united_states,[north_korea,iran,syria,iraq,afghanistan,russia,libya,somalia,pakistan,palestine]).
+poorRelationList(north_korea,[united_states,south_korea]).
 rule(bg3,poorRelation(X,Y),[]) :- poorRelationList(X,L),member(Y,L).
 rule(bg3,poorRelation(X,russia),[]) :- natoCountriesList(L),member(X,L).
 rule(bg3,poorRelation(iran,saudi_arabia),[]).
 
-goodRelationList(united_states_of_america,[canada,australia,united_kingdom,france,italy,ireland,israel,norway,sweden,germany,saudi_arabia,south_korea,cuba]).
+goodRelationList(united_states,[canada,australia,united_kingdom,france,italy,ireland,israel,norway,sweden,germany,saudi_arabia,south_korea,cuba]).
 goodRelationList(china,[north_korea]).
 rule(bg4,goodRelation(X,Y),[]) :- natoCountriesList(L),member(X,L),member(Y,L),X\=Y.
 rule(bg4,goodRelation(X,Y),[]) :- euCountriesList(L),member(X,L),member(Y,L),X\=Y.
@@ -49,7 +49,7 @@ rule(bg_2_2,sha256(goldenEye,'027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b
 rule(bg2,prominentGroup(fancyBear),[]).
 rule(bg3,groupOrigin(fancyBear ,russia),[]).
 rule(bg4,pastMotives(fancyBear ,[ espionage,doxing ]),[]).
-rule(bg5,pastTargets(fancyBear ,[georgia,france,jordan,united_states_of_america,hungary,world_antidoping_agency,
+rule(bg5,pastTargets(fancyBear ,[georgia,france,jordan,united_states,hungary,world_antidoping_agency,
 	nato,ukraine,belgium,pakistan,asia_pacific_economic_cooperation,osce,united_kingdom,
 	germany,poland,european_commission]),[]).
 rule(bg6,targetCategory(fancyBear,government,military),[]).
@@ -70,7 +70,7 @@ rule(bg12,malwareLinkedTo(infostealerFakepude ,lazarusGrp),[]).
 rule(bg13,malwareLinkedTo(backdoorContopee ,lazarusGrp),[]).
 
 rule(bg16,prominentGroup(equationGrp),[]).
-rule(bg17,groupOrigin(equationGrp ,united_states_of_america),[]).
+rule(bg17,groupOrigin(equationGrp ,united_states),[]).
 rule(bg18,pastTargets(equationGrp ,[ iran ,russia ,pakistan ,afghanistan ,india ,syria ,mali ]),[]).
 
 %% https://www.trendmicro.com/vinfo/us/security/definition/exploit-kit
@@ -82,7 +82,7 @@ rule(bg18,pastTargets(equationGrp ,[ iran ,russia ,pakistan ,afghanistan ,india 
 rule(bg28,prominentGroup(deepPanda),[]).
 rule(bg29,groupOrigin(deepPanda ,china),[]).
 rule(bg30,groupAttackMethods(deepPanda ,[ zeroday ,wateringHole ,customMalware ]),[]).
-rule(bg31,pastTargets(deepPanda ,[united_states_of_america]),[]).
+rule(bg31,pastTargets(deepPanda ,[united_states]),[]).
 rule(bg31,targetCategory(deepPanda ,[ aerospace ,energy ,healthcare,military,privateSector ]),[]).
 rule(bg32,pastMotives(deepPanda ,[ cyberespionage ]),[]).
 
@@ -103,7 +103,7 @@ rule(bg45,pastMotives(dragonfly ,[ cyberespionage ,spy ,sabotage ]),[]).
 rule(bg47,prominentGroup(govRAT),[]).
 rule(bg48,groupOrigin(govRAT ,china),[]).
 rule(bg49,groupAttackMethods(govRAT ,[ clientSideExploits ]),[]).
-rule(bg50,pastTargets(govRAT ,[united_states_of_america,taiwan,united_kingdom,singapore,india,canada,
+rule(bg50,pastTargets(govRAT ,[united_states,taiwan,united_kingdom,singapore,india,canada,
 	japan,indonesia,hong_kong,united_nations,south_korea,switzerland,vietnam,germany,
 	international_olympic_committee]),[]).
 rule(bg51,targetCategory([ govOfficials ,militaryOfficials ,enterprises ]),[]).
@@ -138,9 +138,9 @@ listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,
 	colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico,tunisia,croatia,moldova,turkey,cyprus,montenegro,
 	uganda,czech_republic,morocco,ukraine,north_korea,nigeria,united_arab_emirates,denmark,pakistan,uruguay,ecuador,
 	panama,venezuela,germany,paraguay,australia,japan,oman ,canada,south_korea,russia,egypt,malaysia,singapore,estonia,
-	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states_of_america]).
+	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states]).
 
-cybersuperpowerlist([ china ,israel ,iran ,united_states_of_america ,north_korea ]).
+cybersuperpowerlist([ china ,israel ,iran ,united_states ,north_korea ]).
 rule(bg65b,cybersuperpower(X),[]) :- cybersuperpowerlist(L),member(X,L).
 %% rule(bg65b,listNegHasResources([ indonesia,saudi_arabia,india,southafrica,turkey ]),[]).
 listNormalIndustries([ telecom, banking, infocomm ]).
@@ -155,7 +155,7 @@ rule(bg71,politicalIndustry(X),[]) :- listPoliticalIndustries(L),member(X,L).
 %% rule(bg72,hasResources(X),[listHasResources(L),member(X,L)]).
 %% rule(bg72b,neg(hasResources(X)),[listNegHasResources(L),member(X,L)]).
 listChineseCountries([ china ]).
-listEnglishCountries([ united_states_of_america ,united_kingdom ]).
+listEnglishCountries([ united_states ,united_kingdom ]).
 
 rule(bg73,firstLanguage(chinese,X),[]) :- listChineseCountries(L),member(X,L).
 rule(bg74,firstLanguage(english,X),[]) :- listEnglishCountries(L),member(X,L).
@@ -175,7 +175,7 @@ rule(bg89,possibleMotive(espionage ,Att),[informationRich(Ind),industry(Ind,V),t
 %% rule(bg78,isCulprit(equationGroup ,flameattack),[]). 
 rule(bg78,malwareLinkedTo(flame,equationGrp),[]). 
 
-%% rule(bg94,isCulprit([ united_states_of_america ,israel ],flameattack),[]).
+%% rule(bg94,isCulprit([ united_states ,israel ],flameattack),[]).
 rule(bg95,target(middleeast ,flameattack),[]).
 rule(bg96,malwareUsedInAttack(flame ,flameattack),[]).
 rule(bg97,ccServer(gowin7 ,flame),[]).
@@ -211,7 +211,7 @@ list_gci_maturing([albania,ghana,peru,algeria,greece,philippines,argentina,hunga
 	tunisia,croatia,moldova,turkey,cyprus,montenegro,uganda,czech_republic,morocco,ukraine,north_korea,nigeria,
 	united_arab_emirates,denmark,pakistan,uruguay,ecuador,panama,venezuela,germany,paraguay]).
 list_gci_leading([australia,japan,oman,canada,south_korea,russia,egypt,malaysia,singapore,estonia,mauritius,sweden,
-	finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states_of_america]).
+	finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states]).
 rule(bg115,gci_tier(X,initiating),[]) :- list_gci_initiating(L),member(X,L).
 rule(bg116,gci_tier(X,maturing),[]) :- list_gci_maturing(L),member(X,L).
 rule(bg117,gci_tier(X,leading),[]) :- list_gci_leading(L),member(X,L).

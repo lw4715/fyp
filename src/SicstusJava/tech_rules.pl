@@ -80,8 +80,8 @@ rule(r_t_srcIP2(X,Att),  attackPossibleOrigin(X,Att),     [majorityIpOrigin(X,At
 rule(r_t_spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)),[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),spoofedIP(IP,Att),ipGeoloc(X,IP)]).
 
 rule(r_t_IPdomain1(S,M), ccServer(S,M),					[attackSourceIP(IP,M),ipResolution(S,IP,_D)]).
-rule(r_t_IPdomain2(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),ipResolution(S,IP,_D),spoofedIP(IP,Att)]).
-rule(r_t_IPdomain3(S,M), neg(ccServer(S,M)),			[attackSourceIP(IP,M),ipResolution(S,IP,D),malwareUsedInAttack(M,Att),attackPeriod(Att,D1),neg(recent(D,D1))]).
+rule(r_t_IPdomain2(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),spoofedIP(IP,Att),ipResolution(S,IP,_D)]).
+rule(r_t_IPdomain3(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),attackPeriod(Att,D1),ipResolution(S,IP,D),neg(recent(D,D1))]).
 
 
 rule(r_t_spoofIPtor(IP), spoofedIP(IP,Att), [malwareUsedInAttack(M,Att), attackSourceIP(IP,M), targetServerIP(TargetServerIP,Att), torIP(IP, TargetServerIP)]).
