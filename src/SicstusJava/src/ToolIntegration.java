@@ -1,4 +1,3 @@
-
 import javafx.util.Pair;
 
 import java.io.*;
@@ -109,6 +108,16 @@ public class ToolIntegration {
 
     }
 
+    private static String virustotalScanFile(File file) {
+        String resource = ScanFile.getFileResource(file);
+        return GetFileScanReport.getFileScanReport(resource).getScans().toString();
+//        String filename = file.getAbsolutePath();
+//        String filename = "/Users/linna/Downloads/2015-08-31-traffic-analysis-exercise.pcap";
+//        String command = String.format("curl -v -F 'file=@/%s' -F apikey=%s https://www.virustotal.com/vtapi/v2/file/scan", filename, ApiDetails.API_KEY);
+//        return executeUNIXCommand(command);
+//        return scanInfo.getResource();
+    }
+
     static Set<String[]> getTargetServerIP(String filename) {
         Set<String[]> ips = new HashSet<>();
         try {
@@ -194,14 +203,14 @@ public class ToolIntegration {
         return s.toLowerCase().replace(" ", "_");
     }
 
-    void getVirustotalReportAndProcess(String ip) {
-        System.out.println("Processing " + ip);
+    void getVirustotalReportAndProcess(String ip, Integer year, Integer month) {
+        System.out.println("Processing " + ip + " : " + year + "," + month);
         File virusTotalReportFile = new File(virusTotalLogFileTemplate + ip);
         if (!virustotalFinishedScanningIP.contains(ip)) {
 //            GetIPAddressReport.getIPAddressReport(ip, virusTotalLogFileTemplate);
             List<Pair<Pair<Integer, Integer>, String>> res = GetIPAddressReport.getIPResolution(ip);
             if (res != null) {
-                processVirusTotalFile(res, ip);
+                processVirusTotalFile(res, ip, year, month);
                 virustotalFinishedScanningIP.add(ip);
             }
         } else {
@@ -227,10 +236,12 @@ public class ToolIntegration {
         }
     };
 
-    void processVirusTotalFile(List<Pair<Pair<Integer, Integer>, String>> res, String ip) {
+    void processVirusTotalFile(List<Pair<Pair<Integer, Integer>, String>> res, String ip, int year, int month) {
         try {
             FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
             Collections.sort(res, PairComparator);
+            int prevYear = -1;
+            int prevMonth = -1;
             for (int i = 0; i < res.size(); i++) {
                 Pair<Pair<Integer, Integer>, String> r = res.get(i);
                 String[] ips = ip.split("\\.");
@@ -238,11 +249,22 @@ public class ToolIntegration {
                 String hostname = r.getValue();
                 Pair<Integer, Integer> datePair = r.getKey();
 //                String[] d = dateString.split(" ")[0].split("-");
-                String date = String.format("[%d,%d]", datePair.getKey(), datePair.getValue());
+                String resolvedDate = String.format("[%d,%d]", datePair.getKey(), datePair.getValue());
 
-                String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, date);
-                w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", virusTotalCount, fact));
-                virusTotalCount++;
+                int currYear = datePair.getKey();
+                int currMonth = datePair.getValue();
+
+                if (dateExceeded(year, month, currYear, currMonth)) {
+                    break;
+                }
+
+                if (!dateNotReached(year, month, prevYear, prevMonth)) {
+                    String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, resolvedDate);
+                    w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", virusTotalCount, fact));
+                    virusTotalCount++;
+                    prevYear = currYear;
+                    prevMonth = currMonth;
+                }
             }
             w.close();
         } catch (FileNotFoundException e) {
@@ -250,6 +272,16 @@ public class ToolIntegration {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // returns true if year/month is before prevYear/prevMonth
+    private boolean dateNotReached(int year, int month, int prevYear, int prevMonth) {
+        return (year < prevYear) || (year == prevYear && month < prevMonth);
+    }
+
+    // returns true is year/month is after currYear/currMonth
+    private boolean dateExceeded(int year, int month, int currYear, int currMonth) {
+        return year > currYear || (year == currYear && month > currMonth);
     }
 
     static void processVirusTotalFile(String filename, String ip) {
@@ -318,7 +350,8 @@ public class ToolIntegration {
 
     // automated geolocation of ip addresses, resolution
     void preprocessFiles(List<String> allFiles) {
-        Set<String> ips = new HashSet<>();
+//        Set<String> ips = new HashSet<>();
+        Set<Pair<String, String>> ipDates = new HashSet<>();
         for (String f : allFiles) {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(f));
@@ -326,7 +359,9 @@ public class ToolIntegration {
                 br.lines().forEach(line -> {
                     if (line.split("%")[0].contains("ip([")) {
                         String head = Utils.getHeadOfLine(line);
-                        ips.add(head.substring(head.indexOf('(') + 1, head.lastIndexOf(')')));
+                        String ip = head.substring(head.indexOf('['), head.indexOf(']') + 1);
+                        String date = head.substring(head.lastIndexOf('['), head.lastIndexOf(']') + 1);
+                        ipDates.add(new Pair<>(ip, date));
                     }
                 });
                 br.close();
@@ -340,14 +375,21 @@ public class ToolIntegration {
         try {
             FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL, true);
             int c = 0;
-            for (String ip : ips) {
+            for (Pair<String, String> ipDate : ipDates) {
+                String ip = ipDate.getKey();
                 String ipString = convertPrologIPToString(ip);
                 String country = ipGeolocation(ipString);
                 String rule = String.format(RULE_CASE_AUTOGEN_GEOLOCATION, c, country, ip);
                 c++;
                 f_w.write(rule);
 
-//                getVirustotalReportAndProcess(ipString);
+                String date = ipDate.getValue();
+                if (!ip.equals(date)) {
+                    String[] s = date.substring(1, date.length() - 1).split(",");
+                    int year = Integer.parseInt(s[0]);
+                    int month = Integer.parseInt(s[1]);
+                    getVirustotalReportAndProcess(ipString, year, month);
+                }
             }
             f_w.close();
         } catch (IOException e) {
@@ -356,6 +398,7 @@ public class ToolIntegration {
     }
 
     public static void main(String[] args) {
+        System.out.println("RESOURCE: " + virustotalScanFile(new File("/Users/linna/Downloads/2015-08-31-traffic-analysis-exercise.pcap")));
 //        ToolIntegration ti = new ToolIntegration();
 //        ti.torIntegration();
 //        preprocessFiles();

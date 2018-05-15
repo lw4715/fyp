@@ -182,4 +182,3 @@ attackOrigin(X, A, D) :- prove([attackOrigin(X, A)], D).
 notForBlackMarketUse(M, D) :- prove([notForBlackMarketUse(M)], D).
 similar(M1, M2, A, D) :- prove([malwareUsedInAttack(M1, A), similar(M1, M2)], D).
 specificTarget(A, D) :- prove([specificTarget(A)], D). % abducible
-malwareUsedInAttack(M, Att) :- prove([malwareUsedInAttack(M, Att)], _).

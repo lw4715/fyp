@@ -123,8 +123,7 @@ rule(case_example1_f5(),malwareLinkedTo(example1_m2,yourCountry),[]).
 rule(case_example1_f8(),hasMotive(yourCountry,example1),[]).
 rule(case_example1_f9(),attackSourceIP([123,123,123,102],example1m),[]).
 rule(case_example1_f10(),ipGeoloc(yourCountry,[123,123,123,102]),[]).
-
-%% rule(case_example1_f11(),ip([123,123,123,102]),[]).
+rule(case_example1_f11(),ip([123,123,123,102]),[]).
 
 %% example2
 %% expected: 
@@ -139,7 +138,7 @@ rule(case_example2_f5(),malwareLinkedTo(example2_m2,yourCountry),[]).
 rule(case_example2_f8(),hasMotive(yourCountry,example2),[]).
 rule(case_example2_f9(),attackSourceIP([123,123,123,100],example2m),[]).
 rule(case_example2_f10(),ipGeoloc(yourCountry,[123,123,123,100]),[]).
-%% rule(case_example2_f11(),ip([123,123,123,100]),[]).
+rule(case_example2_f11(),ip([123,123,123,100]),[]).
 
 %% example2b
 %% expected: 
@@ -156,7 +155,7 @@ rule(case_example2b_f5(),malwareLinkedTo(example2b_m2,yourCountry),[]).
 rule(case_example2b_f8(),hasMotive(yourCountry,example2b),[]).
 rule(case_example2b_f9(),attackSourceIP([123,123,123,125],example2bm),[]).
 rule(case_example2b_f10(),ipGeoloc(yourCountry,[123,123,123,125]),[]).
-%% rule(case_example2b_f11(),ip([123,123,123,125]),[]).
+rule(case_example2b_f11(),ip([123,123,123,125]),[]).
 
 %% example3
 %% expected: 
@@ -174,8 +173,8 @@ rule(case_example3_f9(),attackSourceIP([123,123,123,123],example3),[]).
 rule(case_example3_f10(),ipGeoloc(yourCountry,[123,123,123,123]),[]).
 rule(case_example3_f12(),attackSourceIP([103,1,206,109],example3m),[]).
 rule(case_example3_f13(),ipGeoloc(hisCountry,[103,1,206,109]),[]).
-%% rule(case_example3_f14(),ip([123,123,123,123]),[]).
-%% rule(case_example3_f15(),ip([103,1,206,109]),[]).
+rule(case_example3_f14(),ip([123,123,123,123]),[]).
+rule(case_example3_f15(),ip([103,1,206,109]),[]).
 
 
 
@@ -189,7 +188,7 @@ rule(case_example4_f3(),hasResources(yourCountry),[]).
 rule(case_example4_f4(),neg(requireHighResource(example4)),[]).
 rule(case_example4_f5(),ipGeoloc(yourCountry,[103,5,206,109]),[]).
 rule(case_example4_f6(),attackSourceIP([103,5,206,109],example4m),[]).
-%% rule(case_example4_f7(),ip([103,5,206,109]),[]).
+rule(case_example4_f7(),ip([103,5,206,109]),[]).
 
 %% %% governmentLinked(P,C),identifiedIndividualInAttack(P,Att)
 
@@ -200,7 +199,7 @@ rule(case_example5_f1(),claimedResponsibility(someGroup,example5),[]).
 rule(case_example5_f1a(),malwareUsedInAttack(example5m,example5),[]).
 rule(case_example5_f2(),ipGeoloc(yourCountry,[103,1,206,100]),[]).
 rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5m),[]).
-%% rule(case_example5_f4(),ip([103,1,206,100]),[]).
+rule(case_example5_f4(),ip([103,1,206,100]),[]).
 
 %% %% example7
 %% %% expected: 
@@ -245,7 +244,7 @@ rule(case_squid_ex_f1(), malwareUsedInAttack(squid_ex_malware,squid_ex), []).
 %% expected: us (loc)
 rule(case_virustotal_ex_f0(),malwareUsedInAttack(virustotal_ex_malware, virustotal_ex),[]).
 rule(case_virustotal_ex_f1(),attackSourceIP([8,8,8,8],virustotal_ex_malware),[]).
-rule(case_virustotal_ex_f2(),ip([8,8,8,8]),[]).
+rule(case_virustotal_ex_f2(),ip([8,8,8,8], [2018,5]),[]). % ip([IP], [YYYY,MM]) for auto resolution using virustotal
 
 %% rule(case_virustotal_ex_f2(),ccServer('smart2home.kz', example_past_attack),[]).
 %% rule(case_virustotal_ex_f3(),isCulprit(myCountry, example_past_attack),[]).

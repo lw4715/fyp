@@ -95,12 +95,14 @@ rule(p4c_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4d_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics2(C,T)),[]).
 rule(p5_op(),prefer(r_op_claimResp1(X,A),r_op_claimResp0(X,A)),[]).
 
-goal_all(A, X, D, D1, D2, D3) :-
+goal_all(A, X, D, D1, D2, D3, D4) :-
   writeToFilesPos(hasCapability(X,A), hasCapability(X,A,D)),
   writeToFilesPos(hasMotive(X,A), hasMotive(X,A,D1)),
-  writeToFilesAll(contextOfAttack(political,A), contextOfAttack(political,A,D2)),
-  writeToFilesAll(contextOfAttack(economic,A), contextOfAttack(economic,A,D3)).
+  writeToFilesAll(existingGroupClaimedResponsibility(X,A), existingGroupClaimedResponsibility(X,A,D2)),
+  writeToFilesAll(contextOfAttack(political,A), contextOfAttack(political,A,D3)),
+  writeToFilesAll(contextOfAttack(economic,A), contextOfAttack(economic,A,D4)).
 
 hasCapability(X,A,D) :- prove([hasCapability(X,A)], D).
 hasMotive(X,A,D) :- prove([hasMotive(X,A)], D).
 contextOfAttack(Context,A,D) :- prove([contextOfAttack(Context,A)], D).
+existingGroupClaimedResponsibility(X, A, D) :- prove([existingGroupClaimedResponsibility(X,A)], D).

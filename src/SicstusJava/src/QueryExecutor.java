@@ -93,7 +93,7 @@ public class QueryExecutor {
                         executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
                     }
                 }
-                queryString = String.format("goal_all(%s, X1, D1, D2, D3, D4)", caseName);
+                queryString = String.format("goal_all(%s, X1, D1, D2, D3, D4, D5)", caseName);
                 System.out.println(queryString);
                 executeQueryString(queryString, 200);
 
@@ -413,7 +413,7 @@ public class QueryExecutor {
         int n = 1;
         try {
 //            System.out.println(qe.execute("example5", false));
-//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
 
             for (int i = 0; i < n; i++) {
                 for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {

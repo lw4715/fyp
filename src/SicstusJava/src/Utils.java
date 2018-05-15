@@ -15,6 +15,7 @@ public class Utils {
 
     private int counter;
     private int prefCount;
+    private List<String> allStrRules;
 
     Utils() {
         counter = 0;
@@ -364,6 +365,28 @@ public class Utils {
             prefCount++;
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public List<String> getAllStrRules() {
+        if (allStrRules == null) {
+            List<String> rs = new ArrayList<>();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(STR));
+                br.lines().forEach(x -> {
+                    if (x.startsWith("rule(r_str__")) {
+                        rs.add(x);
+                    }
+                });
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+
+            }
+            allStrRules = rs;
+            return rs;
+        } else {
+            return allStrRules;
         }
     }
 

@@ -185,6 +185,7 @@ public class Result {
 
     @Override
     public String toString() {
+        processCulpritInfo();
         String s = String.format("\n%s\nCulprit(s): %s\nTree:\n%s", attack, culprits, trees);
         if (abducedMap.isEmpty()) {
             return s;
