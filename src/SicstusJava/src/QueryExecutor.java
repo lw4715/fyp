@@ -1,3 +1,4 @@
+import javafx.util.Pair;
 import org.jpl7.JPL;
 import org.jpl7.Query;
 import org.jpl7.Term;
@@ -252,8 +253,8 @@ public class QueryExecutor {
         Result r = new Result(caseName, resultMap, getVisualTree().toArray(),
                 abduced, getPredMap(abduced, true), negMap);
         if (verbose) {
-            for (String s : r.resultStrings()) {
-                System.out.println(s);
+            for (Pair<String, Pair<List<String>, String>> s : r.resultStrings()) {
+                System.out.println(s.getKey());
             }
             for (String neg : r.negDerivationFor(culprits.toArray()[0].toString())) {
                 System.out.println(neg);

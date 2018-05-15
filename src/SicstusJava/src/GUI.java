@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -28,7 +30,9 @@ class GUI {
     private static final String ARG_TREE = "ArgTree:";
     private static final String UPLOAD_SQUID_LOG = "Upload squid log";
     private static final String OPEN_TOOL_INTEGRATION = "Open tool integration";
+    private static final String ADD_PREF = "AddPref_";
     private static final String SEPARATOR = "#";
+    private static final String PREF_TYPE = "PrefType_";
 
     private final Utils utils;
 
@@ -53,6 +57,9 @@ class GUI {
     private JFrame prefFrame;
     private JFrame toolIntegrationFrame;
     private JLabel toolIntegrationStatus;
+
+    private List<Pair<String, String>> strRulePrefs;
+    private Result reloadResult;
 
     private final JFileChooser fileChooser = new JFileChooser();
 
@@ -99,8 +106,8 @@ class GUI {
         mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.Y_AXIS));
 
         status = new JLabel("", JLabel.LEFT);
-        status.setAutoscrolls(true);
 
+        strRulePrefs = new ArrayList();
         ArrayList predList = new ArrayList();
         predList.add(placeholderItem);
         Collections.addAll(predList, predicates);
@@ -294,7 +301,7 @@ class GUI {
                     JScrollPane sp = new JScrollPane(p);
                     sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-                    JFrame f = new JFrame();
+                    JFrame f = new JFrame("Custom query result");
                     f.add(sp);
                     f.setSize(1200,1000);
                     f.setVisible(true);
@@ -323,19 +330,28 @@ class GUI {
                     break;
                 default:
                     // add pref
-                    if (command.startsWith("[")) {
-                        choosePreferenceAction(command);
-
-                    } else if (command.startsWith("Choose")) {
+                    if (command.startsWith(PREF_TYPE)) {
+                        System.out.println("Full command:" + command);
+                        int prefType = Integer.parseInt(command.substring(command.indexOf(PREF_TYPE) + PREF_TYPE.length(), command.indexOf(ADD_PREF)));
+                        choosePreferenceAction(command.split(ADD_PREF)[1], prefType);
+                    } else if (command.startsWith("Choose:")) {
                         // create preference rule
-                        String[] s = command.split(":")[1].split(">");
+                        String[] s = command.split(":")[2].split(">");
                         String pref = String.format("prefer(%s,%s)", s[0], s[1]);
-                        utils.writePrefToFile(pref);
-                        currentEvidences.setText(utils.getCurrentEvidence());
-                        executeResultFrame.dispose();
-                        executeQuery(false);
-                        prefFrame.dispose();
-                        status.setText("Added  " + pref + " to " + Utils.USER_EVIDENCE_FILENAME);
+                        if (Integer.parseInt(command.split(":")[1]) == 0) {
+                            utils.writePrefToFile(pref);
+                            currentEvidences.setText(utils.getCurrentEvidence());
+                            executeResultFrame.dispose();
+                            executeQuery(false);
+                            prefFrame.dispose();
+                            status.setText("Added  " + pref + " to " + Utils.USER_EVIDENCE_FILENAME);
+                        } else {
+                            prefFrame.dispose();
+                            executeResultFrame.dispose();
+                            strRulePrefs.add(new Pair<>(s[0], s[1]));
+                            status.setText("Str rule preference: " + pref);
+                            displayExecutionResult(reloadResult);
+                        }
 
                     } else if (command.startsWith(ARG_TREE)) {
                         String[] s = command.split(":");
@@ -350,28 +366,31 @@ class GUI {
         }
     }
 
-    private void choosePreferenceAction(String command) {
+    private void choosePreferenceAction(String command, int type) {
         String[] s = command.split("\\*");
-        String negDer = s[0];
+        String selectedDer = s[0];
         String[] posDers = s[1].split(SEPARATOR);
 
-        JTextArea ntf = new JTextArea(negDer);
+        System.out.println("select pref: "+ command + " type: " + type);
+
+
+        JTextArea ntf = new JTextArea(selectedDer);
         ntf.setColumns(30);
         ntf.setLineWrap(true);
 
 
         JPanel prefP = new JPanel();
         prefP.setLayout(new BoxLayout(prefP, BoxLayout.Y_AXIS));
-        prefP.add(new JLabel("Negative derivation:"));
+        prefP.add(new JLabel("Selected derivation:"));
         prefP.add(ntf);
-        prefP.add(new JLabel("Positive derivations:"));
+        prefP.add(new JLabel("Other derivations:"));
         for (String posDer : posDers) {
-            List<String> conflictingRules = QueryExecutor.getConflictingRule(posDer, negDer);
+            List<String> conflictingRules = QueryExecutor.getConflictingRule(posDer, selectedDer);
 
             JButton choosePos = new JButton("Prefer " + conflictingRules.get(0));
             JButton chooseNeg = new JButton("Prefer " + conflictingRules.get(1));
-            choosePos.setActionCommand("Choose0:" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
-            chooseNeg.setActionCommand("Choose1:" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
+            choosePos.setActionCommand("Choose:" + type + ":" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
+            chooseNeg.setActionCommand("Choose:" + type + ":" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
             choosePos.addActionListener(new ButtonClickListener());
             chooseNeg.addActionListener(new ButtonClickListener());
 
@@ -389,7 +408,7 @@ class GUI {
         }
 
         JScrollPane prefSP = new JScrollPane(prefP);
-        prefFrame = new JFrame();
+        prefFrame = new JFrame("Set new preference");
         prefFrame.add(prefSP);
         prefFrame.setSize(1000, 800);
         prefFrame.setVisible(true);
@@ -402,7 +421,7 @@ class GUI {
         btn.setActionCommand(UPLOAD_SQUID_LOG);
         btn.addActionListener(new ButtonClickListener());
 
-        toolIntegrationFrame = new JFrame();
+        toolIntegrationFrame = new JFrame("Forensic tool integration");
         toolIntegrationFrame.setLayout(new BoxLayout(toolIntegrationFrame.getContentPane(), BoxLayout.Y_AXIS));
         toolIntegrationFrame.add(new JLabel("Attack name associated with log:"));
         toolIntegrationFrame.add(squidLogAttackname);
@@ -470,15 +489,24 @@ class GUI {
     }
 
     private void displayExecutionResult(Result executeResult) {
+        reloadResult = executeResult;
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        List<String> rs = executeResult.resultStrings();
+        executeResult.filterByStrRulePrefs(strRulePrefs);
+        List<Pair<String, Pair<List<String>, String>>> rs = executeResult.resultStrings();
         int c = 0;
 
         String summary = executeResult.getCulpritsSummary();
         if (summary.trim().length() == 0) {
             summary = "No results for execution. Try clicking 'Prove all possible predicates' to see what other evidence can be provided.";
         }
+
+        p.add(new JLabel("User preferences:"));
+        JTextArea prefRules = new JTextArea(strRulePrefs.toString());
+        prefRules.setColumns(40);
+        prefRules.setLineWrap(true);
+        p.add(prefRules);
+
         p.add(new JLabel("Summary:"));
         JTextArea ta = new JTextArea();
         ta.setColumns(50);
@@ -500,7 +528,7 @@ class GUI {
         p.add(new JLabel("Derivations:"));
 
         for (int i = 0; i < rs.size(); i++) {
-            String r = rs.get(i);
+            String r = rs.get(i).getKey();
             JTextArea textArea = new JTextArea();
             textArea.setColumns(50);
             textArea.setEditable(false);
@@ -517,9 +545,22 @@ class GUI {
 
             textArea.setCaretPosition(0);
 
+            JPanel btnPanel = new JPanel();
+            btnPanel.setLayout(new FlowLayout());
+
+            btnPanel.add(viewDiagBtn);
+            btnPanel.add(viewTreeBtn);
+
+            if (rs.size() > 1) {
+                JButton addPrefBtn = new JButton("Add rule preference");
+                addPrefBtn.setActionCommand(PREF_TYPE + 1 + ADD_PREF + rs.get(i).getValue().getKey() + "*"
+                        + executeResult.getDerivationsWithDiffStrRule(SEPARATOR, i));
+                addPrefBtn.addActionListener(new ButtonClickListener());
+                btnPanel.add(addPrefBtn);
+            }
+
             p.add(textArea);
-            p.add(viewDiagBtn, Panel.LEFT_ALIGNMENT);
-            p.add(viewTreeBtn, Panel.RIGHT_ALIGNMENT);
+            p.add(btnPanel);
             c++;
         }
 
@@ -537,7 +578,7 @@ class GUI {
                 textArea.setCaretPosition(0);
                 p.add(textArea);
                 JButton addPrefBtn = new JButton("Add rule preference");
-                addPrefBtn.setActionCommand(nd + "*" + executeResult.getDerivationsForCulprit(culprit, SEPARATOR));
+                addPrefBtn.setActionCommand(PREF_TYPE + 0 + ADD_PREF + nd + "*" + executeResult.getDerivationsForCulprit(culprit, SEPARATOR));
                 addPrefBtn.addActionListener(new ButtonClickListener());
                 p.add(addPrefBtn);
             }
