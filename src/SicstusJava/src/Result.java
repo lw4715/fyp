@@ -185,6 +185,10 @@ public class Result {
 
     @Override
     public String toString() {
+        maxScores.clear();
+        culprits.clear();
+        numDs.clear();
+        filteredTrees.clear();
         processCulpritInfo();
         String s = String.format("\n%s\nCulprit(s): %s\nTree:\n%s", attack, culprits, trees);
         if (abducedMap.isEmpty()) {

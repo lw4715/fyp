@@ -35,8 +35,8 @@ writeToFiles(Filename, X, D, Prefix) :-
     (\+ D, writeToFile(Filename, neg(X), Prefix)).
 
 writeToFilesAll(X, D) :-
-  (D, writeResultsToFile(X));
-    (\+ D, writeNonResultsToFile(X)).
+  (D, writeResultsToFile(X), writeNonResultsToFile(neg(X)));
+    (\+ D, writeNonResultsToFile(X), writeResultsToFile(neg(X))).
 
 writeToFilesPos(X, D) :-
-  D, writeResultsToFile(X); \+ D.
+  (D, writeResultsToFile(X), writeNonResultsToFile(neg(X))); \+ D.

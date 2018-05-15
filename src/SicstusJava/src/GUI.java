@@ -1,6 +1,9 @@
 import javafx.util.Pair;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -505,6 +508,7 @@ class GUI {
         JTextArea prefRules = new JTextArea(strRulePrefs.toString());
         prefRules.setColumns(40);
         prefRules.setLineWrap(true);
+        prefRules.setCaretPosition(0);
         p.add(prefRules);
 
         p.add(new JLabel("Summary:"));
@@ -592,6 +596,11 @@ class GUI {
     }
 
     private void displayResultsAndNonResults() {
+        String allStrRules = utils.getAllStrRules();
+        JTextArea allRulesVisual = new JTextArea(allStrRules);
+        allRulesVisual.setColumns(80);
+        allRulesVisual.setLineWrap(true);
+
         List<String>[] res = readFromResultAndNonResultFiles();
         JDialog dialog = new JDialog(mainFrame);
         JPanel row1 = new JPanel();
@@ -601,11 +610,13 @@ class GUI {
         StringJoiner sj = new StringJoiner("\n");
         for (String s : res[0]) {
             sj.add(s);
+            String predicate = s.substring(0, s.lastIndexOf("("));
+            highlightWordInTextArea(predicate, allRulesVisual, Color.green);
         }
         JTextArea results = new JTextArea("Results (proven):\n\n" + sj);
         results.setEditable(false);
-        results.setRows(17);
-        results.setColumns(45);
+        results.setRows(10);
+        results.setColumns(47);
         results.setCaretPosition(0);
         JScrollPane row1col1 = new JScrollPane(results);
         row1.add(row1col1);
@@ -613,13 +624,16 @@ class GUI {
         sj = new StringJoiner("\n");
         for (String s : res[1]) {
             sj.add(s);
+            String predicate = s.substring(0, s.lastIndexOf("("));
+            highlightWordInTextArea(predicate, allRulesVisual, Color.pink);
         }
+
         JTextArea nonresults = new JTextArea("Other possible predicates (not proven):\n\n" + sj);
         nonresults.setCaretPosition(0);
         JScrollPane row1col2 = new JScrollPane(nonresults);
         nonresults.setEditable(false);
-        nonresults.setRows(17);
-        nonresults.setColumns(45);
+        nonresults.setRows(10);
+        nonresults.setColumns(47);
         row1.add(row1col2);
 
         JTextArea possiblerules = new JTextArea("Possible rules:\n\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
@@ -629,6 +643,7 @@ class GUI {
         possiblerules.setCaretPosition(0);
         JScrollPane row2 = new JScrollPane(possiblerules);
 
+        dialog.add(allRulesVisual);
         dialog.add(row1);
         dialog.add(row2);
         dialog.setSize(1200, 1000);
@@ -689,5 +704,41 @@ class GUI {
 
     public static void main(String args[]) {
         GUI awt = new GUI();
+    }
+
+    static void highlightWordInTextArea(String word, JTextArea textArea, Color colour) {
+        String text = textArea.getText();
+        Highlighter highlighter = textArea.getHighlighter();
+        Highlighter.HighlightPainter painter =
+                new DefaultHighlighter.DefaultHighlightPainter(colour);
+
+        word = "," + word;
+        String[] lines = text.split("\n");
+        int p0 = text.indexOf(word);
+        int p1;
+        try {
+            while (p0 >= 0) {
+                p1 = p0 + word.length();
+                highlighter.addHighlight(p0, p1, painter);
+                p0 = text.indexOf(word, p0 + 1);
+            }
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+
+//        try {
+//            for (String line : lines) {
+//                if (line.contains(word)) {
+//                    int p = text.indexOf(line);
+//                    int p0 = p + line.indexOf(word);
+//                    int p1 = p0 + word.length();
+//
+//                    highlighter.addHighlight(p0, p1, painter);
+//                }
+//            }
+//        } catch (BadLocationException e) {
+//            System.err.println("Highlighter bad location!");
+//            System.err.println(word + " not found in " + textArea.getText());
+//        }
     }
 }
