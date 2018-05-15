@@ -110,6 +110,7 @@ public class Result {
             String currCulprit = null;
             int numDsAcc = 0;
             List<Integer> scores = new ArrayList<>();
+            scores.add(0);
             for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
                 String c = derivation.getValue().getValue();
                 List<String> d = derivation.getValue().getKey();
@@ -122,6 +123,7 @@ public class Result {
                     numDs.add(numDsAcc);
                     currCulprit = c;
                     scores.clear();
+                    scores.add(0);
                     numDsAcc = 0;
                 }
                 scores.add(QueryExecutor.getScore(d));
@@ -253,8 +255,13 @@ public class Result {
 
     public int getNumNegDerivations() {
         int r = 0;
+        Set<String> culprits = new HashSet<>();
         for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
             String culprit = derivation.getValue().getValue();
+            culprits.add(culprit);
+        }
+
+        for (String culprit : culprits) {
             if (negMap.get(culprit) != null) {
                 r += negMap.get(culprit).size();
             }
