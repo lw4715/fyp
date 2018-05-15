@@ -6,9 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SVGApplication {
-    public static void main(String[] args) {
-        displayFile("img/usbankhack_1.svg");
-    }
+//    public static void main(String[] args) {
+//        displayFile("img/usbankhack_1.svg");
+//    }
 
     private static final String fileTextArea = "File saved at: ";
 

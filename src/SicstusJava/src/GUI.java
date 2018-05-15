@@ -1,6 +1,9 @@
 import javafx.util.Pair;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -505,6 +508,7 @@ class GUI {
         JTextArea prefRules = new JTextArea(strRulePrefs.toString());
         prefRules.setColumns(40);
         prefRules.setLineWrap(true);
+        prefRules.setCaretPosition(0);
         p.add(prefRules);
 
         p.add(new JLabel("Summary:"));
@@ -592,6 +596,11 @@ class GUI {
     }
 
     private void displayResultsAndNonResults() {
+        String allStrRules = utils.getAllStrRules();
+        JTextArea allRulesVisual = new JTextArea(allStrRules);
+        allRulesVisual.setColumns(80);
+        allRulesVisual.setLineWrap(true);
+
         List<String>[] res = readFromResultAndNonResultFiles();
         JDialog dialog = new JDialog(mainFrame);
         JPanel row1 = new JPanel();
@@ -601,6 +610,8 @@ class GUI {
         StringJoiner sj = new StringJoiner("\n");
         for (String s : res[0]) {
             sj.add(s);
+            String predicate = s.split("\\(")[0];
+            highlightWordInTextArea(predicate, allRulesVisual);
         }
         JTextArea results = new JTextArea("Results (proven):\n\n" + sj);
         results.setEditable(false);
@@ -614,6 +625,7 @@ class GUI {
         for (String s : res[1]) {
             sj.add(s);
         }
+
         JTextArea nonresults = new JTextArea("Other possible predicates (not proven):\n\n" + sj);
         nonresults.setCaretPosition(0);
         JScrollPane row1col2 = new JScrollPane(nonresults);
@@ -629,6 +641,7 @@ class GUI {
         possiblerules.setCaretPosition(0);
         JScrollPane row2 = new JScrollPane(possiblerules);
 
+        dialog.add(allRulesVisual);
         dialog.add(row1);
         dialog.add(row2);
         dialog.setSize(1200, 1000);
@@ -689,5 +702,28 @@ class GUI {
 
     public static void main(String args[]) {
         GUI awt = new GUI();
+    }
+
+    static void highlightWordInTextArea(String word, JTextArea textArea) {
+        String text = textArea.getText();
+        Highlighter highlighter = textArea.getHighlighter();
+        Highlighter.HighlightPainter painter =
+                new DefaultHighlighter.DefaultHighlightPainter(Color.pink);
+
+        String[] lines = text.split("\n");
+        try {
+            for (String line : lines) {
+                if (line.contains(word)) {
+                    int p = text.indexOf(line);
+                    int p0 = p + line.indexOf(word);
+                    int p1 = p0 + word.length();
+
+                    highlighter.addHighlight(p0, p1, painter);
+                }
+            }
+        } catch (BadLocationException e) {
+            System.err.println("Highlighter bad location!");
+            System.err.println(word + " not found in " + textArea.getText());
+        }
     }
 }

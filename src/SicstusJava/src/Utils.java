@@ -15,7 +15,7 @@ public class Utils {
 
     private int counter;
     private int prefCount;
-    private List<String> allStrRules;
+    private String allStrRules;
 
     Utils() {
         counter = 0;
@@ -368,14 +368,16 @@ public class Utils {
         }
     }
 
-    public List<String> getAllStrRules() {
+    public String getAllStrRules() {
         if (allStrRules == null) {
             List<String> rs = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
             try {
                 BufferedReader br = new BufferedReader(new FileReader(STR));
                 br.lines().forEach(x -> {
                     if (x.startsWith("rule(r_str__")) {
-                        rs.add(x);
+//                        rs.add(x);
+                        sb.append(x + "\n");
                     }
                 });
 
@@ -383,8 +385,10 @@ public class Utils {
                 e.printStackTrace();
 
             }
-            allStrRules = rs;
-            return rs;
+//            allStrRules = rs;
+//            return rs;
+            allStrRules = sb.toString();
+            return sb.toString();
         } else {
             return allStrRules;
         }
