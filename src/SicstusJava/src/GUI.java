@@ -36,6 +36,7 @@ class GUI {
     private static final String ADD_PREF = "AddPref_";
     private static final String SEPARATOR = "#";
     private static final String PREF_TYPE = "PrefType_";
+    static final String VIEW_PREF = "View Pref";
 
     private final Utils utils;
 
@@ -200,7 +201,15 @@ class GUI {
         toolIntegrationBtn.setActionCommand(OPEN_TOOL_INTEGRATION);
         toolIntegrationBtn.addActionListener(new ButtonClickListener());
 
-        mainFrame.add(toolIntegrationBtn);
+        JButton prefDiagBtn = new JButton("View pref diagram");
+        prefDiagBtn.setActionCommand(VIEW_PREF);
+        prefDiagBtn.addActionListener(new ButtonClickListener());
+
+        JPanel topPanel = new JPanel();
+        topPanel.add(toolIntegrationBtn);
+        topPanel.add(prefDiagBtn);
+
+        mainFrame.add(topPanel);
 
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
         mainFrame.add(panel2);
@@ -352,6 +361,9 @@ class GUI {
                 case OPEN_TOOL_INTEGRATION:
                     System.out.println("Opening tool integration");
                     openToolIntegrationWindow();
+                    break;
+                case VIEW_PREF:
+                    SVGApplication.displayFile("img/pref_diagram.svg");
                     break;
                 default:
                     // add pref
@@ -747,20 +759,5 @@ class GUI {
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
-
-//        try {
-//            for (String line : lines) {
-//                if (line.contains(word)) {
-//                    int p = text.indexOf(line);
-//                    int p0 = p + line.indexOf(word);
-//                    int p1 = p0 + word.length();
-//
-//                    highlighter.addHighlight(p0, p1, painter);
-//                }
-//            }
-//        } catch (BadLocationException e) {
-//            System.err.println("Highlighter bad location!");
-//            System.err.println(word + " not found in " + textArea.getText());
-//        }
     }
 }
