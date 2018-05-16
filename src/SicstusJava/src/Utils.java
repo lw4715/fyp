@@ -316,7 +316,9 @@ public class Utils {
     }
 
     static String getHeadOfLine(String line) {
-        return line.split("\\)")[1].replaceFirst(",", "") + ")";
+        line = line.replace(" ", "");
+        return line.substring(line.indexOf("),") + 2, line.indexOf(",["));
+//        return line.split("\\)")[1].replaceFirst(",", "") + ")";
     }
 
     static String getRuleFromFile(String rulename, int file) {

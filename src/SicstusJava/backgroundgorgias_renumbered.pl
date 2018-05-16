@@ -169,8 +169,9 @@ rule(bg77(),informationRich(banking),[]).
 rule(bg78(),informationRich(infocomm),[]).
 rule(bg79(),informationRich(consumer),[]).
 
-rule(bg80(),possibleMotive(sabotage ,Att),[isInfrastructure(Ind),industry(Ind,V),target(V,Att)]).
-rule(bg81(),possibleMotive(espionage ,Att),[informationRich(Ind),industry(Ind,V),target(V,Att)]).
+rule(bg80(),typeOfAttack(sabotage ,Att),[isInfrastructure(Ind),industry(Ind,V),target(V,Att)]).
+rule(bg81(),typeOfAttack(espionage ,Att),[informationRich(Ind),industry(Ind,V),target(V,Att)]).
+
 
 %% rule(bg78,isCulprit(equationGroup ,flameattack),[]). 
 rule(bg82(),malwareLinkedTo(flame,equationGrp),[]). 
@@ -182,7 +183,7 @@ rule(bg85(),ccServer(gowin7 ,flame),[]).
 rule(bg86(),ccServer(secuurity ,flame),[]).
 rule(bg87(),domainRegisteredDetails(gowin7 ,adolph_dybevek ,prinsen_gate_6),[]).
 rule(bg88(),domainRegisteredDetails(secuurity ,adolph_dybevek ,prinsen_gate_6),[]).
-rule(bg89(),addressType(prinsen_gate_6 ,hotel),[]).
+%% rule(bg89(),addressType(prinsen_gate_6 ,hotel),[]).
 
 %% fireeye tech
 rule(bg90(),fileCharaMalware(wannacry_filechara1,wannacry),[]).

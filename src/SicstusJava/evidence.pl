@@ -226,25 +226,25 @@ rule(case_autogeoloc_ex_f4(),claimedResponsibility(countryX, autogeoloc_ex),[]).
 
 %% tor_ex
 %% expected: no culprit (spoof)
-rule(case_tor_ex_f1(), malwareUsedInAttack(tor_ex_malware,tor_ex), []).
-rule(case_tor_ex_f2(), attackSourceIP([103,234,220,195],tor_ex_malware), []).
-rule(case_tor_ex_f3(), ip([103,234,220,195]), []).
-rule(case_tor_ex_f4(), targetServerIP([72,111,1,30], tor_ex), []).
+rule(case_tor_ex_f1(), malwareUsedInAttack(tor_ex_malware,tor_ex),[]).
+rule(case_tor_ex_f2(), attackSourceIP([103,234,220,195],tor_ex_malware),[]).
+rule(case_tor_ex_f3(), ip([103,234,220,195]),[]).
+rule(case_tor_ex_f4(), targetServerIP([72,111,1,30], tor_ex),[]).
 rule(case_tor_ex_f5(), claimedResponsibility(countryX, tor_ex),[]).
 
 
 %% squid example
 %% expected: united_states (loc)
-rule(case_squid_ex_f1(), malwareUsedInAttack(squid_ex_malware,squid_ex), []).
-%% rule(case_tor_ex_f2(), attackSourceIP([103,1,206,100],tor_ex_malware), []).
-%% rule(case_tor_ex_f3(), targetServerIP([72,111,1,30], tor_ex), []).
+rule(case_squid_ex_f1(), malwareUsedInAttack(squid_ex_malware,squid_ex),[]).
+%% rule(case_tor_ex_f2(), attackSourceIP([103,1,206,100],tor_ex_malware),[]).
+%% rule(case_tor_ex_f3(), targetServerIP([72,111,1,30], tor_ex),[]).
 
 
 %% virustotal_ex
 %% expected: us (loc)
 rule(case_virustotal_ex_f0(),malwareUsedInAttack(virustotal_ex_malware, virustotal_ex),[]).
 rule(case_virustotal_ex_f1(),attackSourceIP([8,8,8,8],virustotal_ex_malware),[]).
-rule(case_virustotal_ex_f2(),ip([8,8,8,8], [2018,5]),[]). % ip([IP], [YYYY,MM]) for auto resolution using virustotal
+rule(case_virustotal_ex_f2(),ip([8,8,8,8],[2018,5]),[]). % ip([IP],[YYYY,MM]) for auto resolution using virustotal
 
 %% rule(case_virustotal_ex_f2(),ccServer('smart2home.kz', example_past_attack),[]).
 %% rule(case_virustotal_ex_f3(),isCulprit(myCountry, example_past_attack),[]).

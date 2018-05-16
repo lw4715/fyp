@@ -336,7 +336,8 @@ public class QueryExecutor {
             if (isAbducibles) {
                 key = pred.substring(4, pred.length() - 1).split("\\(")[0];
             } else {
-                key = pred.split("\\(")[0];
+                key = pred.substring(0, pred.lastIndexOf("("));
+//                key = pred.split("\\(")[0];
             }
             List<String> val = new ArrayList<>();
             val.addAll(scanFileForPredicate(Utils.TECH, key));

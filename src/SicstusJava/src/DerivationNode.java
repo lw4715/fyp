@@ -5,8 +5,7 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import org.jpl7.Term;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -102,7 +101,7 @@ public class DerivationNode {
         return prefs;
     }
 
-    private static void rewriteTransparentStroke(String filename) throws IOException {
+    static void rewriteTransparentStroke(String filename) throws IOException {
         Path path = Paths.get(filename);
         List<String> fileContent = new ArrayList<>(Files.readAllLines(path, StandardCharsets.UTF_8));
         fileContent.set(4, fileContent.get(4).replace("transparent", "#FFFFFF"));
@@ -372,31 +371,6 @@ public class DerivationNode {
     }
 
     public static void main(String[] args) {
-//        String tree = "[r_t_highSkill0(stuxnetattack), r_t_highResource0(stuxnetattack), r_op_hasCapability1(united_states,stuxnetattack), case4_f13(), case4_f12(), r_t_targetted(stuxnetattack), case4_f9(), r_op_date(ongoing), case4_f8(), case4_f11(), case4_f6(), r_op_conflict(united_states,iran), r_str_motiveAndCapability(united_states,stuxnetattack)]  {DEFENSE}\n" +
-//                "|___[r_t_highSkill2(stuxnetattack), case4_f7(), r_t_zeroday(stuxnet), case4_f12(), p10b_t()]\n" +
-//                "|   |___{NO DEFENSE}\n" +
-//                "|___[r_t_highSkill4(stuxnetattack), case4_f4(), p10c_t()]\n" +
-//                "|   |___{NO DEFENSE}\n" +
-//                "|___[r_t_highResource1(stuxnetattack), case4_f7(), r_t_zeroday(stuxnet), case4_f12(), r_t_highSkill2(stuxnetattack), p12a_t()]\n" +
-//                "|   |___{NO DEFENSE}\n" +
-//                "|___[r_t_highResource1(stuxnetattack), case4_f4(), r_t_highSkill4(stuxnetattack), p12a_t()]\n" +
-//                "    |___{NO DEFENSE}";
-
-//        String tree =
-//                "[r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), r_str_motiveAndCapability(yourCountry,example2b)]  {DEFENSE}\n" +
-//                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
-//                "    |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
-//                "        |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22d(), ass(specificTarget(example2b))]\n" +
-//                "        |   |___[r_str_motiveAndCapability(yourCountry,example2b), r_t_neghighSkill(example2b), r_t_highResource0(example2b), r_op_hasCapability1(yourCountry,example2b), case_example2b_f8(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndCapability(yourCountry,example2b))))]  {DEFENSE}\n" +
-//                "        |       |___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22b(), ass(specificTarget(example2b))]\n" +
-//                "        |       |   |___[r_str_motiveAndLocation(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), case_example2b_f8(), bg1(), ass(neg(prefer(r_str_targetItself2(yourCountry,example2b),r_str_motiveAndLocation(yourCountry,example2b))))]  {DEFENSE}\n" +
-//                "        |       |___[p22b(), ass(specificTarget(example2b))]\n" +
-//                "        |           |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}\n" +
-//                "        |___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
-//                "        |   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
-//                "        |___[p22d(), ass(specificTarget(example2b))]\n" +
-//                "            |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
-
         String tree = " [case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), bg1(), r_str_loc(yourCountry,example2b)]  {DEFENSE}\n" +
                 "|___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
                 "|   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +

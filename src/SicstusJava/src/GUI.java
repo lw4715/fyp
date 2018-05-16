@@ -68,6 +68,28 @@ class GUI {
 
     private static final String placeholderItem = "Select from existing predicates";
 
+    private static final String[] bgPredicates = {"firstLanguage(L,X)",
+            "country(Y)", "gci_tier(X,leading)", "cybersuperpower(X)",
+            "industry(T)", "poorRelation(C,T)", "goodRelation(C,T)", "industry(Ind,T)",
+            "normalIndustry(Ind)", "politicalIndustry(Ind)", "prominentGroup()", "country()",
+            "groupOrigin()", "malwareLinkedTo()", "gci_tier()"};
+
+    private static final String[] evidencePredicates = {"hijackCorporateClouds(Att)",
+            "malwareUsedInAttack(M,Att)", "notForBlackMarketUse(M)", "stolenValidSignedCertificates(Att)",
+            "highSecurity(T)", "target(T,Att)", "highVolumeAttack(Att)", "longDurationAttack(Att)",
+            "majorityIpOrigin(X,Att)", "attackPeriod(Att,D1)", "targetServerIP(TargetServerIP,Att)",
+            "sysLanguage(L,Att)", "languageInCode(L,Att)", "infraUsed(Infra,Att)",
+            "infraRegisteredIn(X,Infra)", "ccServer(S,M)", "domainRegisteredDetails(S,_,Addr)",
+            "addrInCountry(Addr,X)", "infectionMethod(usb,M)", "commandAndControlEasilyFingerprinted(M)",
+            "simlarCodeObfuscation(M1,M2)", "sharedCode(M1,M2)", "malwareModifiedFrom(M1,M2)",
+            "fileCharaMalware(C2,M2)", "specificConfigInMalware(M)", "usesZeroDayVulnerabilities(M)",
+            "fileChara(Filename,_,_,_,_,_,C2)", "targetCountry(T1,Att)", "target(T,Att)",
+            "hasEconomicMotive(C,T)", "targetCountry(T,Att)", "attackPeriod(Att,Date1)",
+            "hasPoliticalMotive(C,T,Date2)", "imposedSanctions(T,C,Date)", "news(News,T,Date2)",
+            "causeOfConflict(X,T,News)", "claimedResponsibility(X,Att)", "noPriorHistory(X)",
+            "geolocatedInGovFacility(P,C)", "publicCommentsRelatedToGov(P,C)", "attackOrigin()",
+            "identifiedIndividualInAttack()", "malwareUsedInAttack()", "target()", "targetCountry()"};
+
     private static final String[] predicates = {"industry(<T>)","targetCountry(<X>,<Att>)",
             "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)","poorRelation(<C>,<T>)",
             "noPriorHistory(<X>)","infraUsed(<Infra>,<Att>)","hasResources(<X>)","majorityIpOrigin(<X>,<Att>)",
@@ -636,10 +658,10 @@ class GUI {
         nonresults.setColumns(47);
         row1.add(row1col2);
 
-        JTextArea possiblerules = new JTextArea("Possible rules:\n\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
+        JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
         possiblerules.setEditable(false);
         possiblerules.setColumns(90);
-        possiblerules.setRows(25);
+        possiblerules.setRows(20);
         possiblerules.setCaretPosition(0);
         JScrollPane row2 = new JScrollPane(possiblerules);
 

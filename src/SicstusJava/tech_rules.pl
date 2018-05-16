@@ -33,6 +33,9 @@
 %% bg:
 %% firstLanguage(L,X)
 %% country(Y)
+
+
+
 %% addressType(Addr,Type) TODO: remove??
 
 
@@ -107,7 +110,7 @@ rule(r_t_simCC1(M1,M2),similarCCServer(M1,M2),[ccServer(S,M1),ccServer(S,M2)]).
 rule(r_t_simCC2(M1,M2),similarCCServer(M1,M2),[ccServer(S1,M1),ccServer(S2,M2),S1 \= S2,domainRegisteredDetails(S1,_,A),domainRegisteredDetails(S2,_,A)]).
 rule(r_t_simCC3(M1,M2),similarCCServer(M1,M2),[ccServer(S1,M1),ccServer(S2,M2),S1 \= S2,domainRegisteredDetails(S1,Name,_),domainRegisteredDetails(S2,Name,_)]).
 
-rule(r_t_ccServerAddrType(Server,Type),ccServerAddrType(Server,Type),[domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
+%% rule(r_t_ccServerAddrType(Server,Type),ccServerAddrType(Server,Type),[domainRegisteredDetails(Server,_,Addr),addressType(Addr,Type)]). 
 rule(r_t_similar1(M1,M2),similar(M1,M2),[simlarCodeObfuscation(M1,M2)]).
 rule(r_t_similar2(M1,M2),similar(M1,M2),[sharedCode(M1,M2)]).
 rule(r_t_similar3(M1,M2),similar(M1,M2),[malwareModifiedFrom(M1,M2)]).
