@@ -110,7 +110,7 @@ class GUI {
             "isInfrastructure(<Ind>)","infraRegisteredIn(<X>,<Infra>)","informationRich(<Ind>)",
             "hasResources(<X>)","fileCharaMalware(<C2>,<M2>)","claimedResponsibility(<X>,<Att>)",
             "addrInCountry(<Addr>,<X>)","similarFileChara(<C1>,<C2>)","dateApplicable(<Date1>,<Date2>)",
-            "attackSourceIP(<IP>,<M>)","hijackCorporateClouds(<Att>)","highVolumeAttack(<Att>)",
+            "attackSourceIP(<IP>,<Att>)","hijackCorporateClouds(<Att>)","highVolumeAttack(<Att>)",
             "imposedSanctions(<T>,<C>,<Date>)","causeOfConflict(<X>,<T>,<News>)","ccServer(<S>,<M>)",
             "specificConfigInMalware(<M>)","cyberespionage>,<undergroundBusiness>)",
             "specificTarget(<Att>)","simlarCodeObfuscation(<M1>,<M2>)","requireHighResource(<Att>)",
@@ -342,7 +342,7 @@ class GUI {
                     break;
                 case UPLOAD_SQUID_LOG:
                     if (squidLogAttackname.getText().length() == 0) {
-                        toolIntegrationStatus.setText("\t\tPlease input malware name associated with squid log");
+                        toolIntegrationStatus.setText("\t\tPlease input name of attack associated with squid log");
                         highlightElement(squidLogAttackname);
                         return;
                     }

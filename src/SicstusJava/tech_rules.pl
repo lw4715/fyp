@@ -42,7 +42,7 @@
 %% tech:
 %% sophisticatedMalware(M)
 %% highLevelSkill(Att)
-%% attackSourceIP(IP,M)
+%% attackSourceIP(IP,Att)
 %% recent(D,D1)
 %% attackPossibleOrigin(X,Att)
 %% similarCCServer(M1,M2)
@@ -78,16 +78,16 @@ rule(r_t_highResource3(Att),requireHighResource(Att),		[highVolumeAttack(Att),lo
 
 
 rule(r_t_noLocEvidence(X,Att),neg(attackPossibleOrigin(X,Att)),[]).
-rule(r_t_srcIP1(X,Att),  attackPossibleOrigin(X,Att),     [malwareUsedInAttack(M,Att),attackSourceIP(IP,M),ipGeoloc(X,IP)]).
+rule(r_t_srcIP1(X,Att),  attackPossibleOrigin(X,Att),     [attackSourceIP(IP,Att),ipGeoloc(X,IP)]).
 rule(r_t_srcIP2(X,Att),  attackPossibleOrigin(X,Att),     [majorityIpOrigin(X,Att)]).
-rule(r_t_spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)),[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),spoofedIP(IP,Att),ipGeoloc(X,IP)]).
+rule(r_t_spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)),[attackSourceIP(IP,Att),spoofedIP(IP,Att),ipGeoloc(X,IP)]).
 
-rule(r_t_IPdomain1(S,M), ccServer(S,M),					[attackSourceIP(IP,M),ipResolution(S,IP,_D)]).
-rule(r_t_IPdomain2(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),spoofedIP(IP,Att),ipResolution(S,IP,_D)]).
-rule(r_t_IPdomain3(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,M),attackPeriod(Att,D1),ipResolution(S,IP,D),neg(recent(D,D1))]).
+rule(r_t_IPdomain1(S,M), ccServer(S,M),					[malwareUsedInAttack(M,Att),attackSourceIP(IP,Att),ipResolution(S,IP,_D)]).
+rule(r_t_IPdomain2(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,Att),spoofedIP(IP,Att),ipResolution(S,IP,_D)]).
+rule(r_t_IPdomain3(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,Att),attackPeriod(Att,D1),ipResolution(S,IP,D),neg(recent(D,D1))]).
 
 
-rule(r_t_spoofIPtor(IP), spoofedIP(IP,Att), [malwareUsedInAttack(M,Att), attackSourceIP(IP,M), targetServerIP(TargetServerIP,Att), torIP(IP, TargetServerIP)]).
+rule(r_t_spoofIPtor(IP), spoofedIP(IP,Att), [attackSourceIP(IP,Att), targetServerIP(TargetServerIP,Att), torIP(IP, TargetServerIP)]).
 rule(r_t_lang1(X,Att),  attackPossibleOrigin(X,Att),     [sysLanguage(L,Att),firstLanguage(L,X)]).
 rule(r_t_lang2(X,Att),  attackPossibleOrigin(X,Att),     [languageInCode(L,Att),firstLanguage(L,X)]).
 rule(r_t_infra(X,Att),  attackPossibleOrigin(X,Att),     [infraUsed(Infra,Att),infraRegisteredIn(X,Infra)]).
@@ -124,7 +124,7 @@ rule(r_t_similarFileChara2(C1,C2),similarFileChara(C1,C2),[fileChara(_,MD5,_,_,_
 rule(r_t_similarFileChara3(C1,C2),similarFileChara(C1,C2),[fileChara(_,_,_,_,Desc,_,C1),fileChara(_,_,_,_,Desc,_,C2)]).
 rule(r_t_similarFileChara4(C1,C2),similarFileChara(C1,C2),[fileChara(_,_,Size,CompileTime,_,Filetype,C1),fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
-rule(r_t_squid_log(IP),  attackSourceIP(IP,M),   [squid_log(IP,_Port,_ResultCode,M)]).
+rule(r_t_squid_log(IP),  attackSourceIP(IP,Att),   [squid_log(IP,_Port,_ResultCode,Att)]).
 
 % pref
 rule(p1_t(),prefer(r_t_attackOrigin(X,Att),r_t_attackOriginDefault(X,Att)),[]).

@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 
@@ -21,6 +23,7 @@ public class ToolIntegration {
     static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
     static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
 
+    static final String CASE_OSSEC_LOG_ = "case_ossec_log_malware_";
     static final String CASE_SQUID_LOG = "case_squid_log_";
     static final String RULE_CASE_SQUID_LOG = "rule(" + CASE_SQUID_LOG + "%d(), squid_log(%s,%s,'%s',%s),[]).\n";
     static final String RULE_CASE_SQUID_LOG1 = "\nrule(" + CASE_SQUID_LOG + "1_%d(), ip(%s),[]).\n";
@@ -32,15 +35,80 @@ public class ToolIntegration {
 
     private List<String> virustotalFinishedScanningIP;
     private int torCount = 0;
-    private int virusTotalCount = 0;
+    private int virustotalCount = 0;
+    private int ossecCount = 0;
 
     public ToolIntegration() {
         Utils.clearFile(VIRUS_TOTAL_PROLOG_FILE);
         virustotalFinishedScanningIP = new ArrayList<>();
     }
 
+    private String parseOSSEC(String filename, String attackname) {
+        final String[] s = new String[1];
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+
+            final String RULE_TEMPLATE = "rule(%s%d(), %s,[]).";
+            final String RULE = "Rule:";
+            final String LEVEL = "(level";
+            final String INFECTED_MSG_PREFIX = "Infected machine with";
+            final String SSHD_LOG_PREFIX = "sshd[";
+            boolean isBruteForce = false;
+
+            String line = br.readLine();
+
+            while (line != null) {
+                if (line.startsWith(RULE)) {
+//                    int ruleIndex = Integer.parseInt(
+//                            line.substring(line.indexOf(RULE) + RULE.length(),
+//                                    line.indexOf("fired")).replace(" ", ""));
+//
+//                    int level = Integer.parseInt(
+//                            line.substring(line.indexOf(LEVEL) + LEVEL.length(),
+//                                    line.indexOf(')')).replace(" ", ""));
+
+                    String msg = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+
+                    if (msg.startsWith(INFECTED_MSG_PREFIX)) {
+                        String malwareName = msg.substring(msg.indexOf(INFECTED_MSG_PREFIX)
+                                + INFECTED_MSG_PREFIX.length())
+                                .replace(" ", "")
+                                .replace("'", "");
+                        String fact = String.format("malwareUsedInAttack('%s',%s)", malwareName, attackname);
+                        s[0] = String.format(RULE_TEMPLATE, CASE_OSSEC_LOG_, ossecCount, fact);
+                        ossecCount++;
+                        break;
+                    } else if (msg.startsWith("SSHD brute force")) {
+                        isBruteForce = true;
+                    }
+                } else if (isBruteForce && line.startsWith(SSHD_LOG_PREFIX)) {
+                    String IPADDRESS_PATTERN =
+                            "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+
+                    Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        String ipString = matcher.group();
+                        String ipProlog = "[" + ipString.replace(".", ",") + "]";
+                        System.out.println(ipString + "   " + ipProlog);
+                        String fact = String.format("attackSourceIP(%s, %s)", ipProlog, attackname);
+                        s[0] = String.format(RULE_TEMPLATE, CASE_OSSEC_LOG_, ossecCount, fact);
+                        ossecCount++;
+                        break;
+                    }
+                }
+                line = br.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return s[0];
+    }
+
     /*
-        * User upload HIDS notification (OSSEC format)
+        * User upload HIDS notification (SQUID format)
         * Filter for keyword: TCP_DENIED/407, TCP_MISS/404
         *
         * Extract: IP, port, code, unixTimestamp
@@ -260,8 +328,8 @@ public class ToolIntegration {
 
                 if (!dateNotReached(year, month, prevYear, prevMonth)) {
                     String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, resolvedDate);
-                    w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", virusTotalCount, fact));
-                    virusTotalCount++;
+                    w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", virustotalCount, fact));
+                    virustotalCount++;
                     prevYear = currYear;
                     prevMonth = currMonth;
                 }
@@ -329,7 +397,6 @@ public class ToolIntegration {
         }
     }
 
-//    TODO: Wireshark, can it find spoofed IP? what can we use??
 
 
     private static Stream<String> executeUNIXCommand(String command) {
@@ -398,11 +465,12 @@ public class ToolIntegration {
     }
 
     public static void main(String[] args) {
-        System.out.println("RESOURCE: " + virustotalScanFile(new File("/Users/linna/Downloads/2015-08-31-traffic-analysis-exercise.pcap")));
-//        ToolIntegration ti = new ToolIntegration();
+//        System.out.println("RESOURCE: " + virustotalScanFile(new File("/Users/linna/Downloads/2015-08-31-traffic-analysis-exercise.pcap")));
+        ToolIntegration ti = new ToolIntegration();
 //        ti.torIntegration();
 //        preprocessFiles();
 //        getVirustotalReportAndProcess("74.125.224.72");
+        System.out.println(ti.parseOSSEC("ossec_alert1.log", "saysomething"));
 
     }
 }
