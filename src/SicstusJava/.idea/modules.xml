@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/SicstusJava.iml" filepath="$PROJECT_DIR$/SicstusJava.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../Virustotal-Public-API-V2.0-Client/Virustotal-Public-API-V2.0-Client.iml" filepath="$PROJECT_DIR$/../../Virustotal-Public-API-V2.0-Client/Virustotal-Public-API-V2.0-Client.iml" />
-    </modules>
-  </component>
-</project>
