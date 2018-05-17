@@ -4,6 +4,8 @@ import java.util.*;
 public class Utils {
     private static final String CASE_USER_F = "case_user_";
     private static final String P_USER_ = "p_user_";
+    static final String BACKGROUNDGORGIAS_PL = "backgroundgorgias_renumbered.pl";
+    static final String EVIDENCE_PL = "evidence.pl";
     private static String FILEPATH = "";
 
     static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
@@ -47,11 +49,7 @@ public class Utils {
         }
     }
 
-    void addRules(String rule) {
-        if (rule.length() == 0) {
-            return;
-        }
-        counter++;
+    public void addRuleWithRulename(String rule, String rulename) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
             String[] split = rule.replace(".", "").split(":-");
@@ -61,11 +59,19 @@ public class Utils {
                 sj.add(split[i]);
             }
             String body = sj.toString();
-            bw.write(String.format("rule(case_user_f%d(), %s, [%s]).\n", counter, head, body));
+            bw.write(String.format("rule(%s(), %s, [%s]).\n", rulename, head, body));
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void addRules(String rule) {
+        if (rule.length() == 0) {
+            return;
+        }
+        counter++;
+        addRuleWithRulename(rule, "case_user_f" + counter);
     }
 
     static void clearFile(String f) {
@@ -272,9 +278,9 @@ public class Utils {
         } else if (r.startsWith(CASE_USER_F) || r.startsWith(P_USER_)) {
             return USER_EVIDENCE_FILENAME;
         } else if (r.startsWith("case")) {
-            return "evidence.pl";
+            return EVIDENCE_PL;
         } else if (r.startsWith("bg")) {
-            return "backgroundgorgias_renumbered.pl";
+            return BACKGROUNDGORGIAS_PL;
         } else {
             System.err.println(r + " which file?");
             return "";
@@ -291,7 +297,7 @@ public class Utils {
                 br.lines().forEach(line -> {
                     line = line.split("%")[0];
                     if (line.startsWith("rule(") && line.contains("[")) {
-                        String[] body = getBodyOfLine(line);
+                        String[] body = getBodiesOfLine(line);
                         for (String b : body) {
                             if (b.startsWith(",")) {
                                 b = b.replaceFirst(",", "");
@@ -311,14 +317,22 @@ public class Utils {
         return sb.toString();
     }
 
-    private static String[] getBodyOfLine(String line) {
+    private static String[] getBodiesOfLine(String line) {
         return line.substring(line.indexOf('['), line.lastIndexOf(']')).split("\\)");
     }
 
     static String getHeadOfLine(String line) {
-        line = line.replace(" ", "");
+        line = line.replace(" ", "").replace("\t", "");
         return line.substring(line.indexOf("),") + 2, line.indexOf(",["));
-//        return line.split("\\)")[1].replaceFirst(",", "") + ")";
+    }
+
+    static String getBodyOfLine(String line) {
+        return line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+    }
+
+    public static String getRulenameOfLine(String line) {
+        final String RULE = "rule(";
+        return line.substring(line.indexOf(RULE) + RULE.length(), line.indexOf(")") + 1);
     }
 
     static String getRuleFromFile(String rulename, int file) {
@@ -396,7 +410,41 @@ public class Utils {
         }
     }
 
-    public static void main(String[] args) {
-
+    public static String getHeadPredicateOfPrologRule(String prologRule) {
+        String head = prologRule.split(":-")[0].trim();
+        return head.substring(0, head.lastIndexOf("("));
     }
+
+    // scan through tech_rules, op_rules, str_rules, backgroundgorgias_renumbered,
+    // return all rules with head == headPred
+    public static List<String> getAllRulesWithHeadPred(String headPred) {
+        List<String> allRuleFilenames = new ArrayList<>();
+        allRuleFilenames.add(TECH);
+        allRuleFilenames.add(OP);
+        allRuleFilenames.add(STR);
+        allRuleFilenames.add(BACKGROUNDGORGIAS_PL);
+
+        List<String> allRules = new ArrayList<>();
+        try {
+            for (String filename : allRuleFilenames) {
+                BufferedReader br = new BufferedReader(new FileReader(filename));
+
+                br.lines().forEach(line -> {
+                    line = line.split("%")[0].replace(" ", "").replace("\t", "");
+                    if (line.startsWith("rule(") && getHeadOfLine(line).split("\\(")[0].equals(headPred)) {
+                        allRules.add(line);
+                    }
+
+                });
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return allRules;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getAllRulesWithHeadPred("hasMotive"));
+    }
+
 }

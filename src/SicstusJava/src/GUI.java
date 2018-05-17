@@ -36,7 +36,11 @@ class GUI {
     private static final String ADD_PREF = "AddPref_";
     private static final String SEPARATOR = "#";
     private static final String PREF_TYPE = "PrefType_";
-    static final String VIEW_PREF = "View Pref";
+    private static final String VIEW_PREF = "View Pref";
+    private static final String USER_INSERT_RULE = "USER INSERT RULE";
+    static final String CHOOSE1 = "Choose1_";
+    static final String CHOOSE0 = "Choose0_";
+    static final String P_USER = "p_user_";
 
     private final Utils utils;
 
@@ -61,6 +65,12 @@ class GUI {
     private JFrame prefFrame;
     private JFrame toolIntegrationFrame;
     private JLabel toolIntegrationStatus;
+    private JFrame insertNewRuleFrame;
+    private JTextField userNewRule;
+    private int userPrefCount;
+    private JLabel newRuleStatus;
+
+
 
     private List<Pair<String, String>> strRulePrefs;
     private Result reloadResult;
@@ -226,7 +236,8 @@ class GUI {
         mainFrame.add(panel5);
         mainFrame.add(status);
 
-        mainFrame.setSize(1000,750);
+        mainFrame.pack();
+//        mainFrame.setSize(1000,750);
         mainFrame.setVisible(true);
         System.out.println("Ready!");
     }
@@ -337,7 +348,8 @@ class GUI {
 
                     JFrame f = new JFrame("Custom query result");
                     f.add(sp);
-                    f.setSize(1200,1000);
+                    f.pack();
+//                    f.setSize(1200, 1000);
                     f.setVisible(true);
                     break;
                 case UPLOAD_SQUID_LOG:
@@ -365,12 +377,37 @@ class GUI {
                 case VIEW_PREF:
                     SVGApplication.displayFile("img/pref_diagram.svg");
                     break;
+                case USER_INSERT_RULE:
+                    utils.addRules(userNewRule.getText());
+                    showConflictingRules(userNewRule.getText());
+                    userPrefCount++;
+                    break;
                 default:
+                    System.out.println("COmmand:" + command);
+
+
                     // add pref
                     if (command.startsWith(PREF_TYPE)) {
                         System.out.println("Full command:" + command);
                         int prefType = Integer.parseInt(command.substring(command.indexOf(PREF_TYPE) + PREF_TYPE.length(), command.indexOf(ADD_PREF)));
                         choosePreferenceAction(command.split(ADD_PREF)[1], prefType);
+                    } else if (command.startsWith(USER_INSERT_RULE)) {
+                        command = command.split(USER_INSERT_RULE)[1];
+
+                        String chosen;
+                        String other;
+                        if (command.startsWith(CHOOSE0)) {
+                            chosen = P_USER + userPrefCount;
+                            other = command.split(CHOOSE0)[1];
+                        } else {
+                            chosen = command.split(CHOOSE1)[1];
+                            other = P_USER + userPrefCount;
+                        }
+
+                        System.out.println("chosen: " + chosen);
+                        String preference = String.format("prefer(%s,%s)", chosen, other);
+                        utils.addRules(preference);
+
                     } else if (command.startsWith("Choose:")) {
                         // create preference rule
                         String[] s = command.split(":")[2].split(">");
@@ -447,7 +484,8 @@ class GUI {
         JScrollPane prefSP = new JScrollPane(prefP);
         prefFrame = new JFrame("Set new preference");
         prefFrame.add(prefSP);
-        prefFrame.setSize(1000, 800);
+        prefFrame.pack();
+//        prefFrame.setSize(1000, 800);
         prefFrame.setVisible(true);
     }
 
@@ -625,7 +663,8 @@ class GUI {
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         executeResultFrame = new JFrame("Execution Result for " + attackName.getText());
         executeResultFrame.add(scrollPane);
-        executeResultFrame.setSize(1200,800);
+        executeResultFrame.pack();
+//        executeResultFrame.setSize(1200,800);
         executeResultFrame.setVisible(true);
     }
 
@@ -680,7 +719,8 @@ class GUI {
         dialog.add(allRulesVisual);
         dialog.add(row1);
         dialog.add(row2);
-        dialog.setSize(1200, 1000);
+        dialog.pack();
+//        dialog.setSize(1200, 1000);
         dialog.setVisible(true);
         dialog.setModal(true);
     }
@@ -736,9 +776,6 @@ class GUI {
         component.setBackground(Color.pink);
     }
 
-    public static void main(String args[]) {
-        GUI awt = new GUI();
-    }
 
     static void highlightWordInTextArea(String word, JTextArea textArea, Color colour) {
         String text = textArea.getText();
@@ -759,5 +796,71 @@ class GUI {
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
+    }
+
+
+    void insertNewRuleAndSetPref() {
+        insertNewRuleFrame = new JFrame("Add new rule");
+        insertNewRuleFrame.setLayout(new BoxLayout(insertNewRuleFrame.getContentPane(), BoxLayout.Y_AXIS));
+
+        JPanel p = new JPanel();
+        p.setLayout(new FlowLayout());
+        userNewRule = new JTextField();
+        userNewRule.setColumns(40);
+        JButton submitRuleBtn = new JButton("Done");
+        submitRuleBtn.setActionCommand(USER_INSERT_RULE);
+        submitRuleBtn.addActionListener(new ButtonClickListener());
+
+        p.add(new JLabel("New rule (in prolog style):"));
+        p.add(userNewRule);
+        p.add(submitRuleBtn);
+        insertNewRuleFrame.add(p);
+        insertNewRuleFrame.add(newRuleStatus);
+        insertNewRuleFrame.pack();
+        insertNewRuleFrame.setVisible(true);
+    }
+
+    private void showConflictingRules(String rule) {
+        String headPred = Utils.getHeadPredicateOfPrologRule(rule);
+        String negPred;
+        if (headPred.contains("neg(")) {
+            negPred = headPred.split("neg\\(")[1];
+        } else {
+            negPred = "neg(" + headPred;
+        }
+
+        List<String> allRules = Utils.getAllRulesWithHeadPred(negPred);
+        newRuleStatus.setText(allRules.size() + " conflicts found!");
+        for (String r : allRules) {
+            JTextArea rta = new JTextArea(r);
+            rta.setEditable(false);
+            rta.setColumns(100);
+            rta.setLineWrap(true);
+
+            String p1rulename = Utils.getRulenameOfLine(r);
+
+            JPanel btnPanel = new JPanel();
+            btnPanel.setLayout(new FlowLayout());
+
+            JButton p0Btn = new JButton("Prefer new rule");
+            p0Btn.setActionCommand(USER_INSERT_RULE + CHOOSE0 + p1rulename);
+            p0Btn.addActionListener(new ButtonClickListener());
+
+            JButton p1Btn = new JButton("Prefer " + p1rulename);
+            p1Btn.setActionCommand(USER_INSERT_RULE + CHOOSE1 + p1rulename);
+            p1Btn.addActionListener(new ButtonClickListener());
+
+            btnPanel.add(p0Btn);
+            btnPanel.add(p1Btn);
+            insertNewRuleFrame.add(rta);
+            insertNewRuleFrame.add(btnPanel);
+        }
+        insertNewRuleFrame.pack();
+        insertNewRuleFrame.setVisible(true);
+    }
+
+    public static void main(String args[]) {
+        GUI awt = new GUI();
+        awt.insertNewRuleAndSetPref();
     }
 }
