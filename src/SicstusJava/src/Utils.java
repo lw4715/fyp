@@ -383,7 +383,7 @@ public class Utils {
     public void writePrefToFile(String preference) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
-            bw.write(String.format("rule(%s%d, %s, []).\n", P_USER_, prefCount, preference));
+            bw.write(String.format("rule(%s%d(), %s, []).\n", P_USER_, prefCount, preference));
             bw.close();
             prefCount++;
         } catch (IOException e) {

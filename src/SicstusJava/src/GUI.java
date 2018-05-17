@@ -65,7 +65,8 @@ class GUI {
     private JLabel toolIntegrationStatus;
     private JFrame insertNewRuleFrame;
     private JTextField userNewRule;
-    private JLabel newRuleStatus;
+    private JPanel userRuleConflicts;
+
 
 
 
@@ -651,10 +652,10 @@ class GUI {
         p.add(userNewRule);
         p.add(submitRuleBtn);
 
-        newRuleStatus = new JLabel();
+        userRuleConflicts = new JPanel();
 
         insertNewRuleFrame.add(p);
-        insertNewRuleFrame.add(newRuleStatus);
+        insertNewRuleFrame.add(userRuleConflicts);
         insertNewRuleFrame.pack();
         insertNewRuleFrame.setVisible(true);
     }
@@ -669,7 +670,10 @@ class GUI {
         }
 
         List<String> allRules = Utils.getAllRulesWithHeadPred(negPred);
-        newRuleStatus.setText(allRules.size() + " conflicts found!");
+        userRuleConflicts.removeAll();
+        userRuleConflicts.setLayout(new BoxLayout(userRuleConflicts, BoxLayout.Y_AXIS));
+        
+        userRuleConflicts.add(new JLabel(allRules.size() + " conflicts found!"));
         for (String r : allRules) {
             JTextArea rta = new JTextArea(r);
             rta.setEditable(false);
@@ -692,8 +696,8 @@ class GUI {
 
             btnPanel.add(p0Btn);
             btnPanel.add(p1Btn);
-            insertNewRuleFrame.add(rta);
-            insertNewRuleFrame.add(btnPanel);
+            userRuleConflicts.add(rta);
+            userRuleConflicts.add(btnPanel);
         }
         insertNewRuleFrame.pack();
         insertNewRuleFrame.setVisible(true);
@@ -801,7 +805,6 @@ class GUI {
                 case USER_INSERT_RULE:
                     utils.addRules(userNewRule.getText());
                     showConflictingRules(userNewRule.getText());
-                    userPrefCount++;
                     break;
                 case USER_INSERT_RULE_START:
                     insertNewRuleAndSetPref();
