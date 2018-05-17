@@ -38,9 +38,7 @@ class GUI {
     private static final String PREF_TYPE = "PrefType_";
     private static final String VIEW_PREF = "View Pref";
     private static final String USER_INSERT_RULE = "USER INSERT RULE";
-    static final String CHOOSE1 = "Choose1_";
-    static final String CHOOSE0 = "Choose0_";
-    static final String P_USER = "p_user_";
+    private static final String USER_INSERT_RULE_START = "USER INSERT RULE START";
 
     private final Utils utils;
 
@@ -67,7 +65,6 @@ class GUI {
     private JLabel toolIntegrationStatus;
     private JFrame insertNewRuleFrame;
     private JTextField userNewRule;
-    private int userPrefCount;
     private JLabel newRuleStatus;
 
 
@@ -277,167 +274,6 @@ class GUI {
         panel4.add(customQueryExecuteButton);
         panel5.add(updateButton);
         mainFrame.setVisible(true);
-    }
-
-    private class ButtonClickListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String command = e.getActionCommand();
-            resetColours();
-
-            switch (command) {
-                case SUBMIT:
-                    if (checkArgs()) {
-                        String evidenceText = evidence.getText();
-                        status.setText("\t\tSubmitted: " + evidenceText);
-                        utils.addEvidence(evidenceText);
-                        currentEvidences.setText(utils.getCurrentEvidence());
-                    }
-                    break;
-                case UPLOAD:
-                    int returnVal = fileChooser.showOpenDialog(mainFrame);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fileChooser.getSelectedFile();
-                        System.out.println("Opening: " + file.getPath() + ".");
-                        status.setText("Uploaded file: " + file.getPath());
-                        utils.updateRule(file);
-                    }
-                    currentEvidences.setText(utils.getCurrentEvidence());
-                    break;
-                case EXECUTE:
-                    executeQuery(false);
-                    break;
-                case EXECUTEALL:
-                    String[] cs = possibleCulprits.getText().split(",");
-                    List<String> csList = new ArrayList<>();
-                    for (String c : cs) {
-                        c = c.trim();
-                        if (c.length() > 0) {
-                            csList.add(c);
-                        }
-                    }
-
-                    status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
-                    executeQueryAllWithCulprits(csList);
-                    break;
-                case UPDATE:
-                    status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
-                    utils.updateEvidence(currentEvidences.getText());
-                    break;
-                case CUSTOMEXECUTE:
-                    String customQuery = customQueryString.getText();
-                    status.setText("Executing custom query string: " + customQuery);
-                    JTextArea textArea = new JTextArea();
-                    String res = QueryExecutor.executeCustomQuery(customQuery);
-                    if (res == null || res.equals("")) {
-                        res = "False. No result for: " + customQuery;
-                    }
-                    textArea.setText(res);
-                    textArea.setEditable(false);
-                    textArea.setRows(40);
-                    textArea.setCaretPosition(0);
-                    textArea.setLineWrap(true);
-
-                    JPanel p = new JPanel();
-                    p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-                    p.add(new JLabel("Custom query result for " + customQuery, JLabel.RIGHT));
-                    p.add(textArea);
-
-                    JScrollPane sp = new JScrollPane(p);
-                    sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-                    JFrame f = new JFrame("Custom query result");
-                    f.add(sp);
-                    f.pack();
-//                    f.setSize(1200, 1000);
-                    f.setVisible(true);
-                    break;
-                case UPLOAD_SQUID_LOG:
-                    if (squidLogAttackname.getText().length() == 0) {
-                        toolIntegrationStatus.setText("\t\tPlease input name of attack associated with squid log");
-                        highlightElement(squidLogAttackname);
-                        return;
-                    }
-
-                    returnVal = fileChooser.showOpenDialog(toolIntegrationFrame);
-
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fileChooser.getSelectedFile();
-                        System.out.println("Opening: " + file.getPath());
-                        ToolIntegration.parseSquidLogFile(file, squidLogAttackname.getText());
-                        toolIntegrationFrame.dispose();
-                        status.setText("Processed squid file, updated prolog file: "
-                                + ToolIntegration.SQUID_LOG_RULES_PL + " for attack: " + squidLogAttackname.getText());
-                    }
-                    break;
-                case OPEN_TOOL_INTEGRATION:
-                    System.out.println("Opening tool integration");
-                    openToolIntegrationWindow();
-                    break;
-                case VIEW_PREF:
-                    SVGApplication.displayFile("img/pref_diagram.svg");
-                    break;
-                case USER_INSERT_RULE:
-                    utils.addRules(userNewRule.getText());
-                    showConflictingRules(userNewRule.getText());
-                    userPrefCount++;
-                    break;
-                default:
-                    System.out.println("COmmand:" + command);
-
-
-                    // add pref
-                    if (command.startsWith(PREF_TYPE)) {
-                        System.out.println("Full command:" + command);
-                        int prefType = Integer.parseInt(command.substring(command.indexOf(PREF_TYPE) + PREF_TYPE.length(), command.indexOf(ADD_PREF)));
-                        choosePreferenceAction(command.split(ADD_PREF)[1], prefType);
-                    } else if (command.startsWith(USER_INSERT_RULE)) {
-                        command = command.split(USER_INSERT_RULE)[1];
-
-                        String chosen;
-                        String other;
-                        if (command.startsWith(CHOOSE0)) {
-                            chosen = P_USER + userPrefCount;
-                            other = command.split(CHOOSE0)[1];
-                        } else {
-                            chosen = command.split(CHOOSE1)[1];
-                            other = P_USER + userPrefCount;
-                        }
-
-                        System.out.println("chosen: " + chosen);
-                        String preference = String.format("prefer(%s,%s)", chosen, other);
-                        utils.addRules(preference);
-
-                    } else if (command.startsWith("Choose:")) {
-                        // create preference rule
-                        String[] s = command.split(":")[2].split(">");
-                        String pref = String.format("prefer(%s,%s)", s[0], s[1]);
-                        if (Integer.parseInt(command.split(":")[1]) == 0) {
-                            utils.writePrefToFile(pref);
-                            currentEvidences.setText(utils.getCurrentEvidence());
-                            executeResultFrame.dispose();
-                            executeQuery(false);
-                            prefFrame.dispose();
-                            status.setText("Added  " + pref + " to " + Utils.USER_EVIDENCE_FILENAME);
-                        } else {
-                            prefFrame.dispose();
-                            executeResultFrame.dispose();
-                            strRulePrefs.add(new Pair<>(s[0], s[1]));
-                            status.setText("Str rule preference: " + pref);
-                            displayExecutionResult(reloadResult);
-                        }
-
-                    } else if (command.startsWith(ARG_TREE)) {
-                        String[] s = command.split(":");
-                        DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
-                        SVGApplication.displayFile("img/" + s[1]);
-
-                    } else {
-                        // display svg
-                        SVGApplication.displayFile("img/" + command);
-                    }
-            }
-        }
     }
 
     private void choosePreferenceAction(String command, int type) {
@@ -814,6 +650,9 @@ class GUI {
         p.add(new JLabel("New rule (in prolog style):"));
         p.add(userNewRule);
         p.add(submitRuleBtn);
+
+        newRuleStatus = new JLabel();
+
         insertNewRuleFrame.add(p);
         insertNewRuleFrame.add(newRuleStatus);
         insertNewRuleFrame.pack();
@@ -837,17 +676,18 @@ class GUI {
             rta.setColumns(100);
             rta.setLineWrap(true);
 
+            String p0rulename = utils.getCurrentUserEvidenceRulename();
             String p1rulename = Utils.getRulenameOfLine(r);
 
             JPanel btnPanel = new JPanel();
             btnPanel.setLayout(new FlowLayout());
 
             JButton p0Btn = new JButton("Prefer new rule");
-            p0Btn.setActionCommand(USER_INSERT_RULE + CHOOSE0 + p1rulename);
+            p0Btn.setActionCommand(USER_INSERT_RULE + p0rulename + SEPARATOR + p1rulename);
             p0Btn.addActionListener(new ButtonClickListener());
 
             JButton p1Btn = new JButton("Prefer " + p1rulename);
-            p1Btn.setActionCommand(USER_INSERT_RULE + CHOOSE1 + p1rulename);
+            p1Btn.setActionCommand(USER_INSERT_RULE + p1rulename + SEPARATOR + p0rulename);
             p1Btn.addActionListener(new ButtonClickListener());
 
             btnPanel.add(p0Btn);
@@ -857,6 +697,162 @@ class GUI {
         }
         insertNewRuleFrame.pack();
         insertNewRuleFrame.setVisible(true);
+    }
+
+
+    private class ButtonClickListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+            resetColours();
+
+            switch (command) {
+                case SUBMIT:
+                    if (checkArgs()) {
+                        String evidenceText = evidence.getText();
+                        status.setText("\t\tSubmitted: " + evidenceText);
+                        utils.addEvidence(evidenceText);
+                        currentEvidences.setText(utils.getCurrentEvidence());
+                    }
+                    break;
+                case UPLOAD:
+                    int returnVal = fileChooser.showOpenDialog(mainFrame);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+                        System.out.println("Opening: " + file.getPath() + ".");
+                        status.setText("Uploaded file: " + file.getPath());
+                        utils.updateRule(file);
+                    }
+                    currentEvidences.setText(utils.getCurrentEvidence());
+                    break;
+                case EXECUTE:
+                    executeQuery(false);
+                    break;
+                case EXECUTEALL:
+                    String[] cs = possibleCulprits.getText().split(",");
+                    List<String> csList = new ArrayList<>();
+                    for (String c : cs) {
+                        c = c.trim();
+                        if (c.length() > 0) {
+                            csList.add(c);
+                        }
+                    }
+                    status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
+                    executeQueryAllWithCulprits(csList);
+                    break;
+                case UPDATE:
+                    status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
+                    utils.updateEvidence(currentEvidences.getText());
+                    break;
+                case CUSTOMEXECUTE:
+                    String customQuery = customQueryString.getText();
+                    status.setText("Executing custom query string: " + customQuery);
+                    JTextArea textArea = new JTextArea();
+                    String res = QueryExecutor.executeCustomQuery(customQuery);
+                    if (res == null || res.equals("")) {
+                        res = "False. No result for: " + customQuery;
+                    }
+                    textArea.setText(res);
+                    textArea.setEditable(false);
+                    textArea.setRows(40);
+                    textArea.setCaretPosition(0);
+                    textArea.setLineWrap(true);
+
+                    JPanel p = new JPanel();
+                    p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+                    p.add(new JLabel("Custom query result for " + customQuery, JLabel.RIGHT));
+                    p.add(textArea);
+
+                    JScrollPane sp = new JScrollPane(p);
+                    sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+                    JFrame f = new JFrame("Custom query result");
+                    f.add(sp);
+                    f.pack();
+//                    f.setSize(1200, 1000);
+                    f.setVisible(true);
+                    break;
+                case UPLOAD_SQUID_LOG:
+                    if (squidLogAttackname.getText().length() == 0) {
+                        toolIntegrationStatus.setText("\t\tPlease input name of attack associated with squid log");
+                        highlightElement(squidLogAttackname);
+                        return;
+                    }
+
+                    returnVal = fileChooser.showOpenDialog(toolIntegrationFrame);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+                        System.out.println("Opening: " + file.getPath());
+                        ToolIntegration.parseSquidLogFile(file, squidLogAttackname.getText());
+                        toolIntegrationFrame.dispose();
+                        status.setText("Processed squid file, updated prolog file: "
+                                + ToolIntegration.SQUID_LOG_RULES_PL + " for attack: " + squidLogAttackname.getText());
+                    }
+                    break;
+                case OPEN_TOOL_INTEGRATION:
+                    System.out.println("Opening tool integration");
+                    openToolIntegrationWindow();
+                    break;
+                case VIEW_PREF:
+                    PrefDiagramNode.createPreferenceDiagram();
+                    SVGApplication.displayFile("img/pref_diagram.svg");
+                    break;
+                case USER_INSERT_RULE:
+                    utils.addRules(userNewRule.getText());
+                    showConflictingRules(userNewRule.getText());
+                    userPrefCount++;
+                    break;
+                case USER_INSERT_RULE_START:
+                    insertNewRuleAndSetPref();
+                    break;
+                default:
+                    System.out.println("Command:" + command);
+
+                    if (command.startsWith(PREF_TYPE)) {
+                        // auto add pref
+                        int prefType = Integer.parseInt(command.substring(command.indexOf(PREF_TYPE) + PREF_TYPE.length(), command.indexOf(ADD_PREF)));
+                        choosePreferenceAction(command.split(ADD_PREF)[1], prefType);
+                    } else if (command.startsWith(USER_INSERT_RULE)) {
+                        // user insert new rule resolve conflicts
+                        command = command.split(USER_INSERT_RULE)[1];
+
+                        String[] s = command.split(SEPARATOR);
+                        String chosen = s[0];
+                        String other = s[1];
+                        String preference = String.format("prefer(%s,%s)", chosen, other);
+                        utils.writePrefToFile(preference);
+
+                    } else if (command.startsWith("Choose:")) {
+                        // create preference rule
+                        String[] s = command.split(":")[2].split(">");
+                        String pref = String.format("prefer(%s,%s)", s[0], s[1]);
+                        if (Integer.parseInt(command.split(":")[1]) == 0) {
+                            utils.writePrefToFile(pref);
+                            currentEvidences.setText(utils.getCurrentEvidence());
+                            executeResultFrame.dispose();
+                            executeQuery(false);
+                            prefFrame.dispose();
+                            status.setText("Added  " + pref + " to " + Utils.USER_EVIDENCE_FILENAME);
+                        } else {
+                            prefFrame.dispose();
+                            executeResultFrame.dispose();
+                            strRulePrefs.add(new Pair<>(s[0], s[1]));
+                            status.setText("Str rule preference: " + pref);
+                            displayExecutionResult(reloadResult);
+                        }
+
+                    } else if (command.startsWith(ARG_TREE)) {
+                        String[] s = command.split(":");
+                        DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
+                        SVGApplication.displayFile("img/" + s[1]);
+
+                    } else {
+                        // display svg
+                        SVGApplication.displayFile("img/" + command);
+                    }
+            }
+        }
     }
 
     public static void main(String args[]) {

@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Utils {
-    private static final String CASE_USER_F = "case_user_";
+    private static final String CASE_USER_F = "case_user_f";
     private static final String P_USER_ = "p_user_";
     static final String BACKGROUNDGORGIAS_PL = "backgroundgorgias_renumbered.pl";
     static final String EVIDENCE_PL = "evidence.pl";
@@ -15,6 +15,7 @@ public class Utils {
     static final String STR = FILEPATH + "str_rules.pl";
     static final String EVIDENCE_FILENAME = FILEPATH + "evidence.pl";
 
+    // counter is index of latest rule
     private int counter;
     private int prefCount;
     private String allStrRules;
@@ -37,6 +38,11 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // counter is index of latest rule
+    String getCurrentUserEvidenceRulename() {
+        return CASE_USER_F + counter + "()";
     }
 
     void addRulesWithoutChange(String rule) {
@@ -66,12 +72,13 @@ public class Utils {
         }
     }
 
+    // counter is index of latest rule
     void addRules(String rule) {
         if (rule.length() == 0) {
             return;
         }
         counter++;
-        addRuleWithRulename(rule, "case_user_f" + counter);
+        addRuleWithRulename(rule, CASE_USER_F + counter);
     }
 
     static void clearFile(String f) {
@@ -431,8 +438,11 @@ public class Utils {
 
                 br.lines().forEach(line -> {
                     line = line.split("%")[0].replace(" ", "").replace("\t", "");
-                    if (line.startsWith("rule(") && getHeadOfLine(line).split("\\(")[0].equals(headPred)) {
-                        allRules.add(line);
+                    if (line.startsWith("rule(")) {
+                        String lineHead = getHeadOfLine(line);
+                        if (lineHead.substring(0, lineHead.lastIndexOf("(")).equals(headPred)) {
+                            allRules.add(line);
+                        }
                     }
 
                 });

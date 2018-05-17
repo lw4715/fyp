@@ -42,13 +42,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GUI.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GUI.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.42675158">
-              <caret line="802" column="53" selection-start-line="802" selection-start-column="53" selection-end-line="802" selection-end-column="53" />
+            <state vertical-scroll-proportion="-3.2962964">
+              <caret line="678" column="53" selection-start-line="678" selection-start-column="53" selection-end-line="678" selection-end-column="53" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#540#564#1" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -58,7 +59,7 @@
         <entry file="file://$PROJECT_DIR$/src/PrefDiagramNode.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="99" column="36" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="36" />
+              <caret line="78" column="77" selection-start-line="78" selection-start-column="77" selection-end-line="78" selection-end-column="77" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -78,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Utils.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Utils.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Utils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.6296296">
-              <caret line="221" column="28" selection-start-line="221" selection-start-column="28" selection-end-line="221" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.3312102">
+              <caret line="44" column="43" selection-start-line="44" selection-start-column="43" selection-end-line="44" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -132,7 +133,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="32" column="38" selection-start-line="32" selection-start-column="38" selection-end-line="32" selection-end-column="38" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -183,10 +186,10 @@
         <option value="$PROJECT_DIR$/src/SVGApplication.java" />
         <option value="$PROJECT_DIR$/src/QueryExecutor.java" />
         <option value="$PROJECT_DIR$/src/DerivationNode.java" />
-        <option value="$PROJECT_DIR$/src/PrefDiagramNode.java" />
         <option value="$PROJECT_DIR$/src/ToolIntegration.java" />
-        <option value="$PROJECT_DIR$/src/Utils.java" />
+        <option value="$PROJECT_DIR$/src/PrefDiagramNode.java" />
         <option value="$PROJECT_DIR$/src/GUI.java" />
+        <option value="$PROJECT_DIR$/src/Utils.java" />
       </list>
     </option>
   </component>
@@ -1196,21 +1199,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SVGApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="84" column="28" selection-start-line="84" selection-start-column="28" selection-end-line="84" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../Virustotal-Public-API-V2.0-Client/examples/Virustotal-Public-API-V2.0-ClientExamples/src/main/java/ScanFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="38" selection-start-line="32" selection-start-column="38" selection-end-line="32" selection-end-column="38" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1225,6 +1220,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test.pl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/javax/swing/JFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3312102">
+          <caret line="577" column="39" selection-start-line="577" selection-start-column="34" selection-end-line="577" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/QueryExecutor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1233,21 +1244,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PrefDiagramNode.java">
+    <entry file="file://$PROJECT_DIR$/src/SVGApplication.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="99" column="36" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="36" />
+          <caret line="84" column="28" selection-start-line="84" selection-start-column="28" selection-end-line="84" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.pl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1261,18 +1264,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/javax/swing/JFrame.java">
+    <entry file="file://$PROJECT_DIR$/src/PrefDiagramNode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3312102">
-          <caret line="577" column="39" selection-start-line="577" selection-start-column="34" selection-end-line="577" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Utils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.6296296">
-          <caret line="221" column="28" selection-start-line="221" selection-start-column="28" selection-end-line="221" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="78" column="77" selection-start-line="78" selection-start-column="77" selection-end-line="78" selection-end-column="77" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1281,8 +1276,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42675158">
-          <caret line="802" column="53" selection-start-line="802" selection-start-column="53" selection-end-line="802" selection-end-column="53" />
+        <state vertical-scroll-proportion="-3.2962964">
+          <caret line="678" column="53" selection-start-line="678" selection-start-column="53" selection-end-line="678" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#540#564#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3312102">
+          <caret line="44" column="43" selection-start-line="44" selection-start-column="43" selection-end-line="44" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
