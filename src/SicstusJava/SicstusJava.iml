@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="jpl:jpl:7.0.1" level="project" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file:///Applications/sicstus4.3.5/bin/sp-4.3.5/sp-4.3.5/sicstus-4.3.5/bin" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file:///Applications/sicstus4.3.5/bin/sp-4.3.5/sp-4.3.5/sicstus-4.3.5/bin" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="ch.qos.logback:logback-classic:1.2.3" level="project" />
+    <orderEntry type="library" name="guru.nidi:graphviz-java:0.4.0" level="project" />
+    <orderEntry type="library" name="org.apache.xmlgraphics:batik-swing:1.9" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/jpl/java_api/javadoc" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Exceptions" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Exceptions2" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Family" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/FamilyMT" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/SemWeb" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Test" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Test2" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Time" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Versions" />
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/doc/packages/examples/jpl/java/Zahed" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES />
+        <JAVADOC />
+        <NATIVE>
+          <root url="file:///usr/local/Cellar/swi-prolog/7.6.4/libexec/lib/swipl-7.6.4/lib/x86_64-darwin17.5.0" />
+        </NATIVE>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../Virustotal-Public-API-V2.0-Client" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../Virustotal-Public-API-V2.0-Client/examples/Virustotal-Public-API-V2.0-ClientExamples/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../Virustotal-Public-API-V2.0-Client/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../Virustotal-Public-API-V2.0-Client/src/test/java" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="Virustotal-Public-API-V2.0-Client" />
+  </component>
+</module>
