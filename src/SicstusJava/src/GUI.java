@@ -672,7 +672,7 @@ class GUI {
         List<String> allRules = Utils.getAllRulesWithHeadPred(negPred);
         userRuleConflicts.removeAll();
         userRuleConflicts.setLayout(new BoxLayout(userRuleConflicts, BoxLayout.Y_AXIS));
-        
+
         userRuleConflicts.add(new JLabel(allRules.size() + " conflicts found!"));
         for (String r : allRules) {
             JTextArea rta = new JTextArea(r);
