@@ -74,6 +74,14 @@ rule(r_op_context(economic,Att), contextOfAttack(economic,Att), [target(T,Att), 
 rule(r_op_context(political,Att), contextOfAttack(political,Att), [target(T,Att), country(T)]).
 rule(r_op_context1(political,Att), contextOfAttack(political,Att), [target(T,Att), industry(Ind,T), politicalIndustry(Ind)]).
 
+
+%% TODO: editing
+
+%% rule(r_op_context(socio_cultural,Att), contextOfAttack(socio_cultural,Att), [target(T,Att), industry(Ind,T), politicalIndustry(Ind)]).
+
+%%%%%%%%%%%%%%%%
+
+
 %% Auxilliary rules
 %% Y2 M2 is before Y1 M1 but recent enough (within 2 years)
 rule(r_op_date(ongoing),dateApplicable(_,ongoing),[]).

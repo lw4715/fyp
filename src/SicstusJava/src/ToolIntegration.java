@@ -464,13 +464,99 @@ public class ToolIntegration {
         }
     }
 
+    // suspicious process -
+    // filters ossec alerts given level and msg
+    public boolean possibleAttack(int level, String msg) {
+        if (level < 9) {
+            return false;
+        } else if (level == 12) {
+            return true;
+        }
+        final String[] keywords = new String[]{"deny", "failure", "failed", "bad",
+                "invalid", "error", "brute force", "multiple", "high amount",
+                "breakin", "infected", "malware", "worm", "trojan", "virus", "suspicious"};
+        String msgLower = msg.toLowerCase();
+        for (String keyword : keywords) {
+            if (msgLower.contains(keyword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // returns unix timestamp
+    public int getTimestamp() {
+        return -1;
+    }
+
+    public static boolean relevantLog(int level, String msg) {
+        if (level >= 3) {
+            return false;
+        }
+        final String[] keywords = new String[]{"bad", "invalid", "error",
+                "brute force", "multiple", "high amount", "breakin", "infected",
+                "malware", "worm", "trojan", "virus", "denial of service", "malicious"};
+        String msgLower = msg.toLowerCase();
+        for (String keyword : keywords) {
+            if (msgLower.contains(keyword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    // return prolog rules
+    public static List<String> parseSnortLogs(String filename) {
+        final String PRIORITY = "[Priority: ";
+        List<String> prologPreds = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            StringBuilder sb = new StringBuilder();
+            br.lines().forEach(x -> sb.append(x));
+            String allLines = sb.toString();
+            String[] logs = allLines.split("\\[\\*\\*\\] \\[[0-9]");
+            for (String log : logs) {
+                if (log.length() > 0) {
+                    int priorityStart = log.indexOf(PRIORITY) + PRIORITY.length();
+                    int priority = Integer.parseInt(log.substring(priorityStart, log.indexOf("]", priorityStart)));
+                    String msg = log.substring(0, log.indexOf("[**]"));
+                    if (relevantLog(priority, msg)) {
+                        final int IP_SEPARATOR_POS = log.indexOf("->");
+                        String srcIP = parseIPFromString(log.substring(log.indexOf("]"), IP_SEPARATOR_POS));
+                        String destIP = parseIPFromString(log.substring(IP_SEPARATOR_POS));
+                        System.out.println("SRC: " + srcIP + " DEST: " + destIP + " MSG: " + msg);
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return prologPreds;
+    }
+
+    private static String parseIPFromString(String str) {
+        String IPADDRESS_PATTERN =
+                "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+
+        Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
 //        System.out.println("RESOURCE: " + virustotalScanFile(new File("/Users/linna/Downloads/2015-08-31-traffic-analysis-exercise.pcap")));
-        ToolIntegration ti = new ToolIntegration();
+//        ToolIntegration ti = new ToolIntegration();
 //        ti.torIntegration();
 //        preprocessFiles();
 //        getVirustotalReportAndProcess("74.125.224.72");
-        System.out.println(ti.parseOSSEC("ossec_alert1.log", "saysomething"));
-
+//        System.out.println(ti.parseOSSEC("ossec_alert1.log", "saysomething"));\
+        parseSnortLogs("/Users/linna/Downloads/tg_snort_full/alert.full");
     }
 }
