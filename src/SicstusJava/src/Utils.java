@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
     private static final String CASE_USER_F = "case_user_f";
@@ -24,6 +26,17 @@ public class Utils {
         counter = 0;
         prefCount = 0;
         clearFile(USER_EVIDENCE_FILENAME);
+    }
+
+    static List<String> regexMatch(String regex, String base) {
+        List<String> l = new ArrayList<>();
+        String PATTERN = regex;
+        Pattern pattern = Pattern.compile(PATTERN);
+        Matcher matcher = pattern.matcher(base);
+        while (matcher.find()) {
+            l.add(matcher.group());
+        }
+        return l;
     }
 
     void addEvidence(String evidence) {
@@ -334,7 +347,8 @@ public class Utils {
     }
 
     static String getBodyOfLine(String line) {
-        return line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+        String s = regexMatch("\\[.*\\]", line).get(0);
+        return s.substring(1, s.length() - 1);
     }
 
     public static String getRulenameOfLine(String line) {

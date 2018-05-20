@@ -517,13 +517,16 @@ class GUI {
         String allStrRules = utils.getAllStrRules();
         String[] strRules = allStrRules.split("\n");
         JFrame altDispFrame = new JFrame("Possible evidences");
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         altDispFrame.setLayout(new BoxLayout(altDispFrame.getContentPane(), BoxLayout.Y_AXIS));
+
         try {
             for (String strRule : strRules) {
                 if (strRule.length() > 0) {
                     JTextArea ta = defaultTextArea(strRule);
 
-                    JButton btn = new JButton("View additional evidences needed");
+                    JButton btn = new JButton("Details");
                     btn.setActionCommand(DISPLAY_RESULTS + strRule);
                     btn.addActionListener(new ButtonClickListener());
 
@@ -541,11 +544,16 @@ class GUI {
                     p.setLayout(new FlowLayout());
                     p.add(ta);
                     p.add(btn);
-                    altDispFrame.add(p);
+//                    altDispFrame.add(p);
+                    container.add(p);
                 }
             }
-            altDispFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            altDispFrame.setUndecorated(true);
+            JScrollPane sp = new JScrollPane(container);
+            sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            altDispFrame.add(sp);
+//            altDispFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//            altDispFrame.setUndecorated(true);
+            altDispFrame.pack();
             altDispFrame.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -663,7 +671,6 @@ class GUI {
 
 
     static void highlightWordInTextArea(String word, JTextArea textArea, Color colour) {
-        System.out.println("HIGHLIGHTING " + word + " in " + textArea.getText());
         String text = textArea.getText();
         Highlighter highlighter = textArea.getHighlighter();
         Highlighter.HighlightPainter painter =
@@ -863,17 +870,38 @@ class GUI {
                         int prefType = Integer.parseInt(command.substring(command.indexOf(PREF_TYPE) + PREF_TYPE.length(), command.indexOf(ADD_PREF)));
                         choosePreferenceAction(command.split(ADD_PREF)[1], prefType);
                     } else if (command.startsWith(DISPLAY_RESULTS)) {
+                        // details page for execute all
                         String strRule = command.split(DISPLAY_RESULTS)[1];
                         try {
                             Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
-                            JTextArea ta = defaultTextArea(String.valueOf(r.getKey()));
-                            JTextArea ta1 = defaultTextArea(String.valueOf(r.getValue()));
+                            Map<String, List<String>> allRules = QueryExecutor.getPredMap(r.getValue(), false);
+                            JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules));
+                            for (String head : allRules.keySet()) {
+                                String headWithConst = returnMatchingPredicate(head, r.getValue());
+                                List<String> rules = allRules.get(head);
+                                for (String rule : rules) {
+                                    Pair<List<String>, List<String>> pair = QueryExecutor.tryToProve(rule, attackName.getText(), headWithConst);
+                                    for (String pair0 : pair.getKey()) {
+                                        pair0 = pair0.substring(0, pair0.lastIndexOf("("));
+                                        highlightWordInTextArea(pair0, possibleRulesTA, Color.green);
+                                    }
+                                    for (String pair1 : pair.getValue()) {
+                                        pair1 = pair1.substring(0, pair1.lastIndexOf("("));
+                                        highlightWordInTextArea(pair1, possibleRulesTA, Color.pink);
+                                    }
+                                }
+                            }
+//                            for (List<String> rules : allRules.values()) {
+//                            }
+
                             JFrame frame = new JFrame("Details:");
                             frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
                             frame.add(new JLabel("Proven"));
-                            frame.add(ta);
+                            frame.add(defaultTextArea(String.valueOf(r.getKey())));
                             frame.add(new JLabel("Not proven"));
-                            frame.add(ta1);
+                            frame.add(defaultTextArea(String.valueOf(r.getValue())));
+                            frame.add(new JLabel("Possible rules:"));
+                            frame.add(possibleRulesTA);
                             frame.pack();
                             frame.setVisible(true);
 
@@ -922,10 +950,19 @@ class GUI {
         }
     }
 
+    private String returnMatchingPredicate(String head, List<String> hs) {
+        for (String h : hs) {
+            if (h.split("\\(")[0].equals(head.split("\\(")[0])) {
+                return h;
+            }
+        }
+        return "";
+    }
+
     private static JTextArea defaultTextArea(String text) {
         JTextArea ta = new JTextArea(text);
-        ta.setColumns(50);
-        ta.setRows(5);
+        ta.setColumns(100);
+//        ta.setRows(5);
         ta.setEditable(false);
         ta.setLineWrap(true);
         ta.setCaretPosition(0);

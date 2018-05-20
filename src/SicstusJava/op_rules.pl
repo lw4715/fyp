@@ -52,7 +52,7 @@ rule(r_op_hasCapability1(X,Att),hasCapability(X,Att),[neg(requireHighResource(At
 rule(r_op_hasCapability2(X,Att),hasCapability(X,Att),[requireHighResource(Att),hasResources(X)]).
 rule(r_op_noCapability(X,Att),neg(hasCapability(X,Att)),[requireHighResource(Att),neg(hasResources(X))]).
 
-rule(r_op_ecMotive(C,T),	hasMotive(C,Att),		 [industry(T),target(T,Att),contextOfAttack(economic,Att),hasEconomicMotive(C,T),specificTarget(Att)]).
+rule(r_op_ecMotive(C,T),	hasMotive(C,Att),		 [target(T,Att),industry(T),contextOfAttack(economic,Att),hasEconomicMotive(C,T),specificTarget(Att)]).
 rule(r_op_pMotive(C,T),   	hasMotive(C,Att),		 [targetCountry(T,Att),attackPeriod(Att,Date1),contextOfAttack(political,Att),hasPoliticalMotive(C,T,Date2),dateApplicable(Date1,Date2),specificTarget(Att)]).
 rule(r_op_pMotive1(C,T,Date),hasPoliticalMotive(C,T,Date),[imposedSanctions(T,C,Date)]).
 rule(r_op_conflict(X,T),	hasMotive(X,Att),		 [targetCountry(T,Att),attackPeriod(Att,Date1),news(News,T,Date2),dateApplicable(Date1,Date2),causeOfConflict(X,T,News),specificTarget(Att)]).

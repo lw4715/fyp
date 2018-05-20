@@ -1,5 +1,6 @@
 import javafx.util.Pair;
 import org.jpl7.JPL;
+import org.jpl7.PrologException;
 import org.jpl7.Query;
 import org.jpl7.Term;
 
@@ -9,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 
-import static java.lang.Character.isUpperCase;
 import static java.lang.Math.pow;
 
 
@@ -120,7 +120,11 @@ public class QueryExecutor {
     private Map<String, Term>[] executeQueryString(String query, int limit) throws Exception {
         if (verbose) System.out.println(query);
         Query q = new Query(query);
-        return q.nSolutions(limit);
+        try {
+            return q.nSolutions(limit);
+        } catch (PrologException e) {
+            return new Map[0];
+        }
     }
 
     private String formatQueryOutput(Map<String, Term>[] output) {
@@ -330,6 +334,7 @@ public class QueryExecutor {
     }
 
 
+    // return rules
     static Map<String, List<String>> getPredMap(Collection<String> preds, boolean isAbducibles) {
         Map<String, List<String>> map = new HashMap<>();
         for (String pred : preds) {
@@ -338,7 +343,6 @@ public class QueryExecutor {
                 key = pred.substring(4, pred.length() - 1).split("\\(")[0];
             } else {
                 key = pred.substring(0, pred.lastIndexOf("("));
-//                key = pred.split("\\(")[0];
             }
             List<String> val = new ArrayList<>();
             val.addAll(scanFileForPredicate(Utils.TECH, key));
@@ -354,7 +358,8 @@ public class QueryExecutor {
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             br.lines().forEach(line -> {
-                if (line.contains(pred) && line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%')) {
+                if (line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%') &&
+                        Utils.getHeadOfLine(line).contains(pred)) {
                     r.add(line.replace("\t",""));
                 }
             });
@@ -406,18 +411,32 @@ public class QueryExecutor {
         verbose = true;
     }
 
-    //returns Pair<(proved), (not proved)>
-    static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
+    public static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName, String givenHead) throws Exception {
+        Map<String, String> argMap = new HashMap<>();
+        String head = Utils.getHeadOfLine(gorgiasRule);
+        if (givenHead.length() > 0) {
+            System.out.println("Given: " + givenHead);
+            String headConstantsAll = Utils.regexMatch("\\(.*\\)", givenHead).get(0);
+            List<String> headConstants = Utils.regexMatch("\\b[(A-Z)|(a-z)]+\\b", headConstantsAll);
+
+            String headVarAll = Utils.regexMatch("\\(.*\\)", head).get(0);
+            List<String> headVar = Utils.regexMatch("\\b[A-Z][(a-z)|(A-Z)]*\\b", headVarAll);
+
+            for (int i = 0; i < headConstants.size(); i++) {
+                String var = headVar.get(i);
+                String constant = headConstants.get(i);
+                argMap.put(var, constant);
+            }
+            System.out.println("Added from head " + givenHead + " argmap: " + argMap);
+        }
+
         List proved = new ArrayList<>();
         List notProved = new ArrayList<>();
         Pair<List<String>, List<String>> ret = new Pair<>(proved, notProved);
 
-        String head = Utils.getHeadOfLine(gorgiasRule);
         Map<String, String> args = new HashMap<>();
         String body = Utils.getBodyOfLine(gorgiasRule);
-        System.out.println("H: " + head + " B: " + body);
         String[] bs = body.split("\\)");
-        Map<String, String> argMap = new HashMap<>();
         for (String b : bs) {
             if (b.length() > 0) {
                 if (b.charAt(0) == ',') {
@@ -429,7 +448,8 @@ public class QueryExecutor {
 
 
                 // replace attack var
-                String[] vars = b.substring(b.indexOf("(") + 1, b.lastIndexOf(")")).split(",");
+                String allVars = Utils.regexMatch("\\(.*\\)", b).get(0);
+                List<String> vars = Utils.regexMatch("\\b[A-Z][(A-Z)|(a-z)]*\\b", allVars);
                 String formattedB = b.replaceAll("\\bAtt\\b", attackName).replaceAll("\\bA1\\b", attackName).replaceAll("\\bA\\b", attackName);
                 for (String var : vars) {
                     if (argMap.containsKey(var)) {
@@ -440,28 +460,82 @@ public class QueryExecutor {
                 String q = String.format("prove([%s], D)", formattedB);
                 Map<String, Term>[] m = getInstance().executeQueryString(q, 5);
 
-
-                String[] varsAfter = formattedB.substring(formattedB.indexOf("(") + 1, formattedB.lastIndexOf(")")).split(",");
+                String allVarsAfter = Utils.regexMatch("\\(.*\\)", formattedB).get(0);
+                List<String> varsAfter = Utils.regexMatch("\\b[A-Z][(A-Z)|(a-z)]*\\b", allVarsAfter);
                 if (m.length > 0) {
                     for (String var : varsAfter) {
                         var = var.trim();
-                        if (isUpperCase(var.charAt(0))) {
-                            String constant = m[0].get(var).name();
-                            argMap.put(var, constant);
-                            formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
-                        }
+                        String constant = m[0].get(var).name();
+                        argMap.put(var, constant);
+                        formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
                     }
-                    System.out.println("Success proven: " + formattedB);
                     proved.add(formattedB);
                 } else {
-                    System.out.println("Failed to prove: " + formattedB);
                     notProved.add(formattedB);
                 }
             }
         }
-        System.out.println("argmap: " + argMap);
-//        System.out.println(ret);
+//        System.out.println("argmap: " + argMap);
         return ret;
+    }
+
+    //returns Pair<(proved), (not proved)>
+    static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
+        return tryToProve(gorgiasRule, attackName, "");
+//        List proved = new ArrayList<>();
+//        List notProved = new ArrayList<>();
+//        Pair<List<String>, List<String>> ret = new Pair<>(proved, notProved);
+//
+//        String head = Utils.getHeadOfLine(gorgiasRule);
+//        Map<String, String> args = new HashMap<>();
+//        String body = Utils.getBodyOfLine(gorgiasRule);
+//        String[] bs = body.split("\\)");
+//        Map<String, String> argMap = new HashMap<>();
+//        for (String b : bs) {
+//            if (b.length() > 0) {
+//                if (b.charAt(0) == ',') {
+//                    b = b.substring(1).trim();
+//                }
+//                // add missing ")" to match "("
+//                int openCount = (int) b.chars().filter(c -> c == '(').count();
+//                b = b + String.join("", Collections.nCopies(openCount, ")"));
+//
+//
+//                // replace attack var
+//                String allVars = Utils.regexMatch("\\(.*\\)", b).get(0);
+//                List<String> vars = Utils.regexMatch("\\b[A-Z][a-z]*\\b", allVars);
+//                String formattedB = b.replaceAll("\\bAtt\\b", attackName).replaceAll("\\bA1\\b", attackName).replaceAll("\\bA\\b", attackName);
+//                for (String var : vars) {
+//                    if (argMap.containsKey(var)) {
+//                        formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
+//                    }
+//                }
+//
+//                String q = String.format("prove([%s], D)", formattedB);
+//                Map<String, Term>[] m = getInstance().executeQueryString(q, 5);
+//
+//                String allVarsAfter = Utils.regexMatch("\\(.*\\)", formattedB).get(0);
+//                List<String> varsAfter = Utils.regexMatch("\\b[A-Z][a-z]*\\b", allVarsAfter);
+//                if (m.length > 0) {
+//                    for (String var : varsAfter) {
+//                        var = var.trim();
+//                        if (isUpperCase(var.charAt(0))) {
+//                            String constant = m[0].get(var).name();
+//                            argMap.put(var, constant);
+//                            formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
+//                        }
+//                    }
+////                    System.out.println("Success proven: " + formattedB);
+//                    proved.add(formattedB);
+//                } else {
+////                    System.out.println("Failed to prove: " + formattedB);
+//                    notProved.add(formattedB);
+//                }
+//            }
+//        }
+////        System.out.println("argmap: " + argMap);
+////        System.out.println(ret);
+//        return ret;
     }
 
     public static void main(String[] args) {
@@ -491,5 +565,6 @@ public class QueryExecutor {
         System.out.println("Mean total runtime over " + n + " times: " + mean(qe.timings));
 
     }
+
 
 }
