@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 
+import static java.lang.Character.isUpperCase;
 import static java.lang.Math.pow;
 
 
@@ -405,27 +406,84 @@ public class QueryExecutor {
         verbose = true;
     }
 
+    //returns Pair<(proved), (not proved)>
+    private Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
+        List proved = new ArrayList<>();
+        List notProved = new ArrayList<>();
+        Pair<List<String>, List<String>> ret = new Pair<>(proved, notProved);
+
+        String head = Utils.getHeadOfLine(gorgiasRule);
+        Map<String, String> args = new HashMap<>();
+        String body = Utils.getBodyOfLine(gorgiasRule);
+        System.out.println("H: " + head + " B: " + body);
+        String[] bs = body.split("\\)");
+        Map<String, String> argMap = new HashMap<>();
+        for (String b : bs) {
+            if (b.length() > 0) {
+                if (b.charAt(0) == ',') {
+                    b = b.substring(1).trim();
+                }
+                // add missing ")" to match "("
+                int openCount = (int) b.chars().filter(c -> c == '(').count();
+                b = b + String.join("", Collections.nCopies(openCount, ")"));
+
+
+                // replace attack var
+                String[] vars = b.substring(b.indexOf("(") + 1, b.lastIndexOf(")")).split(",");
+                String formattedB = b.replaceAll("\\bAtt\\b", attackName).replaceAll("\\bA1\\b", attackName).replaceAll("\\bA\\b", attackName);
+                for (String var : vars) {
+                    if (argMap.containsKey(var)) {
+                        formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
+                    }
+                }
+
+                String q = String.format("prove([%s], D)", formattedB);
+                System.out.println(q);
+                Map<String, Term>[] m = executeQueryString(q, 1);
+
+                String[] varsAfter = formattedB.substring(formattedB.indexOf("(") + 1, formattedB.lastIndexOf(")")).split(",");
+
+
+
+                if (m.length > 0) {
+                    proved.add(b);
+                    for (String var : varsAfter) {
+                        var = var.trim();
+                        if (isUpperCase(var.charAt(0))) {
+                            argMap.put(var, m[0].get(var).name());
+                        }
+                    }
+                } else {
+                    System.out.println("Failed to prove: " + b);
+                    notProved.add(b);
+                }
+                System.out.println("argmap: " + argMap);
+            }
+        }
+        System.out.println(ret);
+        return ret;
+    }
+
     public static void main(String[] args) {
-//        getConflictingRule("[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2(), ass(notForBlackMarketUse(example2b_m2)), ass(notForBlackMarketUse(example2b_m1)), case_example2b_f5(), case_example2b_f4(), r_t_similar1(example2b_m1, example2b_m2), case_example2b_f3(), r_str_linkedMalware(yourCountry, example2b)]",
-//                "[case_example2b_f2(),r_str_targetItself2(yourCountry, example2b)]");
 
         QueryExecutor qe = QueryExecutor.getInstance();
-//        qe.setDebug();
+        qe.setDebug();
         int n = 1;
         try {
+            qe.tryToProve("rule(r_str__linkedMalware(X,A1),        isCulprit(X,A1),    [malwareUsedInAttack(M1,A1),similar(M1,M2),malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).", "example0");
 //            System.out.println(qe.execute("example5", false));
-            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
-
-            for (int i = 0; i < n; i++) {
-                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                    Result r = qe.execute(c, false, new ArrayList<>());
-                    System.out.println(r);
-                }
-                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
-                    Result r = qe.execute(c, false, new ArrayList<>());
-                    System.out.println(r);
-                }
-            }
+//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+//
+//            for (int i = 0; i < n; i++) {
+//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                    Result r = qe.execute(c, false, new ArrayList<>());
+//                    System.out.println(r);
+//                }
+//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
+//                    Result r = qe.execute(c, false, new ArrayList<>());
+//                    System.out.println(r);
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

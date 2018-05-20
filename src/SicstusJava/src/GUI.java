@@ -102,7 +102,7 @@ class GUI {
     private static final String[] predicates = {"industry(<T>)","targetCountry(<X>,<Att>)",
             "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)","poorRelation(<C>,<T>)",
             "noPriorHistory(<X>)","infraUsed(<Infra>,<Att>)","hasResources(<X>)","majorityIpOrigin(<X>,<Att>)",
-            "stolenValidSignedCertificates(<Att>)","cybersuperpower(<X>)","espionage>,<doxing>)",
+            "stolenValidSignedCertificates(<Att>)","cybersuperpower(<X>)",
             "attackPeriod(<Att>,<[Year>,<Month]>)","governmentLinked(<P>,<C>)",
             "domainRegisteredDetails(<Server>,<Name>,<Addr>)","ipResolution(<S>,<IP>,<D>)",
             "infectionMethod(<usb>,<M>)","attackOrigin(<X>,<Att>)","highLevelSkill(<Att>)",
