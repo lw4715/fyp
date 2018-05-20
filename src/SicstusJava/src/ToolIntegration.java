@@ -512,6 +512,8 @@ public class ToolIntegration {
     public static List<String> parseSnortLogs(String filename) {
         final String PRIORITY = "[Priority: ";
         List<String> prologPreds = new ArrayList<>();
+        // key: srcIP value: (key: destIP value: set(msg, times occurred))
+        Map<String, Map<String, Map<String, Integer>>> srcIPMap = new HashMap<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             StringBuilder sb = new StringBuilder();
@@ -522,20 +524,87 @@ public class ToolIntegration {
                 if (log.length() > 0) {
                     int priorityStart = log.indexOf(PRIORITY) + PRIORITY.length();
                     int priority = Integer.parseInt(log.substring(priorityStart, log.indexOf("]", priorityStart)));
-                    String msg = log.substring(0, log.indexOf("[**]"));
+                    String msg = log.substring(log.indexOf("]") + 1, log.indexOf("[**]"));
                     if (relevantLog(priority, msg)) {
                         final int IP_SEPARATOR_POS = log.indexOf("->");
                         String srcIP = parseIPFromString(log.substring(log.indexOf("]"), IP_SEPARATOR_POS));
                         String destIP = parseIPFromString(log.substring(IP_SEPARATOR_POS));
-                        System.out.println("SRC: " + srcIP + " DEST: " + destIP + " MSG: " + msg);
+                        if (isUsefulIP(srcIP) && isUsefulIP(destIP)) {
+                            Map<String, Map<String, Integer>> m;
+                            if (srcIPMap.get(srcIP) == null) {
+                                m = new HashMap<>();
+                                srcIPMap.put(srcIP, m);
+                            }
+                            m = srcIPMap.get(srcIP);
+                            Map<String, Integer> msgs;
+                            if (m.get(destIP) == null) {
+                                msgs = new HashMap<>();
+                                m.put(destIP, msgs);
+                            }
+                            msgs = m.get(destIP);
+                            if (msgs.get(msg) == null) {
+                                msgs.put(msg, 0);
+                            }
+                            msgs.put(msg, msgs.get(msg) + 1);
+                        }
                     }
                 }
             }
+            Map<String, Map<String, Map<String, Integer>>> filteredMap = new HashMap<>();
+            List<Integer> list = new ArrayList<>();
+
+            System.out.println(srcIPMap.size());
+            for (String srcIP : srcIPMap.keySet()) {
+                int size = fullSize(srcIPMap.get(srcIP));
+//                int size = srcIPMap.get(srcIP).size();
+                if (list.size() <= 5) {
+                    list.add(size);
+                    Collections.sort(list);
+                } else if (size > list.get(0)) {
+                    list.remove(0);
+                    list.add(size);
+                    Collections.sort(list);
+                }
+            }
+
+            System.out.println("Num of occurences: " + list);
+
+            for (String srcIP : srcIPMap.keySet()) {
+                if (fullSize(srcIPMap.get(srcIP)) > list.get(0)) {
+                    filteredMap.put(srcIP, srcIPMap.get(srcIP));
+                    System.out.println("src: " + srcIP + " size: "  + fullSize(srcIPMap.get(srcIP)));
+                }
+            }
+
+//            System.out.println(filteredMap);
+            for (String srcIP : filteredMap.keySet()) {
+                System.out.println("srcIP: " + srcIP);
+                for (String destIP : filteredMap.get(srcIP).keySet()) {
+                    System.out.println("\tdestIP: " + destIP);
+                    System.out.println("\t\t" + filteredMap.get(srcIP).get(destIP));
+                }
+                System.out.println("\n");
+            }
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return prologPreds;
+    }
+
+    private static int fullSize(Map<String, Map<String, Integer>> m) {
+        int acc = 0;
+        for (Map<String, Integer> n : m.values()) {
+            for (Integer i : n.values()) {
+                acc += i;
+            }
+        }
+        return acc;
+    }
+
+    private static boolean isUsefulIP(String ip) {
+        return !(ip.equals("0.0.0.0") || ip.equals("255.255.255.255"));
     }
 
     private static String parseIPFromString(String str) {
