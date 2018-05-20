@@ -213,21 +213,28 @@ class GUI {
         prefDiagBtn.setActionCommand(VIEW_PREF);
         prefDiagBtn.addActionListener(new ButtonClickListener());
 
+        JButton userInsertRuleBtn = new JButton("Insert new rule");
+        userInsertRuleBtn.setActionCommand(USER_INSERT_RULE_START);
+        userInsertRuleBtn.addActionListener(new ButtonClickListener());
+
+
         JPanel topPanel = new JPanel();
         topPanel.add(toolIntegrationBtn);
         topPanel.add(prefDiagBtn);
+        topPanel.add(userInsertRuleBtn);
 
         mainFrame.add(topPanel);
-
+        mainFrame.add(new JSeparator());
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
         mainFrame.add(panel2);
         mainFrame.add(panel3);
         mainFrame.add(panel3b);
+        mainFrame.add(new JSeparator());
         mainFrame.add(panel4);
+        mainFrame.add(new JSeparator());
 
         mainFrame.add(new JLabel("\t\tInput evidence: ", JLabel.LEFT));
         mainFrame.add(panel1);
-
         mainFrame.add(new JLabel("\t\tInput so far:", JLabel.LEFT));
         mainFrame.add(scrollPane);
 
@@ -860,6 +867,5 @@ class GUI {
 
     public static void main(String args[]) {
         GUI awt = new GUI();
-        awt.insertNewRuleAndSetPref();
     }
 }
