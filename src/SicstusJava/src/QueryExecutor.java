@@ -407,7 +407,7 @@ public class QueryExecutor {
     }
 
     //returns Pair<(proved), (not proved)>
-    private Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
+    static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
         List proved = new ArrayList<>();
         List notProved = new ArrayList<>();
         Pair<List<String>, List<String>> ret = new Pair<>(proved, notProved);
@@ -438,34 +438,33 @@ public class QueryExecutor {
                 }
 
                 String q = String.format("prove([%s], D)", formattedB);
-                System.out.println(q);
-                Map<String, Term>[] m = executeQueryString(q, 1);
+                Map<String, Term>[] m = getInstance().executeQueryString(q, 5);
+
 
                 String[] varsAfter = formattedB.substring(formattedB.indexOf("(") + 1, formattedB.lastIndexOf(")")).split(",");
-
-
-
                 if (m.length > 0) {
-                    proved.add(b);
                     for (String var : varsAfter) {
                         var = var.trim();
                         if (isUpperCase(var.charAt(0))) {
-                            argMap.put(var, m[0].get(var).name());
+                            String constant = m[0].get(var).name();
+                            argMap.put(var, constant);
+                            formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
                         }
                     }
+                    System.out.println("Success proven: " + formattedB);
+                    proved.add(formattedB);
                 } else {
-                    System.out.println("Failed to prove: " + b);
-                    notProved.add(b);
+                    System.out.println("Failed to prove: " + formattedB);
+                    notProved.add(formattedB);
                 }
-                System.out.println("argmap: " + argMap);
             }
         }
-        System.out.println(ret);
+        System.out.println("argmap: " + argMap);
+//        System.out.println(ret);
         return ret;
     }
 
     public static void main(String[] args) {
-
         QueryExecutor qe = QueryExecutor.getInstance();
         qe.setDebug();
         int n = 1;
