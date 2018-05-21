@@ -90,7 +90,6 @@ public class ToolIntegration {
                     if (matcher.find()) {
                         String ipString = matcher.group();
                         String ipProlog = "[" + ipString.replace(".", ",") + "]";
-                        System.out.println(ipString + "   " + ipProlog);
                         String fact = String.format("attackSourceIP(%s, %s)", ipProlog, attackname);
                         s[0] = String.format(RULE_TEMPLATE, CASE_OSSEC_LOG_, ossecCount, fact);
                         ossecCount++;
@@ -509,13 +508,13 @@ public class ToolIntegration {
 
 
     // return prolog rules
-    public static List<String> parseSnortLogs(String filename) {
+    public static Map<String, Map<String, Map<String, Integer>>> parseSnortLogs(File file) {
         final String PRIORITY = "[Priority: ";
         List<String> prologPreds = new ArrayList<>();
         // key: srcIP value: (key: destIP value: set(msg, times occurred))
         Map<String, Map<String, Map<String, Integer>>> srcIPMap = new HashMap<>();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
+            BufferedReader br = new BufferedReader(new FileReader(file));
             StringBuilder sb = new StringBuilder();
             br.lines().forEach(x -> sb.append(x));
             String allLines = sb.toString();
@@ -553,10 +552,8 @@ public class ToolIntegration {
             Map<String, Map<String, Map<String, Integer>>> filteredMap = new HashMap<>();
             List<Integer> list = new ArrayList<>();
 
-            System.out.println(srcIPMap.size());
             for (String srcIP : srcIPMap.keySet()) {
                 int size = fullSize(srcIPMap.get(srcIP));
-//                int size = srcIPMap.get(srcIP).size();
                 if (list.size() <= 5) {
                     list.add(size);
                     Collections.sort(list);
@@ -567,32 +564,20 @@ public class ToolIntegration {
                 }
             }
 
-            System.out.println("Num of occurences: " + list);
-
             for (String srcIP : srcIPMap.keySet()) {
                 if (fullSize(srcIPMap.get(srcIP)) > list.get(0)) {
                     filteredMap.put(srcIP, srcIPMap.get(srcIP));
-                    System.out.println("src: " + srcIP + " size: "  + fullSize(srcIPMap.get(srcIP)));
                 }
             }
-
-//            System.out.println(filteredMap);
-            for (String srcIP : filteredMap.keySet()) {
-                System.out.println("srcIP: " + srcIP);
-                for (String destIP : filteredMap.get(srcIP).keySet()) {
-                    System.out.println("\tdestIP: " + destIP);
-                    System.out.println("\t\t" + filteredMap.get(srcIP).get(destIP));
-                }
-                System.out.println("\n");
-            }
-
+            return filteredMap;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return prologPreds;
+        return null;
     }
 
+    // return fullsize of map
     private static int fullSize(Map<String, Map<String, Integer>> m) {
         int acc = 0;
         for (Map<String, Integer> n : m.values()) {
@@ -626,6 +611,8 @@ public class ToolIntegration {
 //        preprocessFiles();
 //        getVirustotalReportAndProcess("74.125.224.72");
 //        System.out.println(ti.parseOSSEC("ossec_alert1.log", "saysomething"));\
-        parseSnortLogs("/Users/linna/Downloads/tg_snort_full/alert.full");
+
+
     }
+
 }

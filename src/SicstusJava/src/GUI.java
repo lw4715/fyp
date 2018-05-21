@@ -1,6 +1,7 @@
 import javafx.util.Pair;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
@@ -31,7 +32,7 @@ class GUI {
     private static final String EXECUTEALLINFO = "Get a list of predicates that can be derived by current evidences: ";
     private static final String EXECUTED_IS_CULPRIT = "\t\tExecuted isCulprit(%s, X)...";
     private static final String ARG_TREE = "ArgTree:";
-    private static final String UPLOAD_SQUID_LOG = "Upload squid log";
+    private static final String UPLOAD_LOG = "Upload Snort log";
     private static final String OPEN_TOOL_INTEGRATION = "Open tool integration";
     private static final String ADD_PREF = "AddPref_";
     private static final String SEPARATOR = "#";
@@ -55,7 +56,7 @@ class GUI {
     private JTextField evidence;
     private JTextField attackName;
     private JTextField possibleCulprits;
-    private JTextField squidLogAttackname;
+    private JTextField logAttackname;
     private JTextArea currentEvidences;
     private JScrollPane scrollPane;
     private JasperCallable jc;
@@ -67,9 +68,8 @@ class GUI {
     private JFrame insertNewRuleFrame;
     private JTextField userNewRule;
     private JPanel userRuleConflicts;
-
-
-
+    private JLabel userRuleConflictStatus;
+    private JLabel logStatus;
 
     private List<Pair<String, String>> strRulePrefs;
     private Result reloadResult;
@@ -335,16 +335,16 @@ class GUI {
     }
 
     private void openToolIntegrationWindow() {
-        squidLogAttackname = new JTextField();
+        logAttackname = new JTextField();
         toolIntegrationStatus = new JLabel();
-        JButton btn = new JButton("Upload SQUID log");
-        btn.setActionCommand(UPLOAD_SQUID_LOG);
+        JButton btn = new JButton(UPLOAD_LOG);
+        btn.setActionCommand(UPLOAD_LOG);
         btn.addActionListener(new ButtonClickListener());
 
         toolIntegrationFrame = new JFrame("Forensic tool integration");
         toolIntegrationFrame.setLayout(new BoxLayout(toolIntegrationFrame.getContentPane(), BoxLayout.Y_AXIS));
         toolIntegrationFrame.add(new JLabel("Attack name associated with log:"));
-        toolIntegrationFrame.add(squidLogAttackname);
+        toolIntegrationFrame.add(logAttackname);
         toolIntegrationFrame.add(toolIntegrationStatus);
         toolIntegrationFrame.add(btn);
         toolIntegrationFrame.setSize(400,200);
@@ -524,7 +524,7 @@ class GUI {
         try {
             for (String strRule : strRules) {
                 if (strRule.length() > 0) {
-                    JTextArea ta = defaultTextArea(strRule);
+                    JTextArea ta = defaultTextArea(strRule, 120);
 
                     JButton btn = new JButton("Details");
                     btn.setActionCommand(DISPLAY_RESULTS + strRule);
@@ -532,11 +532,11 @@ class GUI {
 
                     Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
                     for (String proven : r.getKey()) {
-                        String provenPred = proven.substring(0, proven.lastIndexOf("("));
+                        String provenPred = proven.substring(0, proven.lastIndexOf("(") + 1);
                         highlightWordInTextArea(provenPred, ta, Color.green);
                     }
                     for (String notProven : r.getValue()) {
-                        String notProvenPred = notProven.substring(0, notProven.lastIndexOf("("));
+                        String notProvenPred = notProven.substring(0, notProven.lastIndexOf("(") + 1);
                         highlightWordInTextArea(notProvenPred, ta, Color.pink);
                     }
 
@@ -707,9 +707,11 @@ class GUI {
         p.add(userNewRule);
         p.add(submitRuleBtn);
 
-        userRuleConflicts = new JPanel();
+        userRuleConflictStatus = new JLabel();
 
+        userRuleConflicts = new JPanel();
         insertNewRuleFrame.add(p);
+        insertNewRuleFrame.add(userRuleConflictStatus);
         insertNewRuleFrame.add(userRuleConflicts);
         insertNewRuleFrame.pack();
         insertNewRuleFrame.setVisible(true);
@@ -730,10 +732,8 @@ class GUI {
 
         userRuleConflicts.add(new JLabel(allRules.size() + " conflicts found!"));
         for (String r : allRules) {
-            JTextArea rta = new JTextArea(r);
-            rta.setEditable(false);
-            rta.setColumns(100);
-            rta.setLineWrap(true);
+
+            JTextArea rta = defaultTextArea(r, 100);
 
             String p0rulename = utils.getCurrentUserEvidenceRulename();
             String p1rulename = Utils.getRulenameOfLine(r);
@@ -754,6 +754,7 @@ class GUI {
             userRuleConflicts.add(rta);
             userRuleConflicts.add(btnPanel);
         }
+        insertNewRuleFrame.pack();
     }
 
 
@@ -829,10 +830,10 @@ class GUI {
 //                    f.setSize(1200, 1000);
                     f.setVisible(true);
                     break;
-                case UPLOAD_SQUID_LOG:
-                    if (squidLogAttackname.getText().length() == 0) {
+                case UPLOAD_LOG:
+                    if (logAttackname.getText().length() == 0) {
                         toolIntegrationStatus.setText("\t\tPlease input name of attack associated with squid log");
-                        highlightElement(squidLogAttackname);
+                        highlightElement(logAttackname);
                         return;
                     }
 
@@ -841,10 +842,12 @@ class GUI {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
                         System.out.println("Opening: " + file.getPath());
-                        ToolIntegration.parseSquidLogFile(file, squidLogAttackname.getText());
-                        toolIntegrationFrame.dispose();
-                        status.setText("Processed squid file, updated prolog file: "
-                                + ToolIntegration.SQUID_LOG_RULES_PL + " for attack: " + squidLogAttackname.getText());
+//                        ToolIntegration.parseSquidLogFile(file, logAttackname.getText());
+//                        toolIntegrationFrame.dispose();
+//                        status.setText("Processed squid file, updated prolog file: "
+//                                + ToolIntegration.SQUID_LOG_RULES_PL + " for attack: " + logAttackname.getText());
+                        displaySnortLogs(ToolIntegration.parseSnortLogs(file));
+                        status.setText("Processed Snort alert file " + file + " for attack " + logAttackname.getText());
                     }
                     break;
                 case OPEN_TOOL_INTEGRATION:
@@ -857,6 +860,7 @@ class GUI {
                     break;
                 case USER_INSERT_RULE:
                     utils.addRules(userNewRule.getText());
+                    currentEvidences.setText(utils.getCurrentEvidence());
                     showConflictingRules(userNewRule.getText());
                     break;
                 case USER_INSERT_RULE_START:
@@ -875,18 +879,18 @@ class GUI {
                         try {
                             Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
                             Map<String, List<String>> allRules = QueryExecutor.getPredMap(r.getValue(), false);
-                            JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules));
+                            JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules), 120);
                             for (String head : allRules.keySet()) {
                                 String headWithConst = returnMatchingPredicate(head, r.getValue());
                                 List<String> rules = allRules.get(head);
                                 for (String rule : rules) {
                                     Pair<List<String>, List<String>> pair = QueryExecutor.tryToProve(rule, attackName.getText(), headWithConst);
                                     for (String pair0 : pair.getKey()) {
-                                        pair0 = pair0.substring(0, pair0.lastIndexOf("("));
+                                        pair0 = pair0.substring(0, pair0.lastIndexOf("(") + 1);
                                         highlightWordInTextArea(pair0, possibleRulesTA, Color.green);
                                     }
                                     for (String pair1 : pair.getValue()) {
-                                        pair1 = pair1.substring(0, pair1.lastIndexOf("("));
+                                        pair1 = pair1.substring(0, pair1.lastIndexOf("(") + 1);
                                         highlightWordInTextArea(pair1, possibleRulesTA, Color.pink);
                                     }
                                 }
@@ -897,9 +901,9 @@ class GUI {
                             JFrame frame = new JFrame("Details:");
                             frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
                             frame.add(new JLabel("Proven"));
-                            frame.add(defaultTextArea(String.valueOf(r.getKey())));
+                            frame.add(defaultTextArea(String.valueOf(r.getKey()), 120));
                             frame.add(new JLabel("Not proven"));
-                            frame.add(defaultTextArea(String.valueOf(r.getValue())));
+                            frame.add(defaultTextArea(String.valueOf(r.getValue()), 120));
                             frame.add(new JLabel("Possible rules:"));
                             frame.add(possibleRulesTA);
                             frame.pack();
@@ -917,6 +921,8 @@ class GUI {
                         String other = s[1];
                         String preference = String.format("prefer(%s,%s)", chosen, other);
                         utils.writePrefToFile(preference);
+                        currentEvidences.setText(utils.getCurrentEvidence());
+                        userRuleConflictStatus.setText(userRuleConflictStatus.getText() + preference + " added!\n");
 
                     } else if (command.startsWith("Choose:")) {
                         // create preference rule
@@ -959,9 +965,9 @@ class GUI {
         return "";
     }
 
-    private static JTextArea defaultTextArea(String text) {
+    private static JTextArea defaultTextArea(String text, int cols) {
         JTextArea ta = new JTextArea(text);
-        ta.setColumns(100);
+        ta.setColumns(cols);
 //        ta.setRows(5);
         ta.setEditable(false);
         ta.setLineWrap(true);
@@ -969,14 +975,60 @@ class GUI {
         return ta;
     }
 
+    // helper method for displaySnortLogs, create clickable string in JEditorPane using str as url
+    private static String hyperlink(String str) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<a href='https://" + str + "'>");
+        sb.append(str);
+        sb.append("</a><br>");
+        return sb.toString();
+    }
+
+    void displaySnortLogs(Map<String, Map<String, Map<String, Integer>>> snortOutput) {
+        JEditorPane jep = new JEditorPane();
+        jep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        jep.setFont(new Font("Segoe UI", 0, 14));
+        jep.setContentType("text/html");
+        StringBuilder sb = new StringBuilder();
+
+        for (String srcIP : snortOutput.keySet()) {
+            for (String destIP : snortOutput.get(srcIP).keySet()) {
+                for (String msg : snortOutput.get(srcIP).get(destIP).keySet()) {
+                    sb.append("src IP: " + hyperlink(srcIP));
+                    sb.append("&nbsp;&nbsp;dest IP:" + hyperlink(destIP));
+                    sb.append("&nbsp;&nbsp;&nbsp;&nbsp;Msg: " + msg + "(" + snortOutput.get(srcIP).get(destIP).get(msg) + ")<br><br><hr>");
+                }
+            }
+        }
+
+        jep.setText(sb.toString());
+        jep.setEditable(false);
+        jep.addHyperlinkListener(e -> {
+            if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+                String ipString = e.getURL().getHost().replace(".", ",");
+                String fact = String.format("attackSourceIP([%s], %s)", ipString, logAttackname.getText());
+                utils.addRules(fact);
+                currentEvidences.setText(utils.getCurrentEvidence());
+                logStatus.setText(logStatus.getText() + fact + "added!\n");
+            }
+        });
+
+        JScrollPane sp = new JScrollPane(jep);
+        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        JLabel label = new JLabel("Click on IPs to attackSourceIP(<IP>," + logAttackname.getText() + ") as evidence.");
+        label.setFont(new Font("Segoe UI", 0, 20));
+        logStatus = new JLabel();
+        JFrame f = new JFrame();
+        f.setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
+        f.add(label);
+        f.add(logStatus);
+        f.add(sp);
+        f.pack();
+        f.setVisible(true);
+    }
+
     public static void main(String args[]) {
         GUI awt = new GUI();
-//        JFrame f = new JFrame();
-//        f.add(defaultTextArea("SOMETHING"));
-//        f.add(defaultTextArea("SOMETHING1"));
-//        f.add(defaultTextArea("SOMETHING2"));
-//        f.pack();
-//
-//        f.setVisible(true);
+//        awt.displaySnortLogs(ToolIntegration.parseSnortLogs("/Users/linna/Downloads/tg_snort_full/alert.full"));
     }
 }
