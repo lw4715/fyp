@@ -79,7 +79,7 @@ rule(r_op_context1(political,Att), contextOfAttack(political,Att), [target(T,Att
 
 %% rule(r_op_context(socio_cultural,Att), contextOfAttack(socio_cultural,Att), [target(T,Att), industry(Ind,T), politicalIndustry(Ind)]).
 
-%%%%%%%%%%%%%%%%
+%% END
 
 
 %% Auxilliary rules
