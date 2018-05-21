@@ -36,7 +36,7 @@ public class QueryExecutor {
         timings = new ArrayList<>();
         abduced = new HashSet<>();
         ti = new ToolIntegration();
-        clearLeftoverFiles();
+//        clearLeftoverFiles();
         loadFiles();
         reloadFiles = new ArrayList<>();
         reloadFiles.add(Utils.USER_EVIDENCE_FILENAME);
@@ -415,6 +415,9 @@ public class QueryExecutor {
         Map<String, String> argMap = new HashMap<>();
         String head = Utils.getHeadOfLine(gorgiasRule);
         if (givenHead.length() > 0) {
+            if (givenHead.startsWith("neg(")) {
+                givenHead = givenHead.split("neg\\(")[1];
+            }
             System.out.println("Given: " + givenHead);
             String headConstantsAll = Utils.regexMatch("\\(.*\\)", givenHead).get(0);
             List<String> headConstants = Utils.regexMatch("\\b[(A-Z)|(a-z)]+\\b", headConstantsAll);
