@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 public class SVGApplication {
 
     private static final String fileTextArea = "File saved at: ";
-
+    private static final String RELOAD = "Reload";
 
     static void displayFile(String filename) {
         JFrame f = new JFrame("Derivation");
@@ -61,7 +61,12 @@ public class SVGApplication {
         helpBtn.setActionCommand("Help");
         helpBtn.addActionListener(new ButtonClickListener());
 
+        JButton reloadBtn = new JButton(RELOAD);
+        reloadBtn.setActionCommand(RELOAD);
+        reloadBtn.addActionListener(new ButtonClickListener());
+
         p.add(textArea);
+        p.add(reloadBtn);
         p.add(helpBtn, Panel.RIGHT_ALIGNMENT);
 
         panel.add("Center", svgCanvas);
@@ -71,8 +76,6 @@ public class SVGApplication {
     }
 
     private class ButtonClickListener implements ActionListener {
-        private String previousURI;
-
         @Override
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
@@ -91,8 +94,11 @@ public class SVGApplication {
                     helpBtn.setText("Help");
                     helpBtn.setActionCommand("Help");
                     break;
+                case RELOAD:
+                    displayFile(filename);
+                    break;
                 default:
-                    SVGApplication.displayFile("img/" + command);
+                    displayFile("img/" + command);
             }
         }
     }

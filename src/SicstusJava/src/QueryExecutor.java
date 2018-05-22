@@ -270,7 +270,7 @@ public class QueryExecutor {
 
     private void clearLeftoverFiles() {
         Utils.clearFile(Utils.USER_EVIDENCE_FILENAME);
-        Utils.clearFile(ToolIntegration.SQUID_LOG_RULES_PL);
+//        Utils.clearFile(ToolIntegration.SQUID_LOG_RULES_PL);
         Utils.clearFile(ToolIntegration.AUTOMATED_GEOLOCATION_PL);
         Utils.clearFile(ToolIntegration.TOR_IP_FILE);
         Utils.clearFile(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE);
@@ -281,7 +281,7 @@ public class QueryExecutor {
         allFiles.add("utils.pl");
         allFiles.add("evidence.pl");
         allFiles.add(Utils.USER_EVIDENCE_FILENAME);
-        allFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
+//        allFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
         ti.preprocessFiles(allFiles);
 
         try {
@@ -293,7 +293,7 @@ public class QueryExecutor {
             ti.torIntegration();
             executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.TOR_IP_FILE), 1);
-            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
+//            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.AUTOMATED_GEOLOCATION_PL), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.VIRUS_TOTAL_PROLOG_FILE), 1);
         } catch (Exception e) {

@@ -138,7 +138,9 @@ public class DerivationNode {
                     rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.BLACK, Arrow.CROW));
                 }
             }
-            node = node.link(to(rulenameNode).with(Arrow.CROW, Label.of(Utils.getRuleFromFile(rulename, type))));
+            node = node.link(to(rulenameNode).with(Arrow.CROW
+//                    , Label.of(Utils.getRuleFromFile(rulename, type))
+            ));
 
         } else {
             // argumentation tree

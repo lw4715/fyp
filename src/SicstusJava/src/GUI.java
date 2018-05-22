@@ -46,6 +46,7 @@ class GUI {
     private static final String DISPLAY_RESULTS = "DISPLAY RESULTS";
     private static final String DISPLAY_RULE_SEARCH = "DISPLAY RULE SEARCH";
     private static final String DISPLAY_RULES = "Search for a rule";
+    static final String VIRUSTOTAL_IP_SUBMIT = "Virustotal IP submit";
 
     private final Utils utils;
 
@@ -71,6 +72,7 @@ class GUI {
     private JFrame prefFrame;
     private JFrame toolIntegrationFrame;
     private JLabel toolIntegrationStatus;
+    private JTextField virusTotalIPPred;
     private JFrame insertNewRuleFrame;
     private JTextField userNewRule;
     private JPanel userRuleConflicts;
@@ -96,14 +98,14 @@ class GUI {
     private static final String[] evidencePredicates = {"hijackCorporateClouds(Att)",
             "malwareUsedInAttack(M,Att)", "notForBlackMarketUse(M)", "stolenValidSignedCertificates(Att)",
             "highSecurity(T)", "target(T,Att)", "highVolumeAttack(Att)", "longDurationAttack(Att)",
-            "majorityIpOrigin(X,Att)", "attackPeriod(Att,D1)", "targetServerIP(TargetServerIP,Att)",
+            "majorityIpOrigin(X,Att)", "attackPeriod(Att,D1)", "attackSourceIP(IP,Att)", "targetServerIP(TargetServerIP,Att)",
             "sysLanguage(L,Att)", "languageInCode(L,Att)", "infraUsed(Infra,Att)",
             "infraRegisteredIn(X,Infra)", "ccServer(S,M)", "domainRegisteredDetails(S,_,Addr)",
             "addrInCountry(Addr,X)", "infectionMethod(usb,M)", "commandAndControlEasilyFingerprinted(M)",
             "simlarCodeObfuscation(M1,M2)", "sharedCode(M1,M2)", "malwareModifiedFrom(M1,M2)",
             "fileCharaMalware(C2,M2)", "specificConfigInMalware(M)", "usesZeroDayVulnerabilities(M)",
             "fileChara(Filename,_,_,_,_,_,C2)", "targetCountry(T1,Att)", "target(T,Att)",
-            "hasEconomicMotive(C,T)", "targetCountry(T,Att)", "attackPeriod(Att,Date1)",
+            "hasEconomicMotive(C,T)", "targetCountry(T,Att)",
             "hasPoliticalMotive(C,T,Date2)", "imposedSanctions(T,C,Date)", "news(News,T,Date2)",
             "causeOfConflict(X,T,News)", "claimedResponsibility(X,Att)", "noPriorHistory(X)",
             "geolocatedInGovFacility(P,C)", "publicCommentsRelatedToGov(P,C)", "attackOrigin()",
@@ -113,7 +115,7 @@ class GUI {
             "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)","poorRelation(<C>,<T>)",
             "noPriorHistory(<X>)","infraUsed(<Infra>,<Att>)","hasResources(<X>)","majorityIpOrigin(<X>,<Att>)",
             "stolenValidSignedCertificates(<Att>)","cybersuperpower(<X>)",
-            "attackPeriod(<Att>,<[Year>,<Month]>)","governmentLinked(<P>,<C>)",
+            "attackPeriod(<Att>,[<Year>,<Month>])", "attackSourceIP(<IP>,<Att>)","governmentLinked(<P>,<C>)",
             "domainRegisteredDetails(<Server>,<Name>,<Addr>)","ipResolution(<S>,<IP>,<D>)",
             "infectionMethod(<usb>,<M>)","attackOrigin(<X>,<Att>)","highLevelSkill(<Att>)",
             "usesZeroDayVulnerabilities(<M>)","hasPoliticalMotive(<C>,<T>,<Date2>)",
@@ -172,7 +174,7 @@ class GUI {
 
         JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks",
                 "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack",
-                "autogeoloc_ex", "tor_ex", "squid_ex",
+                "autogeoloc_ex", "tor_ex", "virustotal_ex",
                 "example0", "example1", "example2", "example2b", "example3", "example4"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
@@ -211,21 +213,10 @@ class GUI {
         panel5a.add(dropdown);
         panel5a.add(evidence);
 
-        JButton toolIntegrationBtn = new JButton("Tool integration");
-        toolIntegrationBtn.setActionCommand(OPEN_TOOL_INTEGRATION);
-        toolIntegrationBtn.addActionListener(new ButtonClickListener());
-
-        JButton prefDiagBtn = new JButton("View pref diagram");
-        prefDiagBtn.setActionCommand(VIEW_PREF);
-        prefDiagBtn.addActionListener(new ButtonClickListener());
-
-        JButton userInsertRuleBtn = new JButton("Insert new rule");
-        userInsertRuleBtn.setActionCommand(USER_INSERT_RULE_START);
-        userInsertRuleBtn.addActionListener(new ButtonClickListener());
-
-        JButton ruleSearchBtn = new JButton(DISPLAY_RULES);
-        ruleSearchBtn.setActionCommand(DISPLAY_RULES);
-        ruleSearchBtn.addActionListener(new ButtonClickListener());
+        JButton toolIntegrationBtn = defaultJButton("Tool integration", OPEN_TOOL_INTEGRATION);
+        JButton prefDiagBtn = defaultJButton("View pref diagram", VIEW_PREF);
+        JButton userInsertRuleBtn = defaultJButton("Insert new rule", USER_INSERT_RULE_START);
+        JButton ruleSearchBtn = defaultJButton(DISPLAY_RULES, DISPLAY_RULES);
 
 
         JPanel topPanel = defaultJPanel();
@@ -248,7 +239,7 @@ class GUI {
         mainFrame.add(panel5a);
         mainFrame.add(panel5b);
         mainFrame.add(new JSeparator());
-        mainFrame.add(new JLabel("\t\tInput so far:", JLabel.LEFT));
+        mainFrame.add(new JLabel("\t\t" + Utils.USER_EVIDENCE_FILENAME + ":", JLabel.LEFT));
         mainFrame.add(scrollPane);
 
         mainFrame.add(panel6);
@@ -259,26 +250,12 @@ class GUI {
     }
 
     private void addButtonsToPanel(){
-        JButton submitButton = new JButton(SUBMIT);
-        JButton uploadButton = new JButton(UPLOAD);
-        JButton executeButton = new JButton(EXECUTE + " isCulprit(X,A)");
-        JButton executeAllButton = new JButton(EXECUTEALL);
-        JButton updateButton = new JButton(UPDATE);
-        JButton customQueryExecuteButton = new JButton(CUSTOMEXECUTE);
-
-        submitButton.setActionCommand(SUBMIT);
-        uploadButton.setActionCommand(UPLOAD);
-        executeButton.setActionCommand(EXECUTE);
-        executeAllButton.setActionCommand(EXECUTEALL);
-        updateButton.setActionCommand(UPDATE);
-        customQueryExecuteButton.setActionCommand(CUSTOMEXECUTE);
-
-        submitButton.addActionListener(new ButtonClickListener());
-        uploadButton.addActionListener(new ButtonClickListener());
-        executeButton.addActionListener(new ButtonClickListener());
-        executeAllButton.addActionListener(new ButtonClickListener());
-        updateButton.addActionListener(new ButtonClickListener());
-        customQueryExecuteButton.addActionListener(new ButtonClickListener());
+        JButton submitButton = defaultJButton(SUBMIT, SUBMIT);
+        JButton uploadButton = defaultJButton(UPLOAD, UPLOAD);
+        JButton executeButton = defaultJButton(EXECUTE + " isCulprit(X,A)", EXECUTE);
+        JButton executeAllButton = defaultJButton(EXECUTEALL, EXECUTEALL);
+        JButton updateButton = defaultJButton(UPDATE, UPDATE);
+        JButton customQueryExecuteButton = defaultJButton(CUSTOMEXECUTE, CUSTOMEXECUTE);
 
         possibleCulprits = new JTextField();
         possibleCulprits.setColumns(20);
@@ -317,12 +294,10 @@ class GUI {
         for (String notSelectedDer : posDers) {
             List<String> conflictingRules = QueryExecutor.getConflictingRule(notSelectedDer, selectedDer);
 
-            JButton choosePos = new JButton("Prefer " + conflictingRules.get(0));
-            JButton chooseNeg = new JButton("Prefer " + conflictingRules.get(1));
-            choosePos.setActionCommand("Choose:" + type + ":" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
-            chooseNeg.setActionCommand("Choose:" + type + ":" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
-            choosePos.addActionListener(new ButtonClickListener());
-            chooseNeg.addActionListener(new ButtonClickListener());
+            JButton choosePos = defaultJButton("Prefer " + conflictingRules.get(0),
+                    "Choose:" + type + ":" + conflictingRules.get(0) + ">" + conflictingRules.get(1));
+            JButton chooseNeg = defaultJButton("Prefer " + conflictingRules.get(1),
+                    "Choose:" + type + ":" + conflictingRules.get(1) + ">" + conflictingRules.get(0));
 
             JTextArea notSelectedDTF = defaultTextArea(notSelectedDer, 50);
             String otherFinalStrRule = Result.getFinalRule(notSelectedDer);
@@ -345,20 +320,26 @@ class GUI {
 
     private void openToolIntegrationWindow() {
         logAttackname = new JTextField();
+        virusTotalIPPred = new JTextField("ip([IP], [YYYY,MM])");
         toolIntegrationStatus = new JLabel();
-        JButton btn = new JButton(UPLOAD_LOG);
-        btn.setActionCommand(UPLOAD_LOG);
-        btn.addActionListener(new ButtonClickListener());
+
+        JButton virusTotalBtn = defaultJButton("Submit", VIRUSTOTAL_IP_SUBMIT);
+        JButton btn = defaultJButton(UPLOAD_LOG, UPLOAD_LOG);
 
         toolIntegrationFrame = new JFrame("Forensic tool integration");
-//        toolIntegrationFrame.setLayout(new BoxLayout(toolIntegrationFrame.getContentPane(), BoxLayout.Y_AXIS));
+        toolIntegrationFrame.add(new JLabel("Virustotal domain resolution"));
+        toolIntegrationFrame.add(new JLabel("ip([IP], [YYYY,MM]) e.g. ip([8,8,8,8],[2018,5]) to get resolution for 8.8.8.8 in 2018 May"));
+        toolIntegrationFrame.add(virusTotalIPPred);
+        toolIntegrationFrame.add(virusTotalBtn);
+        toolIntegrationFrame.add(new JSeparator());
+
+        toolIntegrationFrame.add(new JLabel("Snort file upload"));
         toolIntegrationFrame.add(new JLabel("Attack name associated with log:"));
         toolIntegrationFrame.add(logAttackname);
         toolIntegrationFrame.add(toolIntegrationStatus);
         toolIntegrationFrame.add(btn);
-//        toolIntegrationFrame.setVisible(true);
         defaultJFrameActions(toolIntegrationFrame);
-        toolIntegrationFrame.setSize(400,200);
+//        toolIntegrationFrame.setSize(400,200);
     }
 
     private void executeQueryAllWithCulprits(List<String> culpritsToConsider) {
@@ -460,15 +441,11 @@ class GUI {
             String r = rs.get(i).getKey();
             JTextArea textArea = defaultTextArea(r, 50);
             highlightWordInTextArea("X = [(A-Z)|(a-z)|_]*\\b", textArea, Color.YELLOW, true); // highlight culprit
-            JButton viewDiagBtn = new JButton("View Diagram");
             String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
-            viewDiagBtn.setActionCommand(filename);
-            viewDiagBtn.addActionListener(new ButtonClickListener());
 
-            JButton viewTreeBtn = new JButton("View Argumentation Tree");
-            viewTreeBtn.setActionCommand(ARG_TREE + "arg_tree_" + i + ".svg:" +  executeResult.getTree(i));
-            viewTreeBtn.addActionListener(new ButtonClickListener());
-
+            JButton viewDiagBtn = defaultJButton("View Diagram", filename);
+            JButton viewTreeBtn = defaultJButton("View Argumentation Tree",
+                    ARG_TREE + "arg_tree_" + i + ".svg:" +  executeResult.getTree(i));
 
             JPanel btnPanel = defaultJPanel();
 
@@ -476,10 +453,9 @@ class GUI {
             btnPanel.add(viewTreeBtn);
 
             if (rs.size() > 1) {
-                JButton addPrefBtn = new JButton("Add rule preference");
-                addPrefBtn.setActionCommand(PREF_TYPE + 1 + ADD_PREF + rs.get(i).getValue().getKey() + "*"
+                JButton addPrefBtn = defaultJButton("Add rule preference",
+                        PREF_TYPE + 1 + ADD_PREF + rs.get(i).getValue().getKey() + "*"
                         + executeResult.getDerivationsWithDiffStrRule(SEPARATOR, i));
-                addPrefBtn.addActionListener(new ButtonClickListener());
                 btnPanel.add(addPrefBtn);
             }
 
@@ -497,9 +473,8 @@ class GUI {
             for (String nd : executeResult.negDerivationFor(culprit)) {
                 p.add(new JLabel(String.format("neg(isCulprit(%s,%s))", culprit, attackName.getText())));
                 p.add(defaultTextArea(nd, -1));
-                JButton addPrefBtn = new JButton("Add rule preference");
-                addPrefBtn.setActionCommand(PREF_TYPE + 0 + ADD_PREF + nd + "*" + executeResult.getDerivationsForCulprit(culprit, SEPARATOR));
-                addPrefBtn.addActionListener(new ButtonClickListener());
+                JButton addPrefBtn = defaultJButton("Add rule preference",
+                        PREF_TYPE + 0 + ADD_PREF + nd + "*" + executeResult.getDerivationsForCulprit(culprit, SEPARATOR));
                 p.add(addPrefBtn);
             }
         }
@@ -523,9 +498,7 @@ class GUI {
                 if (strRule.length() > 0) {
                     JTextArea ta = defaultTextArea(strRule, 120);
 
-                    JButton btn = new JButton("Details");
-                    btn.setActionCommand(DISPLAY_RESULTS + strRule);
-                    btn.addActionListener(new ButtonClickListener());
+                    JButton btn = defaultJButton("Details", DISPLAY_RESULTS + strRule);
 
                     Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
                     for (String proven : r.getKey()) {
@@ -646,9 +619,7 @@ class GUI {
         JPanel p = defaultJPanel();
         userNewRule = new JTextField();
         userNewRule.setColumns(40);
-        JButton submitRuleBtn = new JButton("Done");
-        submitRuleBtn.setActionCommand(USER_INSERT_RULE);
-        submitRuleBtn.addActionListener(new ButtonClickListener());
+        JButton submitRuleBtn = defaultJButton("Done", USER_INSERT_RULE);
 
         p.add(new JLabel("New rule (in prolog style):"));
         p.add(userNewRule);
@@ -685,13 +656,8 @@ class GUI {
 
             JPanel btnPanel = defaultJPanel();
 
-            JButton p0Btn = new JButton("Prefer new rule");
-            p0Btn.setActionCommand(USER_INSERT_RULE + p0rulename + SEPARATOR + p1rulename);
-            p0Btn.addActionListener(new ButtonClickListener());
-
-            JButton p1Btn = new JButton("Prefer " + p1rulename);
-            p1Btn.setActionCommand(USER_INSERT_RULE + p1rulename + SEPARATOR + p0rulename);
-            p1Btn.addActionListener(new ButtonClickListener());
+            JButton p0Btn = defaultJButton("Prefer new rule", USER_INSERT_RULE + p0rulename + SEPARATOR + p1rulename);
+            JButton p1Btn = defaultJButton("Prefer " + p1rulename, USER_INSERT_RULE + p1rulename + SEPARATOR + p0rulename);
 
             btnPanel.add(p0Btn);
             btnPanel.add(p1Btn);
@@ -789,6 +755,7 @@ class GUI {
                 case VIEW_PREF:
                     PrefDiagramNode.createPreferenceDiagram();
                     SVGApplication.displayFile("img/pref_diagram.svg");
+                    displayRules();
                     break;
                 case USER_INSERT_RULE:
                     utils.addRules(userNewRule.getText());
@@ -803,9 +770,15 @@ class GUI {
                     break;
                 case DISPLAY_RULE_SEARCH:
                     String rulename = displayRulesTextField.getText();
-                    displayRulesFrame.add(new JLabel(Utils.getRuleFromRulename(rulename)));
-                    displayRulesFrame.add(new JLabel());
+                    List<String> rulesFromRulename = Utils.getRulesFromRulename(rulename);
+                    for (String rule : rulesFromRulename) {
+                        displayRulesFrame.add(new JLabel(rule));
+                    }
                     displayRulesFrame.pack();
+                    break;
+                case VIRUSTOTAL_IP_SUBMIT:
+                    utils.addRules(virusTotalIPPred.getText());
+                    currentEvidences.setText(utils.getCurrentEvidence());
                     break;
                 default:
                     System.out.println("Command:" + command);
@@ -861,7 +834,7 @@ class GUI {
                         utils.writePrefToFile(preference);
                         currentEvidences.setText(utils.getCurrentEvidence());
                         userRuleConflictStatus.setText(userRuleConflictStatus.getText() + preference + " added!\n");
-                        insertNewRuleFrame.pack(); //FIXME
+                        insertNewRuleFrame.pack();
 
                     } else if (command.startsWith("Choose:")) {
                         // create preference rule
@@ -887,9 +860,11 @@ class GUI {
                         String[] s = command.split(":");
                         DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
                         SVGApplication.displayFile("img/" + s[1]);
+                        displayRules();
                     } else {
                         // display svg
                         SVGApplication.displayFile("img/" + command);
+                        displayRules();
                     }
             }
         }
@@ -899,9 +874,7 @@ class GUI {
     private void displayRules() {
         displayRulesTextField = new JTextField();
         displayRulesTextField.setColumns(50);
-        JButton btn = new JButton("Search");
-        btn.setActionCommand(DISPLAY_RULE_SEARCH);
-        btn.addActionListener(new ButtonClickListener());
+        JButton btn = defaultJButton("Search", DISPLAY_RULE_SEARCH);
 
         displayRulesFrame = new JFrame("Search rules");
         displayRulesFrame.add(new JLabel("Input rulename to view entire rule"));
@@ -942,6 +915,13 @@ class GUI {
         JPanel p = new JPanel();
         p.setLayout(new FlowLayout());
         return p;
+    }
+
+    private JButton defaultJButton(String btnText, String command) {
+        JButton btn = new JButton(btnText);
+        btn.setActionCommand(command);
+        btn.addActionListener(new ButtonClickListener());
+        return btn;
     }
 
     // helper method for displaySnortLogs, create clickable string in JEditorPane using str as url

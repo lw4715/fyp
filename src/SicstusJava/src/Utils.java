@@ -17,7 +17,7 @@ public class Utils {
     static final String STR = FILEPATH + "str_rules.pl";
     static final String EVIDENCE_FILENAME = FILEPATH + "evidence.pl";
 
-    // counter is index of latest rule
+    //counter is index of latest rule
     private int counter;
     private int prefCount;
     private String allStrRules;
@@ -291,7 +291,8 @@ public class Utils {
     }
 
     // return entire line of gorgias rule corresponding to rulename
-    static String getRuleFromRulename(String rulename) {
+    static List<String> getRulesFromRulename(String rulename) {
+        List<String> l = new ArrayList<>();
         String f = GetFilenameForRule(rulename);
         rulename = rulename.split("\\(")[0];
         try {
@@ -299,18 +300,21 @@ public class Utils {
             String line = br.readLine();
             while (line != null) {
                 if (line.contains(rulename)) {
-                    return line;
+                    l.add(line.split("%")[0]);
                 }
                 line = br.readLine();
             }
-            return "Rule " + rulename + " not found!";
+            if (l.isEmpty()) {
+              l.add("Rule " + rulename + " not found!");
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return "File " + f + " not found";
+            l.add("File " + f + " not found");
         } catch (IOException e) {
             e.printStackTrace();
-            return "Error!";
+            l.add("Error!");
         }
+        return l;
     }
 
     // returns body of rule corresponding to rulename
@@ -364,8 +368,10 @@ public class Utils {
             return OP;
         } else if (r.startsWith("r_str_") || isPreference(r)) {
             return STR;
-        } else if (r.startsWith(ToolIntegration.CASE_SQUID_LOG)) {
-            return ToolIntegration.SQUID_LOG_RULES_PL;
+//        } else if (r.startsWith(ToolIntegration.CASE_SQUID_LOG)) {
+//            return ToolIntegration.SQUID_LOG_RULES_PL;
+        } else if (r.startsWith(ToolIntegration.RULE_CASE_VIRUSTOTAL_RES)) {
+            return ToolIntegration.VIRUS_TOTAL_PROLOG_FILE;
         } else if (r.startsWith(ToolIntegration.CASE_TOR_CHECK)) {
             return ToolIntegration.TOR_IP_FILE;
         } else if (r.startsWith(ToolIntegration.CASE_AUTOGEN_GEOLOCATION)) {
@@ -417,8 +423,10 @@ public class Utils {
     }
 
     static String getHeadOfLine(String line) {
-        line = line.replace(" ", "").replace("\t", "");
-        return line.substring(line.indexOf("),") + 2, line.indexOf(",["));
+        List<String> s = regexMatch("[(A-Z)|(a-z)|(0-9)|_]*\\([^\\)]*\\)", line.split("rule\\(")[1]);
+        return s.get(1);
+//        line = line.replace(" ", "").replace("\t", "");
+//        return line.substring(line.indexOf("),") + 2, line.indexOf(",["));
     }
 
     static String getBodyOfLine(String line) {

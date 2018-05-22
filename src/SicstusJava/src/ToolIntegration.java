@@ -20,7 +20,7 @@ public class ToolIntegration {
     static final String virusTotalLogFileTemplate = "virustotal/virustotal_report_";
 
 
-    static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
+    private static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
     static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
 
     static final String CASE_OSSEC_LOG_ = "case_ossec_log_malware_";
@@ -34,6 +34,8 @@ public class ToolIntegration {
     static final String RULE_CASE_TOR_CHECK1 = "rule(" + CASE_TOR_CHECK + "1_%d(), ip(%s), []).\n";
     static final String CASE_AUTOGEN_GEOLOCATION = "case_autogen_geolocation_";
     static final String RULE_CASE_AUTOGEN_GEOLOCATION = "rule(" + CASE_AUTOGEN_GEOLOCATION + "%d(), ipGeoloc(%s,%s), []).\n";
+    static final String RULE_CASE_VIRUSTOTAL_RES = "case_virustotal_res";
+    static final String RULE_CASE_VIRUSTOTAL_RES_TEMPLATE = "rule(" + RULE_CASE_VIRUSTOTAL_RES + "%d(), %s, []).";
 
     private List<String> virustotalFinishedScanningIP;
     private final String IPADDRESS_PATTERN =
@@ -154,7 +156,7 @@ public class ToolIntegration {
         Set<String[]> ips = getTargetServerIP(Utils.EVIDENCE_FILENAME);
         ips.addAll(getTargetServerIP(Utils.USER_EVIDENCE_FILENAME));
 
-        System.out.println(ips.size() + " server IPs found!");
+        System.out.println("Tor: " + ips.toArray());
 
         for (String[] ip : ips) {
             String ipPredString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
@@ -303,21 +305,20 @@ public class ToolIntegration {
                 String hostname = r.getValue();
                 Pair<Integer, Integer> datePair = r.getKey();
                 String resolvedDate = String.format("[%d,%d]", datePair.getKey(), datePair.getValue());
+                System.out.println("Hostname: " + hostname + " : " + resolvedDate);
 
                 int currYear = datePair.getKey();
                 int currMonth = datePair.getValue();
 
-                if (dateExceeded(year, month, currYear, currMonth)) {
+                if (dateExceeded(year, month, prevYear, prevMonth) && !dateExceeded(year, month, currYear, currMonth)) {
+                    String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, resolvedDate);
+                    w.write(String.format(RULE_CASE_VIRUSTOTAL_RES_TEMPLATE + "\n", virustotalCount, fact));
+                    virustotalCount++;
                     break;
                 }
+                prevYear = currYear;
+                prevMonth = currMonth;
 
-                if (!dateNotReached(year, month, prevYear, prevMonth)) {
-                    String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, resolvedDate);
-                    w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", virustotalCount, fact));
-                    virustotalCount++;
-                    prevYear = currYear;
-                    prevMonth = currMonth;
-                }
             }
             w.close();
         } catch (FileNotFoundException e) {
@@ -329,7 +330,7 @@ public class ToolIntegration {
 
     // returns true if year/month is before prevYear/prevMonth
     private boolean dateNotReached(int year, int month, int prevYear, int prevMonth) {
-        return (year < prevYear) || (year == prevYear && month < prevMonth);
+        return (year < prevYear) || (year == prevYear && month <= prevMonth);
     }
 
     // returns true is year/month is after currYear/currMonth
@@ -366,7 +367,7 @@ public class ToolIntegration {
                 if (done) {
                     String fact = String.format("ipResolution(%s,%s,%s)",
                             server, ipStrings, date);
-                    w.write(String.format("rule(case_virustotal_res%d(), %s, []).\n", count, fact));
+                    w.write(String.format(RULE_CASE_VIRUSTOTAL_RES_TEMPLATE + "\n", count, fact));
                     count++;
                 }
                 line = br.readLine();
@@ -402,7 +403,7 @@ public class ToolIntegration {
 
     // automated geolocation of ip addresses, resolution
     void preprocessFiles(List<String> allFiles) {
-//        Set<String> ips = new HashSet<>();
+        System.out.println("Tool integration...");
         Set<Pair<String, String>> ipDates = new HashSet<>();
         for (String f : allFiles) {
             try {
@@ -426,7 +427,6 @@ public class ToolIntegration {
 
         try {
             FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL, true);
-
             for (Pair<String, String> ipDate : ipDates) {
                 String ip = ipDate.getKey();
                 String ipString = convertPrologIPToString(ip);
@@ -437,6 +437,7 @@ public class ToolIntegration {
 
                 String date = ipDate.getValue();
                 if (!ip.equals(date)) {
+                    System.out.println(ip + " " + date);
                     String[] s = date.substring(1, date.length() - 1).split(",");
                     int year = Integer.parseInt(s[0]);
                     int month = Integer.parseInt(s[1]);
@@ -590,7 +591,14 @@ public class ToolIntegration {
         return null;
     }
 
-    public static void main(String[] args) {
-    }
-
+//    public static void main(String[] args) {
+//        String s = "rule(case_user_f1(), ip([8,8,8,10], [2018,5]), []).";
+//        if (s.split("%")[0].contains("ip([")) {
+//            String head = Utils.getHeadOfLine(s);
+//            System.out.println(head);
+//            String ip = head.substring(head.indexOf('['), head.indexOf(']') + 1);
+//            String date = head.substring(head.lastIndexOf('['), head.lastIndexOf(']') + 1);
+//            System.out.println(new Pair<>(ip, date));
+//        }
+//    }
 }
