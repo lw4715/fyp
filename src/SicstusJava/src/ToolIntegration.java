@@ -156,7 +156,7 @@ public class ToolIntegration {
         Set<String[]> ips = getTargetServerIP(Utils.EVIDENCE_FILENAME);
         ips.addAll(getTargetServerIP(Utils.USER_EVIDENCE_FILENAME));
 
-        System.out.println("Tor: " + ips.toArray());
+        System.out.println("Tor: " + ips.size());
 
         for (String[] ip : ips) {
             String ipPredString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
@@ -305,7 +305,6 @@ public class ToolIntegration {
                 String hostname = r.getValue();
                 Pair<Integer, Integer> datePair = r.getKey();
                 String resolvedDate = String.format("[%d,%d]", datePair.getKey(), datePair.getValue());
-                System.out.println("Hostname: " + hostname + " : " + resolvedDate);
 
                 int currYear = datePair.getKey();
                 int currMonth = datePair.getValue();

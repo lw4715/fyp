@@ -15,6 +15,7 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
+    static final String ALPHANUMERIC = "[(A-Z)|(a-z)|(0-9)|_]";
     List<Double> timings;
     private boolean verbose = false;
     private ToolIntegration ti;
@@ -365,10 +366,10 @@ public class QueryExecutor {
             }
             System.out.println("Given: " + givenHead);
             String headConstantsAll = Utils.regexMatch("\\(.*\\)", givenHead).get(0);
-            List<String> headConstants = Utils.regexMatch("\\b[(A-Z)|(a-z)]+\\b", headConstantsAll);
+            List<String> headConstants = Utils.regexMatch("\\b" + ALPHANUMERIC + "+\\b", headConstantsAll);
 
             String headVarAll = Utils.regexMatch("\\(.*\\)", head).get(0);
-            List<String> headVar = Utils.regexMatch("\\b[A-Z][(a-z)|(A-Z)]*\\b", headVarAll);
+            List<String> headVar = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", headVarAll);
 
             for (int i = 0; i < headConstants.size(); i++) {
                 String var = headVar.get(i);
@@ -387,33 +388,40 @@ public class QueryExecutor {
         String[] bs = body.split("\\)");
         for (String b : bs) {
             if (b.length() > 0) {
-                if (b.charAt(0) == ',') {
-                    b = b.substring(1).trim();
-                }
+                b = Utils.removeLeadingNonAlpha(b);
+
                 // add missing ")" to match "("
                 int openCount = (int) b.chars().filter(c -> c == '(').count();
                 b = b + String.join("", Collections.nCopies(openCount, ")"));
 
                 // replace attack var
                 String allVars = Utils.regexMatch("\\(.*\\)", b).get(0);
-                List<String> vars = Utils.regexMatch("\\b[A-Z][(A-Z)|(a-z)]*\\b", allVars);
+                List<String> vars = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVars);
                 String formattedB = b.replaceAll("\\bAtt\\b", attackName).replaceAll("\\bA1\\b", attackName).replaceAll("\\bA\\b", attackName);
+//                System.out.println("argmap" + argMap);
                 for (String var : vars) {
                     if (argMap.containsKey(var)) {
+//                        System.out.println("Replacing " + var + " with " + argMap.get(var));
                         formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
                     }
                 }
+//                System.out.println("formatedb: " + formattedB);
 
                 String q = String.format("prove([%s], D)", formattedB);
                 Map<String, Term>[] m = getInstance().executeQueryString(q, 5);
 
                 String allVarsAfter = Utils.regexMatch("\\(.*\\)", formattedB).get(0);
-                List<String> varsAfter = Utils.regexMatch("\\b[A-Z][(A-Z)|(a-z)]*\\b", allVarsAfter);
+                List<String> varsAfter = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVarsAfter);
                 if (m.length > 0) {
                     for (String var : varsAfter) {
                         var = var.trim();
                         String constant = m[0].get(var).name();
-                        argMap.put(var, constant);
+                        if (!constant.equals("[|]")) {
+//                            System.out.println("Adding " + constant + " to " + var);
+                            argMap.put(var, constant);
+                        } else {
+                            System.out.println(constant);
+                        }
                         formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
                     }
                     proved.add(formattedB);

@@ -46,7 +46,9 @@ class GUI {
     private static final String DISPLAY_RESULTS = "DISPLAY RESULTS";
     private static final String DISPLAY_RULE_SEARCH = "DISPLAY RULE SEARCH";
     private static final String DISPLAY_RULES = "Search for a rule";
-    static final String VIRUSTOTAL_IP_SUBMIT = "Virustotal IP submit";
+    private static final String VIRUSTOTAL_IP_SUBMIT = "Virustotal IP submit";
+    private static final String ADD_EVIDENCE_POPUP = "ADD EVIDENCE POPUP";
+    static final String POPUP_ADD_EVIDENCE = "POPUP ADD EVIDENCE";
 
     private final Utils utils;
 
@@ -80,6 +82,8 @@ class GUI {
     private JTextArea logStatus;
     private JFrame displayRulesFrame;
     private JTextField displayRulesTextField;
+    private JTextField evidencePopupField;
+    private JLabel evidencePopupStatus;
 
 
     private List<Pair<String, String>> strRulePrefs;
@@ -150,8 +154,6 @@ class GUI {
     private void prepareGUI() {
         mainFrame = new JFrame("Argumentation-Based Reasoner (ABR)");
 
-//        mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.Y_AXIS));
-
         status = new JLabel("", JLabel.LEFT);
 
         strRulePrefs = new ArrayList();
@@ -174,7 +176,7 @@ class GUI {
 
         JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks",
                 "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack",
-                "autogeoloc_ex", "tor_ex", "virustotal_ex",
+                "autogeoloc_ex", "tor_ex", "virustotal_ex", "snort_ex",
                 "example0", "example1", "example2", "example2b", "example3", "example4"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
@@ -230,8 +232,8 @@ class GUI {
         mainFrame.add(new JLabel("\t\tName of attack (No spaces or '.'):", JLabel.LEFT));
         mainFrame.add(panel2);
         mainFrame.add(panel3);
-        mainFrame.add(panel3b);
         mainFrame.add(new JSeparator());
+        mainFrame.add(panel3b);
         mainFrame.add(panel4);
         mainFrame.add(new JSeparator());
 
@@ -244,8 +246,8 @@ class GUI {
 
         mainFrame.add(panel6);
         mainFrame.add(status);
-
         defaultJFrameActions(mainFrame);
+        mainFrame.setSize(1200, 700);
         System.out.println("Ready!");
     }
 
@@ -260,14 +262,14 @@ class GUI {
         possibleCulprits = new JTextField();
         possibleCulprits.setColumns(20);
 
-        panel5b.add(submitButton);
-        panel5b.add(uploadButton);
         panel2.add(executeButton);
         panel3.add(new JLabel(EXECUTEALLINFO, JLabel.RIGHT));
         panel3.add(executeAllButton);
         panel3b.add(new JLabel("Possible culprits (separate by commas):"));
         panel3b.add(possibleCulprits);
         panel4.add(customQueryExecuteButton);
+        panel5b.add(submitButton);
+        panel5b.add(uploadButton);
         panel6.add(updateButton);
         mainFrame.setVisible(true);
     }
@@ -315,7 +317,6 @@ class GUI {
         prefFrame = new JFrame("Set new pref");
         prefFrame.add(prefSP);
         defaultJFrameActions(prefFrame);
-//        prefFrame.setSize(1200, 400);
     }
 
     private void openToolIntegrationWindow() {
@@ -488,17 +489,14 @@ class GUI {
     private void displayResultsAndNonResults() {
         String allStrRules = utils.getAllStrRules();
         String[] strRules = allStrRules.split("\n");
-        JFrame altDispFrame = new JFrame("Possible evidences");
+        JFrame executeAllFrame = new JFrame("Possible evidences");
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-//        altDispFrame.setLayout(new BoxLayout(altDispFrame.getContentPane(), BoxLayout.Y_AXIS));
 
         try {
             for (String strRule : strRules) {
                 if (strRule.length() > 0) {
-                    JTextArea ta = defaultTextArea(strRule, 120);
-
-                    JButton btn = defaultJButton("Details", DISPLAY_RESULTS + strRule);
+                    JTextArea ta = defaultTextArea(strRule, 90);
 
                     Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
                     for (String proven : r.getKey()) {
@@ -510,17 +508,19 @@ class GUI {
                         highlightWordInTextArea(notProvenPred, ta, Color.pink, false);
                     }
 
+                    JButton detailsBtn = defaultJButton("Details", DISPLAY_RESULTS + strRule);
                     JPanel p = defaultJPanel();
                     p.add(ta);
-                    p.add(btn);
-//                    altDispFrame.add(p);
+                    p.add(detailsBtn);
                     container.add(p);
                 }
             }
             JScrollPane sp = new JScrollPane(container);
             sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            altDispFrame.add(sp);
-            defaultJFrameActions(altDispFrame);
+            JButton addEvidenceBtn = defaultJButton("Add evidence", ADD_EVIDENCE_POPUP);
+            executeAllFrame.add(addEvidenceBtn);
+            executeAllFrame.add(sp);
+            defaultJFrameActions(executeAllFrame);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -780,6 +780,21 @@ class GUI {
                     utils.addRules(virusTotalIPPred.getText());
                     currentEvidences.setText(utils.getCurrentEvidence());
                     break;
+                case ADD_EVIDENCE_POPUP:
+                    evidencePopupField = new JTextField();
+                    evidencePopupField.setColumns(50);
+                    evidencePopupStatus = new JLabel();
+                    JFrame evidencePopup = new JFrame("Add evidence");
+                    evidencePopup.add(evidencePopupField);
+                    evidencePopup.add(defaultJButton("Add", POPUP_ADD_EVIDENCE));
+                    evidencePopup.add(evidencePopupStatus);
+                    defaultJFrameActions(evidencePopup);
+                    break;
+                case POPUP_ADD_EVIDENCE:
+                    utils.addRules(evidencePopupField.getText());
+                    currentEvidences.setText(utils.getCurrentEvidence());
+                    evidencePopupStatus.setText(evidencePopupField.getText() + " added");
+                    break;
                 default:
                     System.out.println("Command:" + command);
 
@@ -810,8 +825,8 @@ class GUI {
                                 }
                             }
 
-                            JFrame frame = new JFrame("Details:");
-//                            frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+                            JFrame frame = new JFrame("Details");
+                            frame.add(defaultJButton("Add evidence", ADD_EVIDENCE_POPUP));
                             frame.add(new JLabel("Proven"));
                             frame.add(defaultTextArea(String.valueOf(r.getKey()), 120));
                             frame.add(new JLabel("Not proven"));
@@ -873,7 +888,7 @@ class GUI {
     // separate frame to search (by rulename) and display rules
     private void displayRules() {
         displayRulesTextField = new JTextField();
-        displayRulesTextField.setColumns(50);
+        displayRulesTextField.setColumns(35);
         JButton btn = defaultJButton("Search", DISPLAY_RULE_SEARCH);
 
         displayRulesFrame = new JFrame("Search rules");
@@ -958,10 +973,10 @@ class GUI {
                 String ipString = e.getURL().getHost().replace(".", ",");
                 String fact = String.format("attackSourceIP([%s], %s)", ipString, logAttackname.getText());
                 utils.addRules(fact);
-                fact = String.format("ip([%s])", ipString);
-                utils.addRules(fact);
+                String fact1 = String.format("ip([%s])", ipString);
+                utils.addRules(fact1);
                 currentEvidences.setText(utils.getCurrentEvidence());
-                logStatus.setText(logStatus.getText() + fact + " added!\n");
+                logStatus.setText(logStatus.getText() + fact + " added!\n" + fact1 + " added!\n");
             }
         });
 

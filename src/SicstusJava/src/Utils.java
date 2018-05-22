@@ -40,14 +40,7 @@ public class Utils {
     }
 
     static String removeLeadingNonAlpha(String s) {
-        String regex = "[(A-Z)|(a-z)]*.*";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(s);
-        if (matcher.matches()) {
-            return matcher.group();
-        }
-        System.err.println("No alphabets in " + s);
-        return "";
+        return s.replaceFirst("^,", "").trim();
     }
 
     static double mean(List<Double> timings) {
@@ -294,12 +287,16 @@ public class Utils {
     static List<String> getRulesFromRulename(String rulename) {
         List<String> l = new ArrayList<>();
         String f = GetFilenameForRule(rulename);
+        if (f.length() == 0) {
+            l.add("Invalid rulename " + rulename);
+            return l;
+        }
         rulename = rulename.split("\\(")[0];
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = br.readLine();
             while (line != null) {
-                if (line.contains(rulename)) {
+                if (getRulenameOfLine(line).contains(rulename)) {
                     l.add(line.split("%")[0]);
                 }
                 line = br.readLine();
@@ -312,7 +309,6 @@ public class Utils {
             l.add("File " + f + " not found");
         } catch (IOException e) {
             e.printStackTrace();
-            l.add("Error!");
         }
         return l;
     }
@@ -329,17 +325,18 @@ public class Utils {
                     if (isPreference(r)) {
                         String[] s = getHead(r, new ArrayList<>()).replaceFirst("prefer\\(","").split("\\),");
                         for (String s1 : s) {
-                            if (s1.charAt(0) == ',') {
-                                s1 = s1.substring(1, s1.length());
-                            }
-                            s1 = s1.trim();
+//                            if (s1.charAt(0) == ',') {
+//                                s1 = s1.substring(1, s1.length());
+//                            }
+//                            s1 = s1.trim();
+                            s1 = removeLeadingNonAlpha(s1).trim();
                             if (!s1.isEmpty()) {
                                 l.add(s1.split("\\(")[0]);
                             }
                         }
 
                     } else {
-                        for (String b : line.split("\\[")[1].split("\\]")[0].split("\\)")) {
+                        for (String b : getBodiesOfLine(line)) {
                             b = b.split("\\(")[0].replaceFirst(",", "").trim();
                             if (b.length() > 0) {
                                 l.add(b);
@@ -368,8 +365,6 @@ public class Utils {
             return OP;
         } else if (r.startsWith("r_str_") || isPreference(r)) {
             return STR;
-//        } else if (r.startsWith(ToolIntegration.CASE_SQUID_LOG)) {
-//            return ToolIntegration.SQUID_LOG_RULES_PL;
         } else if (r.startsWith(ToolIntegration.RULE_CASE_VIRUSTOTAL_RES)) {
             return ToolIntegration.VIRUS_TOTAL_PROLOG_FILE;
         } else if (r.startsWith(ToolIntegration.CASE_TOR_CHECK)) {
@@ -383,7 +378,7 @@ public class Utils {
         } else if (r.startsWith("bg")) {
             return BACKGROUNDGORGIAS_PL;
         } else {
-            System.err.println(r + " which file?");
+            System.err.println("Where to find " + r);
             return "";
         }
     }
@@ -419,24 +414,37 @@ public class Utils {
     }
 
     private static String[] getBodiesOfLine(String line) {
-        return line.substring(line.indexOf('['), line.lastIndexOf(']')).split("\\)");
+        return getBodyOfLine(line).split("\\)");
     }
 
     static String getHeadOfLine(String line) {
-        List<String> s = regexMatch("[(A-Z)|(a-z)|(0-9)|_]*\\([^\\)]*\\)", line.split("rule\\(")[1]);
-        return s.get(1);
+        line = line.split("%")[0];
+        if (line.contains("rule(")) {
+            List<String> s = regexMatch(QueryExecutor.ALPHANUMERIC + "*\\([^\\)]*\\)", line.split("rule\\(")[1]);
+            return s.get(1);
+        }
+        return "";
 //        line = line.replace(" ", "").replace("\t", "");
 //        return line.substring(line.indexOf("),") + 2, line.indexOf(",["));
     }
 
     static String getBodyOfLine(String line) {
-        String s = regexMatch("\\[.*\\]", line).get(0);
-        return s.substring(1, s.length() - 1);
+        List<String> s = regexMatch("\\[.*\\]\\)\\.", line);
+        if (s.isEmpty()) {
+            return "";
+        }
+        String body = s.get(s.size() - 1);
+        return body.substring(1, body.length() - 3);
     }
 
     public static String getRulenameOfLine(String line) {
-        final String RULE = "rule(";
-        return line.substring(line.indexOf(RULE) + RULE.length(), line.indexOf(")") + 1);
+        line = line.split("%")[0];
+        if (line.contains("rule(")) {
+            line = line.split("rule\\(")[1];
+            List<String> s = regexMatch(QueryExecutor.ALPHANUMERIC + "*\\([^\\)]*\\)", line);
+            return s.get(0);
+        }
+        return "";
     }
 
     static String getRuleFromFile(String rulename, int file) {
@@ -548,10 +556,6 @@ public class Utils {
             e.printStackTrace();
         }
         return allRules;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getAllRulesWithHeadPred("hasMotive"));
     }
 
 }

@@ -213,9 +213,9 @@ rule(case_example7_f5(),malwareLinkedTo(example7_m2,yourCountry),[]).
 %% %% example8
 %% %% expected: 
 %% %% yourCountry (hasMotiveAndCapability)
-rule(case_example8_f1(),targetCountry(myCountry,example8),[]).
-rule(case_example8_f2(),imposedSanctions(myCountry, yourCountry, ongoing),[]).
-rule(case_example8_f3(),attackPeriod(example8,[2018,5]),[]).
+%% rule(case_example8_f1(),targetCountry(myCountry,example8),[]).
+%% rule(case_example8_f2(),imposedSanctions(myCountry, yourCountry, ongoing),[]).
+%% rule(case_example8_f3(),attackPeriod(example8,[2018,5]),[]).
 
 %% auto geolocation example
 %% expected: hong_kong (loc)
@@ -237,11 +237,12 @@ rule(case_tor_ex_f5(), claimedResponsibility(countryX, tor_ex),[]).
 %% expected: us (loc)
 rule(case_virustotal_ex_f0(),malwareUsedInAttack(virustotal_ex_malware, virustotal_ex),[]).
 rule(case_virustotal_ex_f1(),attackSourceIP([8,8,8,8],virustotal_ex),[]).
-rule(case_virustotal_ex_f2(),ip([8,8,8,8],[2018,5]),[]). % ip([IP],[YYYY,MM]) for auto resolution using virustotal
+%% rule(case_virustotal_ex_f2(),ip([8,8,8,8],[2018,5]),[]). % ip([IP],[YYYY,MM]) for auto resolution using virustotal
 rule(case_virustotal_ex_f3(),ccServer('00027.hk', example_past_attack_m),[]).
 rule(case_virustotal_ex_f4(),malwareLinkedTo(example_past_attack_m, myCountry),[]).
 
-
+%% snort_ex
+rule(case_snort_ex_f0(),malwareUsedInAttack(snort_exmalware, snort_ex),[]).
 
 
 %% https://en.wikipedia.org/wiki/Global_surveillance_disclosures_(2013%E2%80%93present)#Disclosures
