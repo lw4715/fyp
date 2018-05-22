@@ -47,6 +47,7 @@ class GUI {
 
     private final Utils utils;
 
+    private QueryExecutor qe;
     private JFrame mainFrame;
     private JLabel status;
     private JPanel panel2;
@@ -136,6 +137,7 @@ class GUI {
             "isCulprit(<Group>,<Att>)"};
 
     GUI() {
+        qe = QueryExecutor.getInstance();
         utils = new Utils();
         prepareGUI();
         addButtonsToPanel();
@@ -370,16 +372,18 @@ class GUI {
             Result executeResult = null;
             status.setText(String.format(EXECUTED_IS_CULPRIT, attackName.getText()));
             try {
-                if (jc == null) {
-                    jc = new JasperCallable();
-                }
-                jc.setName(attackName.getText());
-                jc.setReload(true);
-                jc.setAll(true);
-                if (culpritsToConsider.size() > 0) {
-                    jc.setCulpritsList(culpritsToConsider);
-                }
-                executeResult = jc.call();
+                executeResult = qe.executeAll(attackName.getText(), culpritsToConsider);
+//
+//                if (jc == null) {
+//                    jc = new JasperCallable();
+//                }
+//                jc.setName(attackName.getText());
+//                jc.setReload(true);
+//                jc.setAll(true);
+//                if (culpritsToConsider.size() > 0) {
+//                    jc.setCulpritsList(culpritsToConsider);
+//                }
+//                executeResult = jc.call();
 
             } catch (Exception e1) {
                 e1.printStackTrace();
@@ -398,16 +402,21 @@ class GUI {
             Result executeResult = null;
             status.setText(String.format(EXECUTED_IS_CULPRIT, attackName.getText()));
             try {
-                if (jc == null) {
-                    jc = new JasperCallable();
-                }
-                jc.setName(attackName.getText());
-                jc.setReload(true);
-                jc.setAll(all);
-                executeResult = jc.call();
-            } catch (Exception e1) {
-                e1.printStackTrace();
+                executeResult = qe.execute(attackName.getText(), true, new ArrayList<>());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+//            try {
+//                if (jc == null) {
+//                    jc = new JasperCallable();
+//                }
+//                jc.setName(attackName.getText());
+//                jc.setReload(true);
+//                jc.setAll(all);
+//                executeResult = jc.call();
+//            } catch (Exception e1) {
+//                e1.printStackTrace();
+//            }
 
             if (!all) {
                 displayExecutionResult(executeResult);

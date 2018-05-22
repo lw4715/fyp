@@ -36,7 +36,7 @@ public class QueryExecutor {
         timings = new ArrayList<>();
         abduced = new HashSet<>();
         ti = new ToolIntegration();
-//        clearLeftoverFiles();
+        clearLeftoverFiles();
         loadFiles();
         reloadFiles = new ArrayList<>();
         reloadFiles.add(Utils.USER_EVIDENCE_FILENAME);
@@ -546,13 +546,14 @@ public class QueryExecutor {
         qe.setDebug();
         int n = 1;
         try {
-            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+            qe.clearLeftoverFiles();
+//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
 
             for (int i = 0; i < n; i++) {
-                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                    Result r = qe.execute(c, false, new ArrayList<>());
-                    System.out.println(r);
-                }
+//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                    Result r = qe.execute(c, false, new ArrayList<>());
+//                    System.out.println(r);
+//                }
                 for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
                     Result r = qe.execute(c, false, new ArrayList<>());
                     System.out.println(r);
