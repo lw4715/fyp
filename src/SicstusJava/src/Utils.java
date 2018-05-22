@@ -238,6 +238,28 @@ public class Utils {
         return head.substring(0, head.lastIndexOf(","));
     }
 
+    // return entire line of gorgias rule corresponding to rulename
+    static String getRuleFromRulename(String rulename) {
+        String f = GetFilenameForRule(rulename);
+        rulename = rulename.substring(0, rulename.indexOf("("));
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String line = br.readLine();
+            while (line != null) {
+                if (line.contains(rulename)) {
+                    return line;
+                }
+            }
+            return "Rule " + rulename + " not found!";
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return "File " + f + " not found";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error!";
+        }
+    }
+
     // returns body of rule corresponding to rulename
     static List<String> getBody(String r) {
         String f = GetFilenameForRule(r);

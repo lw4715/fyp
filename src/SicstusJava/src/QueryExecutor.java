@@ -546,20 +546,18 @@ public class QueryExecutor {
         qe.setDebug();
         int n = 1;
         try {
-            qe.tryToProve("rule(r_str__linkedMalware(X,A1),        isCulprit(X,A1),    [malwareUsedInAttack(M1,A1),similar(M1,M2),malwareLinkedTo(M2,X),notForBlackMarketUse(M1),notForBlackMarketUse(M2)]).", "example0");
-//            System.out.println(qe.execute("example5", false));
-//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
-//
-//            for (int i = 0; i < n; i++) {
-//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-//                }
-//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
-//                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-//                }
-//            }
+            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
+
+            for (int i = 0; i < n; i++) {
+                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                    Result r = qe.execute(c, false, new ArrayList<>());
+                    System.out.println(r);
+                }
+                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
+                    Result r = qe.execute(c, false, new ArrayList<>());
+                    System.out.println(r);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

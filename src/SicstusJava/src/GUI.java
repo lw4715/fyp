@@ -17,6 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("ALL")
 class GUI {
@@ -41,6 +43,7 @@ class GUI {
     private static final String USER_INSERT_RULE = "USER INSERT RULE";
     private static final String USER_INSERT_RULE_START = "USER INSERT RULE START";
     private static final String DISPLAY_RESULTS = "DISPLAY RESULTS";
+    private static final String DISPLAY_RULE_SEARCH = "DISPLAY RULE SEARCH";
 
     private final Utils utils;
 
@@ -70,6 +73,9 @@ class GUI {
     private JPanel userRuleConflicts;
     private JTextArea userRuleConflictStatus;
     private JTextArea logStatus;
+    private JFrame displayRulesFrame;
+    private JTextField displayRulesTextField;
+
 
     private List<Pair<String, String>> strRulePrefs;
     private Result reloadResult;
@@ -425,40 +431,55 @@ class GUI {
             summary = "No results for execution. Try clicking 'Prove all possible predicates' to see what other evidence can be provided.";
         }
 
-        p.add(new JLabel("User preferences:"));
-        JTextArea prefRules = new JTextArea(strRulePrefs.toString());
-        prefRules.setColumns(40);
-        prefRules.setLineWrap(true);
-        prefRules.setCaretPosition(0);
-        p.add(prefRules);
+        JLabel label = new JLabel("User preferences:");
+//        label.setBackground(Color.YELLOW);
+//        label.setOpaque(true);
+        p.add(label);
+//        JTextArea prefRules = new JTextArea();
+//        prefRules.setColumns(40);
+//        prefRules.setLineWrap(true);
+//        prefRules.setCaretPosition(0);
+        p.add(defaultTextArea(strRulePrefs.toString(), 40));
 
-        p.add(new JLabel("Summary:"));
-        JTextArea ta = new JTextArea();
-        ta.setColumns(50);
-        ta.setEditable(false);
-        ta.setLineWrap(true);
-        ta.setText(summary);
-        ta.setCaretPosition(0);
-        p.add(ta);
+        JLabel label2 = new JLabel("Summary:");
+//        label2.setBackground(Color.YELLOW);
+//        label2.setOpaque(true);
+        p.add(label2);
+//        JTextArea ta = new JTextArea();
+//        ta.setColumns(50);
+//        ta.setEditable(false);
+//        ta.setLineWrap(true);
+//        ta.setText(summary);
+//        ta.setCaretPosition(0);
+        p.add(defaultTextArea(summary, 50));
 
         if (executeResult.hasAbduced()) {
-            p.add(new JLabel("Assumptions:"));
-            JTextArea abduced = new JTextArea(executeResult.getAbducedInfo());
-            abduced.setColumns(50);
-            abduced.setEditable(false);
-            abduced.setLineWrap(true);
-            p.add(abduced);
+            JLabel label3 = new JLabel("Assumptions:");
+//            label3.setBackground(Color.YELLOW);
+//            label3.setOpaque(true);
+            p.add(label3);
+//            JTextArea abduced = new JTextArea(executeResult.getAbducedInfo());
+//            abduced.setColumns(50);
+//            abduced.setEditable(false);
+//            abduced.setLineWrap(true);
+            p.add(defaultTextArea(executeResult.getAbducedInfo(), 50));
         }
 
-        p.add(new JLabel("Derivations:"));
+        JLabel label4 = new JLabel("Derivations:");
+//        label4.setBackground(Color.YELLOW);
+//        label4.setOpaque(true);
+        p.add(new JSeparator());
+        p.add(label4);
 
         for (int i = 0; i < rs.size(); i++) {
             String r = rs.get(i).getKey();
-            JTextArea textArea = new JTextArea();
-            textArea.setColumns(50);
-            textArea.setEditable(false);
-            textArea.setText(r);
-            textArea.setLineWrap(true);
+            JTextArea textArea = defaultTextArea(r, 50);
+            highlightWordInTextArea("X = [(A-Z)|(a-z)]*\\b", textArea, Color.YELLOW, true); // highlight culprit
+//            textArea.setColumns(50);
+//            textArea.setEditable(false);
+//            textArea.setText(r);
+//            textArea.setLineWrap(true);
+//            textArea.setCaretPosition(0);
             JButton viewDiagBtn = new JButton("View Diagram");
             String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
             viewDiagBtn.setActionCommand(filename);
@@ -468,7 +489,6 @@ class GUI {
             viewTreeBtn.setActionCommand(ARG_TREE + "arg_tree_" + i + ".svg:" +  executeResult.getTree(i));
             viewTreeBtn.addActionListener(new ButtonClickListener());
 
-            textArea.setCaretPosition(0);
 
             JPanel btnPanel = new JPanel();
             btnPanel.setLayout(new FlowLayout());
@@ -490,18 +510,19 @@ class GUI {
         }
 
         if (executeResult.hasNegDerivations()) {
+            p.add(new JSeparator());
             p.add(new JLabel("Negative Derivations: " + executeResult.getNumNegDerivations()));
         }
 
         for (String culprit : executeResult.getCulprits()) {
             for (String nd : executeResult.negDerivationFor(culprit)) {
                 p.add(new JLabel(String.format("neg(isCulprit(%s,%s))", culprit, attackName.getText())));
-                JTextArea textArea = new JTextArea();
-                textArea.setEditable(false);
-                textArea.setText(nd);
-                textArea.setLineWrap(true);
-                textArea.setCaretPosition(0);
-                p.add(textArea);
+//                JTextArea textArea = new JTextArea();
+//                textArea.setEditable(false);
+//                textArea.setText(nd);
+//                textArea.setLineWrap(true);
+//                textArea.setCaretPosition(0);
+                p.add(defaultTextArea(nd, -1));
                 JButton addPrefBtn = new JButton("Add rule preference");
                 addPrefBtn.setActionCommand(PREF_TYPE + 0 + ADD_PREF + nd + "*" + executeResult.getDerivationsForCulprit(culprit, SEPARATOR));
                 addPrefBtn.addActionListener(new ButtonClickListener());
@@ -537,11 +558,11 @@ class GUI {
                     Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
                     for (String proven : r.getKey()) {
                         String provenPred = proven.substring(0, proven.lastIndexOf("(") + 1);
-                        highlightWordInTextArea(provenPred, ta, Color.green);
+                        highlightWordInTextArea(provenPred, ta, Color.green, false);
                     }
                     for (String notProven : r.getValue()) {
                         String notProvenPred = notProven.substring(0, notProven.lastIndexOf("(") + 1);
-                        highlightWordInTextArea(notProvenPred, ta, Color.pink);
+                        highlightWordInTextArea(notProvenPred, ta, Color.pink, false);
                     }
 
                     JPanel p = new JPanel();
@@ -555,71 +576,11 @@ class GUI {
             JScrollPane sp = new JScrollPane(container);
             sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             altDispFrame.add(sp);
-//            altDispFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//            altDispFrame.setUndecorated(true);
             altDispFrame.pack();
             altDispFrame.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-        ///////////////////////
-//
-//        JTextArea allRulesVisual = new JTextArea(allStrRules);
-//        allRulesVisual.setColumns(80);
-//        allRulesVisual.setLineWrap(true);
-//
-//        List<String>[] res = readFromResultAndNonResultFiles();
-//        JDialog dialog = new JDialog(mainFrame);
-//        JPanel row1 = new JPanel();
-//        row1.setLayout(new FlowLayout());
-//
-//        dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
-//        StringJoiner sj = new StringJoiner("\n");
-//        for (String s : res[0]) {
-//            sj.add(s);
-//            String predicate = s.substring(0, s.lastIndexOf("("));
-//            highlightWordInTextArea(predicate, allRulesVisual, Color.green);
-//        }
-//        JTextArea results = new JTextArea("Results (proven):\n\n" + sj);
-//        results.setEditable(false);
-//        results.setRows(10);
-//        results.setColumns(47);
-//        results.setCaretPosition(0);
-//        JScrollPane row1col1 = new JScrollPane(results);
-//        row1.add(row1col1);
-//
-//        sj = new StringJoiner("\n");
-//        for (String s : res[1]) {
-//            sj.add(s);
-//            String predicate = s.substring(0, s.lastIndexOf("("));
-//            highlightWordInTextArea(predicate, allRulesVisual, Color.pink);
-//        }
-//
-//        JTextArea nonresults = new JTextArea("Other possible predicates (not proven):\n\n" + sj);
-//        nonresults.setCaretPosition(0);
-//        JScrollPane row1col2 = new JScrollPane(nonresults);
-//        nonresults.setEditable(false);
-//        nonresults.setRows(10);
-//        nonresults.setColumns(47);
-//        row1.add(row1col2);
-//
-//        JTextArea possiblerules = new JTextArea("Possible rules:\n" + Utils.formatMap(QueryExecutor.getPredMap(res[1], false)));
-//        possiblerules.setEditable(false);
-//        possiblerules.setColumns(90);
-//        possiblerules.setRows(20);
-//        possiblerules.setCaretPosition(0);
-//        JScrollPane row2 = new JScrollPane(possiblerules);
-//
-//        dialog.add(allRulesVisual);
-//        dialog.add(row1);
-//        dialog.add(row2);
-//        dialog.pack();
-////        dialog.setSize(1200, 1000);
-//        dialog.setVisible(true);
-//        dialog.setModal(true);
     }
 
 
@@ -674,20 +635,33 @@ class GUI {
     }
 
 
-    static void highlightWordInTextArea(String word, JTextArea textArea, Color colour) {
+    static void highlightWordInTextArea(String word, JTextArea textArea, Color colour, boolean useRegex) {
         String text = textArea.getText();
         Highlighter highlighter = textArea.getHighlighter();
         Highlighter.HighlightPainter painter =
                 new DefaultHighlighter.DefaultHighlightPainter(colour);
 
-        String[] lines = text.split("\n");
-        int p0 = text.indexOf(word);
-        int p1;
         try {
-            while (p0 >= 0) {
-                p1 = p0 + word.length();
-                highlighter.addHighlight(p0, p1, painter);
-                p0 = text.indexOf(word, p0 + 1);
+            if (!useRegex) {
+                String[] lines = text.split("\n");
+                int p0 = text.indexOf(word);
+                int p1;
+                while (p0 >= 0) {
+                    p1 = p0 + word.length();
+                    highlighter.addHighlight(p0, p1, painter);
+                    p0 = text.indexOf(word, p0 + 1);
+                }
+            } else {
+                Pattern pattern = Pattern.compile(word);
+                Matcher matcher = pattern.matcher(text);
+                int p0, p1;
+                String matched;
+                while (matcher.find()) {
+                    matched = matcher.group();
+                    p0 = matcher.start();
+                    p1 = p0 + matched.length();
+                    highlighter.addHighlight(p0, p1, painter);
+                }
             }
         } catch (BadLocationException e) {
             e.printStackTrace();
@@ -866,6 +840,11 @@ class GUI {
                 case USER_INSERT_RULE_START:
                     insertNewRuleAndSetPref();
                     break;
+                // FIXME!
+                case DISPLAY_RULE_SEARCH:
+                    String rulename = displayRulesTextField.getText();
+                    displayRulesFrame.add(new JLabel(Utils.getRuleFromRulename(rulename)));
+                    break;
                 default:
                     System.out.println("Command:" + command);
 
@@ -887,16 +866,14 @@ class GUI {
                                     Pair<List<String>, List<String>> pair = QueryExecutor.tryToProve(rule, attackName.getText(), headWithConst);
                                     for (String pair0 : pair.getKey()) {
                                         pair0 = pair0.substring(0, pair0.lastIndexOf("(") + 1);
-                                        highlightWordInTextArea(pair0, possibleRulesTA, Color.green);
+                                        highlightWordInTextArea(pair0, possibleRulesTA, Color.green, false);
                                     }
                                     for (String pair1 : pair.getValue()) {
                                         pair1 = pair1.substring(0, pair1.lastIndexOf("(") + 1);
-                                        highlightWordInTextArea(pair1, possibleRulesTA, Color.pink);
+                                        highlightWordInTextArea(pair1, possibleRulesTA, Color.pink, false);
                                     }
                                 }
                             }
-//                            for (List<String> rules : allRules.values()) {
-//                            }
 
                             JFrame frame = new JFrame("Details:");
                             frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
@@ -947,6 +924,8 @@ class GUI {
                         String[] s = command.split(":");
                         DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
                         SVGApplication.displayFile("img/" + s[1]);
+                        // FIXME!
+                        displayRules();
 
                     } else {
                         // display svg
@@ -954,6 +933,22 @@ class GUI {
                     }
             }
         }
+    }
+
+    // separate frame to search (by rulename) and display rules
+    private void displayRules() {
+        displayRulesTextField = new JTextField();
+        JButton btn = new JButton("Search");
+        btn.setActionCommand(DISPLAY_RULE_SEARCH);
+        btn.addActionListener(new ButtonClickListener());
+
+        displayRulesFrame = new JFrame("Search rules");
+        displayRulesFrame.setLayout(new BoxLayout(displayRulesFrame.getContentPane(), BoxLayout.Y_AXIS));
+        displayRulesFrame.add(new JLabel("Input rulename to view entire rule"));
+        displayRulesFrame.add(displayRulesTextField);
+        displayRulesFrame.add(btn);
+        displayRulesFrame.pack();
+        displayRulesFrame.setVisible(true);
     }
 
     private String returnMatchingPredicate(String head, List<String> hs) {
@@ -988,7 +983,7 @@ class GUI {
     void displaySnortLogs(Map<String, Map<String, Map<String, Integer>>> snortOutput) {
         JEditorPane jep = new JEditorPane();
         jep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        jep.setFont(new Font("Segoe UI", 0, 14));
+        jep.setFont(status.getFont());
         jep.setContentType("text/html");
         StringBuilder sb = new StringBuilder();
 
@@ -1010,6 +1005,8 @@ class GUI {
                 String ipString = e.getURL().getHost().replace(".", ",");
                 String fact = String.format("attackSourceIP([%s], %s)", ipString, logAttackname.getText());
                 utils.addRules(fact);
+                fact = String.format("ip([%s])", ipString);
+                utils.addRules(fact);
                 currentEvidences.setText(utils.getCurrentEvidence());
                 logStatus.setText(logStatus.getText() + fact + " added!\n");
             }
@@ -1017,10 +1014,10 @@ class GUI {
 
         JScrollPane sp = new JScrollPane(jep);
         sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        JTextArea label = new JTextArea("Click on IPs to add attackSourceIP(<IP>," + logAttackname.getText() + ") as evidence.");
-        label.setEditable(false);
+        JLabel label = new JLabel("Click on IPs to add attackSourceIP(<IP>," + logAttackname.getText() + ") as evidence.");
         label.setBackground(Color.YELLOW);
-        label.setFont(new Font("Segoe UI", 0, 16));
+        label.setOpaque(true);
+        label.setFont(label.getFont().deriveFont(16));
         logStatus = new JTextArea();
         logStatus.setEditable(false);
         logStatus.setBackground(Color.lightGray);

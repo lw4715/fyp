@@ -35,9 +35,7 @@
 %% country(Y)
 
 
-
 %% addressType(Addr,Type) TODO: remove??
-
 
 %% tech:
 %% sophisticatedMalware(M)
@@ -57,11 +55,6 @@
 %% squid_log(IP,_Port,_ResultCode,M)
 
 %% ipResolution(S,IP,_D) TODO: get this??
-
-
-
-
-
 
 %% --------
 
@@ -124,7 +117,7 @@ rule(r_t_similarFileChara2(C1,C2),similarFileChara(C1,C2),[fileChara(_,MD5,_,_,_
 rule(r_t_similarFileChara3(C1,C2),similarFileChara(C1,C2),[fileChara(_,_,_,_,Desc,_,C1),fileChara(_,_,_,_,Desc,_,C2)]).
 rule(r_t_similarFileChara4(C1,C2),similarFileChara(C1,C2),[fileChara(_,_,Size,CompileTime,_,Filetype,C1),fileChara(_,_,Size,CompileTime,_,Filetype,C2)]).
 
-rule(r_t_squid_log(IP),  attackSourceIP(IP,Att),   [squid_log(IP,_Port,_ResultCode,Att)]).
+%% rule(r_t_squid_log(IP),  attackSourceIP(IP,Att),   [squid_log(IP,_Port,_ResultCode,Att)]).
 
 % pref
 rule(p1_t(),prefer(r_t_attackOrigin(X,Att),r_t_attackOriginDefault(X,Att)),[]).
