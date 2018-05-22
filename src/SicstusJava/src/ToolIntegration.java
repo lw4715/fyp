@@ -25,8 +25,10 @@ public class ToolIntegration {
 
     static final String CASE_OSSEC_LOG_ = "case_ossec_log_malware_";
     static final String CASE_SQUID_LOG = "case_squid_log_";
+
     static final String RULE_CASE_SQUID_LOG = "rule(" + CASE_SQUID_LOG + "%d(), squid_log(%s,%s,'%s',%s),[]).\n";
     static final String RULE_CASE_SQUID_LOG1 = "\nrule(" + CASE_SQUID_LOG + "1_%d(), ip(%s),[]).\n";
+
     static final String CASE_TOR_CHECK = "case_torCheck";
     static final String RULE_CASE_TOR_CHECK = "rule(" + CASE_TOR_CHECK + "%d(), %s, []).\n";
     static final String RULE_CASE_TOR_CHECK1 = "rule(" + CASE_TOR_CHECK + "1_%d(), ip(%s), []).\n";
@@ -34,9 +36,12 @@ public class ToolIntegration {
     static final String RULE_CASE_AUTOGEN_GEOLOCATION = "rule(" + CASE_AUTOGEN_GEOLOCATION + "%d(), ipGeoloc(%s,%s), []).\n";
 
     private List<String> virustotalFinishedScanningIP;
-    private int torCount = 0;
+    private final String IPADDRESS_PATTERN =
+            "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
     private int virustotalCount = 0;
+    private int torCount = 0;
     private int ossecCount = 0;
+    private int geolocCount = 0;
 
     public ToolIntegration() {
         Utils.clearFile(VIRUS_TOTAL_PROLOG_FILE);
@@ -59,13 +64,6 @@ public class ToolIntegration {
 
             while (line != null) {
                 if (line.startsWith(RULE)) {
-//                    int ruleIndex = Integer.parseInt(
-//                            line.substring(line.indexOf(RULE) + RULE.length(),
-//                                    line.indexOf("fired")).replace(" ", ""));
-//
-//                    int level = Integer.parseInt(
-//                            line.substring(line.indexOf(LEVEL) + LEVEL.length(),
-//                                    line.indexOf(')')).replace(" ", ""));
 
                     String msg = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
 
@@ -82,9 +80,6 @@ public class ToolIntegration {
                         isBruteForce = true;
                     }
                 } else if (isBruteForce && line.startsWith(SSHD_LOG_PREFIX)) {
-                    String IPADDRESS_PATTERN =
-                            "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
-
                     Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
@@ -178,11 +173,6 @@ public class ToolIntegration {
     private static String virustotalScanFile(File file) {
         String resource = ScanFile.getFileResource(file);
         return GetFileScanReport.getFileScanReport(resource).getScans().toString();
-//        String filename = file.getAbsolutePath();
-//        String filename = "/Users/linna/Downloads/2015-08-31-traffic-analysis-exercise.pcap";
-//        String command = String.format("curl -v -F 'file=@/%s' -F apikey=%s https://www.virustotal.com/vtapi/v2/file/scan", filename, ApiDetails.API_KEY);
-//        return executeUNIXCommand(command);
-//        return scanInfo.getResource();
     }
 
     static Set<String[]> getTargetServerIP(String filename) {
@@ -286,22 +276,19 @@ public class ToolIntegration {
     }
 
     public static Comparator<Pair<Pair<Integer, Integer>, String>> PairComparator
-            = new Comparator<Pair<Pair<Integer, Integer>, String>>() {
-        @Override
-        public int compare(Pair<Pair<Integer, Integer>, String> o1, Pair<Pair<Integer, Integer>, String> o2) {
-            int keykeyCompare = o1.getKey().getKey().compareTo(o2.getKey().getKey());
-            if (keykeyCompare == 0) {
-                int keyvalueCompare = o1.getKey().getValue().compareTo(o2.getKey().getValue());
-                if (keyvalueCompare == 0) {
-                    return o1.getValue().compareTo(o2.getValue());
+            = (o1, o2) -> {
+                int keykeyCompare = o1.getKey().getKey().compareTo(o2.getKey().getKey());
+                if (keykeyCompare == 0) {
+                    int keyvalueCompare = o1.getKey().getValue().compareTo(o2.getKey().getValue());
+                    if (keyvalueCompare == 0) {
+                        return o1.getValue().compareTo(o2.getValue());
+                    } else {
+                        return keyvalueCompare;
+                    }
                 } else {
-                    return keyvalueCompare;
+                    return keykeyCompare;
                 }
-            } else {
-                return keykeyCompare;
-            }
-        }
-    };
+            };
 
     void processVirusTotalFile(List<Pair<Pair<Integer, Integer>, String>> res, String ip, int year, int month) {
         try {
@@ -315,7 +302,6 @@ public class ToolIntegration {
                 String ipString = String.format("[%s,%s,%s,%s]", ips[0], ips[1], ips[2], ips[3]);
                 String hostname = r.getValue();
                 Pair<Integer, Integer> datePair = r.getKey();
-//                String[] d = dateString.split(" ")[0].split("-");
                 String resolvedDate = String.format("[%d,%d]", datePair.getKey(), datePair.getValue());
 
                 int currYear = datePair.getKey();
@@ -440,13 +426,13 @@ public class ToolIntegration {
 
         try {
             FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL, true);
-            int c = 0;
+
             for (Pair<String, String> ipDate : ipDates) {
                 String ip = ipDate.getKey();
                 String ipString = convertPrologIPToString(ip);
                 String country = ipGeolocation(ipString);
-                String rule = String.format(RULE_CASE_AUTOGEN_GEOLOCATION, c, country, ip);
-                c++;
+                String rule = String.format(RULE_CASE_AUTOGEN_GEOLOCATION, geolocCount, country, ip);
+                geolocCount++;
                 f_w.write(rule);
 
                 String date = ipDate.getValue();
@@ -605,14 +591,6 @@ public class ToolIntegration {
     }
 
     public static void main(String[] args) {
-//        System.out.println("RESOURCE: " + virustotalScanFile(new File("/Users/linna/Downloads/2015-08-31-traffic-analysis-exercise.pcap")));
-//        ToolIntegration ti = new ToolIntegration();
-//        ti.torIntegration();
-//        preprocessFiles();
-//        getVirustotalReportAndProcess("74.125.224.72");
-//        System.out.println(ti.parseOSSEC("ossec_alert1.log", "saysomething"));\
-
-
     }
 
 }

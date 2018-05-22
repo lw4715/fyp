@@ -121,8 +121,8 @@ rule(r_t_similarFileChara4(C1,C2),similarFileChara(C1,C2),[fileChara(_,_,Size,Co
 
 % pref
 rule(p1_t(),prefer(r_t_attackOrigin(X,Att),r_t_attackOriginDefault(X,Att)),[]).
-rule(p2a_t(),prefer(r_t_conflictingOrigin(X,_Y,Att),r_t_attackOrigin(X,Att)),[]).
-rule(p2b_t(),prefer(r_t_conflictingOrigin(_Y,X,Att),r_t_attackOrigin(X,Att)),[]).
+%% rule(p2a_t(),prefer(r_t_conflictingOrigin(X,_Y,Att),r_t_attackOrigin(X,Att)),[]).
+%% rule(p2b_t(),prefer(r_t_conflictingOrigin(_Y,X,Att),r_t_attackOrigin(X,Att)),[]).
 rule(p3_t(),prefer(r_t_nonOrigin(X,Att),r_t_attackOrigin(X,Att)),[]).
 rule(p4a_t(),prefer(r_t_srcIP1(X,Att),r_t_noLocEvidence(X,Att)),[]).
 rule(p4b_t(),prefer(r_t_srcIP2(X,Att),r_t_noLocEvidence(X,Att)),[]).

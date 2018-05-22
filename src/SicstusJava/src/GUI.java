@@ -25,6 +25,7 @@ class GUI {
     private static final String RESULTFILENAME = "results.pl";
     private static final String NONRESULTFILENAME = "non_results.pl";
 
+    // commands/command prefixes
     private static final String SUBMIT = "Submit";
     private static final String UPLOAD = "Upload";
     private static final String EXECUTE = "Prove";
@@ -44,7 +45,7 @@ class GUI {
     private static final String USER_INSERT_RULE_START = "USER INSERT RULE START";
     private static final String DISPLAY_RESULTS = "DISPLAY RESULTS";
     private static final String DISPLAY_RULE_SEARCH = "DISPLAY RULE SEARCH";
-    static final String DISPLAY_RULES = "Search for a rule";
+    private static final String DISPLAY_RULES = "Search for a rule";
 
     private final Utils utils;
 
@@ -142,13 +143,12 @@ class GUI {
         utils = new Utils();
         prepareGUI();
         addButtonsToPanel();
-        displayRules();
     }
 
     private void prepareGUI() {
         mainFrame = new JFrame("Argumentation-Based Reasoner (ABR)");
 
-        mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.Y_AXIS));
+//        mainFrame.setLayout(new BoxLayout(mainFrame.getContentPane(), BoxLayout.Y_AXIS));
 
         status = new JLabel("", JLabel.LEFT);
 
@@ -187,20 +187,13 @@ class GUI {
                 System.exit(0);
             }
         });
-        panel2 = new JPanel();
-        panel2.setLayout(new FlowLayout());
-        panel3 = new JPanel();
-        panel3.setLayout(new FlowLayout());
-        panel3b = new JPanel();
-        panel3b.setLayout(new FlowLayout());
-        panel4 = new JPanel();
-        panel4.setLayout(new FlowLayout());
-        JPanel panel5a = new JPanel();
-        panel5a.setLayout(new FlowLayout());
-        panel5b = new JPanel();
-        panel5b.setLayout(new FlowLayout());
-        panel6 = new JPanel();
-        panel6.setLayout(new FlowLayout());
+        panel2 = defaultJPanel();
+        panel3 = defaultJPanel();
+        panel3b = defaultJPanel();
+        panel4 = defaultJPanel();
+        JPanel panel5a = defaultJPanel();
+        panel5b = defaultJPanel();
+        panel6 = defaultJPanel();
 
         currentEvidences = new JTextArea(utils.getCurrentEvidence());
         currentEvidences.setColumns(60);
@@ -235,7 +228,7 @@ class GUI {
         ruleSearchBtn.addActionListener(new ButtonClickListener());
 
 
-        JPanel topPanel = new JPanel();
+        JPanel topPanel = defaultJPanel();
         topPanel.add(toolIntegrationBtn);
         topPanel.add(prefDiagBtn);
         topPanel.add(userInsertRuleBtn);
@@ -261,9 +254,7 @@ class GUI {
         mainFrame.add(panel6);
         mainFrame.add(status);
 
-        mainFrame.pack();
-//        mainFrame.setSize(1000,750);
-        mainFrame.setVisible(true);
+        defaultJFrameActions(mainFrame);
         System.out.println("Ready!");
     }
 
@@ -312,18 +303,19 @@ class GUI {
         System.out.println("select pref: "+ command + " type: " + type);
 
 
-        JTextArea ntf = new JTextArea(selectedDer);
-        ntf.setColumns(30);
-        ntf.setLineWrap(true);
+        JTextArea selectedDerTF = defaultTextArea(selectedDer, 50);
 
 
         JPanel prefP = new JPanel();
         prefP.setLayout(new BoxLayout(prefP, BoxLayout.Y_AXIS));
         prefP.add(new JLabel("Selected derivation:"));
-        prefP.add(ntf);
+        prefP.add(selectedDerTF);
+        String finalStrRule = Result.getFinalRule(selectedDer);
+        highlightWordInTextArea(finalStrRule, selectedDerTF, Color.YELLOW, false);
+
         prefP.add(new JLabel("Other derivations:"));
-        for (String posDer : posDers) {
-            List<String> conflictingRules = QueryExecutor.getConflictingRule(posDer, selectedDer);
+        for (String notSelectedDer : posDers) {
+            List<String> conflictingRules = QueryExecutor.getConflictingRule(notSelectedDer, selectedDer);
 
             JButton choosePos = new JButton("Prefer " + conflictingRules.get(0));
             JButton chooseNeg = new JButton("Prefer " + conflictingRules.get(1));
@@ -332,24 +324,23 @@ class GUI {
             choosePos.addActionListener(new ButtonClickListener());
             chooseNeg.addActionListener(new ButtonClickListener());
 
-            JTextArea ptf = new JTextArea(posDer);
-            ptf.setColumns(30);
-            ptf.setLineWrap(true);
+            JTextArea notSelectedDTF = defaultTextArea(notSelectedDer, 50);
+            String otherFinalStrRule = Result.getFinalRule(notSelectedDer);
+            highlightWordInTextArea(otherFinalStrRule, notSelectedDTF, Color.YELLOW, false);
 
-            JPanel btnPanel = new JPanel();
-            btnPanel.setLayout(new FlowLayout());
+            JPanel btnPanel = defaultJPanel();
             btnPanel.add(chooseNeg);
             btnPanel.add(choosePos);
 
-            prefP.add(ptf);
+            prefP.add(notSelectedDTF);
             prefP.add(btnPanel);
         }
 
         JScrollPane prefSP = new JScrollPane(prefP);
         prefFrame = new JFrame("Set new pref");
         prefFrame.add(prefSP);
-        prefFrame.setSize(800, 400);
-        prefFrame.setVisible(true);
+        defaultJFrameActions(prefFrame);
+//        prefFrame.setSize(1200, 400);
     }
 
     private void openToolIntegrationWindow() {
@@ -360,13 +351,14 @@ class GUI {
         btn.addActionListener(new ButtonClickListener());
 
         toolIntegrationFrame = new JFrame("Forensic tool integration");
-        toolIntegrationFrame.setLayout(new BoxLayout(toolIntegrationFrame.getContentPane(), BoxLayout.Y_AXIS));
+//        toolIntegrationFrame.setLayout(new BoxLayout(toolIntegrationFrame.getContentPane(), BoxLayout.Y_AXIS));
         toolIntegrationFrame.add(new JLabel("Attack name associated with log:"));
         toolIntegrationFrame.add(logAttackname);
         toolIntegrationFrame.add(toolIntegrationStatus);
         toolIntegrationFrame.add(btn);
+//        toolIntegrationFrame.setVisible(true);
+        defaultJFrameActions(toolIntegrationFrame);
         toolIntegrationFrame.setSize(400,200);
-        toolIntegrationFrame.setVisible(true);
     }
 
     private void executeQueryAllWithCulprits(List<String> culpritsToConsider) {
@@ -467,7 +459,7 @@ class GUI {
         for (int i = 0; i < rs.size(); i++) {
             String r = rs.get(i).getKey();
             JTextArea textArea = defaultTextArea(r, 50);
-            highlightWordInTextArea("X = [(A-Z)|(a-z)]*\\b", textArea, Color.YELLOW, true); // highlight culprit
+            highlightWordInTextArea("X = [(A-Z)|(a-z)|_]*\\b", textArea, Color.YELLOW, true); // highlight culprit
             JButton viewDiagBtn = new JButton("View Diagram");
             String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
             viewDiagBtn.setActionCommand(filename);
@@ -478,8 +470,7 @@ class GUI {
             viewTreeBtn.addActionListener(new ButtonClickListener());
 
 
-            JPanel btnPanel = new JPanel();
-            btnPanel.setLayout(new FlowLayout());
+            JPanel btnPanel = defaultJPanel();
 
             btnPanel.add(viewDiagBtn);
             btnPanel.add(viewTreeBtn);
@@ -516,9 +507,7 @@ class GUI {
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         executeResultFrame = new JFrame("Execution Result for " + attackName.getText());
         executeResultFrame.add(scrollPane);
-        executeResultFrame.pack();
-//        executeResultFrame.setSize(1200,800);
-        executeResultFrame.setVisible(true);
+        defaultJFrameActions(executeResultFrame);
     }
 
     private void displayResultsAndNonResults() {
@@ -527,7 +516,7 @@ class GUI {
         JFrame altDispFrame = new JFrame("Possible evidences");
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        altDispFrame.setLayout(new BoxLayout(altDispFrame.getContentPane(), BoxLayout.Y_AXIS));
+//        altDispFrame.setLayout(new BoxLayout(altDispFrame.getContentPane(), BoxLayout.Y_AXIS));
 
         try {
             for (String strRule : strRules) {
@@ -548,8 +537,7 @@ class GUI {
                         highlightWordInTextArea(notProvenPred, ta, Color.pink, false);
                     }
 
-                    JPanel p = new JPanel();
-                    p.setLayout(new FlowLayout());
+                    JPanel p = defaultJPanel();
                     p.add(ta);
                     p.add(btn);
 //                    altDispFrame.add(p);
@@ -559,8 +547,7 @@ class GUI {
             JScrollPane sp = new JScrollPane(container);
             sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             altDispFrame.add(sp);
-            altDispFrame.pack();
-            altDispFrame.setVisible(true);
+            defaultJFrameActions(altDispFrame);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -654,10 +641,9 @@ class GUI {
 
     void insertNewRuleAndSetPref() {
         insertNewRuleFrame = new JFrame("Add new rule");
-        insertNewRuleFrame.setLayout(new BoxLayout(insertNewRuleFrame.getContentPane(), BoxLayout.Y_AXIS));
+//        insertNewRuleFrame.setLayout(new BoxLayout(insertNewRuleFrame.getContentPane(), BoxLayout.Y_AXIS));
 
-        JPanel p = new JPanel();
-        p.setLayout(new FlowLayout());
+        JPanel p = defaultJPanel();
         userNewRule = new JTextField();
         userNewRule.setColumns(40);
         JButton submitRuleBtn = new JButton("Done");
@@ -673,8 +659,7 @@ class GUI {
         insertNewRuleFrame.add(p);
         insertNewRuleFrame.add(userRuleConflictStatus);
         insertNewRuleFrame.add(userRuleConflicts);
-        insertNewRuleFrame.pack();
-        insertNewRuleFrame.setVisible(true);
+        defaultJFrameActions(insertNewRuleFrame);
     }
 
     private void showConflictingRules(String rule) {
@@ -698,8 +683,7 @@ class GUI {
             String p0rulename = utils.getCurrentUserEvidenceRulename();
             String p1rulename = Utils.getRulenameOfLine(r);
 
-            JPanel btnPanel = new JPanel();
-            btnPanel.setLayout(new FlowLayout());
+            JPanel btnPanel = defaultJPanel();
 
             JButton p0Btn = new JButton("Prefer new rule");
             p0Btn.setActionCommand(USER_INSERT_RULE + p0rulename + SEPARATOR + p1rulename);
@@ -766,28 +750,21 @@ class GUI {
                     String customQuery = customQueryString.getText();
                     status.setText("Executing custom query string: " + customQuery);
                     JTextArea textArea = new JTextArea();
-                    String res = QueryExecutor.executeCustomQuery(customQuery);
+                    String res = qe.executeCustomQuery(customQuery);
                     if (res == null || res.equals("")) {
                         res = "False. No result for: " + customQuery;
                     }
-                    textArea.setText(res);
-                    textArea.setEditable(false);
-                    textArea.setRows(40);
-                    textArea.setCaretPosition(0);
-                    textArea.setLineWrap(true);
 
                     JPanel p = new JPanel();
                     p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-                    p.add(new JLabel("Custom query result for " + customQuery, JLabel.RIGHT));
-                    p.add(textArea);
+                    p.add(defaultTextArea(res, 40));
 
                     JScrollPane sp = new JScrollPane(p);
                     sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-                    JFrame f = new JFrame("Custom query result");
+                    JFrame f = new JFrame("Custom query result for " + customQuery);
                     f.add(sp);
-                    f.pack();
-                    f.setVisible(true);
+                    defaultJFrameActions(f);
                     break;
                 case UPLOAD_LOG:
                     if (logAttackname.getText().length() == 0) {
@@ -861,15 +838,14 @@ class GUI {
                             }
 
                             JFrame frame = new JFrame("Details:");
-                            frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+//                            frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
                             frame.add(new JLabel("Proven"));
                             frame.add(defaultTextArea(String.valueOf(r.getKey()), 120));
                             frame.add(new JLabel("Not proven"));
                             frame.add(defaultTextArea(String.valueOf(r.getValue()), 120));
                             frame.add(new JLabel("Possible rules:"));
                             frame.add(possibleRulesTA);
-                            frame.pack();
-                            frame.setVisible(true);
+                            defaultJFrameActions(frame);
 
                         } catch (Exception e1) {
                             e1.printStackTrace();
@@ -928,14 +904,12 @@ class GUI {
         btn.addActionListener(new ButtonClickListener());
 
         displayRulesFrame = new JFrame("Search rules");
-        displayRulesFrame.setLayout(new BoxLayout(displayRulesFrame.getContentPane(), BoxLayout.Y_AXIS));
         displayRulesFrame.add(new JLabel("Input rulename to view entire rule"));
         displayRulesFrame.add(displayRulesTextField);
         displayRulesFrame.add(btn);
         displayRulesFrame.add(new JLabel("Results:"));
-        displayRulesFrame.pack();
         displayRulesFrame.setAlwaysOnTop(true);
-        displayRulesFrame.setVisible(true);
+        defaultJFrameActions(displayRulesFrame);
     }
 
     private String returnMatchingPredicate(String head, List<String> hs) {
@@ -956,6 +930,18 @@ class GUI {
         ta.setLineWrap(true);
         ta.setCaretPosition(0);
         return ta;
+    }
+
+    private static void defaultJFrameActions(JFrame f) {
+        f.setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
+        f.pack();
+        f.setVisible(true);
+    }
+
+    private static JPanel defaultJPanel() {
+        JPanel p = new JPanel();
+        p.setLayout(new FlowLayout());
+        return p;
     }
 
     // helper method for displaySnortLogs, create clickable string in JEditorPane using str as url
@@ -1010,12 +996,10 @@ class GUI {
         logStatus.setBackground(Color.lightGray);
         JFrame f = new JFrame("Processed snort log");
 
-        f.setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
         f.add(label);
         f.add(logStatus);
         f.add(sp);
-        f.pack();
-        f.setVisible(true);
+        defaultJFrameActions(f);
     }
 
     public static void main(String args[]) {

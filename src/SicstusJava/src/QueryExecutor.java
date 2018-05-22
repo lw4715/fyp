@@ -25,7 +25,7 @@ public class QueryExecutor {
 
     private Set<String> abduced;
     private ArrayList<String> allFiles;
-    private ArrayList<String> reloadFiles;
+//    private ArrayList<String> reloadFiles;
 
     public static QueryExecutor getInstance() {
         return instance;
@@ -38,12 +38,13 @@ public class QueryExecutor {
         ti = new ToolIntegration();
         clearLeftoverFiles();
         loadFiles();
-        reloadFiles = new ArrayList<>();
-        reloadFiles.add(Utils.USER_EVIDENCE_FILENAME);
-        reloadFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
+//        reloadFiles = new ArrayList<>();
+//        reloadFiles.add(Utils.USER_EVIDENCE_FILENAME);
+//        reloadFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
     }
 
-    private LinkedHashSet<String> getVisualTree() {
+    // after executing query, call this method to get argumentation trees
+    private LinkedHashSet<String> extractArgumentationTreeFromFile() {
         try {
             File f = new File(Utils.VISUALLOG);
             BufferedReader br = new BufferedReader(new FileReader(Utils.VISUALLOG));
@@ -117,6 +118,7 @@ public class QueryExecutor {
         return new Map[0];
     }
 
+    // execute query with limit
     private Map<String, Term>[] executeQueryString(String query, int limit) throws Exception {
         if (verbose) System.out.println(query);
         Query q = new Query(query);
@@ -127,9 +129,14 @@ public class QueryExecutor {
         }
     }
 
+    // format output from executeQueryString
     private String formatQueryOutput(Map<String, Term>[] output) {
         StringBuilder sb = new StringBuilder();
-        for (Map<String, Term> stringTermMap : output) {
+
+        Set<Map<String, Term>> set = new HashSet<>();
+        Collections.addAll(set, output);
+
+        for (Map<String, Term> stringTermMap : set) {
             for (String term : stringTermMap.keySet()) {
                 Term d = stringTermMap.get(term);
                 sb.append(term + "=" + convertToString(d) + "\n");
@@ -139,24 +146,15 @@ public class QueryExecutor {
         return sb.toString();
     }
 
-    static String executeCustomQuery(String query) {
+    String executeCustomQuery(String query) {
         System.out.println("Executing custom query: " + query);
         try {
-            QueryExecutor qe = getInstance();
-            qe.loadFiles();
-            return qe.formatQueryOutput(qe.executeQueryString(query, 20));
+            loadFiles();
+            return formatQueryOutput(executeQueryString(query, 20));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    static int getScore(List<String> ds) {
-        int acc = 0;
-        for (int i = 0; i < ds.size(); i++) {
-             acc += getScore(ds.get(i));
-        }
-        return acc;
     }
 
     private List<String> convertToString(Term d) {
@@ -175,30 +173,18 @@ public class QueryExecutor {
         return dList;
     }
 
-
-    private static int getScore(String deltaString) {
-        if (deltaString.contains("case")) {
-            return 2;
-        } else if (deltaString.contains("bg")) {
-            return 1;
-        }
-        return 0;
-    }
-
-
+    // prove all predicates
     public Result executeAll(String caseName, List<String> culpritsList) {
         System.out.println("Executing for " + caseName);
-        reloadUserFile();
         abduced.clear();
         Map<String, Term>[] maps = this.executeQuery(caseName, verbose, true, culpritsList);
         return null;
     }
 
+    // prove([isCulprit(X, caseName)], D)
     public Result execute(String caseName, boolean reload, List<String> culpritsList) throws Exception {
         System.out.println("Executing for " + caseName);
-//        if (reload)
-        reloadUserFile();
-
+        loadFiles();
         abduced.clear();
         System.out.println(String.format("---------\nStart %s derivation", caseName));
 
@@ -255,7 +241,7 @@ public class QueryExecutor {
         time = ((System.nanoTime() - time)/pow(10, 9));
         timings.add(time);
         System.out.println("\nTotal time for " + caseName + ": " + time );
-        Result r = new Result(caseName, resultMap, getVisualTree().toArray(),
+        Result r = new Result(caseName, resultMap, extractArgumentationTreeFromFile().toArray(),
                 abduced, getPredMap(abduced, true), negMap);
         if (verbose) {
             for (Pair<String, Pair<List<String>, String>> s : r.resultStrings()) {
@@ -269,14 +255,6 @@ public class QueryExecutor {
         return r;
     }
 
-    private <E> Set<E> toSet(E[] list) {
-        Set<E> set = new HashSet<>();
-        for (E elem : list) {
-            set.add(elem);
-        }
-        return set;
-    }
-
     private void populateAbduced(Map<String, LinkedHashSet<List<String>>> resultMap) {
         boolean first = true;
         for (String culprit : resultMap.keySet()) {
@@ -287,16 +265,6 @@ public class QueryExecutor {
                     }
                 }
             }
-        }
-    }
-
-    private void reloadUserFile() {
-        try {
-            ti.preprocessFiles(reloadFiles);
-            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
-            executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -334,7 +302,7 @@ public class QueryExecutor {
     }
 
 
-    // return rules
+    // return rules corresponding to predicates
     static Map<String, List<String>> getPredMap(Collection<String> preds, boolean isAbducibles) {
         Map<String, List<String>> map = new HashMap<>();
         for (String pred : preds) {
@@ -345,28 +313,12 @@ public class QueryExecutor {
                 key = pred.substring(0, pred.lastIndexOf("("));
             }
             List<String> val = new ArrayList<>();
-            val.addAll(scanFileForPredicate(Utils.TECH, key));
-            val.addAll(scanFileForPredicate(Utils.OP, key));
-            val.addAll(scanFileForPredicate(Utils.STR, key));
+            val.addAll(Utils.scanFileForPredicate(Utils.TECH, key));
+            val.addAll(Utils.scanFileForPredicate(Utils.OP, key));
+            val.addAll(Utils.scanFileForPredicate(Utils.STR, key));
             map.put(key, val);
         }
         return map;
-    }
-
-    private static List<String> scanFileForPredicate(String filename, String pred) {
-        List<String> r = new ArrayList<>();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-            br.lines().forEach(line -> {
-                if (line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%') &&
-                        Utils.getHeadOfLine(line).contains(pred)) {
-                    r.add(line.replace("\t",""));
-                }
-            });
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return r;
     }
 
     static List<String> getConflictingRule(String posDer, String negDer) {
@@ -399,18 +351,11 @@ public class QueryExecutor {
         return l;
     }
 
-    private static double mean(List<Double> timings) {
-        double acc = 0;
-        for (Double t : timings) {
-            acc += t;
-        }
-        return acc/timings.size();
-    }
-
     private void setDebug() {
         verbose = true;
     }
 
+    // try to prove given gorgiasRule, return pair containing proved predicates (key) and not proved predicates (value)
     public static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName, String givenHead) throws Exception {
         Map<String, String> argMap = new HashMap<>();
         String head = Utils.getHeadOfLine(gorgiasRule);
@@ -449,7 +394,6 @@ public class QueryExecutor {
                 int openCount = (int) b.chars().filter(c -> c == '(').count();
                 b = b + String.join("", Collections.nCopies(openCount, ")"));
 
-
                 // replace attack var
                 String allVars = Utils.regexMatch("\\(.*\\)", b).get(0);
                 List<String> vars = Utils.regexMatch("\\b[A-Z][(A-Z)|(a-z)]*\\b", allVars);
@@ -478,67 +422,12 @@ public class QueryExecutor {
                 }
             }
         }
-//        System.out.println("argmap: " + argMap);
         return ret;
     }
 
     //returns Pair<(proved), (not proved)>
     static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
         return tryToProve(gorgiasRule, attackName, "");
-//        List proved = new ArrayList<>();
-//        List notProved = new ArrayList<>();
-//        Pair<List<String>, List<String>> ret = new Pair<>(proved, notProved);
-//
-//        String head = Utils.getHeadOfLine(gorgiasRule);
-//        Map<String, String> args = new HashMap<>();
-//        String body = Utils.getBodyOfLine(gorgiasRule);
-//        String[] bs = body.split("\\)");
-//        Map<String, String> argMap = new HashMap<>();
-//        for (String b : bs) {
-//            if (b.length() > 0) {
-//                if (b.charAt(0) == ',') {
-//                    b = b.substring(1).trim();
-//                }
-//                // add missing ")" to match "("
-//                int openCount = (int) b.chars().filter(c -> c == '(').count();
-//                b = b + String.join("", Collections.nCopies(openCount, ")"));
-//
-//
-//                // replace attack var
-//                String allVars = Utils.regexMatch("\\(.*\\)", b).get(0);
-//                List<String> vars = Utils.regexMatch("\\b[A-Z][a-z]*\\b", allVars);
-//                String formattedB = b.replaceAll("\\bAtt\\b", attackName).replaceAll("\\bA1\\b", attackName).replaceAll("\\bA\\b", attackName);
-//                for (String var : vars) {
-//                    if (argMap.containsKey(var)) {
-//                        formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
-//                    }
-//                }
-//
-//                String q = String.format("prove([%s], D)", formattedB);
-//                Map<String, Term>[] m = getInstance().executeQueryString(q, 5);
-//
-//                String allVarsAfter = Utils.regexMatch("\\(.*\\)", formattedB).get(0);
-//                List<String> varsAfter = Utils.regexMatch("\\b[A-Z][a-z]*\\b", allVarsAfter);
-//                if (m.length > 0) {
-//                    for (String var : varsAfter) {
-//                        var = var.trim();
-//                        if (isUpperCase(var.charAt(0))) {
-//                            String constant = m[0].get(var).name();
-//                            argMap.put(var, constant);
-//                            formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
-//                        }
-//                    }
-////                    System.out.println("Success proven: " + formattedB);
-//                    proved.add(formattedB);
-//                } else {
-////                    System.out.println("Failed to prove: " + formattedB);
-//                    notProved.add(formattedB);
-//                }
-//            }
-//        }
-////        System.out.println("argmap: " + argMap);
-////        System.out.println(ret);
-//        return ret;
     }
 
     public static void main(String[] args) {
@@ -547,7 +436,6 @@ public class QueryExecutor {
         int n = 1;
         try {
             qe.clearLeftoverFiles();
-//            DerivationNode.createDiagram("img/_sample.svg", DerivationNode.getExampleNode(), new ArrayList<>());
 
             for (int i = 0; i < n; i++) {
 //                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
@@ -564,7 +452,7 @@ public class QueryExecutor {
         }
 
         assert (n == qe.timings.size());
-        System.out.println("Mean total runtime over " + n + " times: " + mean(qe.timings));
+        System.out.println("Mean total runtime over " + n + " times: " + Utils.mean(qe.timings));
 
     }
 

@@ -19,14 +19,12 @@ public class SVGApplication {
         f.setVisible(true);
     }
 
-    private JFrame frame;
     private JTextArea textArea;
     private JSVGCanvas svgCanvas;
     private JButton helpBtn;
     String filename;
 
     public SVGApplication(JFrame f) {
-        frame = f;
         textArea = new JTextArea();
         svgCanvas = new JSVGCanvas();
 

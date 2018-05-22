@@ -126,7 +126,7 @@ public class Result {
                     scores.add(0);
                     numDsAcc = 0;
                 }
-                scores.add(QueryExecutor.getScore(d));
+                scores.add(Utils.getScore(d));
                 numDsAcc++;
             }
             // last derivation is missed out
@@ -146,7 +146,7 @@ public class Result {
             LinkedHashSet<List<String>> ds = resultMap.get(c);
             if (!ds.isEmpty()) {
                 for (List<String> d : ds) {
-                    scores.add(QueryExecutor.getScore(d));
+                    scores.add(Utils.getScore(d));
                 }
 
                 if (max(scores) > 0) {
@@ -222,6 +222,15 @@ public class Result {
         return ds.get(ds.size() - 1);
     }
 
+    // format of d:
+    // [p4a_t(), case_autogen_geolocation_0(), case_example2b_f9(), r_t_srcIP1(china, example2b),
+    // r_t_attackOrigin(china, example2b), bg67(), r_str__loc(china, example2b)]
+    public static String getFinalRule(String d) {
+        d = d.substring(1, d.length() - 1);
+        String ruleRegex = "\\b[(a-z)|(A-Z)|(0-9)|_]*\\([^\\)]*\\)";
+        return getFinalRule(Utils.regexMatch(ruleRegex, d));
+    }
+
 
     public List<Pair<String, Pair<List<String>, String>>> resultStrings() {
         return derivations;
@@ -276,18 +285,8 @@ public class Result {
         return r;
     }
 
-//    void generateDiagram(String filename) {
-//        String attack = filename.split("_")[0];
-//        int count = Integer.parseInt(filename.split("_")[1].split(".")[0]);
-//        int c = 0;
-//        Term t = null;
-//        for (Term term : allterms) {
-//            if (c == count) {
-//               t = term;
-//                break;
-//            }
-//            c++;
-//        }
-//        DerivationNode.createDerivationAndSaveDiagram(t, attack, count);
-//    }
+    public static void main(String[] args) {
+        System.out.println(getFinalRule("[p4a_t(), case_autogen_geolocation_0(), case_example2b_f9(), r_t_srcIP1(china, example2b), r_t_attackOrigin(china, example2b), bg67(), r_str__loc(china, example2b)]"));
+    }
+
 }

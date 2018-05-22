@@ -50,6 +50,47 @@ public class Utils {
         return "";
     }
 
+    static double mean(List<Double> timings) {
+        double acc = 0;
+        for (Double t : timings) {
+            acc += t;
+        }
+        return acc/timings.size();
+    }
+
+    static int getScore(List<String> ds) {
+        int acc = 0;
+        for (int i = 0; i < ds.size(); i++) {
+            acc += getScore(ds.get(i));
+        }
+        return acc;
+    }
+
+    private static int getScore(String deltaString) {
+        if (deltaString.contains("case")) {
+            return 2;
+        } else if (deltaString.contains("bg")) {
+            return 1;
+        }
+        return 0;
+    }
+
+    static List<String> scanFileForPredicate(String filename, String pred) {
+        List<String> r = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            br.lines().forEach(line -> {
+                if (line.contains("rule(") && !line.contains("abducible(") && (line.charAt(0) != '%') &&
+                        getHeadOfLine(line).contains(pred)) {
+                    r.add(line.replace("\t",""));
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return r;
+    }
+
     void addEvidence(String evidence) {
         if (evidence.length() == 0) {
             return;
