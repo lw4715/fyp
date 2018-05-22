@@ -210,14 +210,16 @@ public class Result {
         return sb.toString();
     }
 
-    private String getFinalRule(List<String> ds) {
+    static String getFinalRule(List<String> ds) {
         for (int i = ds.size() - 1; i >= 0 ; i--) {
             String d1 = ds.get(i);
             if (Utils.isFinalStrRule(d1)) {
                 return d1;
             }
         }
-        return null;
+
+        // if doesn't follow pattern, maybe its just the last one
+        return ds.get(ds.size() - 1);
     }
 
 

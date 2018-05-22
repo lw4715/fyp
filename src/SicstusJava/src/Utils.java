@@ -39,6 +39,17 @@ public class Utils {
         return l;
     }
 
+    static String removeLeadingNonAlpha(String s) {
+        String regex = "[(A-Z)|(a-z)]*.*";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(s);
+        if (matcher.matches()) {
+            return matcher.group();
+        }
+        System.err.println("No alphabets in " + s);
+        return "";
+    }
+
     void addEvidence(String evidence) {
         if (evidence.length() == 0) {
             return;
@@ -241,7 +252,7 @@ public class Utils {
     // return entire line of gorgias rule corresponding to rulename
     static String getRuleFromRulename(String rulename) {
         String f = GetFilenameForRule(rulename);
-        rulename = rulename.substring(0, rulename.indexOf("("));
+        rulename = rulename.split("\\(")[0];
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = br.readLine();
@@ -249,6 +260,7 @@ public class Utils {
                 if (line.contains(rulename)) {
                     return line;
                 }
+                line = br.readLine();
             }
             return "Rule " + rulename + " not found!";
         } catch (FileNotFoundException e) {

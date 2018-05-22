@@ -44,6 +44,7 @@ class GUI {
     private static final String USER_INSERT_RULE_START = "USER INSERT RULE START";
     private static final String DISPLAY_RESULTS = "DISPLAY RESULTS";
     private static final String DISPLAY_RULE_SEARCH = "DISPLAY RULE SEARCH";
+    static final String DISPLAY_RULES = "Search for a rule";
 
     private final Utils utils;
 
@@ -141,6 +142,7 @@ class GUI {
         utils = new Utils();
         prepareGUI();
         addButtonsToPanel();
+        displayRules();
     }
 
     private void prepareGUI() {
@@ -228,11 +230,16 @@ class GUI {
         userInsertRuleBtn.setActionCommand(USER_INSERT_RULE_START);
         userInsertRuleBtn.addActionListener(new ButtonClickListener());
 
+        JButton ruleSearchBtn = new JButton(DISPLAY_RULES);
+        ruleSearchBtn.setActionCommand(DISPLAY_RULES);
+        ruleSearchBtn.addActionListener(new ButtonClickListener());
+
 
         JPanel topPanel = new JPanel();
         topPanel.add(toolIntegrationBtn);
         topPanel.add(prefDiagBtn);
         topPanel.add(userInsertRuleBtn);
+        topPanel.add(ruleSearchBtn);
 
         mainFrame.add(topPanel);
         mainFrame.add(new JSeparator());
@@ -339,10 +346,9 @@ class GUI {
         }
 
         JScrollPane prefSP = new JScrollPane(prefP);
-        prefFrame = new JFrame("Set new preference");
+        prefFrame = new JFrame("Set new pref");
         prefFrame.add(prefSP);
-        prefFrame.pack();
-//        prefFrame.setSize(1000, 800);
+        prefFrame.setSize(800, 400);
         prefFrame.setVisible(true);
     }
 
@@ -441,42 +447,20 @@ class GUI {
         }
 
         JLabel label = new JLabel("User preferences:");
-//        label.setBackground(Color.YELLOW);
-//        label.setOpaque(true);
         p.add(label);
-//        JTextArea prefRules = new JTextArea();
-//        prefRules.setColumns(40);
-//        prefRules.setLineWrap(true);
-//        prefRules.setCaretPosition(0);
         p.add(defaultTextArea(strRulePrefs.toString(), 40));
 
         JLabel label2 = new JLabel("Summary:");
-//        label2.setBackground(Color.YELLOW);
-//        label2.setOpaque(true);
         p.add(label2);
-//        JTextArea ta = new JTextArea();
-//        ta.setColumns(50);
-//        ta.setEditable(false);
-//        ta.setLineWrap(true);
-//        ta.setText(summary);
-//        ta.setCaretPosition(0);
         p.add(defaultTextArea(summary, 50));
 
         if (executeResult.hasAbduced()) {
             JLabel label3 = new JLabel("Assumptions:");
-//            label3.setBackground(Color.YELLOW);
-//            label3.setOpaque(true);
             p.add(label3);
-//            JTextArea abduced = new JTextArea(executeResult.getAbducedInfo());
-//            abduced.setColumns(50);
-//            abduced.setEditable(false);
-//            abduced.setLineWrap(true);
             p.add(defaultTextArea(executeResult.getAbducedInfo(), 50));
         }
 
         JLabel label4 = new JLabel("Derivations:");
-//        label4.setBackground(Color.YELLOW);
-//        label4.setOpaque(true);
         p.add(new JSeparator());
         p.add(label4);
 
@@ -484,11 +468,6 @@ class GUI {
             String r = rs.get(i).getKey();
             JTextArea textArea = defaultTextArea(r, 50);
             highlightWordInTextArea("X = [(A-Z)|(a-z)]*\\b", textArea, Color.YELLOW, true); // highlight culprit
-//            textArea.setColumns(50);
-//            textArea.setEditable(false);
-//            textArea.setText(r);
-//            textArea.setLineWrap(true);
-//            textArea.setCaretPosition(0);
             JButton viewDiagBtn = new JButton("View Diagram");
             String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
             viewDiagBtn.setActionCommand(filename);
@@ -526,11 +505,6 @@ class GUI {
         for (String culprit : executeResult.getCulprits()) {
             for (String nd : executeResult.negDerivationFor(culprit)) {
                 p.add(new JLabel(String.format("neg(isCulprit(%s,%s))", culprit, attackName.getText())));
-//                JTextArea textArea = new JTextArea();
-//                textArea.setEditable(false);
-//                textArea.setText(nd);
-//                textArea.setLineWrap(true);
-//                textArea.setCaretPosition(0);
                 p.add(defaultTextArea(nd, -1));
                 JButton addPrefBtn = new JButton("Add rule preference");
                 addPrefBtn.setActionCommand(PREF_TYPE + 0 + ADD_PREF + nd + "*" + executeResult.getDerivationsForCulprit(culprit, SEPARATOR));
@@ -813,7 +787,6 @@ class GUI {
                     JFrame f = new JFrame("Custom query result");
                     f.add(sp);
                     f.pack();
-//                    f.setSize(1200, 1000);
                     f.setVisible(true);
                     break;
                 case UPLOAD_LOG:
@@ -848,10 +821,14 @@ class GUI {
                 case USER_INSERT_RULE_START:
                     insertNewRuleAndSetPref();
                     break;
-                // FIXME!
+                case DISPLAY_RULES:
+                    displayRules();
+                    break;
                 case DISPLAY_RULE_SEARCH:
                     String rulename = displayRulesTextField.getText();
                     displayRulesFrame.add(new JLabel(Utils.getRuleFromRulename(rulename)));
+                    displayRulesFrame.add(new JLabel());
+                    displayRulesFrame.pack();
                     break;
                 default:
                     System.out.println("Command:" + command);
@@ -908,6 +885,7 @@ class GUI {
                         utils.writePrefToFile(preference);
                         currentEvidences.setText(utils.getCurrentEvidence());
                         userRuleConflictStatus.setText(userRuleConflictStatus.getText() + preference + " added!\n");
+                        insertNewRuleFrame.pack(); //FIXME
 
                     } else if (command.startsWith("Choose:")) {
                         // create preference rule
@@ -919,6 +897,7 @@ class GUI {
                             executeResultFrame.dispose();
                             executeQuery(false);
                             prefFrame.dispose();
+                            strRulePrefs.add(new Pair<>(s[1], s[0]));
                             status.setText("Added  " + pref + " to " + Utils.USER_EVIDENCE_FILENAME);
                         } else {
                             prefFrame.dispose();
@@ -932,9 +911,6 @@ class GUI {
                         String[] s = command.split(":");
                         DerivationNode.createArgumentTreeDiagram(s[2], s[1]);
                         SVGApplication.displayFile("img/" + s[1]);
-                        // FIXME!
-                        displayRules();
-
                     } else {
                         // display svg
                         SVGApplication.displayFile("img/" + command);
@@ -946,6 +922,7 @@ class GUI {
     // separate frame to search (by rulename) and display rules
     private void displayRules() {
         displayRulesTextField = new JTextField();
+        displayRulesTextField.setColumns(50);
         JButton btn = new JButton("Search");
         btn.setActionCommand(DISPLAY_RULE_SEARCH);
         btn.addActionListener(new ButtonClickListener());
@@ -955,7 +932,9 @@ class GUI {
         displayRulesFrame.add(new JLabel("Input rulename to view entire rule"));
         displayRulesFrame.add(displayRulesTextField);
         displayRulesFrame.add(btn);
+        displayRulesFrame.add(new JLabel("Results:"));
         displayRulesFrame.pack();
+        displayRulesFrame.setAlwaysOnTop(true);
         displayRulesFrame.setVisible(true);
     }
 

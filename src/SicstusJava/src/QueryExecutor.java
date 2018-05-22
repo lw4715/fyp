@@ -373,11 +373,11 @@ public class QueryExecutor {
         List<String> l = new ArrayList<>();
         posDer = posDer + "$";
         negDer = negDer + "$";
-        String[] posRules = posDer.replaceFirst("\\[", "").replace("\\]$", "").split("\\)");
-        String[] negRules = negDer.replaceFirst("\\[", "").replace("\\]$", "").split("\\)");
+        String[] posRules = posDer.replaceFirst("\\[", "").replace("]$", "").split("\\)");
+        String[] negRules = negDer.replaceFirst("\\[", "").replace("]$", "").split("\\)");
 
-        String posStrRule = null;
-        String negStrRule = null;
+        String posStrRule = Utils.removeLeadingNonAlpha(posRules[posRules.length - 1]) + ")";
+        String negStrRule = Utils.removeLeadingNonAlpha(negRules[negRules.length - 1]) + ")";
 
         for (String pr : posRules) {
             String prTrimmed = pr.trim();
