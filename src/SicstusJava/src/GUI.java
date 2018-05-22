@@ -686,7 +686,6 @@ class GUI {
         p.add(submitRuleBtn);
 
         userRuleConflictStatus = new JTextArea();
-
         userRuleConflicts = new JPanel();
         insertNewRuleFrame.add(p);
         insertNewRuleFrame.add(userRuleConflictStatus);
@@ -1022,6 +1021,7 @@ class GUI {
         logStatus.setEditable(false);
         logStatus.setBackground(Color.lightGray);
         JFrame f = new JFrame("Processed snort log");
+
         f.setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
         f.add(label);
         f.add(logStatus);
