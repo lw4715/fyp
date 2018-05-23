@@ -52,7 +52,7 @@ class GUI {
 
     private final Utils utils;
 
-    private QueryExecutor qe;
+//    private QueryExecutor qe;
     private JFrame mainFrame;
     private JLabel status;
     private JPanel panel2;
@@ -82,6 +82,8 @@ class GUI {
 
     private JPanel userRuleConflicts;
     private JTextArea userRuleConflictStatus;
+
+    private JFrame executeAllFrame;
 
     private JFrame displayRulesFrame;
     private JTextField displayRulesTextField;
@@ -150,7 +152,7 @@ class GUI {
             "isCulprit(<Group>,<Att>)"};
 
     GUI() {
-        qe = QueryExecutor.getInstance();
+//        qe = QueryExecutor.getInstance();
         utils = new Utils();
         prepareGUI();
         addButtonsToPanel();
@@ -323,6 +325,7 @@ class GUI {
         JScrollPane prefSP = new JScrollPane(prefP);
         prefFrame = new JFrame("Set new pref");
         prefFrame.add(prefSP);
+        prefFrame.add(new JLabel());
         defaultJFrameActions(prefFrame);
     }
 
@@ -360,7 +363,6 @@ class GUI {
             status.setText(String.format(EXECUTED_IS_CULPRIT, attackName.getText()));
             try {
 //                executeResult = qe.executeAll(attackName.getText(), culpritsToConsider);
-                mainFrame.setCursor(Frame.WAIT_CURSOR);
                 executeResult = QueryExecutorWorkers.executeAll(attackName.getText(), culpritsToConsider, mainFrame);
             } catch (Exception e1) {
                 e1.printStackTrace();
@@ -389,7 +391,6 @@ class GUI {
                 displayExecutionResult(executeResult);
             } else {
                 displayResultsAndNonResults();
-
             }
         }
     }
@@ -476,7 +477,7 @@ class GUI {
     private void displayResultsAndNonResults() {
         String allStrRules = utils.getAllStrRules();
         String[] strRules = allStrRules.split("\n");
-        JFrame executeAllFrame = new JFrame("Possible evidences");
+        executeAllFrame = new JFrame("Possible evidences");
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
@@ -485,7 +486,7 @@ class GUI {
                 if (strRule.length() > 0) {
                     JTextArea ta = defaultTextArea(strRule, 90);
 
-                    Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
+                    Pair<List<String>, List<String>> r = QueryExecutorWorkers.tryToProve(strRule, attackName.getText(), mainFrame);
                     for (String proven : r.getKey()) {
                         String provenPred = proven.substring(0, proven.lastIndexOf("(") + 1);
                         highlightWordInTextArea(provenPred, ta, Color.green, false);
@@ -802,14 +803,18 @@ class GUI {
                         // details page for execute all
                         String strRule = command.split(DISPLAY_RESULTS)[1];
                         try {
-                            Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
-                            Map<String, List<String>> allRules = QueryExecutor.getPredMap(r.getValue(), false);
+//                            Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
+                            Pair<List<String>, List<String>> r = QueryExecutorWorkers.tryToProve(strRule, attackName.getText(), executeAllFrame);
+
+//                            Map<String, List<String>> allRules = QueryExecutor.getPredMap(r.getValue(), false);
+                            Map<String, List<String>> allRules = QueryExecutorWorkers.getPredMap(r.getValue(), false, executeAllFrame);
                             JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules), 100);
                             for (String head : allRules.keySet()) {
                                 String headWithConst = returnMatchingPredicate(head, r.getValue());
                                 List<String> rules = allRules.get(head);
                                 for (String rule : rules) {
-                                    Pair<List<String>, List<String>> pair = QueryExecutor.tryToProve(rule, attackName.getText(), headWithConst);
+//                                    Pair<List<String>, List<String>> pair = QueryExecutor.tryToProve(rule, attackName.getText(), headWithConst);
+                                    Pair<List<String>, List<String>> pair = QueryExecutorWorkers.tryToProve(rule, attackName.getText(), headWithConst, executeAllFrame);
                                     for (String pair0 : pair.getKey()) {
                                         pair0 = pair0.substring(0, pair0.lastIndexOf("(") + 1);
                                         highlightWordInTextArea(pair0, possibleRulesTA, Color.green, false);

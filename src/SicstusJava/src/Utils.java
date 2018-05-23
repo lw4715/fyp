@@ -291,13 +291,14 @@ public class Utils {
             l.add("Invalid rulename " + rulename);
             return l;
         }
-        rulename = rulename.split("\\(")[0];
+        rulename = rulename.split("\\(")[0].trim();
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = br.readLine();
             while (line != null) {
+                line = line.split("%")[0];
                 if (getRulenameOfLine(line).contains(rulename)) {
-                    l.add(line.split("%")[0]);
+                    l.add(line);
                 }
                 line = br.readLine();
             }
@@ -359,6 +360,7 @@ public class Utils {
 
 
     static String GetFilenameForRule(String r) {
+        r = r.split("\\(")[0];
         if (r.startsWith("r_t_") || (isPreference(r) && r.endsWith("t"))) {
             return TECH;
         } else if (r.startsWith("r_op_") || (isPreference(r) && r.endsWith("op"))) {
