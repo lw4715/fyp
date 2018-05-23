@@ -26,7 +26,6 @@ public class QueryExecutor {
 
     private Set<String> abduced;
     private ArrayList<String> allFiles;
-//    private ArrayList<String> reloadFiles;
 
     public static QueryExecutor getInstance() {
         return instance;
@@ -39,9 +38,6 @@ public class QueryExecutor {
         ti = new ToolIntegration();
         clearLeftoverFiles();
         loadFiles();
-//        reloadFiles = new ArrayList<>();
-//        reloadFiles.add(Utils.USER_EVIDENCE_FILENAME);
-//        reloadFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
     }
 
     // after executing query, call this method to get argumentation trees
@@ -271,7 +267,6 @@ public class QueryExecutor {
 
     private void clearLeftoverFiles() {
         Utils.clearFile(Utils.USER_EVIDENCE_FILENAME);
-//        Utils.clearFile(ToolIntegration.SQUID_LOG_RULES_PL);
         Utils.clearFile(ToolIntegration.AUTOMATED_GEOLOCATION_PL);
         Utils.clearFile(ToolIntegration.TOR_IP_FILE);
         Utils.clearFile(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE);
@@ -282,7 +277,6 @@ public class QueryExecutor {
         allFiles.add("utils.pl");
         allFiles.add("evidence.pl");
         allFiles.add(Utils.USER_EVIDENCE_FILENAME);
-//        allFiles.add(ToolIntegration.SQUID_LOG_RULES_PL);
         ti.preprocessFiles(allFiles);
 
         try {
@@ -294,7 +288,6 @@ public class QueryExecutor {
             ti.torIntegration();
             executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.TOR_IP_FILE), 1);
-//            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.SQUID_LOG_RULES_PL), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.AUTOMATED_GEOLOCATION_PL), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.VIRUS_TOTAL_PROLOG_FILE), 1);
         } catch (Exception e) {
@@ -324,18 +317,19 @@ public class QueryExecutor {
 
     static List<String> getConflictingRule(String posDer, String negDer) {
         List<String> l = new ArrayList<>();
-        posDer = posDer + "$";
-        negDer = negDer + "$";
-        String[] posRules = posDer.replaceFirst("\\[", "").replace("]$", "").split("\\)");
-        String[] negRules = negDer.replaceFirst("\\[", "").replace("]$", "").split("\\)");
+        char placeholder = '$';
+        posDer = posDer + placeholder;
+        negDer = negDer + placeholder;
+        String[] posRules = posDer.replaceFirst("\\[", "").replace("]" + placeholder, "").split("\\)");
+        String[] negRules = negDer.replaceFirst("\\[", "").replace("]" + placeholder, "").split("\\)");
 
         String posStrRule = Utils.removeLeadingNonAlpha(posRules[posRules.length - 1]) + ")";
         String negStrRule = Utils.removeLeadingNonAlpha(negRules[negRules.length - 1]) + ")";
 
         for (String pr : posRules) {
             String prTrimmed = pr.trim();
-            if (prTrimmed.contains("r_str_")) {
-                prTrimmed = prTrimmed.substring(prTrimmed.indexOf("r_str_"), prTrimmed.length());
+            if (prTrimmed.contains(Utils.R_STR_)) {
+                prTrimmed = prTrimmed.substring(prTrimmed.indexOf(Utils.R_STR_), prTrimmed.length());
                 posStrRule = prTrimmed + ")";
             }
         }
@@ -343,8 +337,8 @@ public class QueryExecutor {
 
         for (String nr : negRules) {
             String nrTrimmed = nr.trim();
-            if (nrTrimmed.contains("r_str_")) {
-                nrTrimmed = nrTrimmed.substring(nrTrimmed.indexOf("r_str_"), nrTrimmed.length());
+            if (nrTrimmed.contains(Utils.R_STR_)) {
+                nrTrimmed = nrTrimmed.substring(nrTrimmed.indexOf(Utils.R_STR_), nrTrimmed.length());
                 negStrRule = nrTrimmed + ")";
             }
         }
@@ -398,14 +392,11 @@ public class QueryExecutor {
                 String allVars = Utils.regexMatch("\\(.*\\)", b).get(0);
                 List<String> vars = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVars);
                 String formattedB = b.replaceAll("\\bAtt\\b", attackName).replaceAll("\\bA1\\b", attackName).replaceAll("\\bA\\b", attackName);
-//                System.out.println("argmap" + argMap);
                 for (String var : vars) {
                     if (argMap.containsKey(var)) {
-//                        System.out.println("Replacing " + var + " with " + argMap.get(var));
                         formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
                     }
                 }
-//                System.out.println("formatedb: " + formattedB);
 
                 String q = String.format("prove([%s], D)", formattedB);
                 Map<String, Term>[] m = getInstance().executeQueryString(q, 5);
@@ -417,7 +408,6 @@ public class QueryExecutor {
                         var = var.trim();
                         String constant = m[0].get(var).name();
                         if (!constant.equals("[|]")) {
-//                            System.out.println("Adding " + constant + " to " + var);
                             argMap.put(var, constant);
                         } else {
                             System.out.println(constant);

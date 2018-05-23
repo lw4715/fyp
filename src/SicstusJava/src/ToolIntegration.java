@@ -24,10 +24,9 @@ public class ToolIntegration {
     static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
 
     static final String CASE_OSSEC_LOG_ = "case_ossec_log_malware_";
-    static final String CASE_SQUID_LOG = "case_squid_log_";
-
-    static final String RULE_CASE_SQUID_LOG = "rule(" + CASE_SQUID_LOG + "%d(), squid_log(%s,%s,'%s',%s),[]).\n";
-    static final String RULE_CASE_SQUID_LOG1 = "\nrule(" + CASE_SQUID_LOG + "1_%d(), ip(%s),[]).\n";
+//    static final String CASE_SQUID_LOG = "case_squid_log_";
+//    static final String RULE_CASE_SQUID_LOG = "rule(" + CASE_SQUID_LOG + "%d(), squid_log(%s,%s,'%s',%s),[]).\n";
+//    static final String RULE_CASE_SQUID_LOG1 = "\nrule(" + CASE_SQUID_LOG + "1_%d(), ip(%s),[]).\n";
 
     static final String CASE_TOR_CHECK = "case_torCheck";
     static final String RULE_CASE_TOR_CHECK = "rule(" + CASE_TOR_CHECK + "%d(), %s, []).\n";
@@ -109,43 +108,42 @@ public class ToolIntegration {
         *
         * Extract: IP, port, code, unixTimestamp
         * */
-    private static String parseSquidLog(String line, int count, String malware) {
-        String[] ss = line.split(" ");
-        String resultCode = ss[3];
-        String forwardedAddr = ss[6];
-        String[] ip = forwardedAddr.split(":")[0].split("\\.");
-        if (ip.length == 4) {
-            String port = forwardedAddr.split(":")[1];
-            String ipString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
-            return String.format(RULE_CASE_SQUID_LOG + RULE_CASE_SQUID_LOG1,
-                    count, ipString, port, resultCode, malware, count, ipString);
-        } else {
-            System.out.println(forwardedAddr + " is not valid IP");
-        }
-        return "";
-    }
+//    private static String parseSquidLog(String line, int count, String malware) {
+//        String[] ss = line.split(" ");
+//        String resultCode = ss[3];
+//        String forwardedAddr = ss[6];
+//        String[] ip = forwardedAddr.split(":")[0].split("\\.");
+//        if (ip.length == 4) {
+//            String port = forwardedAddr.split(":")[1];
+//            String ipString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
+//            return String.format(RULE_CASE_SQUID_LOG + RULE_CASE_SQUID_LOG1,
+//                    count, ipString, port, resultCode, malware, count, ipString);
+//        } else {
+//            System.out.println(forwardedAddr + " is not valid IP");
+//        }
+//        return "";
+//    }
 
-    public static void parseSquidLogFile(File file, String malware) {
-        try {
-            System.out.println("Processing squid log: " + file);
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            final int[] c = {0};
-            br.lines().forEach(x -> {
-                sb.append(parseSquidLog(x, c[0], malware) + "\n");
-                c[0]++;
-            });
-
-            FileWriter w = new FileWriter(SQUID_LOG_RULES_PL, true);
-//            w.write(":- multifile rule/3.\n");
-            w.write(sb.toString());
-            w.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void parseSquidLogFile(File file, String malware) {
+//        try {
+//            System.out.println("Processing squid log: " + file);
+//            BufferedReader br = new BufferedReader(new FileReader(file));
+//            StringBuilder sb = new StringBuilder();
+//            final int[] c = {0};
+//            br.lines().forEach(x -> {
+//                sb.append(parseSquidLog(x, c[0], malware) + "\n");
+//                c[0]++;
+//            });
+//
+//            FileWriter w = new FileWriter(SQUID_LOG_RULES_PL, true);
+//            w.write(sb.toString());
+//            w.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     void torIntegration() {
@@ -172,10 +170,10 @@ public class ToolIntegration {
 
     }
 
-    private static String virustotalScanFile(File file) {
-        String resource = ScanFile.getFileResource(file);
-        return GetFileScanReport.getFileScanReport(resource).getScans().toString();
-    }
+//    private static String virustotalScanFile(File file) {
+//        String resource = ScanFile.getFileResource(file);
+//        return GetFileScanReport.getFileScanReport(resource).getScans().toString();
+//    }
 
     static Set<String[]> getTargetServerIP(String filename) {
         Set<String[]> ips = new HashSet<>();
@@ -266,7 +264,6 @@ public class ToolIntegration {
         System.out.println("Processing " + ip + " : " + year + "," + month);
         File virusTotalReportFile = new File(virusTotalLogFileTemplate + ip);
         if (!virustotalFinishedScanningIP.contains(ip)) {
-//            GetIPAddressReport.getIPAddressReport(ip, virusTotalLogFileTemplate);
             List<Pair<Pair<Integer, Integer>, String>> res = GetIPAddressReport.getIPResolution(ip);
             if (res != null) {
                 processVirusTotalFile(res, ip, year, month);
@@ -337,50 +334,50 @@ public class ToolIntegration {
         return year > currYear || (year == currYear && month > currMonth);
     }
 
-    static void processVirusTotalFile(String filename, String ip) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-            FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
-            String line = br.readLine();
-
-            StringJoiner sj = new StringJoiner(",");
-            for (String s : ip.split("\\.")) {
-                sj.add(s);
-            }
-            
-            int count = 0;
-            String server = null;
-            String ipStrings = "[" + sj + "]";
-            String date = null;
-            boolean done = false;
-            while (line != null) {
-                if (line.startsWith("Host Name :")) {
-                    server = "'" + line.split(" : ")[1] + "'";
-                } else if (line.startsWith("Last Resolved :")) {
-                    String s = line.split(" : ")[1];
-                    String[] d = s.split(" ")[0].split("-");
-                    date = String.format("[%d,%d]", Integer.parseInt(d[0]), Integer.parseInt(d[1]));
-                    done = true;
-                }
-
-                if (done) {
-                    String fact = String.format("ipResolution(%s,%s,%s)",
-                            server, ipStrings, date);
-                    w.write(String.format(RULE_CASE_VIRUSTOTAL_RES_TEMPLATE + "\n", count, fact));
-                    count++;
-                }
-                line = br.readLine();
-            }
-            w.close();
-            br.close();
-
-        } catch (FileNotFoundException e) {
-            System.err.println(filename + " not found (processVirusTotalFile)");
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    static void processVirusTotalFile(String filename, String ip) {
+//        try {
+//            BufferedReader br = new BufferedReader(new FileReader(filename));
+//            FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
+//            String line = br.readLine();
+//
+//            StringJoiner sj = new StringJoiner(",");
+//            for (String s : ip.split("\\.")) {
+//                sj.add(s);
+//            }
+//
+//            int count = 0;
+//            String server = null;
+//            String ipStrings = "[" + sj + "]";
+//            String date = null;
+//            boolean done = false;
+//            while (line != null) {
+//                if (line.startsWith("Host Name :")) {
+//                    server = "'" + line.split(" : ")[1] + "'";
+//                } else if (line.startsWith("Last Resolved :")) {
+//                    String s = line.split(" : ")[1];
+//                    String[] d = s.split(" ")[0].split("-");
+//                    date = String.format("[%d,%d]", Integer.parseInt(d[0]), Integer.parseInt(d[1]));
+//                    done = true;
+//                }
+//
+//                if (done) {
+//                    String fact = String.format("ipResolution(%s,%s,%s)",
+//                            server, ipStrings, date);
+//                    w.write(String.format(RULE_CASE_VIRUSTOTAL_RES_TEMPLATE + "\n", count, fact));
+//                    count++;
+//                }
+//                line = br.readLine();
+//            }
+//            w.close();
+//            br.close();
+//
+//        } catch (FileNotFoundException e) {
+//            System.err.println(filename + " not found (processVirusTotalFile)");
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 

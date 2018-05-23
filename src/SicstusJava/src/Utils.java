@@ -8,6 +8,8 @@ public class Utils {
     private static final String P_USER_ = "p_user_";
     static final String BACKGROUNDGORGIAS_PL = "backgroundgorgias_renumbered.pl";
     static final String EVIDENCE_PL = "evidence.pl";
+    static final String R_STR_ = "r_str_";
+    static final String R_STR__ = "r_str__";
     private static String FILEPATH = "";
 
     static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
@@ -17,7 +19,7 @@ public class Utils {
     static final String STR = FILEPATH + "str_rules.pl";
     static final String EVIDENCE_FILENAME = FILEPATH + "evidence.pl";
 
-    //counter is index of latest rule
+    //counter is index of latest (already written) rule
     private int counter;
     private int prefCount;
     private String allStrRules;
@@ -203,11 +205,11 @@ public class Utils {
     }
 
     static boolean isStrRule(String s) {
-        return s.startsWith("r_str_");
+        return s.startsWith(R_STR_);
     }
 
     static boolean isFinalStrRule(String s) {
-        return s.startsWith("r_str__");
+        return s.startsWith(R_STR__);
     }
 
     static boolean isAss(String s) {
