@@ -301,13 +301,14 @@ public class DerivationNode {
         return new DerivationNode("str result (isCulprit)", "strategic rulename", l, 2, es2);
     }
 
-    static String getDiagramFilename(String attack, int c) {
-        return String.format("%s_%d.svg", attack, c);
+    //FIXME
+    static String getDiagramFilename(String derivation) {
+        return String.format("%s.svg", Utils.alphabetNumericalOfString(derivation).hashCode());
     }
 
     // return list of prefs
     public static List<DerivationNode> createDerivationAndSaveDiagram(Term t, String attack, int count) {
-        String filename = getDiagramFilename(attack, count);
+        String filename = getDiagramFilename(t.toString());
         List<String> names = new ArrayList<>();
         List<List<String>> args = new ArrayList<>();
         if (t.isListPair()) {
@@ -330,6 +331,7 @@ public class DerivationNode {
         List<DerivationNode> prefs = res;
         return createDiagram("img/" + filename, mainNode, prefs);
     }
+
 
     public static void createArgumentTreeDiagram(String tree, String f) {
         String[] lines = tree.split("\n");

@@ -15,7 +15,7 @@ import static java.lang.Math.pow;
 
 @SuppressWarnings("ALL")
 public class QueryExecutor {
-    static final String ALPHANUMERIC = "[(A-Z)|(a-z)|(0-9)|_]";
+    static final String ALPHANUMERIC = "[A-Za-z0-9_]";
     List<Double> timings;
     private boolean verbose = false;
     private ToolIntegration ti;

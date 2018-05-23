@@ -48,7 +48,8 @@ class GUI {
     private static final String DISPLAY_RULES = "Search for a rule";
     private static final String VIRUSTOTAL_IP_SUBMIT = "Virustotal IP submit";
     private static final String ADD_EVIDENCE_POPUP = "ADD EVIDENCE POPUP";
-    static final String POPUP_ADD_EVIDENCE = "POPUP ADD EVIDENCE";
+    private static final String POPUP_ADD_EVIDENCE = "POPUP ADD EVIDENCE";
+    private static final String CLEAR = "Clear";
 
     private final Utils utils;
 
@@ -212,6 +213,8 @@ class GUI {
         currentEvidences.setRows(10);
         scrollPane = new JScrollPane(currentEvidences);
         scrollPane.setSize(0,300);
+//        scrollPane.getViewport().setViewPosition(new Point(0,0));
+
 
         customQueryString = new JTextField("prove([<list of predicates to prove>], D)");
         customQueryString.setColumns(50);
@@ -325,6 +328,8 @@ class GUI {
         }
 
         JScrollPane prefSP = new JScrollPane(prefP);
+//        prefSP.getViewport().setViewPosition(new Point(0,0));
+
         prefFrame = new JFrame("Set new pref");
         prefFrame.add(prefSP);
         defaultJFrameActions(prefFrame);
@@ -412,6 +417,7 @@ class GUI {
         JLabel label = new JLabel("User preferences:");
         p.add(label);
         p.add(defaultTextArea(strRulePrefs + "\n" + displayOnlyStrRulePrefs, 40));
+        p.add(defaultJButton(CLEAR, CLEAR));
 
         JLabel label2 = new JLabel("Summary:");
         p.add(label2);
@@ -430,8 +436,8 @@ class GUI {
         for (int i = 0; i < rs.size(); i++) {
             String r = rs.get(i).getKey();
             JTextArea textArea = defaultTextArea(r, 50);
-            highlightWordInTextArea("X = [(A-Z)|(a-z)|_]*\\b", textArea, Color.YELLOW, true); // highlight culprit
-            String filename = DerivationNode.getDiagramFilename(executeResult.getAttack(), c);
+            highlightWordInTextArea("X = [A-Za-z_]*\\b", textArea, Color.YELLOW, true); // highlight culprit
+            String filename = DerivationNode.getDiagramFilename(rs.get(i).getValue().getKey().toString());
 
             JButton viewDiagBtn = defaultJButton("View Diagram", filename);
             JButton viewTreeBtn = defaultJButton("View Argumentation Tree",
@@ -470,6 +476,8 @@ class GUI {
         }
         JScrollPane scrollPane = new JScrollPane(p);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//        scrollPane.getViewport().setViewPosition(new Point(0,0));
+
         executeResultFrame = new JFrame("Execution Result for " + attackName.getText());
         executeResultFrame.add(scrollPane);
         defaultJFrameActions(executeResultFrame);
@@ -511,6 +519,8 @@ class GUI {
 
             JScrollPane sp = new JScrollPane(container);
             sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//            sp.getViewport().setViewPosition(new Point(0,0));
+
             JButton addEvidenceBtn = defaultJButton("Add evidence", ADD_EVIDENCE_POPUP);
             executeAllFrame.add(addEvidenceBtn);
             executeAllFrame.add(instr);
@@ -692,14 +702,6 @@ class GUI {
                     executeQuery(false);
                     break;
                 case EXECUTEALL:
-//                    String[] cs = possibleCulprits.getText().split(",");
-//                    List<String> csList = new ArrayList<>();
-//                    for (String c : cs) {
-//                        c = c.trim();
-//                        if (c.length() > 0) {
-//                            csList.add(c);
-//                        }
-//                    }
                     status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
                     executeQueryAll();
                     break;
@@ -723,6 +725,7 @@ class GUI {
 
                     JScrollPane sp = new JScrollPane(p);
                     sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//                    sp.getViewport().setViewPosition(new Point(0,0));
 
                     JFrame f = new JFrame("Custom query result for " + customQuery);
                     f.add(sp);
@@ -740,7 +743,6 @@ class GUI {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
                         System.out.println("Opening: " + file.getPath());
-//                        displaySnortLogs(ToolIntegration.parseSnortLogs(file));
                         displaySnortLogs(QueryExecutorWorkers.parseSnortLogs(file, toolIntegrationFrame));
                         status.setText("Processed Snort alert file " + file + " for attack " + logAttackname.getText());
                     }
@@ -793,6 +795,12 @@ class GUI {
                     evidencePopupStatus.setText(evidencePopupField.getText() + " added");
                     evidencePopup.pack();
                     break;
+                case CLEAR:
+                    strRulePrefs.clear();
+                    displayOnlyStrRulePrefs.clear();
+                    utils.clearUserPrefs();
+                    displayExecutionResult(reloadResult);
+                    break;
                 default:
                     System.out.println("Command:" + command);
 
@@ -833,6 +841,7 @@ class GUI {
                             panel.add(new JLabel("Possible rules:"));
                             panel.add(possibleRulesTA);
                             JScrollPane scrollPane = new JScrollPane(panel);
+//                            scrollPane.getViewport().setViewPosition(new Point(0,0));
 
                             JFrame frame = new JFrame("Details");
                             frame.add(new JLabel("Rule:"));
@@ -922,7 +931,7 @@ class GUI {
         }
         ta.setEditable(false);
         ta.setLineWrap(true);
-        ta.setCaretPosition(0);
+//        ta.setCaretPosition(0);
         return ta;
     }
 
@@ -988,7 +997,8 @@ class GUI {
 
         JScrollPane sp = new JScrollPane(jep);
         sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        JLabel label = new JLabel("Click on IPs to add attackSourceIP(<IP>," + logAttackname.getText() + ") as evidence.");
+//        sp.getViewport().setViewPosition(new Point(0,0));
+        JLabel label = new JLabel("Click on IPs to add attackSourceIP(<IP>," + logAttackname.getText() + ") and ip(<IP>) as evidence.");
         label.setBackground(Color.YELLOW);
         label.setOpaque(true);
         label.setFont(label.getFont().deriveFont(16));

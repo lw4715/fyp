@@ -443,7 +443,7 @@ public class Utils {
         return body.substring(1, body.length() - 3);
     }
 
-    public static String getRulenameOfLine(String line) {
+    static String getRulenameOfLine(String line) {
         line = line.split("%")[0];
         if (line.contains("rule(")) {
             line = line.split("rule\\(")[1];
@@ -453,7 +453,7 @@ public class Utils {
         return "";
     }
 
-    public void writePrefToFile(String preference) {
+    void writePrefToFile(String preference) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
             bw.write(String.format("rule(%s%d(), %s, []).\n", P_USER_, prefCount, preference));
@@ -520,5 +520,33 @@ public class Utils {
             e.printStackTrace();
         }
         return allRules;
+    }
+
+    public void clearUserPrefs() {
+        try {
+            System.out.println("Clearing user prefs...");
+            BufferedReader br = new BufferedReader(new FileReader(USER_EVIDENCE_FILENAME));
+            StringBuilder sb = new StringBuilder();
+            br.lines().forEach(line -> {
+                if (!line.startsWith("rule(" + P_USER_)) {
+                    sb.append(line);
+                    sb.append("\n");
+                }
+            });
+            br.close();
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME));
+            bw.write(sb.toString());
+            bw.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static String alphabetNumericalOfString(String s) {
+        return s.replaceAll("[^A-Za-z0-9_]", "");
     }
 }

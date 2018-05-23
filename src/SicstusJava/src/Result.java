@@ -6,17 +6,20 @@ import static java.util.Collections.max;
 
 public class Result {
     private String attack;
-    private List<Pair<String, Pair<List<String>, String>>> derivations;
     private Set<String> abduced;
     private Map<String, List<String>> abducedMap;
     private Map<String, Set<List<String>>> negMap;
     private final Object[] trees;
-    private List<Object> filteredTrees;
+    //derivations = key: fullString value: {key1: derivation, value1: culprit}
+    private List<Pair<String, Pair<List<String>, String>>> derivations;
+    private Map<String, LinkedHashSet<List<String>>> resultMap;
 
+    // NOTE: to clear each round
     private List<String> culprits;
     private List<Integer> maxScores;
     private List<Integer> numDs;
-    private Map<String, LinkedHashSet<List<String>>> resultMap;
+    private List<Object> filteredTrees;
+    private HashSet<String> nonpreferredStrRules;
 
 
     public Result(String attack, Map<String, LinkedHashSet<List<String>>> resultMap,
@@ -77,7 +80,7 @@ public class Result {
             filteredTrees.clear();
 
             System.out.println("Filtering...");
-            Set<String> nonpreferredStrRules = new HashSet<>();
+            nonpreferredStrRules = new HashSet<>();
             // find all preferred rules (to override nonpreferred rules)
             for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
                 System.out.println("d: " + derivation);
@@ -185,7 +188,18 @@ public class Result {
     String getDerivationsForCulprit(String c, String separator) {
         StringJoiner sj = new StringJoiner(separator);
         for (List<String> d : resultMap.get(c)) {
-            sj.add(d.toString());
+            boolean include = true;
+            if (nonpreferredStrRules != null) {
+                for (String nonpreferredStrRule : nonpreferredStrRules) {
+                    if (d.toString().contains(nonpreferredStrRule)) {
+                        include = false;
+                        break;
+                    }
+                }
+            }
+            if (include) {
+                sj.add(d.toString());
+            }
         }
         return sj.toString();
     }
