@@ -557,5 +557,4 @@ public class Utils {
         }
         return allRules;
     }
-
 }

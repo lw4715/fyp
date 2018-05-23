@@ -243,6 +243,7 @@ rule(case_virustotal_ex_f4(),malwareLinkedTo(example_past_attack_m, myCountry),[
 
 %% snort_ex
 rule(case_snort_ex_f0(),malwareUsedInAttack(snort_exmalware, snort_ex),[]).
+rule(case_snort_ex_f1(),dummyPred(someone, snort_ex),[]).
 
 
 %% https://en.wikipedia.org/wiki/Global_surveillance_disclosures_(2013%E2%80%93present)#Disclosures
