@@ -318,6 +318,7 @@ public class Utils {
 
     // returns body of rule corresponding to rulename
     static List<String> getBody(String r) {
+        r = r.split("\\(")[0];
         String f = GetFilenameForRule(r);
         try {
             List<String> l = new ArrayList<>();
@@ -328,10 +329,6 @@ public class Utils {
                     if (isPreference(r)) {
                         String[] s = getHead(r, new ArrayList<>()).replaceFirst("prefer\\(","").split("\\),");
                         for (String s1 : s) {
-//                            if (s1.charAt(0) == ',') {
-//                                s1 = s1.substring(1, s1.length());
-//                            }
-//                            s1 = s1.trim();
                             s1 = removeLeadingNonAlpha(s1).trim();
                             if (!s1.isEmpty()) {
                                 l.add(s1.split("\\(")[0]);
@@ -387,6 +384,7 @@ public class Utils {
         }
     }
 
+    // helper method to generate all predicates used
     private static String getAllPreds() {
         BufferedReader br;
         Set<String> preds = new HashSet<>();
@@ -424,12 +422,16 @@ public class Utils {
     static String getHeadOfLine(String line) {
         line = line.split("%")[0];
         if (line.contains("rule(")) {
-            List<String> s = regexMatch(QueryExecutor.ALPHANUMERIC + "*\\([^\\)]*\\)", line.split("rule\\(")[1]);
-            return s.get(1);
+            List<String> s;
+            if (line.contains("prefer(")) {
+                s = regexMatch("prefer\\(.*\\([^)]*\\)[^(]*\\([^)]*\\)\\)", line);
+                return s.get(0);
+            } else {
+                s = regexMatch(QueryExecutor.ALPHANUMERIC + "*\\([^\\)]*\\)", line.split("rule\\(")[1]);
+                return s.get(1);
+            }
         }
         return "";
-//        line = line.replace(" ", "").replace("\t", "");
-//        return line.substring(line.indexOf("),") + 2, line.indexOf(",["));
     }
 
     static String getBodyOfLine(String line) {
@@ -451,44 +453,6 @@ public class Utils {
         return "";
     }
 
-    static String getRuleFromFile(String rulename, int file) {
-        String filename;
-        switch(file) {
-            case 0:
-                filename = TECH;
-                break;
-            case 1:
-                filename = OP;
-                break;
-            case 2:
-                filename = STR;
-                break;
-            case -1:
-                filename = USER_EVIDENCE_FILENAME;
-                break;
-            default:
-                System.err.println("Invalid filecode: " + file);
-                return null;
-        }
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-            String next = br.readLine();
-
-            while (next != null) {
-                if (!next.startsWith("%") && next.contains(rulename.split("\\(")[0] + "(")) {
-                    return next.split("%")[0];
-                }
-                next = br.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
     public void writePrefToFile(String preference) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(USER_EVIDENCE_FILENAME, true));
@@ -502,13 +466,11 @@ public class Utils {
 
     public String getAllStrRules() {
         if (allStrRules == null) {
-            List<String> rs = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             try {
                 BufferedReader br = new BufferedReader(new FileReader(STR));
                 br.lines().forEach(x -> {
                     if (x.startsWith("rule(r_str__")) {
-//                        rs.add(x);
                         sb.append(x + "\n");
                     }
                 });
@@ -517,8 +479,6 @@ public class Utils {
                 e.printStackTrace();
 
             }
-//            allStrRules = rs;
-//            return rs;
             allStrRules = sb.toString();
             return sb.toString();
         } else {

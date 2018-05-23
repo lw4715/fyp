@@ -64,7 +64,7 @@ class GUI {
     private JTextField customQueryString;
     private JTextField evidence;
     private JTextField attackName;
-    private JTextField possibleCulprits;
+//    private JTextField possibleCulprits;
     private JTextField logAttackname;
     private JTextArea currentEvidences;
     private JScrollPane scrollPane;
@@ -152,7 +152,7 @@ class GUI {
             "isCulprit(<Group>,<Att>)"};
 
     GUI() {
-//        qe = QueryExecutor.getInstance();
+        QueryExecutor.getInstance(); // run this at start to clear files
         utils = new Utils();
         prepareGUI();
         addButtonsToPanel();
@@ -182,8 +182,9 @@ class GUI {
         attackName.setColumns(15);
 
         JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks",
+                "ex",
                 "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack",
-                "autogeoloc_ex", "tor_ex", "virustotal_ex", "snort_ex",
+                "autogeoloc_ex", "tor_ex", "virustotal_ex",
                 "example0", "example1", "example2", "example2b", "example3", "example4"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
@@ -266,14 +267,14 @@ class GUI {
         JButton updateButton = defaultJButton(UPDATE, UPDATE);
         JButton customQueryExecuteButton = defaultJButton(CUSTOMEXECUTE, CUSTOMEXECUTE);
 
-        possibleCulprits = new JTextField();
-        possibleCulprits.setColumns(20);
+//        possibleCulprits = new JTextField();
+//        possibleCulprits.setColumns(20);
 
         panel2.add(executeButton);
         panel3.add(new JLabel(EXECUTEALLINFO, JLabel.RIGHT));
         panel3.add(executeAllButton);
-        panel3b.add(new JLabel("Possible culprits (separate by commas):"));
-        panel3b.add(possibleCulprits);
+//        panel3b.add(new JLabel("Possible culprits (separate by commas):"));
+//        panel3b.add(possibleCulprits);
         panel4.add(customQueryExecuteButton);
         panel5b.add(submitButton);
         panel5b.add(uploadButton);
@@ -320,12 +321,12 @@ class GUI {
 
             prefP.add(notSelectedDTF);
             prefP.add(btnPanel);
+            prefP.add(new JLabel());
         }
 
         JScrollPane prefSP = new JScrollPane(prefP);
         prefFrame = new JFrame("Set new pref");
         prefFrame.add(prefSP);
-        prefFrame.add(new JLabel());
         defaultJFrameActions(prefFrame);
     }
 
@@ -353,7 +354,7 @@ class GUI {
 //        toolIntegrationFrame.setSize(400,200);
     }
 
-    private void executeQueryAllWithCulprits(List<String> culpritsToConsider) {
+    private void executeQueryAll() {
         if (attackName.getText().isEmpty()) {
             status.setText("\t\tPlease input attack name to executeQuery query: isCulprit(<attackName>, X)");
             highlightElement(attackName);
@@ -361,12 +362,12 @@ class GUI {
         } else {
             Result executeResult = null;
             status.setText(String.format(EXECUTED_IS_CULPRIT, attackName.getText()));
-            try {
-//                executeResult = qe.executeAll(attackName.getText(), culpritsToConsider);
-                executeResult = QueryExecutorWorkers.executeAll(attackName.getText(), culpritsToConsider, mainFrame);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+//            try {
+////                executeResult = qe.executeAll(attackName.getText(), culpritsToConsider);
+//                executeResult = QueryExecutorWorkers.executeAll(attackName.getText(), mainFrame);
+//            } catch (Exception e1) {
+//                e1.printStackTrace();
+//            }
 
             displayResultsAndNonResults();
         }
@@ -480,6 +481,7 @@ class GUI {
         executeAllFrame = new JFrame("Possible evidences");
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.add(new JLabel("All strategic rules:"));
 
         try {
             for (String strRule : strRules) {
@@ -503,7 +505,7 @@ class GUI {
                     container.add(p);
                 }
             }
-            JTextArea instr = defaultTextArea("Legend: Green = predicates proved, Red = predicates not proved", -1);
+            JTextArea instr = defaultTextArea("Legend: Green = predicates proved, Red = predicates not proved\n", -1);
             highlightWordInTextArea("Green", instr, Color.GREEN, false);
             highlightWordInTextArea("Red", instr, Color.PINK, false);
 
@@ -642,7 +644,7 @@ class GUI {
         userRuleConflicts.add(new JLabel(allRules.size() + " conflicts found!"));
         for (String r : allRules) {
 
-            JTextArea rta = defaultTextArea(r, 100);
+            JTextArea rta = defaultTextArea(r, 110);
 
             String p0rulename = utils.getCurrentUserEvidenceRulename();
             String p1rulename = Utils.getRulenameOfLine(r);
@@ -690,16 +692,16 @@ class GUI {
                     executeQuery(false);
                     break;
                 case EXECUTEALL:
-                    String[] cs = possibleCulprits.getText().split(",");
-                    List<String> csList = new ArrayList<>();
-                    for (String c : cs) {
-                        c = c.trim();
-                        if (c.length() > 0) {
-                            csList.add(c);
-                        }
-                    }
+//                    String[] cs = possibleCulprits.getText().split(",");
+//                    List<String> csList = new ArrayList<>();
+//                    for (String c : cs) {
+//                        c = c.trim();
+//                        if (c.length() > 0) {
+//                            csList.add(c);
+//                        }
+//                    }
                     status.setText(String.format("\t\tExecuted all: %s", utils.USER_EVIDENCE_FILENAME));
-                    executeQueryAllWithCulprits(csList);
+                    executeQueryAll();
                     break;
                 case UPDATE:
                     status.setText(String.format("\t\tUpdated file: %s", utils.USER_EVIDENCE_FILENAME));
@@ -709,7 +711,6 @@ class GUI {
                     String customQuery = customQueryString.getText();
                     status.setText("Executing custom query string: " + customQuery);
                     JTextArea textArea = new JTextArea();
-//                    String res = qe.executeCustomQuery(customQuery);
                     String res = QueryExecutorWorkers.customExecute(customQuery, mainFrame);
 
                     if (res == null || res.equals("")) {
@@ -803,17 +804,14 @@ class GUI {
                         // details page for execute all
                         String strRule = command.split(DISPLAY_RESULTS)[1];
                         try {
-//                            Pair<List<String>, List<String>> r = QueryExecutor.tryToProve(strRule, attackName.getText());
                             Pair<List<String>, List<String>> r = QueryExecutorWorkers.tryToProve(strRule, attackName.getText(), executeAllFrame);
 
-//                            Map<String, List<String>> allRules = QueryExecutor.getPredMap(r.getValue(), false);
                             Map<String, List<String>> allRules = QueryExecutorWorkers.getPredMap(r.getValue(), false, executeAllFrame);
-                            JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules), 100);
+                            JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules), 110);
                             for (String head : allRules.keySet()) {
                                 String headWithConst = returnMatchingPredicate(head, r.getValue());
                                 List<String> rules = allRules.get(head);
                                 for (String rule : rules) {
-//                                    Pair<List<String>, List<String>> pair = QueryExecutor.tryToProve(rule, attackName.getText(), headWithConst);
                                     Pair<List<String>, List<String>> pair = QueryExecutorWorkers.tryToProve(rule, attackName.getText(), headWithConst, executeAllFrame);
                                     for (String pair0 : pair.getKey()) {
                                         pair0 = pair0.substring(0, pair0.lastIndexOf("(") + 1);
@@ -826,16 +824,21 @@ class GUI {
                                 }
                             }
 
+                            JPanel panel = new JPanel();
+                            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                            panel.add(new JLabel("Proven:"));
+                            panel.add(defaultTextArea(String.valueOf(r.getKey()), 110));
+                            panel.add(new JLabel("Not proven:"));
+                            panel.add(defaultTextArea(String.valueOf(r.getValue()), 110));
+                            panel.add(new JLabel("Possible rules:"));
+                            panel.add(possibleRulesTA);
+                            JScrollPane scrollPane = new JScrollPane(panel);
+
                             JFrame frame = new JFrame("Details");
                             frame.add(new JLabel("Rule:"));
-                            frame.add(defaultTextArea(strRule, 100));
+                            frame.add(defaultTextArea(strRule, 110));
                             frame.add(defaultJButton("Add evidence", ADD_EVIDENCE_POPUP));
-                            frame.add(new JLabel("Proven:"));
-                            frame.add(defaultTextArea(String.valueOf(r.getKey()), 100));
-                            frame.add(new JLabel("Not proven:"));
-                            frame.add(defaultTextArea(String.valueOf(r.getValue()), 100));
-                            frame.add(new JLabel("Possible rules:"));
-                            frame.add(possibleRulesTA);
+                            frame.add(scrollPane);
                             defaultJFrameActions(frame);
 
                         } catch (Exception e1) {
@@ -862,17 +865,14 @@ class GUI {
                             // neg(isCulprit) and isCulprit for same X
                             utils.writePrefToFile(pref);
                             currentEvidences.setText(utils.getCurrentEvidence());
-                            displayOnlyStrRulePrefs.add(new Pair<>(s[1], s[0]));
-                            System.out.println("Added " + pref + " to displayOnly " + displayOnlyStrRulePrefs.size());
+                            displayOnlyStrRulePrefs.add(new Pair<>(s[0], s[1]));
                             executeResultFrame.dispose();
                             executeQuery(false);
-//                            prefFrame.dispose();
-//                            strRulePrefs.add(new Pair<>(s[1], s[0]));
                         } else {
                             // isCulprit (X \= Y)
-                            displayExecutionResult(reloadResult);
-                            strRulePrefs.add(new Pair<>(s[1], s[0]));
                             executeResultFrame.dispose();
+                            strRulePrefs.add(new Pair<>(s[0], s[1]));
+                            displayExecutionResult(reloadResult);
                         }
                         prefFrame.dispose();
                         status.setText("Added  " + pref + " to " + Utils.USER_EVIDENCE_FILENAME);

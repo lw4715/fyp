@@ -58,23 +58,29 @@ public class Result {
     }
 
     public void filterByStrRulePrefs(List<Pair<String, String>> strRulePrefs) {
-        maxScores.clear();
-        culprits.clear();
-        numDs.clear();
-        filteredTrees.clear();
         if (strRulePrefs.isEmpty()) {
+            // no custom prefs, proceed as normal
+            maxScores.clear();
+            culprits.clear();
+            numDs.clear();
+            filteredTrees.clear();
+            derivations.clear();
             processCulpritInfo();
+
         } else {
-            Collections.addAll(filteredTrees, trees);
-            for (String c : resultMap.keySet()) {
-                LinkedHashSet<List<String>> ds = resultMap.get(c);
+            if (derivations.isEmpty()) {
+                processCulpritInfo(); // populate derivations for the first time
             }
+            maxScores.clear();
+            culprits.clear();
+            numDs.clear();
+            filteredTrees.clear();
 
-
+            System.out.println("Filtering...");
             Set<String> nonpreferredStrRules = new HashSet<>();
-
             // find all preferred rules (to override nonpreferred rules)
             for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
+                System.out.println("d: " + derivation);
                 for (Pair<String, String> strRulePref : strRulePrefs) {
                     String preferredStrRule = strRulePref.getKey();
                     String nonpreferredStrRule = strRulePref.getValue();
@@ -94,13 +100,15 @@ public class Result {
                 boolean found = false;
                 for (String nonpreferredStrRule : nonpreferredStrRules) {
                     if (d.toString().contains(nonpreferredStrRule)) {
+                        System.out.println(d + " contains " + nonpreferredStrRule);
                         found = true;
-                        filteredTrees.remove(i);
                         break;
                     }
                 }
                 if (!found) {
+                    filteredTrees.add(trees[i]);
                     filteredDerivations.add(derivations.get(i));
+                    System.out.println("filtered Derivations: " + filteredDerivations);
                 }
             }
 

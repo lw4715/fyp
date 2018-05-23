@@ -143,7 +143,8 @@ public class QueryExecutor {
         return sb.toString();
     }
 
-    String executeCustomQuery(String query) {
+    String executeCustomQuery(String queryList) {
+        String query = String.format("prove([%s], D)", queryList);
         System.out.println("Executing custom query: " + query);
         try {
             loadFiles();
@@ -350,7 +351,7 @@ public class QueryExecutor {
         verbose = true;
     }
 
-    // try to prove given gorgiasRule, return pair containing proved predicates (key) and not proved predicates (value)
+        // try to prove given gorgiasRule, return pair containing proved predicates (key) and not proved predicates (value)
     public static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName, String givenHead) throws Exception {
         Map<String, String> argMap = new HashMap<>();
         String head = Utils.getHeadOfLine(gorgiasRule);
@@ -358,9 +359,8 @@ public class QueryExecutor {
             if (givenHead.startsWith("neg(")) {
                 givenHead = givenHead.split("neg\\(")[1];
             }
-            System.out.println("Given: " + givenHead);
             String headConstantsAll = Utils.regexMatch("\\(.*\\)", givenHead).get(0);
-            List<String> headConstants = Utils.regexMatch("\\b" + ALPHANUMERIC + "+\\b", headConstantsAll);
+            List<String> headConstants = Utils.regexMatch("\\b[a-z]" + ALPHANUMERIC + "*\\b", headConstantsAll);
 
             String headVarAll = Utils.regexMatch("\\(.*\\)", head).get(0);
             List<String> headVar = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", headVarAll);
@@ -370,7 +370,6 @@ public class QueryExecutor {
                 String constant = headConstants.get(i);
                 argMap.put(var, constant);
             }
-            System.out.println("Added from head " + givenHead + " argmap: " + argMap);
         }
 
         List proved = new ArrayList<>();
@@ -380,7 +379,14 @@ public class QueryExecutor {
         Map<String, String> args = new HashMap<>();
         String body = Utils.getBodyOfLine(gorgiasRule);
         String[] bs = body.split("\\)");
-        for (String b : bs) {
+        List<String> bsList = new ArrayList<>();
+        Collections.addAll(bsList, bs);
+
+        if (bsList.size() == 0) return ret;
+
+//        String b = bsList.get(0);
+//        int i = 0;
+        for (String b : bsList) {
             if (b.length() > 0) {
                 b = Utils.removeLeadingNonAlpha(b);
 
@@ -389,36 +395,47 @@ public class QueryExecutor {
                 b = b + String.join("", Collections.nCopies(openCount, ")"));
 
                 // replace attack var
-                String allVars = Utils.regexMatch("\\(.*\\)", b).get(0);
-                List<String> vars = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVars);
+                List<String> s = Utils.regexMatch("\\(.*\\)", b);
                 String formattedB = b.replaceAll("\\bAtt\\b", attackName).replaceAll("\\bA1\\b", attackName).replaceAll("\\bA\\b", attackName);
-                for (String var : vars) {
-                    if (argMap.containsKey(var)) {
-                        formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
+
+                if (s.size() > 0) {
+                    String allVars = s.get(0);
+                    List<String> vars = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVars);
+                    for (String var : vars) {
+                        if (argMap.containsKey(var)) {
+                            formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
+                        }
                     }
                 }
 
                 String q = String.format("prove([%s], D)", formattedB);
-                Map<String, Term>[] m = getInstance().executeQueryString(q, 5);
+                Map<String, Term>[] m = getInstance().executeQueryString(q, 10);
 
-                String allVarsAfter = Utils.regexMatch("\\(.*\\)", formattedB).get(0);
-                List<String> varsAfter = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVarsAfter);
-                if (m.length > 0) {
-                    for (String var : varsAfter) {
-                        var = var.trim();
-                        String constant = m[0].get(var).name();
-                        if (!constant.equals("[|]")) {
-                            argMap.put(var, constant);
-                        } else {
-                            System.out.println(constant);
+                List<String> s1 = Utils.regexMatch("\\(.*\\)", formattedB);
+                if (s1.size() > 0) {
+                    String allVarsAfter = s1.get(0);
+                    List<String> varsAfter = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVarsAfter);
+                    if (m.length > 0) {
+                        for (String var : varsAfter) {
+                            var = var.trim();
+//                            String constant = m[0].get(var).name(); //FIXME
+                            for (Map<String, Term> stringTermMap : m) {
+                                String constant = stringTermMap.get(var).name();
+                                if (!constant.equals("[|]")) {
+                                    argMap.put(var, constant);
+                                }
+                                formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
+                                if (!proved.contains(formattedB)) {
+                                    proved.add(formattedB);
+                                }
+                            }
                         }
-                        formattedB = formattedB.replaceAll("\\b" + var + "\\b", constant);
+                    } else {
+                        notProved.add(formattedB);
                     }
-                    proved.add(formattedB);
-                } else {
-                    notProved.add(formattedB);
                 }
             }
+//            i++;
         }
         return ret;
     }

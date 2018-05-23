@@ -9,9 +9,10 @@ public class SVGApplication {
 
     private static final String fileTextArea = "File saved at: ";
     private static final String RELOAD = "Reload";
+    private static JFrame f;
 
     static void displayFile(String filename) {
-        JFrame f = new JFrame("Derivation");
+        f = new JFrame("Derivation");
         f.setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
         SVGApplication app = new SVGApplication(f);
         f.getContentPane().add(app.createComponents(filename));
@@ -95,6 +96,7 @@ public class SVGApplication {
                     helpBtn.setActionCommand("Help");
                     break;
                 case RELOAD:
+                    f.dispose();
                     displayFile(filename);
                     break;
                 default:

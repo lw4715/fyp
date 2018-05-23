@@ -433,7 +433,7 @@ public class ToolIntegration {
 
                 String date = ipDate.getValue();
                 if (!ip.equals(date)) {
-                    System.out.println(ip + " " + date);
+                    System.out.println("Virustotall " + ip + " " + date);
                     String[] s = date.substring(1, date.length() - 1).split(",");
                     int year = Integer.parseInt(s[0]);
                     int month = Integer.parseInt(s[1]);

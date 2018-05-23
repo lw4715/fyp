@@ -79,6 +79,9 @@ rule(r_t_IPdomain1(S,M), ccServer(S,M),					[malwareUsedInAttack(M,Att),attackSo
 rule(r_t_IPdomain2(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,Att),spoofedIP(IP,Att),ipResolution(S,IP,_D)]).
 rule(r_t_IPdomain3(S,M), neg(ccServer(S,M)),			[malwareUsedInAttack(M,Att),attackSourceIP(IP,Att),attackPeriod(Att,D1),ipResolution(S,IP,D),neg(recent(D,D1))]).
 
+% to get auto ip resolution via virustotal
+rule(r_t_IP(IP, Date), ip(IP,Date),						[ip(IP), attackSourceIP(IP,Att), attackPeriod(Att,Date)]).
+
 
 rule(r_t_spoofIPtor(IP), spoofedIP(IP,Att), [attackSourceIP(IP,Att), targetServerIP(TargetServerIP,Att), torIP(IP, TargetServerIP)]).
 rule(r_t_lang1(X,Att),  attackPossibleOrigin(X,Att),     [sysLanguage(L,Att),firstLanguage(L,X)]).
