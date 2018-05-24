@@ -21,20 +21,20 @@ public class DerivationNode {
     // for argumentation tree
     private int level;
 
-    private String result;
-    private String rulename;
-    private Set<DerivationNode> children;
-    private int type;
-    private List<String> args;
+    private final String result;
+    private final String rulename;
+    private final Set<DerivationNode> children;
+    private final int type;
+    private final List<String> args;
 
     // for argumentation tree
     public DerivationNode(String d, int level, int type) {
-        result = d;
+        this.result = d;
         this.level = level;
         this.type = type;
-        children = new HashSet<>();
-        rulename = "";
-        args = new ArrayList<>();
+        this.children = new HashSet<>();
+        this.rulename = "";
+        this.args = new ArrayList<>();
     }
 
     // for derivation graph
@@ -42,7 +42,7 @@ public class DerivationNode {
         this.result = result;
         this.rulename = rulename;
         this.args = args;
-        this.children = new HashSet<>();
+        children = new HashSet<>();
         this.type = type;
     }
 
@@ -56,19 +56,19 @@ public class DerivationNode {
     }
 
     public List<String> getArgs() {
-        return this.args;
+        return args;
     }
 
     public String getRulename() {
-        return this.rulename;
+        return rulename;
     }
 
     public String getResult() {
-        return this.result;
+        return result;
     }
 
     public int getLevel() {
-        return level;
+        return this.level;
     }
 
     static String getPref(String derivation) {
@@ -84,7 +84,7 @@ public class DerivationNode {
     }
 
     private void addChild(DerivationNode child) {
-        this.children.add(child);
+        children.add(child);
     }
 
     static List<DerivationNode> createDiagram(String filename, DerivationNode mainNode, List<DerivationNode> prefs) {
@@ -94,7 +94,7 @@ public class DerivationNode {
             Graphviz.fromGraph(g)
                 .width(100).render(Format.SVG).toFile(new File(filename));
 
-            rewriteTransparentStroke(filename);
+            DerivationNode.rewriteTransparentStroke(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,7 +110,7 @@ public class DerivationNode {
 
     Node createNode() {
         Color typeColour;
-        switch(type) {
+        switch(this.type) {
             case 0: // tech
                 typeColour = Color.SKYBLUE1;
                 break;
@@ -128,11 +128,11 @@ public class DerivationNode {
         }
 
         Node node;
-        if (rulename.length() > 0) {
-            node = node(result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
-            Node rulenameNode = node(rulename).with(typeColour);
-            for (DerivationNode child : children) {
-                if (result.equals(child.getResult())) {
+        if (this.rulename.length() > 0) {
+            node = node(this.result).with(Shape.RECTANGLE, typeColour, Style.FILLED);
+            Node rulenameNode = node(this.rulename).with(typeColour);
+            for (DerivationNode child : this.children) {
+                if (this.result.equals(child.getResult())) {
                     rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.WHITE, Arrow.CROW));
                 } else {
                     rulenameNode = rulenameNode.link(to(child.createNode()).with(Color.BLACK, Arrow.CROW));
@@ -144,11 +144,11 @@ public class DerivationNode {
 
         } else {
             // argumentation tree
-            String splitResult = result.substring(0, result.length()/2) + "\n" + result.substring(result.length()/2);
+            String splitResult = this.result.substring(0, this.result.length()/2) + "\n" + this.result.substring(this.result.length()/2);
             node = node(splitResult).with(Shape.RECTANGLE, typeColour, Style.FILLED);
 
-            for (DerivationNode child : children) {
-                node = node.link(to(child.createNode()).with(Label.of(getPref(child.getResult()))));
+            for (DerivationNode child : this.children) {
+                node = node.link(to(child.createNode()).with(Label.of(DerivationNode.getPref(child.getResult()))));
             }
         }
         return node;
@@ -157,11 +157,11 @@ public class DerivationNode {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (!children.isEmpty()) {
-            sb.append("{" + children.size() + "}");
+        if (!this.children.isEmpty()) {
+            sb.append("{" + this.children.size() + "}");
             sb.append("\n");
         }
-        for (DerivationNode child : children) {
+        for (DerivationNode child : this.children) {
             sb.append(child + "\t");
         }
         return sb.toString();
@@ -172,15 +172,15 @@ public class DerivationNode {
         if (o == this) return true;
         if (o instanceof DerivationNode) {
             DerivationNode o1 = (DerivationNode) o;
-            return this.result.equals(o1.result) && this.rulename.equals(o1.rulename)
-                   && this.args.equals(o1.args);
+            return result.equals(o1.result) && rulename.equals(o1.rulename)
+                   && args.equals(o1.args);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return result.hashCode() * rulename.hashCode() - args.hashCode();
+        return this.result.hashCode() * this.rulename.hashCode() - this.args.hashCode();
     }
 
     // TODO: time and then create to make more efficient and time again
@@ -213,15 +213,15 @@ public class DerivationNode {
         }
 
         for (int i : ruleIndices) {
-            st = processRule(names.get(i), args.get(i), st);
+            st = DerivationNode.processRule(names.get(i), args.get(i), st);
         }
 
         for (int i : strRuleIndices) {
-            st = processRule(names.get(i), args.get(i), st);
+            st = DerivationNode.processRule(names.get(i), args.get(i), st);
         }
 
         while (st.size() > 1) {
-            st.push(combineFinalResult(st.pop(), st.pop()));
+            st.push(DerivationNode.combineFinalResult(st.pop(), st.pop()));
         }
 
         if (st.size() !=  1) {
@@ -267,7 +267,7 @@ public class DerivationNode {
             st.push(tmp.pop());
         }
 
-        st.push(new DerivationNode(Utils.getHead(name, args), name, args, getType(name), body));
+        st.push(new DerivationNode(Utils.getHead(name, args), name, args, DerivationNode.getType(name), body));
         return st;
     }
 
@@ -308,7 +308,7 @@ public class DerivationNode {
 
     // return list of prefs
     public static void createDerivationAndSaveDiagram(Term t) {
-        String filename = getDiagramFilename(t.toString());
+        String filename = DerivationNode.getDiagramFilename(t.toString());
         if (new File("img/" + filename).exists()) {
             System.out.println(filename + " already exists, skipping diagram creation");
             return;
@@ -326,14 +326,14 @@ public class DerivationNode {
             }
         }
 
-        final StringJoiner sj = new StringJoiner(",");
+        StringJoiner sj = new StringJoiner(",");
         names.forEach(x -> sj.add(x));
         System.out.println(filename + ": " + sj);
-        List<DerivationNode> res = createDerivationNode(names, args);
+        List<DerivationNode> res = DerivationNode.createDerivationNode(names, args);
         DerivationNode mainNode = res.get(0);
         res.remove(0);
         List<DerivationNode> prefs = res;
-        createDiagram("img/" + filename, mainNode, prefs);
+        DerivationNode.createDiagram("img/" + filename, mainNode, prefs);
         return;
     }
 
@@ -373,20 +373,11 @@ public class DerivationNode {
                     .with(st.pop().createNode());
             Graphviz.fromGraph(g)
                     .width(100).render(Format.SVG).toFile(new File(filename));
-            rewriteTransparentStroke(filename);
+            DerivationNode.rewriteTransparentStroke(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-//    public static void main(String[] args) {
-//        String tree = " [case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), bg1(), r_str_loc(yourCountry,example2b)]  {DEFENSE}\n" +
-//                "|___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
-//                "|   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
-//                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22e(), ass(specificTarget(example2b))]\n" +
-//                "    |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
-//        createArgumentTreeDiagram(tree, "test.svg");
-//    }
 
 }
 

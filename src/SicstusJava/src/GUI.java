@@ -1,4 +1,5 @@
 //import javafx.util.Pair;
+
 import com.sun.tools.javac.util.Pair;
 
 import javax.swing.*;
@@ -54,7 +55,7 @@ class GUI {
 
     private final Utils utils;
 
-//    private QueryExecutor qe;
+    //    private QueryExecutor qe;
     private JFrame mainFrame;
     private JLabel status;
     private JPanel panel2;
@@ -66,7 +67,7 @@ class GUI {
     private JTextField customQueryString;
     private JTextField evidence;
     private JTextField attackName;
-//    private JTextField possibleCulprits;
+    //    private JTextField possibleCulprits;
     private JTextField logAttackname;
     private JTextArea currentEvidences;
     private JScrollPane scrollPane;
@@ -124,33 +125,33 @@ class GUI {
             "geolocatedInGovFacility(P,C)", "publicCommentsRelatedToGov(P,C)", "attackOrigin()",
             "identifiedIndividualInAttack()", "malwareUsedInAttack()", "target()", "targetCountry()"};
 
-    private static final String[] predicates = {"industry(<T>)","targetCountry(<X>,<Att>)",
-            "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)","poorRelation(<C>,<T>)",
-            "noPriorHistory(<X>)","infraUsed(<Infra>,<Att>)","hasResources(<X>)","majorityIpOrigin(<X>,<Att>)",
-            "stolenValidSignedCertificates(<Att>)","cybersuperpower(<X>)",
-            "attackPeriod(<Att>,[<Year>,<Month>])", "attackSourceIP(<IP>,<Att>)","governmentLinked(<P>,<C>)",
-            "domainRegisteredDetails(<Server>,<Name>,<Addr>)","ipResolution(<S>,<IP>,<D>)",
-            "infectionMethod(<usb>,<M>)","attackOrigin(<X>,<Att>)","highLevelSkill(<Att>)",
-            "usesZeroDayVulnerabilities(<M>)","hasPoliticalMotive(<C>,<T>,<Date2>)",
-            "malwareUsedInAttack(<M>,<Att>)","news(<News>,<T>,<Date2>)","prominentGroup(<X>)",
-            "attackPossibleOrigin(<X>,<Att>)","notForBlackMarket        Use(<M>)","similarCCServer(<M1>,<M2>)",
-            "publicCommentsRelatedToGov(<P>,<C>)","zeroday>,<customMalware>)","gci_tier(<X>,<leading>)",
-            "torIP(<IP>)","malwareLinkedTo(<M2>,<X>)","sysLanguage(<L>,<Att>)","spoofedIP(<IP>)",
-            "ipGeoloc(<X>,<IP>)","addressType(<Addr>,<Type>)",
-            "sophisticatedMalware(<M>)","identifiedIndividualInAttack(<P>,<Att>)",
-            "goodRelation(<X>,<Y>)","industry(<Ind>,<X>)","cyberespionage>)",
-            "languageInCode(<L>,<Att>)","groupOrigin(<Group>,<C>)","hasCapability(<X>,<Att>)",
-            "isInfrastructure(<Ind>)","infraRegisteredIn(<X>,<Infra>)","informationRich(<Ind>)",
-            "hasResources(<X>)","fileCharaMalware(<C2>,<M2>)","claimedResponsibility(<X>,<Att>)",
-            "addrInCountry(<Addr>,<X>)","similarFileChara(<C1>,<C2>)","dateApplicable(<Date1>,<Date2>)",
-            "attackSourceIP(<IP>,<Att>)","hijackCorporateClouds(<Att>)","highVolumeAttack(<Att>)",
-            "imposedSanctions(<T>,<C>,<Date>)","causeOfConflict(<X>,<T>,<News>)","ccServer(<S>,<M>)",
-            "specificConfigInMalware(<M>)","cyberespionage>,<undergroundBusiness>)",
-            "specificTarget(<Att>)","simlarCodeObfuscation(<M1>,<M2>)","requireHighResource(<Att>)",
-            "target(<X>,<Att>)","hasMotive(<X>,<Att>)","similar(<M1>,<M2>)","hasEconomicMotive(<C>,<T>)",
-            "longDurationAttack(<Att>)","sharedCode(<M1>,<M2>)","commandAndControlEasilyFingerprinted(<M>)",
-            "highSecurity(<T>)","firstLanguage(<L>,<X>)","geolocatedInGovFacility(<P>,<C>)",
-            "malwareModifiedFrom(<M1>,<M2>)","gci_tier(<X>,<initiating>)","gci_tier(<X>,<maturing>)",
+    private static final String[] predicates = {"industry(<T>)", "targetCountry(<X>,<Att>)",
+            "fileChara(<Filename>,<MD5>,<Size>,<CompileTime>,<Desc>,<Filetype>,<C1>)", "poorRelation(<C>,<T>)",
+            "noPriorHistory(<X>)", "infraUsed(<Infra>,<Att>)", "hasResources(<X>)", "majorityIpOrigin(<X>,<Att>)",
+            "stolenValidSignedCertificates(<Att>)", "cybersuperpower(<X>)",
+            "attackPeriod(<Att>,[<Year>,<Month>])", "attackSourceIP(<IP>,<Att>)", "governmentLinked(<P>,<C>)",
+            "domainRegisteredDetails(<Server>,<Name>,<Addr>)", "ipResolution(<S>,<IP>,<D>)",
+            "infectionMethod(<usb>,<M>)", "attackOrigin(<X>,<Att>)", "highLevelSkill(<Att>)",
+            "usesZeroDayVulnerabilities(<M>)", "hasPoliticalMotive(<C>,<T>,<Date2>)",
+            "malwareUsedInAttack(<M>,<Att>)", "news(<News>,<T>,<Date2>)", "prominentGroup(<X>)",
+            "attackPossibleOrigin(<X>,<Att>)", "notForBlackMarket        Use(<M>)", "similarCCServer(<M1>,<M2>)",
+            "publicCommentsRelatedToGov(<P>,<C>)", "zeroday>,<customMalware>)", "gci_tier(<X>,<leading>)",
+            "torIP(<IP>)", "malwareLinkedTo(<M2>,<X>)", "sysLanguage(<L>,<Att>)", "spoofedIP(<IP>)",
+            "ipGeoloc(<X>,<IP>)", "addressType(<Addr>,<Type>)",
+            "sophisticatedMalware(<M>)", "identifiedIndividualInAttack(<P>,<Att>)",
+            "goodRelation(<X>,<Y>)", "industry(<Ind>,<X>)", "cyberespionage>)",
+            "languageInCode(<L>,<Att>)", "groupOrigin(<Group>,<C>)", "hasCapability(<X>,<Att>)",
+            "isInfrastructure(<Ind>)", "infraRegisteredIn(<X>,<Infra>)", "informationRich(<Ind>)",
+            "hasResources(<X>)", "fileCharaMalware(<C2>,<M2>)", "claimedResponsibility(<X>,<Att>)",
+            "addrInCountry(<Addr>,<X>)", "similarFileChara(<C1>,<C2>)", "dateApplicable(<Date1>,<Date2>)",
+            "attackSourceIP(<IP>,<Att>)", "hijackCorporateClouds(<Att>)", "highVolumeAttack(<Att>)",
+            "imposedSanctions(<T>,<C>,<Date>)", "causeOfConflict(<X>,<T>,<News>)", "ccServer(<S>,<M>)",
+            "specificConfigInMalware(<M>)", "cyberespionage>,<undergroundBusiness>)",
+            "specificTarget(<Att>)", "simlarCodeObfuscation(<M1>,<M2>)", "requireHighResource(<Att>)",
+            "target(<X>,<Att>)", "hasMotive(<X>,<Att>)", "similar(<M1>,<M2>)", "hasEconomicMotive(<C>,<T>)",
+            "longDurationAttack(<Att>)", "sharedCode(<M1>,<M2>)", "commandAndControlEasilyFingerprinted(<M>)",
+            "highSecurity(<T>)", "firstLanguage(<L>,<X>)", "geolocatedInGovFacility(<P>,<C>)",
+            "malwareModifiedFrom(<M1>,<M2>)", "gci_tier(<X>,<initiating>)", "gci_tier(<X>,<maturing>)",
             "isCulprit(<Group>,<Att>)"};
 
     GUI() {
@@ -176,14 +177,14 @@ class GUI {
             evidence.setText(dropdown.getSelectedItem().toString());
 
         });
-        dropdown.setSize(70,0);
+        dropdown.setSize(70, 0);
 
         evidence = new JTextField();
         evidence.setColumns(35);
         attackName = new JTextField(JTextField.LEFT);
         attackName.setColumns(15);
 
-        JComboBox existsingAttacks = new JComboBox(new String[] {"Select predefined attacks",
+        JComboBox existsingAttacks = new JComboBox(new String[]{"Select predefined attacks",
                 "ex",
                 "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack",
                 "autogeoloc_ex", "tor_ex", "virustotal_ex",
@@ -197,7 +198,7 @@ class GUI {
 
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent windowEvent){
+            public void windowClosing(WindowEvent windowEvent) {
                 System.exit(0);
             }
         });
@@ -213,7 +214,7 @@ class GUI {
         currentEvidences.setColumns(60);
         currentEvidences.setRows(10);
         scrollPane = new JScrollPane(currentEvidences);
-        scrollPane.setSize(0,300);
+        scrollPane.setSize(0, 300);
 //        scrollPane.getViewport().setViewPosition(new Point(0,0));
 
 
@@ -263,7 +264,7 @@ class GUI {
         System.out.println("Ready!");
     }
 
-    private void addButtonsToPanel(){
+    private void addButtonsToPanel() {
         JButton submitButton = defaultJButton(SUBMIT, SUBMIT);
         JButton uploadButton = defaultJButton(UPLOAD, UPLOAD);
         JButton executeButton = defaultJButton(EXECUTE + " isCulprit(X,A)", EXECUTE);
@@ -293,7 +294,7 @@ class GUI {
         String selectedDer = s[0];
         String[] posDers = s[1].split(SEPARATOR);
 
-        System.out.println("selected pref: "+ command + " type: " + type);
+        System.out.println("selected pref: " + command + " type: " + type);
 
 
         JTextArea selectedDerTF = defaultTextArea(selectedDer, 50);
@@ -443,7 +444,7 @@ class GUI {
 
             JButton viewDiagBtn = defaultJButton("View Diagram", filename);
             JButton viewTreeBtn = defaultJButton("View Argumentation Tree",
-                    ARG_TREE + "arg_tree_" + i + ".svg:" +  executeResult.getTree(i));
+                    ARG_TREE + "arg_tree_" + i + ".svg:" + executeResult.getTree(i));
 
             JPanel btnPanel = defaultJPanel();
 
@@ -453,7 +454,7 @@ class GUI {
             if (rs.size() > 1) {
                 JButton addPrefBtn = defaultJButton("Add rule preference",
                         PREF_TYPE + 1 + ADD_PREF + rs.get(i).snd.fst + "*"
-                        + executeResult.getDerivationsWithDiffStrRule(SEPARATOR, i));
+                                + executeResult.getDerivationsWithDiffStrRule(SEPARATOR, i));
                 btnPanel.add(addPrefBtn);
             }
 

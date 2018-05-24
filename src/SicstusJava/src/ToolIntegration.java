@@ -24,110 +24,110 @@ public class ToolIntegration {
 //    private static final String SQUID_LOG_RULES_PL = "toolIntegration/squid_log_rules.pl";
     static final String AUTOMATED_GEOLOCATION_PL = "toolIntegration/automated_geolocation.pl";
 
-    static final String CASE_OSSEC_LOG_ = "case_ossec_log_malware_";
+//    static final String CASE_OSSEC_LOG_ = "case_ossec_log_malware_";
 //    static final String CASE_SQUID_LOG = "case_squid_log_";
 //    static final String RULE_CASE_SQUID_LOG = "rule(" + CASE_SQUID_LOG + "%d(), squid_log(%s,%s,'%s',%s),[]).\n";
 //    static final String RULE_CASE_SQUID_LOG1 = "\nrule(" + CASE_SQUID_LOG + "1_%d(), ip(%s),[]).\n";
 
     static final String CASE_TOR_CHECK = "case_torCheck";
-    static final String RULE_CASE_TOR_CHECK = "rule(" + CASE_TOR_CHECK + "%d(), %s, []).\n";
-    static final String RULE_CASE_TOR_CHECK1 = "rule(" + CASE_TOR_CHECK + "1_%d(), ip(%s), []).\n";
+    static final String RULE_CASE_TOR_CHECK = "rule(" + ToolIntegration.CASE_TOR_CHECK + "%d(), %s, []).\n";
+    static final String RULE_CASE_TOR_CHECK1 = "rule(" + ToolIntegration.CASE_TOR_CHECK + "1_%d(), ip(%s), []).\n";
     static final String CASE_AUTOGEN_GEOLOCATION = "case_autogen_geolocation_";
     static Set<String> geolocatedIPs;
 
-    static final String RULE_CASE_AUTOGEN_GEOLOCATION = "rule(" + CASE_AUTOGEN_GEOLOCATION + "%d(), ipGeoloc(%s,%s), []).\n";
+    static final String RULE_CASE_AUTOGEN_GEOLOCATION = "rule(" + ToolIntegration.CASE_AUTOGEN_GEOLOCATION + "%d(), ipGeoloc(%s,%s), []).\n";
     static final String RULE_CASE_VIRUSTOTAL_RES = "case_virustotal_res";
-    static final String RULE_CASE_VIRUSTOTAL_RES_TEMPLATE = "rule(" + RULE_CASE_VIRUSTOTAL_RES + "%d(), %s, []).";
+    static final String RULE_CASE_VIRUSTOTAL_RES_TEMPLATE = "rule(" + ToolIntegration.RULE_CASE_VIRUSTOTAL_RES + "%d(), %s, []).";
 
-    private List<String> virustotalFinishedScanningIP;
+    private final List<String> virustotalFinishedScanningIP;
     private final String IPADDRESS_PATTERN =
             "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
-    private int virustotalCount = 0;
-    private int torCount = 0;
-    private int ossecCount = 0;
-    private int geolocCount = 0;
+    private int virustotalCount;
+    private int torCount;
+//    private int ossecCount;
+    private int geolocCount;
 
     public ToolIntegration() {
-        Utils.clearFile(VIRUS_TOTAL_PROLOG_FILE);
-        virustotalFinishedScanningIP = new ArrayList<>();
-        geolocatedIPs = new HashSet<>();
+        Utils.clearFile(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE);
+        this.virustotalFinishedScanningIP = new ArrayList<>();
+        ToolIntegration.geolocatedIPs = new HashSet<>();
     }
 
-    private String parseOSSEC(String filename, String attackname) {
-        final String[] s = new String[1];
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-
-            final String RULE_TEMPLATE = "rule(%s%d(), %s,[]).";
-            final String RULE = "Rule:";
-            final String LEVEL = "(level";
-            final String INFECTED_MSG_PREFIX = "Infected machine with";
-            final String SSHD_LOG_PREFIX = "sshd[";
-            boolean isBruteForce = false;
-
-            String line = br.readLine();
-
-            while (line != null) {
-                if (line.startsWith(RULE)) {
-
-                    String msg = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
-
-                    if (msg.startsWith(INFECTED_MSG_PREFIX)) {
-                        String malwareName = msg.substring(msg.indexOf(INFECTED_MSG_PREFIX)
-                                + INFECTED_MSG_PREFIX.length())
-                                .replace(" ", "")
-                                .replace("'", "");
-                        String fact = String.format("malwareUsedInAttack('%s',%s)", malwareName, attackname);
-                        s[0] = String.format(RULE_TEMPLATE, CASE_OSSEC_LOG_, ossecCount, fact);
-                        ossecCount++;
-                        break;
-                    } else if (msg.startsWith("SSHD brute force")) {
-                        isBruteForce = true;
-                    }
-                } else if (isBruteForce && line.startsWith(SSHD_LOG_PREFIX)) {
-                    Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        String ipString = matcher.group();
-                        String ipProlog = "[" + ipString.replace(".", ",") + "]";
-                        String fact = String.format("attackSourceIP(%s, %s)", ipProlog, attackname);
-                        s[0] = String.format(RULE_TEMPLATE, CASE_OSSEC_LOG_, ossecCount, fact);
-                        ossecCount++;
-                        break;
-                    }
-                }
-                line = br.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return s[0];
-    }
+//    private String parseOSSEC(String filename, String attackname) {
+//        String[] s = new String[1];
+//        try {
+//            BufferedReader br = new BufferedReader(new FileReader(filename));
+//
+//            String RULE_TEMPLATE = "rule(%s%d(), %s,[]).";
+//            String RULE = "Rule:";
+//            String LEVEL = "(level";
+//            String INFECTED_MSG_PREFIX = "Infected machine with";
+//            String SSHD_LOG_PREFIX = "sshd[";
+//            boolean isBruteForce = false;
+//
+//            String line = br.readLine();
+//
+//            while (line != null) {
+//                if (line.startsWith(RULE)) {
+//
+//                    String msg = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+//
+//                    if (msg.startsWith(INFECTED_MSG_PREFIX)) {
+//                        String malwareName = msg.substring(msg.indexOf(INFECTED_MSG_PREFIX)
+//                                + INFECTED_MSG_PREFIX.length())
+//                                .replace(" ", "")
+//                                .replace("'", "");
+//                        String fact = String.format("malwareUsedInAttack('%s',%s)", malwareName, attackname);
+//                        s[0] = String.format(RULE_TEMPLATE, ToolIntegration.CASE_OSSEC_LOG_, this.ossecCount, fact);
+//                        this.ossecCount++;
+//                        break;
+//                    } else if (msg.startsWith("SSHD brute force")) {
+//                        isBruteForce = true;
+//                    }
+//                } else if (isBruteForce && line.startsWith(SSHD_LOG_PREFIX)) {
+//                    Pattern pattern = Pattern.compile(this.IPADDRESS_PATTERN);
+//                    Matcher matcher = pattern.matcher(line);
+//                    if (matcher.find()) {
+//                        String ipString = matcher.group();
+//                        String ipProlog = "[" + ipString.replace(".", ",") + "]";
+//                        String fact = String.format("attackSourceIP(%s, %s)", ipProlog, attackname);
+//                        s[0] = String.format(RULE_TEMPLATE, ToolIntegration.CASE_OSSEC_LOG_, this.ossecCount, fact);
+//                        this.ossecCount++;
+//                        break;
+//                    }
+//                }
+//                line = br.readLine();
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return s[0];
+//    }
 
 
     void torIntegration() {
-        if (torCount == 0) {
-            Utils.clearFile(TOR_IP_FILE);
+        if (this.torCount == 0) {
+            Utils.clearFile(ToolIntegration.TOR_IP_FILE);
         }
 
-        Set<String[]> ips = getTargetServerIP(Utils.EVIDENCE_FILENAME);
-        ips.addAll(getTargetServerIP(Utils.USER_EVIDENCE_FILENAME));
+        Set<String[]> ips = ToolIntegration.getTargetServerIP(Utils.EVIDENCE_PL);
+        ips.addAll(ToolIntegration.getTargetServerIP(Utils.USER_EVIDENCE_FILENAME));
 
         System.out.println("Tor: " + ips.size());
 
         for (String[] ip : ips) {
             String ipPredString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
             String ipString = String.format("%s.%s.%s.%s", ip[0], ip[1], ip[2], ip[3]);
-            processTorCheckFile(getTorFile(ipString), ipPredString);
+            this.processTorCheckFile(ToolIntegration.getTorFile(ipString), ipPredString);
         }
     }
 
     private static Stream<String> getTorFile(String ipString) {
         String domainName = String.format("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s&port=", ipString);
         String command = "curl " + domainName;
-        return executeUNIXCommand(command);
+        return ToolIntegration.executeUNIXCommand(command);
 
     }
 
@@ -136,7 +136,7 @@ public class ToolIntegration {
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             br.lines().forEach(line -> {
-                if (line.contains(targetServerIPPredicate)) {
+                if (line.contains(ToolIntegration.targetServerIPPredicate)) {
                     String head = Utils.getHeadOfLine(line);
                     String[] ip = head.split("\\]")[0].split("\\[")[1].split(",");
                     ips.add(ip);
@@ -151,20 +151,20 @@ public class ToolIntegration {
 //      use imperial ip as example, write result in evidence
     void processTorCheckFile(Stream<String> lines, String serverIP) {
         try {
-            final int[] count = {torCount};
-            final StringBuilder sb = new StringBuilder("\n");
+            int[] count = {this.torCount};
+            StringBuilder sb = new StringBuilder("\n");
             lines.forEach(line -> {
                 if (!line.startsWith("#") && !line.startsWith("<!")) {
                     String[] ipStrings = line.split("\\.");
                     String ipString = String.format("[%s,%s,%s,%s]", ipStrings[0], ipStrings[1], ipStrings[2], ipStrings[3]);
                     String fact = String.format("torIP(%s, %s)", ipString, serverIP);
-                    sb.append(String.format(RULE_CASE_TOR_CHECK, count[0], fact));
-                    sb.append(String.format(RULE_CASE_TOR_CHECK1, count[0], ipString));
+                    sb.append(String.format(ToolIntegration.RULE_CASE_TOR_CHECK, count[0], fact));
+                    sb.append(String.format(ToolIntegration.RULE_CASE_TOR_CHECK1, count[0], ipString));
                     count[0]++;
                 }
             });
-            torCount = count[0];
-            Files.write(Paths.get(TOR_IP_FILE), sb.toString().getBytes(), StandardOpenOption.APPEND);
+            this.torCount = count[0];
+            Files.write(Paths.get(ToolIntegration.TOR_IP_FILE), sb.toString().getBytes(), StandardOpenOption.APPEND);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -201,7 +201,7 @@ public class ToolIntegration {
                     break;
                 case '1':
                     String[] reply = s.split(";");
-                    return convertToAtom(reply[3]);
+                    return ToolIntegration.convertToAtom(reply[3]);
                 case '2':
                     System.err.println("Not found in database");
                     break;
@@ -218,12 +218,12 @@ public class ToolIntegration {
 
     void getVirustotalReportAndProcess(String ip, Integer year, Integer month) {
         System.out.println("Processing " + ip + " : " + year + "," + month);
-        File virusTotalReportFile = new File(virusTotalLogFileTemplate + ip);
-        if (!virustotalFinishedScanningIP.contains(ip)) {
+        File virusTotalReportFile = new File(ToolIntegration.virusTotalLogFileTemplate + ip);
+        if (!this.virustotalFinishedScanningIP.contains(ip)) {
             List<Pair<Pair<Integer, Integer>, String>> res = GetIPAddressReport.getIPResolution(ip);
             if (res != null) {
-                processVirusTotalFile(res, ip, year, month);
-                virustotalFinishedScanningIP.add(ip);
+                this.processVirusTotalFile(res, ip, year, month);
+                this.virustotalFinishedScanningIP.add(ip);
             }
         } else {
             System.out.println(virusTotalReportFile + " already exists.");
@@ -247,8 +247,8 @@ public class ToolIntegration {
 
     void processVirusTotalFile(List<Pair<Pair<Integer, Integer>, String>> res, String ip, int year, int month) {
         try {
-            FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
-            Collections.sort(res, PairComparator);
+            FileWriter w = new FileWriter(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE, true);
+            Collections.sort(res, ToolIntegration.PairComparator);
             int prevYear = -1;
             int prevMonth = -1;
             for (int i = 0; i < res.size(); i++) {
@@ -262,10 +262,10 @@ public class ToolIntegration {
                 int currYear = datePair.fst;
                 int currMonth = datePair.snd;
 
-                if (dateExceeded(year, month, prevYear, prevMonth) && !dateExceeded(year, month, currYear, currMonth)) {
+                if (this.dateExceeded(year, month, prevYear, prevMonth) && !this.dateExceeded(year, month, currYear, currMonth)) {
                     String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, resolvedDate);
-                    w.write(String.format(RULE_CASE_VIRUSTOTAL_RES_TEMPLATE + "\n", virustotalCount, fact));
-                    virustotalCount++;
+                    w.write(String.format(ToolIntegration.RULE_CASE_VIRUSTOTAL_RES_TEMPLATE + "\n", this.virustotalCount, fact));
+                    this.virustotalCount++;
                     break;
                 }
                 prevYear = currYear;
@@ -282,7 +282,7 @@ public class ToolIntegration {
 
     // returns true is year/month is after currYear/currMonth
     private boolean dateExceeded(int year, int month, int currYear, int currMonth) {
-        return year > currYear || (year == currYear && month > currMonth);
+        return year > currYear || year == currYear && month > currMonth;
     }
 
 
@@ -327,16 +327,16 @@ public class ToolIntegration {
         }
 
         try {
-            FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL, true);
+            FileWriter f_w = new FileWriter(ToolIntegration.AUTOMATED_GEOLOCATION_PL, true);
             for (Pair<String, String> ipDate : ipDates) {
                 String ip = ipDate.fst;
-                String ipString = convertPrologIPToString(ip);
+                String ipString = ToolIntegration.convertPrologIPToString(ip);
 
-                if (!geolocatedIPs.contains(ipString)) {
-                    String country = ipGeolocation(ipString);
-                    geolocatedIPs.add(ipString);
-                    String rule = String.format(RULE_CASE_AUTOGEN_GEOLOCATION, geolocCount, country, ip);
-                    geolocCount++;
+                if (!ToolIntegration.geolocatedIPs.contains(ipString)) {
+                    String country = ToolIntegration.ipGeolocation(ipString);
+                    ToolIntegration.geolocatedIPs.add(ipString);
+                    String rule = String.format(ToolIntegration.RULE_CASE_AUTOGEN_GEOLOCATION, this.geolocCount, country, ip);
+                    this.geolocCount++;
                     f_w.write(rule);
                 }
 
@@ -346,7 +346,7 @@ public class ToolIntegration {
                     String[] s = date.substring(1, date.length() - 1).split(",");
                     int year = Integer.parseInt(s[0]);
                     int month = Integer.parseInt(s[1]);
-                    getVirustotalReportAndProcess(ipString, year, month);
+                    this.getVirustotalReportAndProcess(ipString, year, month);
                 }
             }
             f_w.close();
@@ -359,7 +359,7 @@ public class ToolIntegration {
         if (level >= 3) {
             return false;
         }
-        final String[] keywords = new String[]{"bad", "invalid", "error",
+        String[] keywords = {"bad", "invalid", "error",
                 "brute force", "multiple", "high amount", "breakin", "infected",
                 "malware", "worm", "trojan", "virus", "denial of service", "malicious"};
         String msgLower = msg.toLowerCase();
@@ -376,7 +376,7 @@ public class ToolIntegration {
 
     // return prolog rules
     public static Map<String, Map<String, Map<String, Integer>>> parseSnortLogs(File file) {
-        final String PRIORITY = "[Priority: ";
+        String PRIORITY = "[Priority: ";
         List<String> prologPreds = new ArrayList<>();
         // key: srcIP value: (key: destIP value: set(msg, times occurred))
         Map<String, Map<String, Map<String, Integer>>> srcIPMap = new HashMap<>();
@@ -391,11 +391,11 @@ public class ToolIntegration {
                     int priorityStart = log.indexOf(PRIORITY) + PRIORITY.length();
                     int priority = Integer.parseInt(log.substring(priorityStart, log.indexOf("]", priorityStart)));
                     String msg = log.substring(log.indexOf("]") + 1, log.indexOf("[**]"));
-                    if (relevantLog(priority, msg)) {
-                        final int IP_SEPARATOR_POS = log.indexOf("->");
-                        String srcIP = parseIPFromString(log.substring(log.indexOf("]"), IP_SEPARATOR_POS));
-                        String destIP = parseIPFromString(log.substring(IP_SEPARATOR_POS));
-                        if (isUsefulIP(srcIP) && isUsefulIP(destIP)) {
+                    if (ToolIntegration.relevantLog(priority, msg)) {
+                        int IP_SEPARATOR_POS = log.indexOf("->");
+                        String srcIP = ToolIntegration.parseIPFromString(log.substring(log.indexOf("]"), IP_SEPARATOR_POS));
+                        String destIP = ToolIntegration.parseIPFromString(log.substring(IP_SEPARATOR_POS));
+                        if (ToolIntegration.isUsefulIP(srcIP) && ToolIntegration.isUsefulIP(destIP)) {
                             Map<String, Map<String, Integer>> m;
                             if (srcIPMap.get(srcIP) == null) {
                                 m = new HashMap<>();
@@ -420,7 +420,7 @@ public class ToolIntegration {
             List<Integer> list = new ArrayList<>();
 
             for (String srcIP : srcIPMap.keySet()) {
-                int size = recursiveSizeOfMap(srcIPMap.get(srcIP));
+                int size = ToolIntegration.recursiveSizeOfMap(srcIPMap.get(srcIP));
                 if (list.size() <= 5) {
                     list.add(size);
                     Collections.sort(list);
@@ -432,7 +432,7 @@ public class ToolIntegration {
             }
 
             for (String srcIP : srcIPMap.keySet()) {
-                if (recursiveSizeOfMap(srcIPMap.get(srcIP)) > list.get(0)) {
+                if (ToolIntegration.recursiveSizeOfMap(srcIPMap.get(srcIP)) > list.get(0)) {
                     filteredMap.put(srcIP, srcIPMap.get(srcIP));
                 }
             }
