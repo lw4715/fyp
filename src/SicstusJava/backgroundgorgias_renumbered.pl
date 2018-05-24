@@ -49,9 +49,7 @@ rule(bg15(),sha256(goldenEye,'027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b
 rule(bg16(),prominentGroup(fancyBear),[]).
 rule(bg17(),groupOrigin(fancyBear ,russian_federation),[]).
 rule(bg18(),pastMotives(fancyBear ,[ espionage,doxing ]),[]).
-rule(bg19(),pastTargets(fancyBear ,[georgia,france,jordan,united_states,hungary,world_antidoping_agency,
-	nato,ukraine,belgium,pakistan,asia_pacific_economic_cooperation,osce,united_kingdom,
-	germany,poland,european_commission]),[]).
+rule(bg19(),pastTargets(fancyBear ,[georgia,france,jordan,united_states,hungary,world_antidoping_agency, nato,ukraine,belgium,pakistan,asia_pacific_economic_cooperation,osce,united_kingdom, germany,poland,european_commission]),[]). 
 rule(bg20(),targetCategory(fancyBear,government,military),[]).
 
 rule(bg21(),prominentGroup(cozyBear),[]).
@@ -89,8 +87,7 @@ rule(bg41(),pastMotives(deepPanda ,[ cyberespionage ]),[]).
 rule(bg42(),prominentGroup(butterfly),[]).
 rule(bg43(),groupOrigin(butterfly ,china),[]).
 rule(bg44(),groupAttackMethods(butterfly ,[ zeroday ,customMalware ]),[]).
-rule(bg45(),pastTargets(butterfly ,[ twitter ,facebook ,apple ,microsoft ,pharmaceutical,
-	technology ,law ,oil ,preciousMetalMining ]),[]).
+rule(bg45(),pastTargets(butterfly ,[ twitter ,facebook ,apple ,microsoft ,pharmaceutical, technology ,law ,oil ,preciousMetalMining ]),[]). 
 rule(bg46(),pastMotives(butterfly ,[ cyberespionage ,undergroundBusiness ]),[]).
 
 rule(bg47(),prominentGroup(dragonfly),[]).
@@ -103,9 +100,7 @@ rule(bg51(),pastMotives(dragonfly ,[ cyberespionage ,spy ,sabotage ]),[]).
 rule(bg52(),prominentGroup(govRAT),[]).
 rule(bg53(),groupOrigin(govRAT ,china),[]).
 rule(bg54(),groupAttackMethods(govRAT ,[ clientSideExploits ]),[]).
-rule(bg55(),pastTargets(govRAT ,[united_states,taiwan,united_kingdom,singapore,india,canada,
-	japan,indonesia,hong_kong,united_nations,south_korea,switzerland,vietnam,germany,
-	international_olympic_committee]),[]).
+rule(bg55(),pastTargets(govRAT ,[united_states,taiwan,united_kingdom,singapore,india,canada, japan,indonesia,hong_kong,united_nations,south_korea,switzerland,vietnam,germany, international_olympic_committee]),[]). 
 rule(bg56(),targetCategory([ govOfficials ,militaryOfficials ,enterprises ]),[]).
 rule(bg57(),pastMotives(govRAT ,[ cyberespionage ]),[]).
 
@@ -122,24 +117,7 @@ rule(bg65(),pastMotives(waterbug ,[ cyberespionage ,spy ,intelligenceGathering ]
 
 
 
-listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia,
-	bosnia_herzegovina,burkina_faso,burundi,cambodia,cape,verde,central_african_republic,chad,comoros,congo,
-	cuba,democratic_republic_of_the_congo,djibouti,dominica,dominican_republic,el_salvador,equatorial_guinea,
-	eritrea,ethiopia,fiji,gabon,gambia,grenada,guatemala,guinea,guinea_bissau,guyana,haiti,honduras,iraq,jordan,
-	kiribati,kuwait,kyrgyzstan,lebanon,lesotho,liberia,libya,liechtenstein,madagascar,malawi,maldives,mali,
-	marshall_islands,mauritania,micronesia,monaco,mongolia,mozambique,myanmar,namibia,nauru,nepal,nicaragua,niger,
-	palau,state_of_palestine,papua_new_guinea ,saint_kitts_and_nevis ,saint_lucia,saint_vincent_and_the_grenadines,
-	samoa,san_marino,saotome_and_principe,seychelles,sierra_leone,solomon_islands,somalia,southsudan,sudan,suriname,
-	swaziland,syrian_arab_republic,tajikistan,timor_leste,togo,tonga,trinidad_and_tobago,turkmenistan,tuvalu,
-	uzbekistan,vanuatu,vatican,viet,nam,yemen,zambia,zimbabwe,albania,ghana,peru,algeria,greece,philippines,argentina,
-	hungary,poland,austria,iceland,portugal,azerbaijan,india,qatar,bahrain,indonesia,romania,bangladesh,iran,rwanda,
-	belarus,ireland,saudi_arabia,belgium,israel,senegal,botswana,italy,serbia ,brazil,jamaica,slovakia,brunei_darussalam,
-	kazakhstan,slovenia,bulgaria,kenya,southafrica,cameroon,laos,spain,chile,latvia,sri,lanka,china,lithuania,tanzania,
-	colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico,tunisia,croatia,moldova,turkey,cyprus,montenegro,
-	uganda,czech_republic,morocco,ukraine,north_korea,nigeria,united_arab_emirates,denmark,pakistan,uruguay,ecuador,
-	panama,venezuela,germany,paraguay,australia,japan,oman ,canada,south_korea,russian_federation,egypt,malaysia,singapore,estonia,
-	mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states,hong_kong]).
-
+listCountries([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia, bosnia_herzegovina,burkina_faso,burundi,cambodia,cape,verde,central_african_republic,chad,comoros,congo, cuba,democratic_republic_of_the_congo,djibouti,dominica,dominican_republic,el_salvador,equatorial_guinea, eritrea,ethiopia,fiji,gabon,gambia,grenada,guatemala,guinea,guinea_bissau,guyana,haiti,honduras,iraq,jordan, kiribati,kuwait,kyrgyzstan,lebanon,lesotho,liberia,libya,liechtenstein,madagascar,malawi,maldives,mali, marshall_islands,mauritania,micronesia,monaco,mongolia,mozambique,myanmar,namibia,nauru,nepal,nicaragua,niger, palau,state_of_palestine,papua_new_guinea ,saint_kitts_and_nevis ,saint_lucia,saint_vincent_and_the_grenadines, samoa,san_marino,saotome_and_principe,seychelles,sierra_leone,solomon_islands,somalia,southsudan,sudan,suriname, swaziland,syrian_arab_republic,tajikistan,timor_leste,togo,tonga,trinidad_and_tobago,turkmenistan,tuvalu, uzbekistan,vanuatu,vatican,viet,nam,yemen,zambia,zimbabwe,albania,ghana,peru,algeria,greece,philippines,argentina, hungary,poland,austria,iceland,portugal,azerbaijan,india,qatar,bahrain,indonesia,romania,bangladesh,iran,rwanda, belarus,ireland,saudi_arabia,belgium,israel,senegal,botswana,italy,serbia ,brazil,jamaica,slovakia,brunei_darussalam, kazakhstan,slovenia,bulgaria,kenya,southafrica,cameroon,laos,spain,chile,latvia,sri,lanka,china,lithuania,tanzania, colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico,tunisia,croatia,moldova,turkey,cyprus,montenegro, uganda,czech_republic,morocco,ukraine,north_korea,nigeria,united_arab_emirates,denmark,pakistan,uruguay,ecuador, panama,venezuela,germany,paraguay,australia,japan,oman ,canada,south_korea,russian_federation,egypt,malaysia,singapore,estonia, mauritius,sweden,finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states,hong_kong]).
 cybersuperpowerlist([ china ,israel ,iran ,united_states ,north_korea]).
 rule(bg66(),cybersuperpower(X),[]) :- cybersuperpowerlist(L),member(X,L).
 %% rule(bg65b,listNegHasResources([ indonesia,saudi_arabia,india,southafrica,turkey ]),[]).
@@ -196,23 +174,9 @@ rule(bg96(),fileCharaMalware(wannacry_filechara4,wannacry),[]).
 rule(bg97(),fileChara('@WanaDecryptor@exe','7bf2b57f2a205768755c07f238fb32cc','245760','2009-07-1323:19:35Z','Decryptor','EXE',wannacry_filechara4),[]).
 
 %% Global Cybersecurity Index
-list_gci_initiating([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia,
-	bosnia_herzegovina,burkina_faso,burundi,cambodia,cape,verde,central_african_republic,chad,comoros,congo,cuba,
-	democratic_republic_of_the_congo,djibouti,dominica,dominican_republic,el_salvador,equatorial_guinea,eritrea,
-	ethiopia,fiji,gabon,gambia,grenada,guatemala,guinea,guinea_bissau,guyana,haiti,honduras,iraq,jordan,kiribati,
-	kuwait,kyrgyzstan,lebanon,lesotho,liberia,libya,liechtenstein,madagascar,malawi,maldives,mali,marshall_islands,
-	mauritania,micronesia,monaco,mongolia,mozambique,myanmar,namibia,nauru,nepal,nicaragua,niger,palau,state_of_palestine,
-	papua_new_guinea,saint_kitts_and_nevis,saint_lucia,saint_vincent_and_the_grenadines,samoa,san_marino,saotome_and_principe,
-	seychelles,sierra_leone,solomon_islands,somalia,southsudan,sudan,suriname,swaziland,syrian_arab_republic,tajikistan,
-	timor_leste,togo,tonga,trinidad_and_tobago,turkmenistan,tuvalu,uzbekistan,vanuatu,vatican,viet,nam,yemen,zambia,zimbabwe]).
-list_gci_maturing([albania,ghana,peru,algeria,greece,philippines,argentina,hungary,poland,austria,iceland,portugal,
-	azerbaijan,india,qatar,bahrain,indonesia,romania,bangladesh,iran,rwanda,belarus,ireland,saudi_arabia,belgium,israel,senegal,
-	botswana,italy,serbia,brazil,jamaica,slovakia,brunei_darussalam,kazakhstan,slovenia,bulgaria,kenya,southafrica,cameroon,laos,
-	spain,chile,latvia,sri,lanka,china,lithuania,tanzania,colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico,
-	tunisia,croatia,moldova,turkey,cyprus,montenegro,uganda,czech_republic,morocco,ukraine,north_korea,nigeria,
-	united_arab_emirates,denmark,pakistan,uruguay,ecuador,panama,venezuela,germany,paraguay]).
-list_gci_leading([australia,japan,oman,canada,south_korea,russian_federation,egypt,malaysia,singapore,estonia,mauritius,sweden,
-	finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states]).
+list_gci_initiating([afghanistan,andorra,angola,armenia,bahamas,barbados,belize,benin,bhutan,bolivia, bosnia_herzegovina,burkina_faso,burundi,cambodia,cape,verde,central_african_republic,chad,comoros,congo,cuba, democratic_republic_of_the_congo,djibouti,dominica,dominican_republic,el_salvador,equatorial_guinea,eritrea, ethiopia,fiji,gabon,gambia,grenada,guatemala,guinea,guinea_bissau,guyana,haiti,honduras,iraq,jordan,kiribati, kuwait,kyrgyzstan,lebanon,lesotho,liberia,libya,liechtenstein,madagascar,malawi,maldives,mali,marshall_islands, mauritania,micronesia,monaco,mongolia,mozambique,myanmar,namibia,nauru,nepal,nicaragua,niger,palau,state_of_palestine, papua_new_guinea,saint_kitts_and_nevis,saint_lucia,saint_vincent_and_the_grenadines,samoa,san_marino,saotome_and_principe, seychelles,sierra_leone,solomon_islands,somalia,southsudan,sudan,suriname,swaziland,syrian_arab_republic,tajikistan, timor_leste,togo,tonga,trinidad_and_tobago,turkmenistan,tuvalu,uzbekistan,vanuatu,vatican,viet,nam,yemen,zambia,zimbabwe]). 
+list_gci_maturing([albania,ghana,peru,algeria,greece,philippines,argentina,hungary,poland,austria,iceland,portugal, azerbaijan,india,qatar,bahrain,indonesia,romania,bangladesh,iran,rwanda,belarus,ireland,saudi_arabia,belgium,israel,senegal, botswana,italy,serbia,brazil,jamaica,slovakia,brunei_darussalam,kazakhstan,slovenia,bulgaria,kenya,southafrica,cameroon,laos, spain,chile,latvia,sri,lanka,china,lithuania,tanzania,colombia,luxembourg,thailand,costa_rica,malta,cote_divoire,mexico, tunisia,croatia,moldova,turkey,cyprus,montenegro,uganda,czech_republic,morocco,ukraine,north_korea,nigeria, united_arab_emirates,denmark,pakistan,uruguay,ecuador,panama,venezuela,germany,paraguay]).
+list_gci_leading([australia,japan,oman,canada,south_korea,russian_federation,egypt,malaysia,singapore,estonia,mauritius,sweden, finland,netherlands,switzerland,france,new_zealand,united_kingdom,georgia,norway,united_states]).
 rule(bg98(),gci_tier(X,initiating),[]) :- list_gci_initiating(L),member(X,L).
 rule(bg99(),gci_tier(X,maturing),[]) :- list_gci_maturing(L),member(X,L).
 rule(bg100(),gci_tier(X,leading),[]) :- list_gci_leading(L),member(X,L).
