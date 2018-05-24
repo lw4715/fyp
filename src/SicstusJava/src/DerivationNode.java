@@ -307,7 +307,7 @@ public class DerivationNode {
     }
 
     // return list of prefs
-    public static void createDerivationAndSaveDiagram(Term t, String attack, int count) {
+    public static void createDerivationAndSaveDiagram(Term t) {
         String filename = getDiagramFilename(t.toString());
         if (new File("img/" + filename).exists()) {
             System.out.println(filename + " already exists, skipping diagram creation");

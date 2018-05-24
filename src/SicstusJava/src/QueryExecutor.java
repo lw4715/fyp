@@ -57,7 +57,7 @@ public class QueryExecutor {
                 String s = split[i];
                 set.add(s);
             }
-            System.out.println("Size of visual tree=" + set.size());
+//            System.out.println("Size of visual tree=" + set.size());
             return set;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -80,7 +80,7 @@ public class QueryExecutor {
                 goal = "goal_all";
                 // tech
                 queryString = String.format("goal_all(%s,X, M, M2, M3, D1, D2, D3, D4, D5)", caseName);
-                System.out.println(queryString);
+//                System.out.println(queryString);
                 executeQueryString(queryString, 200);
 
                 // op
@@ -95,18 +95,18 @@ public class QueryExecutor {
                     }
                 }
                 queryString = String.format("goal_all(%s, X1, D1, D2, D3, D4, D5)", caseName);
-                System.out.println(queryString);
+//                System.out.println(queryString);
                 executeQueryString(queryString, 200);
 
                 queryString = String.format("goal_all(%s, X, D)", caseName);
-                System.out.println(queryString);
+//                System.out.println(queryString);
                 executeQueryString(queryString, 50);
 
             } else {
                 executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
                 queryString = String.format("goal(%s,X,D0)", caseName);
                 queryMap = executeQueryString(queryString, 10);
-                System.out.println(queryString);
+//                System.out.println(queryString);
                 executeQueryString("told", 1);
                 return queryMap;
             }
@@ -175,7 +175,7 @@ public class QueryExecutor {
 
     // prove all predicates
     public Result executeAll(String caseName, List<String> culpritsList) {
-        System.out.println("Executing for " + caseName);
+//        System.out.println("Executing for " + caseName);
         abduced.clear();
         Map<String, Term>[] maps = this.executeQuery(caseName, verbose, true, culpritsList);
         return null;
@@ -183,7 +183,7 @@ public class QueryExecutor {
 
     // prove([isCulprit(X, caseName)], D)
     public Result execute(String caseName, boolean reload, List<String> culpritsList) throws Exception {
-        System.out.println("Executing for " + caseName);
+//        System.out.println("Executing for " + caseName);
         loadFiles();
         abduced.clear();
         System.out.println(String.format("---------\nStart %s derivation", caseName));
@@ -212,7 +212,10 @@ public class QueryExecutor {
                 culprits.add(culprit);
                 List<String> d = convertToString(t);
                 set.add(d);
-                DerivationNode.createDerivationAndSaveDiagram(t, caseName, count);
+                long diagTime = System.nanoTime();
+                DerivationNode.createDerivationAndSaveDiagram(t);
+                diagTime = (long) ((System.nanoTime() - diagTime)/pow(10, 9));
+                System.out.println("\n*\tTime for diagram " + caseName + " = " +  diagTime);
                 count++;
             }
         }
@@ -225,7 +228,6 @@ public class QueryExecutor {
                     negQueryString, 5);
             for (Map<String, Term> m: ms) {
                 Term d = m.get("D");
-                if (verbose) System.out.println(ms + " " + m);
                 if (!d.toString().equals("'FAIL'")) {
                     negDerivations.add(convertToString(d));
                 } else {
@@ -240,18 +242,9 @@ public class QueryExecutor {
         populateAbduced(resultMap);
         time = ((System.nanoTime() - time)/pow(10, 9));
         timings.add(time);
-        System.out.println("\nTotal time for " + caseName + ": " + time );
+        System.out.println("\n* Total time for " + caseName + ": " + time );
         Result r = new Result(caseName, resultMap, extractArgumentationTreeFromFile().toArray(),
                 abduced, getPredMap(abduced, true), negMap);
-//        if (verbose) {
-//            for (Pair<String, Pair<List<String>, String>> s : r.resultStrings()) {
-//                System.out.println(s.getKey());
-//            }
-//            for (String neg : r.negDerivationFor(culprits.toArray()[0].toString())) {
-//                System.out.println(neg);
-//            }
-//        }
-
         return r;
     }
 
@@ -455,14 +448,14 @@ public class QueryExecutor {
             qe.clearLeftoverFiles();
 
             for (int i = 0; i < n; i++) {
-//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-//                }
-//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example6", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
-                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
+                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
                     Result r = qe.execute(c, false, new ArrayList<>());
-                    System.out.println(r);
+//                    System.out.println(r);
+                }
+                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
+//                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
+                    Result r = qe.execute(c, false, new ArrayList<>());
+//                    System.out.println(r);
                 }
             }
         } catch (Exception e) {
