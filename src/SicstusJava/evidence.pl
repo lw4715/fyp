@@ -222,7 +222,7 @@ rule(case_example7_f5(),malwareLinkedTo(example7_m2,yourCountry),[]).
 rule(case_autogeoloc_ex_f0(),malwareUsedInAttack(autogeoloc_ex_malware, autogeoloc_ex),[]).
 rule(case_autogeoloc_ex_f1(),attackSourceIP([103,234,220,195],autogeoloc_ex),[]).
 rule(case_autogeoloc_ex_f3(),ip([103,234,220,195]),[]).
-rule(case_autogeoloc_ex_f4(),claimedResponsibility(countryX, autogeoloc_ex),[]).
+%% rule(case_autogeoloc_ex_f4(),claimedResponsibility(countryX, autogeoloc_ex),[]).
 
 %% tor_ex
 %% expected: no culprit (spoof)
@@ -230,19 +230,22 @@ rule(case_tor_ex_f1(), malwareUsedInAttack(tor_ex_malware,tor_ex),[]).
 rule(case_tor_ex_f2(), attackSourceIP([103,234,220,195],tor_ex),[]).
 rule(case_tor_ex_f3(), ip([103,234,220,195]),[]).
 rule(case_tor_ex_f4(), targetServerIP([72,111,1,30], tor_ex),[]).
-rule(case_tor_ex_f5(), claimedResponsibility(countryX, tor_ex),[]).
+%% rule(case_tor_ex_f5(), claimedResponsibility(countryX, tor_ex),[]).
 
 
 %% virustotal_ex
 %% expected: us (loc)
 rule(case_virustotal_ex_f0(),malwareUsedInAttack(virustotal_ex_malware, virustotal_ex),[]).
 rule(case_virustotal_ex_f1(),attackSourceIP([8,8,8,8],virustotal_ex),[]).
-%% rule(case_virustotal_ex_f2(),ip([8,8,8,8],[2018,5]),[]). % ip([IP],[YYYY,MM]) for auto resolution using virustotal
+rule(case_virustotal_ex_f2(),ip([8,8,8,8],[2018,5]),[]). % ip([IP],[YYYY,MM]) for auto resolution using virustotal
 rule(case_virustotal_ex_f3(),ccServer('00027.hk', example_past_attack_m),[]).
 rule(case_virustotal_ex_f4(),malwareLinkedTo(example_past_attack_m, myCountry),[]).
 
 %% ex
 rule(case_snort_ex_f0(),malwareUsedInAttack(ex_malware, ex),[]).
+rule(case_snort_ex_f1(),attackSourceIP([8,8,8,8], ex),[]).
+rule(case_snort_ex_f2(),ip([8,8,8,8]),[]).
+
 %% rule(case_snort_ex_f1(),dummyPred(someone, ex),[]).
 
 

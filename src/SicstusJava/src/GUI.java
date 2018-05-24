@@ -1,4 +1,5 @@
-import javafx.util.Pair;
+//import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -435,10 +436,10 @@ class GUI {
         p.add(label4);
 
         for (int i = 0; i < rs.size(); i++) {
-            String r = rs.get(i).getKey();
+            String r = rs.get(i).fst;
             JTextArea textArea = defaultTextArea(r, 50);
             highlightWordInTextArea("X = [A-Za-z_]*\\b", textArea, Color.YELLOW, true); // highlight culprit
-            String filename = DerivationNode.getDiagramFilename(rs.get(i).getValue().getKey().toString());
+            String filename = DerivationNode.getDiagramFilename(rs.get(i).snd.fst.toString());
 
             JButton viewDiagBtn = defaultJButton("View Diagram", filename);
             JButton viewTreeBtn = defaultJButton("View Argumentation Tree",
@@ -451,7 +452,7 @@ class GUI {
 
             if (rs.size() > 1) {
                 JButton addPrefBtn = defaultJButton("Add rule preference",
-                        PREF_TYPE + 1 + ADD_PREF + rs.get(i).getValue().getKey() + "*"
+                        PREF_TYPE + 1 + ADD_PREF + rs.get(i).snd.fst + "*"
                         + executeResult.getDerivationsWithDiffStrRule(SEPARATOR, i));
                 btnPanel.add(addPrefBtn);
             }
@@ -498,11 +499,11 @@ class GUI {
                     JTextArea ta = defaultTextArea(strRule, 90);
 
                     Pair<List<String>, List<String>> r = QueryExecutorWorkers.tryToProve(strRule, attackName.getText(), mainFrame);
-                    for (String proven : r.getKey()) {
+                    for (String proven : r.fst) {
                         String provenPred = proven.substring(0, proven.lastIndexOf("(") + 1);
                         highlightWordInTextArea(provenPred, ta, Color.green, false);
                     }
-                    for (String notProven : r.getValue()) {
+                    for (String notProven : r.snd) {
                         String notProvenPred = notProven.substring(0, notProven.lastIndexOf("(") + 1);
                         highlightWordInTextArea(notProvenPred, ta, Color.pink, false);
                     }
@@ -816,18 +817,18 @@ class GUI {
                         try {
                             Pair<List<String>, List<String>> r = QueryExecutorWorkers.tryToProve(strRule, attackName.getText(), executeAllFrame);
 
-                            Map<String, List<String>> allRules = QueryExecutorWorkers.getPredMap(r.getValue(), false, executeAllFrame);
+                            Map<String, List<String>> allRules = QueryExecutorWorkers.getPredMap(r.snd, false, executeAllFrame);
                             JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules), 110);
                             for (String head : allRules.keySet()) {
-                                String headWithConst = returnMatchingPredicate(head, r.getValue());
+                                String headWithConst = returnMatchingPredicate(head, r.snd);
                                 List<String> rules = allRules.get(head);
                                 for (String rule : rules) {
                                     Pair<List<String>, List<String>> pair = QueryExecutorWorkers.tryToProve(rule, attackName.getText(), headWithConst, executeAllFrame);
-                                    for (String pair0 : pair.getKey()) {
+                                    for (String pair0 : pair.fst) {
                                         pair0 = pair0.substring(0, pair0.lastIndexOf("(") + 1);
                                         highlightWordInTextArea(pair0, possibleRulesTA, Color.green, false);
                                     }
-                                    for (String pair1 : pair.getValue()) {
+                                    for (String pair1 : pair.snd) {
                                         pair1 = pair1.substring(0, pair1.lastIndexOf("(") + 1);
                                         highlightWordInTextArea(pair1, possibleRulesTA, Color.pink, false);
                                     }
@@ -837,9 +838,9 @@ class GUI {
                             JPanel panel = new JPanel();
                             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
                             panel.add(new JLabel("Proven:"));
-                            panel.add(defaultTextArea(String.valueOf(r.getKey()), 110));
+                            panel.add(defaultTextArea(String.valueOf(r.fst), 110));
                             panel.add(new JLabel("Not proven:"));
-                            panel.add(defaultTextArea(String.valueOf(r.getValue()), 110));
+                            panel.add(defaultTextArea(String.valueOf(r.snd), 110));
                             panel.add(new JLabel("Possible rules:"));
                             panel.add(possibleRulesTA);
                             JScrollPane scrollPane = new JScrollPane(panel);

@@ -1,4 +1,5 @@
-import javafx.util.Pair;
+//import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
 
 import java.util.*;
 
@@ -85,10 +86,10 @@ public class Result {
             // find all preferred rules (to override nonpreferred rules)
             for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
                 for (Pair<String, String> strRulePref : strRulePrefs) {
-                    String preferredStrRule = strRulePref.getKey();
-                    String nonpreferredStrRule = strRulePref.getValue();
+                    String preferredStrRule = strRulePref.fst;
+                    String nonpreferredStrRule = strRulePref.snd;
 
-                    if (derivation.getValue().getKey().toString().contains(preferredStrRule)) {
+                    if (derivation.snd.fst.toString().contains(preferredStrRule)) {
                         nonpreferredStrRules.add(nonpreferredStrRule);
                         break;
                     }
@@ -99,7 +100,7 @@ public class Result {
             List<Pair<String, Pair<List<String>, String>>> filteredDerivations = new ArrayList<>();
 
             for (int i = derivations.size() - 1; i >=0 ; i--) {
-                List<String> d = derivations.get(i).getValue().getKey();
+                List<String> d = derivations.get(i).snd.fst;
                 boolean found = false;
                 for (String nonpreferredStrRule : nonpreferredStrRules) {
                     if (d.toString().contains(nonpreferredStrRule)) {
@@ -123,8 +124,8 @@ public class Result {
             List<Integer> scores = new ArrayList<>();
             scores.add(0);
             for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
-                String c = derivation.getValue().getValue();
-                List<String> d = derivation.getValue().getKey();
+                String c = derivation.snd.snd;
+                List<String> d = derivation.snd.fst;
                 if (currCulprit == null) {
                     currCulprit = c;
                     culprits.add(c);
@@ -260,12 +261,12 @@ public class Result {
 
     // Return all derivation (first in pair), joined by separator, excluding the ones with same strRule
     public String getDerivationsWithDiffStrRule(String separator, int excludeIndex) {
-        String strRule = getFinalRule(derivations.get(excludeIndex).getValue().getKey());
+        String strRule = getFinalRule(derivations.get(excludeIndex).snd.fst);
         StringJoiner sj = new StringJoiner(separator);
         for (int i = 0; i < derivations.size(); i++) {
-            if (i != excludeIndex && !getFinalRule(derivations.get(i).getValue().getKey()).equals(strRule)) {
+            if (i != excludeIndex && !getFinalRule(derivations.get(i).snd.fst).equals(strRule)) {
                 Pair<String, Pair<List<String>, String>> derivation = derivations.get(i);
-                sj.add(derivation.getValue().getKey().toString());
+                sj.add(derivation.snd.fst.toString());
             }
         }
         return sj.toString();
@@ -295,7 +296,7 @@ public class Result {
         int r = 0;
         Set<String> culprits = new HashSet<>();
         for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
-            String culprit = derivation.getValue().getValue();
+            String culprit = derivation.snd.snd;
             culprits.add(culprit);
         }
 

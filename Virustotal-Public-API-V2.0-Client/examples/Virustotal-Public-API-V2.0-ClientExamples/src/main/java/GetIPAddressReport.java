@@ -1,3 +1,6 @@
+//import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
+
 import com.kanishka.virustotal.dto.IPAddressReport;
 import com.kanishka.virustotal.dto.IPAddressResolution;
 import com.kanishka.virustotal.dto.Sample;
@@ -7,7 +10,7 @@ import com.kanishka.virustotal.exception.UnauthorizedAccessException;
 import com.kanishka.virustotalv2.VirusTotalConfig;
 import com.kanishka.virustotalv2.VirustotalPublicV2;
 import com.kanishka.virustotalv2.VirustotalPublicV2Impl;
-import javafx.util.Pair;
+
 import systemtests.config.ApiDetails;
 
 import java.io.FileWriter;

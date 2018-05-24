@@ -1,4 +1,6 @@
-import javafx.util.Pair;
+//import javafx.util.Pair;
+
+import com.sun.tools.javac.util.Pair;
 import org.jpl7.JPL;
 import org.jpl7.PrologException;
 import org.jpl7.Query;
@@ -447,17 +449,18 @@ public class QueryExecutor {
 
     public static void main(String[] args) {
         QueryExecutor qe = QueryExecutor.getInstance();
-        qe.setDebug();
+//        qe.setDebug();
         int n = 1;
         try {
             qe.clearLeftoverFiles();
 
             for (int i = 0; i < n; i++) {
-                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                    Result r = qe.execute(c, false, new ArrayList<>());
-                    System.out.println(r);
-                }
-                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
+//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                    Result r = qe.execute(c, false, new ArrayList<>());
+//                    System.out.println(r);
+//                }
+//                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example6", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
+                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
                     Result r = qe.execute(c, false, new ArrayList<>());
                     System.out.println(r);
                 }

@@ -1,4 +1,5 @@
-import javafx.util.Pair;
+//import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,14 +15,14 @@ import java.util.stream.Stream;
 
 public class ToolIntegration {
     static final String targetServerIPPredicate = "targetServerIP";
-    static final String TOR_IP_FILE = "tor_ip_list.pl";
+    static final String TOR_IP_FILE = "toolIntegration/tor_ip_list.pl";
 
-    static final String VIRUS_TOTAL_PROLOG_FILE = "virustotal/virustotal.pl";
-    static final String virusTotalLogFileTemplate = "virustotal/virustotal_report_";
+    static final String VIRUS_TOTAL_PROLOG_FILE = "toolIntegration/virustotal.pl";
+    static final String virusTotalLogFileTemplate = "toolIntegration/virustotal_report_";
 
 
-    private static final String SQUID_LOG_RULES_PL = "squid_log_rules.pl";
-    static final String AUTOMATED_GEOLOCATION_PL = "automated_geolocation.pl";
+//    private static final String SQUID_LOG_RULES_PL = "toolIntegration/squid_log_rules.pl";
+    static final String AUTOMATED_GEOLOCATION_PL = "toolIntegration/automated_geolocation.pl";
 
     static final String CASE_OSSEC_LOG_ = "case_ossec_log_malware_";
 //    static final String CASE_SQUID_LOG = "case_squid_log_";
@@ -279,11 +280,11 @@ public class ToolIntegration {
 
     public static Comparator<Pair<Pair<Integer, Integer>, String>> PairComparator
             = (o1, o2) -> {
-                int keykeyCompare = o1.getKey().getKey().compareTo(o2.getKey().getKey());
+                int keykeyCompare = o1.fst.fst.compareTo(o2.fst.fst);
                 if (keykeyCompare == 0) {
-                    int keyvalueCompare = o1.getKey().getValue().compareTo(o2.getKey().getValue());
+                    int keyvalueCompare = o1.fst.snd.compareTo(o2.fst.snd);
                     if (keyvalueCompare == 0) {
-                        return o1.getValue().compareTo(o2.getValue());
+                        return o1.snd.compareTo(o2.snd);
                     } else {
                         return keyvalueCompare;
                     }
@@ -302,12 +303,12 @@ public class ToolIntegration {
                 Pair<Pair<Integer, Integer>, String> r = res.get(i);
                 String[] ips = ip.split("\\.");
                 String ipString = String.format("[%s,%s,%s,%s]", ips[0], ips[1], ips[2], ips[3]);
-                String hostname = r.getValue();
-                Pair<Integer, Integer> datePair = r.getKey();
-                String resolvedDate = String.format("[%d,%d]", datePair.getKey(), datePair.getValue());
+                String hostname = r.snd;
+                Pair<Integer, Integer> datePair = r.fst;
+                String resolvedDate = String.format("[%d,%d]", datePair.fst, datePair.snd);
 
-                int currYear = datePair.getKey();
-                int currMonth = datePair.getValue();
+                int currYear = datePair.fst;
+                int currMonth = datePair.snd;
 
                 if (dateExceeded(year, month, prevYear, prevMonth) && !dateExceeded(year, month, currYear, currMonth)) {
                     String fact = String.format("ipResolution('%s',%s,%s)", hostname, ipString, resolvedDate);
@@ -427,7 +428,7 @@ public class ToolIntegration {
         try {
             FileWriter f_w = new FileWriter(AUTOMATED_GEOLOCATION_PL, true);
             for (Pair<String, String> ipDate : ipDates) {
-                String ip = ipDate.getKey();
+                String ip = ipDate.fst;
                 String ipString = convertPrologIPToString(ip);
 
                 if (!geolocatedIPs.contains(ipString)) {
@@ -438,7 +439,7 @@ public class ToolIntegration {
                     f_w.write(rule);
                 }
 
-                String date = ipDate.getValue();
+                String date = ipDate.snd;
                 if (!ip.equals(date)) {
                     System.out.println("Virustotal " + ip + " " + date);
                     String[] s = date.substring(1, date.length() - 1).split(",");
