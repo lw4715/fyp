@@ -212,10 +212,9 @@ public class QueryExecutor {
                 culprits.add(culprit);
                 List<String> d = convertToString(t);
                 set.add(d);
-                long diagTime = System.nanoTime();
+                double diagTime = System.nanoTime();
                 DerivationNode.createDerivationAndSaveDiagram(t);
-                diagTime = (long) ((System.nanoTime() - diagTime)/pow(10, 9));
-                System.out.println("\n*\tTime for diagram " + caseName + " = " +  diagTime);
+                System.out.println("\n*\tTime for diagram " + caseName + " = " +  (System.nanoTime() - diagTime)/pow(10, 9));
                 count++;
             }
         }
