@@ -95,7 +95,7 @@ rule(r_t_recent3(Y1,Y2,M1,M2), recent([Y1,M1],[Y2,M2]), [Y2 is Y1 - 1,M2 > M1]).
 
 rule(r_t_attackOriginDefault(X,Att),neg(attackOrigin(X,Att)),[]).
 rule(r_t_attackOrigin(X,Att),attackOrigin(X,Att),             	[attackPossibleOrigin(X,Att)]).
-rule(r_t_conflictingOrigin(X,Y,Att),neg(attackOrigin(X,Att)),   [country(X),country(Y),attackPossibleOrigin(X,Att),attackPossibleOrigin(Y,Att),X \= Y]).
+rule(r_t_conflictingOrigin(X,Y,Att),neg(attackOrigin(X,Att)),   [attackPossibleOrigin(X,Att),attackPossibleOrigin(Y,Att),country(X),country(Y),X \= Y]).
 rule(r_t_nonOrigin(X,Att),neg(attackOrigin(X,Att)),  			[neg(attackPossibleOrigin(X,Att))]).
 
 rule(r_t_bm(M),notForBlackMarketUse(M),[infectionMethod(usb,M),commandAndControlEasilyFingerprinted(M)]). 

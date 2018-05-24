@@ -102,9 +102,9 @@ class GUI {
     private static final String placeholderItem = "Select from existing predicates";
 
     private static final String[] bgPredicates = {"firstLanguage(L,X)",
-            "country(Y)", "gci_tier(X,leading)", "cybersuperpower(X)",
+            "gci_tier(X,leading)", "cybersuperpower(X)",
             "industry(T)", "poorRelation(C,T)", "goodRelation(C,T)", "industry(Ind,T)",
-            "normalIndustry(Ind)", "politicalIndustry(Ind)", "prominentGroup()", "country()",
+            "normalIndustry(Ind)", "politicalIndustry(Ind)", "prominentGroup()",
             "groupOrigin()", "malwareLinkedTo()", "gci_tier()"};
 
     private static final String[] evidencePredicates = {"hijackCorporateClouds(Att)",
@@ -148,7 +148,7 @@ class GUI {
             "specificTarget(<Att>)","simlarCodeObfuscation(<M1>,<M2>)","requireHighResource(<Att>)",
             "target(<X>,<Att>)","hasMotive(<X>,<Att>)","similar(<M1>,<M2>)","hasEconomicMotive(<C>,<T>)",
             "longDurationAttack(<Att>)","sharedCode(<M1>,<M2>)","commandAndControlEasilyFingerprinted(<M>)",
-            "highSecurity(<T>)","firstLanguage(<L>,<X>)","geolocatedInGovFacility(<P>,<C>)","country(<X>)",
+            "highSecurity(<T>)","firstLanguage(<L>,<X>)","geolocatedInGovFacility(<P>,<C>)",
             "malwareModifiedFrom(<M1>,<M2>)","gci_tier(<X>,<initiating>)","gci_tier(<X>,<maturing>)",
             "isCulprit(<Group>,<Att>)"};
 
@@ -216,7 +216,7 @@ class GUI {
 //        scrollPane.getViewport().setViewPosition(new Point(0,0));
 
 
-        customQueryString = new JTextField("prove([<list of predicates to prove>], D)");
+        customQueryString = new JTextField("<list of predicates to prove>");
         customQueryString.setColumns(50);
 
         panel2.add(existsingAttacks);
@@ -300,12 +300,13 @@ class GUI {
 
         JPanel prefP = new JPanel();
         prefP.setLayout(new BoxLayout(prefP, BoxLayout.Y_AXIS));
-        prefP.add(new JLabel("Selected derivation:"));
+        prefP.add(new JLabel("\nSelected derivation:"));
         prefP.add(selectedDerTF);
         String finalStrRule = Result.getFinalRule(selectedDer);
         highlightWordInTextArea(finalStrRule, selectedDerTF, Color.YELLOW, false);
 
-        prefP.add(new JLabel("Other derivations:"));
+        prefP.add(new JSeparator());
+        prefP.add(new JLabel("\nOther derivations:"));
         for (String notSelectedDer : posDers) {
             List<String> conflictingRules = QueryExecutor.getConflictingRule(notSelectedDer, selectedDer);
 
@@ -374,7 +375,7 @@ class GUI {
 //                e1.printStackTrace();
 //            }
 
-            displayResultsAndNonResults();
+            displayAllResults();
         }
     }
 
@@ -396,7 +397,7 @@ class GUI {
             if (!all) {
                 displayExecutionResult(executeResult);
             } else {
-                displayResultsAndNonResults();
+                displayAllResults();
             }
         }
     }
@@ -483,7 +484,7 @@ class GUI {
         defaultJFrameActions(executeResultFrame);
     }
 
-    private void displayResultsAndNonResults() {
+    private void displayAllResults() {
         String allStrRules = utils.getAllStrRules();
         String[] strRules = allStrRules.split("\n");
         executeAllFrame = new JFrame("Possible evidences");
@@ -799,6 +800,7 @@ class GUI {
                     strRulePrefs.clear();
                     displayOnlyStrRulePrefs.clear();
                     utils.clearUserPrefs();
+                    executeResultFrame.dispose();
                     displayExecutionResult(reloadResult);
                     break;
                 default:
@@ -870,16 +872,15 @@ class GUI {
                         // create preference rule
                         String[] s = command.split(":")[2].split(">");
                         String pref = String.format("prefer(%s,%s)", s[0], s[1]);
+                        utils.writePrefToFile(pref);
+                        currentEvidences.setText(utils.getCurrentEvidence());
+                        executeResultFrame.dispose();
                         if (Integer.parseInt(command.split(":")[1]) == 0) {
-                            // neg(isCulprit) and isCulprit for same X
-                            utils.writePrefToFile(pref);
-                            currentEvidences.setText(utils.getCurrentEvidence());
+                            // neg(isCulprit) and isCulprit for same X (execute prolog again)
                             displayOnlyStrRulePrefs.add(new Pair<>(s[0], s[1]));
-                            executeResultFrame.dispose();
                             executeQuery(false);
                         } else {
-                            // isCulprit (X \= Y)
-                            executeResultFrame.dispose();
+                            // isCulprit (X \= Y) (java filter)
                             strRulePrefs.add(new Pair<>(s[0], s[1]));
                             displayExecutionResult(reloadResult);
                         }

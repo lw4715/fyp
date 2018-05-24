@@ -241,14 +241,14 @@ public class QueryExecutor {
         System.out.println("\nTotal time for " + caseName + ": " + time );
         Result r = new Result(caseName, resultMap, extractArgumentationTreeFromFile().toArray(),
                 abduced, getPredMap(abduced, true), negMap);
-        if (verbose) {
-            for (Pair<String, Pair<List<String>, String>> s : r.resultStrings()) {
-                System.out.println(s.getKey());
-            }
-            for (String neg : r.negDerivationFor(culprits.toArray()[0].toString())) {
-                System.out.println(neg);
-            }
-        }
+//        if (verbose) {
+//            for (Pair<String, Pair<List<String>, String>> s : r.resultStrings()) {
+//                System.out.println(s.getKey());
+//            }
+//            for (String neg : r.negDerivationFor(culprits.toArray()[0].toString())) {
+//                System.out.println(neg);
+//            }
+//        }
 
         return r;
     }
@@ -453,10 +453,10 @@ public class QueryExecutor {
             qe.clearLeftoverFiles();
 
             for (int i = 0; i < n; i++) {
-//                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-//                }
+                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                    Result r = qe.execute(c, false, new ArrayList<>());
+                    System.out.println(r);
+                }
                 for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5"}) {
                     Result r = qe.execute(c, false, new ArrayList<>());
                     System.out.println(r);

@@ -307,8 +307,12 @@ public class DerivationNode {
     }
 
     // return list of prefs
-    public static List<DerivationNode> createDerivationAndSaveDiagram(Term t, String attack, int count) {
+    public static void createDerivationAndSaveDiagram(Term t, String attack, int count) {
         String filename = getDiagramFilename(t.toString());
+        if (new File("img/" + filename).exists()) {
+            System.out.println(filename + " already exists, skipping diagram creation");
+            return;
+        }
         List<String> names = new ArrayList<>();
         List<List<String>> args = new ArrayList<>();
         if (t.isListPair()) {
@@ -329,7 +333,8 @@ public class DerivationNode {
         DerivationNode mainNode = res.get(0);
         res.remove(0);
         List<DerivationNode> prefs = res;
-        return createDiagram("img/" + filename, mainNode, prefs);
+        createDiagram("img/" + filename, mainNode, prefs);
+        return;
     }
 
 

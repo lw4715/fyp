@@ -61,6 +61,7 @@ public class Result {
     }
 
     public void filterByStrRulePrefs(List<Pair<String, String>> strRulePrefs) {
+        System.out.println("filterByStrRulePrefs? " + strRulePrefs.size() );
         if (strRulePrefs.isEmpty()) {
             // no custom prefs, proceed as normal
             maxScores.clear();
@@ -83,12 +84,11 @@ public class Result {
             nonpreferredStrRules = new HashSet<>();
             // find all preferred rules (to override nonpreferred rules)
             for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
-                System.out.println("d: " + derivation);
                 for (Pair<String, String> strRulePref : strRulePrefs) {
                     String preferredStrRule = strRulePref.getKey();
                     String nonpreferredStrRule = strRulePref.getValue();
 
-                    if (derivation.getValue().toString().contains(preferredStrRule)) {
+                    if (derivation.getValue().getKey().toString().contains(preferredStrRule)) {
                         nonpreferredStrRules.add(nonpreferredStrRule);
                         break;
                     }

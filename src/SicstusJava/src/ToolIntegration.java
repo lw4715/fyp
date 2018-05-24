@@ -32,6 +32,8 @@ public class ToolIntegration {
     static final String RULE_CASE_TOR_CHECK = "rule(" + CASE_TOR_CHECK + "%d(), %s, []).\n";
     static final String RULE_CASE_TOR_CHECK1 = "rule(" + CASE_TOR_CHECK + "1_%d(), ip(%s), []).\n";
     static final String CASE_AUTOGEN_GEOLOCATION = "case_autogen_geolocation_";
+    static Set<String> geolocatedIPs;
+
     static final String RULE_CASE_AUTOGEN_GEOLOCATION = "rule(" + CASE_AUTOGEN_GEOLOCATION + "%d(), ipGeoloc(%s,%s), []).\n";
     static final String RULE_CASE_VIRUSTOTAL_RES = "case_virustotal_res";
     static final String RULE_CASE_VIRUSTOTAL_RES_TEMPLATE = "rule(" + RULE_CASE_VIRUSTOTAL_RES + "%d(), %s, []).";
@@ -47,6 +49,7 @@ public class ToolIntegration {
     public ToolIntegration() {
         Utils.clearFile(VIRUS_TOTAL_PROLOG_FILE);
         virustotalFinishedScanningIP = new ArrayList<>();
+        geolocatedIPs = new HashSet<>();
     }
 
     private String parseOSSEC(String filename, String attackname) {
@@ -426,14 +429,18 @@ public class ToolIntegration {
             for (Pair<String, String> ipDate : ipDates) {
                 String ip = ipDate.getKey();
                 String ipString = convertPrologIPToString(ip);
-                String country = ipGeolocation(ipString);
-                String rule = String.format(RULE_CASE_AUTOGEN_GEOLOCATION, geolocCount, country, ip);
-                geolocCount++;
-                f_w.write(rule);
+
+                if (!geolocatedIPs.contains(ipString)) {
+                    String country = ipGeolocation(ipString);
+                    geolocatedIPs.add(ipString);
+                    String rule = String.format(RULE_CASE_AUTOGEN_GEOLOCATION, geolocCount, country, ip);
+                    geolocCount++;
+                    f_w.write(rule);
+                }
 
                 String date = ipDate.getValue();
                 if (!ip.equals(date)) {
-                    System.out.println("Virustotall " + ip + " " + date);
+                    System.out.println("Virustotal " + ip + " " + date);
                     String[] s = date.substring(1, date.length() - 1).split(",");
                     int year = Integer.parseInt(s[0]);
                     int month = Integer.parseInt(s[1]);
