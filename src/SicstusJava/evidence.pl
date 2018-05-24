@@ -193,8 +193,7 @@ rule(case_example4_f6(),attackSourceIP([103,5,206,109],example4),[]).
 %% %% governmentLinked(P,C),identifiedIndividualInAttack(P,Att)
 
 %% example5
-%% exptected: someGroup
-%% torIP([103,1,206,100]) is true, 103.1.206.100 is a spoofed IP
+%% exptected: someGroup, youtCountry
 rule(case_example5_f1(),claimedResponsibility(someGroup,example5),[]).
 rule(case_example5_f1a(),malwareUsedInAttack(example5m,example5),[]).
 rule(case_example5_f2(),ipGeoloc(yourCountry,[103,1,206,100]),[]).
