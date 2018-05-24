@@ -11,7 +11,7 @@ public class Result {
     private Map<String, List<String>> abducedMap;
     private Map<String, Set<List<String>>> negMap;
     private final Object[] trees;
-    //derivations = key: fullString value: {key1: derivation, value1: culprit}
+    //derivations = fst: fullString snd: {fst1: derivation, snd1: culprit}
     private List<Pair<String, Pair<List<String>, String>>> derivations;
     private Map<String, LinkedHashSet<List<String>>> resultMap;
 
@@ -40,9 +40,9 @@ public class Result {
         filteredTrees = new ArrayList<>();
     }
 
-    public String getAttack() {
-        return this.attack;
-    }
+//    public String getAttack() {
+//        return this.attack;
+//    }
 
     public List<String> getCulprits() {
         return this.culprits;

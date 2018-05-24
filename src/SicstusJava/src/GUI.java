@@ -390,7 +390,7 @@ class GUI {
             status.setText(String.format(EXECUTED_IS_CULPRIT, attackName.getText()));
             try {
 //                executeResult = qe.execute(attackName.getText(), true, new ArrayList<>());
-                executeResult = QueryExecutorWorkers.execute(attackName.getText(), true, new ArrayList<>(), mainFrame);
+                executeResult = QueryExecutorWorkers.execute(attackName.getText(), true, mainFrame);
             } catch (Exception e) {
                 e.printStackTrace();
             }

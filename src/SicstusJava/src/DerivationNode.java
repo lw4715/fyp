@@ -379,14 +379,14 @@ public class DerivationNode {
         }
     }
 
-    public static void main(String[] args) {
-        String tree = " [case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), bg1(), r_str_loc(yourCountry,example2b)]  {DEFENSE}\n" +
-                "|___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
-                "|   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
-                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22e(), ass(specificTarget(example2b))]\n" +
-                "    |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
-        createArgumentTreeDiagram(tree, "test.svg");
-    }
+//    public static void main(String[] args) {
+//        String tree = " [case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), r_t_srcIP1(yourCountry,example2b), r_t_attackOrigin(yourCountry,example2b), bg1(), r_str_loc(yourCountry,example2b)]  {DEFENSE}\n" +
+//                "|___[r_t_nonOrigin(yourCountry,example2b), r_t_noLocEvidence(yourCountry,example2b), p3_t()]\n" +
+//                "|   |___[r_t_srcIP1(yourCountry,example2b), case_example2b_f10(), case_example2b_f9(), case_example2b_f1a(), p4a_t()]  {DEFENSE}\n" +
+//                "|___[r_str_targetItself2(yourCountry,example2b), case_example2b_f2(), p22e(), ass(specificTarget(example2b))]\n" +
+//                "    |___[r_op_notTargetted(example2b), case_example2b_f2b(), case_example2b_f2()]  {DEFENSE}";
+//        createArgumentTreeDiagram(tree, "test.svg");
+//    }
 
 }
 

@@ -63,7 +63,7 @@ public class QueryExecutor {
         }
     }
 
-    Map<String, Term>[] executeQuery(String caseName, boolean verbose, boolean all, List<String> culpritsList) {
+    Map<String, Term>[] executeQuery(String caseName, boolean verbose, boolean all) {
         Map<String, Integer> accMap;
         int res;
         int numDeltas;
@@ -78,33 +78,29 @@ public class QueryExecutor {
                 goal = "goal_all";
                 // tech
                 queryString = String.format("goal_all(%s,X, M, M2, M3, D1, D2, D3, D4, D5)", caseName);
-//                System.out.println(queryString);
                 executeQueryString(queryString, 200);
 
                 // op
-                if (!culpritsList.isEmpty()) {
-                    for (String c : culpritsList) {
-                        String s = String.format("hasCapability(%s,%s, D)", c, caseName);
-                        String s1 = String.format("hasCapability(%s,%s)", c, caseName);
-                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
-                        s = String.format("hasMotive(%s,%s, D)", c, caseName);
-                        s1 = String.format("hasMotive(%s,%s)", c, caseName);
-                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
-                    }
-                }
+//                if (!culpritsList.isEmpty()) {
+//                    for (String c : culpritsList) {
+//                        String s = String.format("hasCapability(%s,%s, D)", c, caseName);
+//                        String s1 = String.format("hasCapability(%s,%s)", c, caseName);
+//                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
+//                        s = String.format("hasMotive(%s,%s, D)", c, caseName);
+//                        s1 = String.format("hasMotive(%s,%s)", c, caseName);
+//                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
+//                    }
+//                }
                 queryString = String.format("goal_all(%s, X1, D1, D2, D3, D4, D5)", caseName);
-//                System.out.println(queryString);
                 executeQueryString(queryString, 200);
 
                 queryString = String.format("goal_all(%s, X, D)", caseName);
-//                System.out.println(queryString);
                 executeQueryString(queryString, 50);
 
             } else {
                 executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
                 queryString = String.format("goal(%s,X,D0)", caseName);
                 queryMap = executeQueryString(queryString, 10);
-//                System.out.println(queryString);
                 executeQueryString("told", 1);
                 return queryMap;
             }
@@ -171,24 +167,22 @@ public class QueryExecutor {
         return dList;
     }
 
-    // prove all predicates
-    public Result executeAll(String caseName, List<String> culpritsList) {
-//        System.out.println("Executing for " + caseName);
-        abduced.clear();
-        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, true, culpritsList);
-        return null;
-    }
+//    // prove all predicates
+//    public Result executeAll(String caseName, List<String> culpritsList) {
+//        abduced.clear();
+//        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, true, culpritsList);
+//        return null;
+//    }
 
     // prove([isCulprit(X, caseName)], D)
-    public Result execute(String caseName, boolean reload, List<String> culpritsList) throws Exception {
-//        System.out.println("Executing for " + caseName);
+    public Result execute(String caseName, boolean reload) throws Exception {
         loadFiles();
         abduced.clear();
         System.out.println(String.format("---------\nStart %s derivation", caseName));
 
         double time = System.nanoTime();
         int count = 0;
-        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, false, culpritsList);
+        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, false);
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
         Set<String> culprits = new HashSet<>();
@@ -410,7 +404,6 @@ public class QueryExecutor {
                     if (m.length > 0) {
                         for (String var : varsAfter) {
                             var = var.trim();
-//                            String constant = m[0].get(var).name(); //FIXME
                             for (Map<String, Term> stringTermMap : m) {
                                 String constant = stringTermMap.get(var).name();
                                 if (!constant.equals("[|]")) {
@@ -427,7 +420,6 @@ public class QueryExecutor {
                     }
                 }
             }
-//            i++;
         }
         return ret;
     }
@@ -439,29 +431,21 @@ public class QueryExecutor {
 
     public static void main(String[] args) {
         QueryExecutor qe = QueryExecutor.getInstance();
-//        qe.setDebug();
-        int n = 1;
         try {
             qe.clearLeftoverFiles();
 
-            for (int i = 0; i < n; i++) {
-                for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-                }
-                for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
+            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                Result r = qe.execute(c, false);
+            }
+            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
 //                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
-                    Result r = qe.execute(c, false, new ArrayList<>());
-//                    System.out.println(r);
-                }
+                Result r = qe.execute(c, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assert (n == qe.timings.size());
-        System.out.println("Mean total runtime over " + n + " times: " + Utils.mean(qe.timings));
-
+        System.out.println("Mean total runtime: " + Utils.mean(qe.timings));
     }
 
 

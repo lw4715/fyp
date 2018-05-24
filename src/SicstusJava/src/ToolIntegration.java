@@ -106,49 +106,6 @@ public class ToolIntegration {
         return s[0];
     }
 
-    /*
-        * User upload HIDS notification (SQUID format)
-        * Filter for keyword: TCP_DENIED/407, TCP_MISS/404
-        *
-        * Extract: IP, port, code, unixTimestamp
-        * */
-//    private static String parseSquidLog(String line, int count, String malware) {
-//        String[] ss = line.split(" ");
-//        String resultCode = ss[3];
-//        String forwardedAddr = ss[6];
-//        String[] ip = forwardedAddr.split(":")[0].split("\\.");
-//        if (ip.length == 4) {
-//            String port = forwardedAddr.split(":")[1];
-//            String ipString = String.format("[%s,%s,%s,%s]", ip[0], ip[1], ip[2], ip[3]);
-//            return String.format(RULE_CASE_SQUID_LOG + RULE_CASE_SQUID_LOG1,
-//                    count, ipString, port, resultCode, malware, count, ipString);
-//        } else {
-//            System.out.println(forwardedAddr + " is not valid IP");
-//        }
-//        return "";
-//    }
-
-//    public static void parseSquidLogFile(File file, String malware) {
-//        try {
-//            System.out.println("Processing squid log: " + file);
-//            BufferedReader br = new BufferedReader(new FileReader(file));
-//            StringBuilder sb = new StringBuilder();
-//            final int[] c = {0};
-//            br.lines().forEach(x -> {
-//                sb.append(parseSquidLog(x, c[0], malware) + "\n");
-//                c[0]++;
-//            });
-//
-//            FileWriter w = new FileWriter(SQUID_LOG_RULES_PL, true);
-//            w.write(sb.toString());
-//            w.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 
     void torIntegration() {
         if (torCount == 0) {
@@ -173,11 +130,6 @@ public class ToolIntegration {
         return executeUNIXCommand(command);
 
     }
-
-//    private static String virustotalScanFile(File file) {
-//        String resource = ScanFile.getFileResource(file);
-//        return GetFileScanReport.getFileScanReport(resource).getScans().toString();
-//    }
 
     static Set<String[]> getTargetServerIP(String filename) {
         Set<String[]> ips = new HashSet<>();
@@ -328,61 +280,10 @@ public class ToolIntegration {
         }
     }
 
-    // returns true if year/month is before prevYear/prevMonth
-    private boolean dateNotReached(int year, int month, int prevYear, int prevMonth) {
-        return (year < prevYear) || (year == prevYear && month <= prevMonth);
-    }
-
     // returns true is year/month is after currYear/currMonth
     private boolean dateExceeded(int year, int month, int currYear, int currMonth) {
         return year > currYear || (year == currYear && month > currMonth);
     }
-
-//    static void processVirusTotalFile(String filename, String ip) {
-//        try {
-//            BufferedReader br = new BufferedReader(new FileReader(filename));
-//            FileWriter w = new FileWriter(VIRUS_TOTAL_PROLOG_FILE, true);
-//            String line = br.readLine();
-//
-//            StringJoiner sj = new StringJoiner(",");
-//            for (String s : ip.split("\\.")) {
-//                sj.add(s);
-//            }
-//
-//            int count = 0;
-//            String server = null;
-//            String ipStrings = "[" + sj + "]";
-//            String date = null;
-//            boolean done = false;
-//            while (line != null) {
-//                if (line.startsWith("Host Name :")) {
-//                    server = "'" + line.split(" : ")[1] + "'";
-//                } else if (line.startsWith("Last Resolved :")) {
-//                    String s = line.split(" : ")[1];
-//                    String[] d = s.split(" ")[0].split("-");
-//                    date = String.format("[%d,%d]", Integer.parseInt(d[0]), Integer.parseInt(d[1]));
-//                    done = true;
-//                }
-//
-//                if (done) {
-//                    String fact = String.format("ipResolution(%s,%s,%s)",
-//                            server, ipStrings, date);
-//                    w.write(String.format(RULE_CASE_VIRUSTOTAL_RES_TEMPLATE + "\n", count, fact));
-//                    count++;
-//                }
-//                line = br.readLine();
-//            }
-//            w.close();
-//            br.close();
-//
-//        } catch (FileNotFoundException e) {
-//            System.err.println(filename + " not found (processVirusTotalFile)");
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 
 
     private static Stream<String> executeUNIXCommand(String command) {
@@ -454,31 +355,6 @@ public class ToolIntegration {
         }
     }
 
-    // suspicious process -
-    // filters ossec alerts given level and msg
-    public boolean possibleAttack(int level, String msg) {
-        if (level < 9) {
-            return false;
-        } else if (level == 12) {
-            return true;
-        }
-        final String[] keywords = new String[]{"deny", "failure", "failed", "bad",
-                "invalid", "error", "brute force", "multiple", "high amount",
-                "breakin", "infected", "malware", "worm", "trojan", "virus", "suspicious"};
-        String msgLower = msg.toLowerCase();
-        for (String keyword : keywords) {
-            if (msgLower.contains(keyword)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // returns unix timestamp
-    public int getTimestamp() {
-        return -1;
-    }
-
     public static boolean relevantLog(int level, String msg) {
         if (level >= 3) {
             return false;
@@ -544,7 +420,7 @@ public class ToolIntegration {
             List<Integer> list = new ArrayList<>();
 
             for (String srcIP : srcIPMap.keySet()) {
-                int size = fullSize(srcIPMap.get(srcIP));
+                int size = recursiveSizeOfMap(srcIPMap.get(srcIP));
                 if (list.size() <= 5) {
                     list.add(size);
                     Collections.sort(list);
@@ -556,7 +432,7 @@ public class ToolIntegration {
             }
 
             for (String srcIP : srcIPMap.keySet()) {
-                if (fullSize(srcIPMap.get(srcIP)) > list.get(0)) {
+                if (recursiveSizeOfMap(srcIPMap.get(srcIP)) > list.get(0)) {
                     filteredMap.put(srcIP, srcIPMap.get(srcIP));
                 }
             }
@@ -569,7 +445,7 @@ public class ToolIntegration {
     }
 
     // return fullsize of map
-    private static int fullSize(Map<String, Map<String, Integer>> m) {
+    private static int recursiveSizeOfMap(Map<String, Map<String, Integer>> m) {
         int acc = 0;
         for (Map<String, Integer> n : m.values()) {
             for (Integer i : n.values()) {
@@ -595,14 +471,4 @@ public class ToolIntegration {
         return null;
     }
 
-//    public static void main(String[] args) {
-//        String s = "rule(case_user_f1(), ip([8,8,8,10], [2018,5]), []).";
-//        if (s.split("%")[0].contains("ip([")) {
-//            String head = Utils.getHeadOfLine(s);
-//            System.out.println(head);
-//            String ip = head.substring(head.indexOf('['), head.indexOf(']') + 1);
-//            String date = head.substring(head.lastIndexOf('['), head.lastIndexOf(']') + 1);
-//            System.out.println(new Pair<>(ip, date));
-//        }
-//    }
 }
