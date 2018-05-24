@@ -14,10 +14,8 @@ import java.util.*;
 
 import static java.lang.Math.pow;
 
-
 @SuppressWarnings("ALL")
 public class QueryExecutor {
-    static final String ALPHANUMERIC = "[A-Za-z0-9_]";
     List<Double> timings;
     private boolean verbose = false;
     private ToolIntegration ti;
@@ -354,10 +352,10 @@ public class QueryExecutor {
                 givenHead = givenHead.split("neg\\(")[1];
             }
             String headConstantsAll = Utils.regexMatch("\\(.*\\)", givenHead).get(0);
-            List<String> headConstants = Utils.regexMatch("\\b[a-z]" + ALPHANUMERIC + "*\\b", headConstantsAll);
+            List<String> headConstants = Utils.regexMatch("\\b[a-z]" + Utils.ALPHANUMERIC + "*\\b", headConstantsAll);
 
             String headVarAll = Utils.regexMatch("\\(.*\\)", head).get(0);
-            List<String> headVar = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", headVarAll);
+            List<String> headVar = Utils.regexMatch("\\b[A-Z]" + Utils.ALPHANUMERIC + "*\\b", headVarAll);
 
             for (int i = 0; i < headConstants.size(); i++) {
                 String var = headVar.get(i);
@@ -394,7 +392,7 @@ public class QueryExecutor {
 
                 if (s.size() > 0) {
                     String allVars = s.get(0);
-                    List<String> vars = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVars);
+                    List<String> vars = Utils.regexMatch("\\b[A-Z]" + Utils.ALPHANUMERIC + "*\\b", allVars);
                     for (String var : vars) {
                         if (argMap.containsKey(var)) {
                             formattedB = formattedB.replaceAll("\\b" + var + "\\b", argMap.get(var));
@@ -408,7 +406,7 @@ public class QueryExecutor {
                 List<String> s1 = Utils.regexMatch("\\(.*\\)", formattedB);
                 if (s1.size() > 0) {
                     String allVarsAfter = s1.get(0);
-                    List<String> varsAfter = Utils.regexMatch("\\b[A-Z]" + ALPHANUMERIC + "*\\b", allVarsAfter);
+                    List<String> varsAfter = Utils.regexMatch("\\b[A-Z]" + Utils.ALPHANUMERIC + "*\\b", allVarsAfter);
                     if (m.length > 0) {
                         for (String var : varsAfter) {
                             var = var.trim();

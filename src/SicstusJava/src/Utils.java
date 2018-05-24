@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public class Utils {
     private static final String CASE_USER_F = "case_user_f";
     private static final String P_USER_ = "p_user_";
+    static final String ALPHANUMERIC = "[A-Za-z0-9_]";
     static final String BACKGROUNDGORGIAS_PL = "backgroundgorgias_renumbered.pl";
     static final String EVIDENCE_PL = "evidence.pl";
     static final String R_STR_ = "r_str_";
@@ -427,7 +428,7 @@ public class Utils {
                 s = regexMatch("prefer\\(.*\\([^)]*\\)[^(]*\\([^)]*\\)\\)", line);
                 return s.get(0);
             } else {
-                s = regexMatch(QueryExecutor.ALPHANUMERIC + "*\\([^\\)]*\\)", line.split("rule\\(")[1]);
+                s = regexMatch(ALPHANUMERIC + "*\\([^\\)]*\\)", line.split("rule\\(")[1]);
                 return s.get(1);
             }
         }
@@ -447,7 +448,7 @@ public class Utils {
         line = line.split("%")[0];
         if (line.contains("rule(")) {
             line = line.split("rule\\(")[1];
-            List<String> s = regexMatch(QueryExecutor.ALPHANUMERIC + "*\\([^\\)]*\\)", line);
+            List<String> s = regexMatch(ALPHANUMERIC + "*\\([^\\)]*\\)", line);
             return s.get(0);
         }
         return "";
