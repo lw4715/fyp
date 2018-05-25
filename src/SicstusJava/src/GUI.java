@@ -79,6 +79,7 @@ class GUI {
     private JLabel toolIntegrationStatus;
     private JTextField virusTotalIPPred;
     private JTextArea logStatus;
+    private HashMap<String, String> toolDescMap;
 
     private JFrame insertNewRuleFrame;
     private JTextField userNewRule;
@@ -154,11 +155,19 @@ class GUI {
             "malwareModifiedFrom(<M1>,<M2>)", "gci_tier(<X>,<initiating>)", "gci_tier(<X>,<maturing>)",
             "isCulprit(<Group>,<Att>)"};
 
+
     GUI() {
         QueryExecutor.getInstance(); // run this at start to clear files
         utils = new Utils();
         prepareGUI();
         addButtonsToPanel();
+
+        toolDescMap = new HashMap<>();
+        toolDescMap.put("ip([IP])", "e.g. ip([8,8,8,8]) : get geolocation for 8.8.8.8");
+        toolDescMap.put("ip([IP], [YYYY,MM])", "e.g. ip([8,8,8,8],[2018,5]) : get resolution for 8.8.8.8 in 2018 May");
+        toolDescMap.put("targetServerIP([IP],<attackName>",
+                "e.g. targetServerIP([72,111,1,30], tor_ex) : 72.111.1.30 is the IP address of the target server of attack 'tor_ex', " +
+                "get list of all exit Tor nodes that are allowed to contact the server at 72.111.1.30");
     }
 
     private void prepareGUI() {
@@ -340,15 +349,23 @@ class GUI {
 
     private void openToolIntegrationWindow() {
         logAttackname = new JTextField();
-        virusTotalIPPred = new JTextField("ip([IP], [YYYY,MM])");
+        virusTotalIPPred = new JTextField();
         toolIntegrationStatus = new JLabel();
+        JLabel descLabel = new JLabel();
+        JComboBox dropdown = new JComboBox(new String[] {"ip([IP])", "ip([IP], [YYYY,MM])", "targetServerIP([IP],<attackName>"});
+        dropdown.addItemListener(arg0 -> {
+            String pred = dropdown.getSelectedItem().toString();
+            virusTotalIPPred.setText(pred);
+            descLabel.setText(toolDescMap.get(pred));
+        });
 
         JButton virusTotalBtn = defaultJButton("Submit", VIRUSTOTAL_IP_SUBMIT);
         JButton btn = defaultJButton(UPLOAD_LOG, UPLOAD_LOG);
 
         toolIntegrationFrame = new JFrame("Forensic tool integration");
-        toolIntegrationFrame.add(new JLabel("Virustotal domain resolution"));
-        toolIntegrationFrame.add(new JLabel("ip([IP], [YYYY,MM]) e.g. ip([8,8,8,8],[2018,5]) to get resolution for 8.8.8.8 in 2018 May"));
+        toolIntegrationFrame.add(new JLabel("Select predicate to add:"));
+        toolIntegrationFrame.add(dropdown);
+        toolIntegrationFrame.add(descLabel);
         toolIntegrationFrame.add(virusTotalIPPred);
         toolIntegrationFrame.add(virusTotalBtn);
         toolIntegrationFrame.add(new JSeparator());
@@ -359,7 +376,7 @@ class GUI {
         toolIntegrationFrame.add(toolIntegrationStatus);
         toolIntegrationFrame.add(btn);
         defaultJFrameActions(toolIntegrationFrame);
-//        toolIntegrationFrame.setSize(400,200);
+        toolIntegrationFrame.setSize(800,200);
     }
 
     private void executeQueryAll() {
