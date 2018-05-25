@@ -432,15 +432,16 @@ public class QueryExecutor {
     public static void main(String[] args) {
         QueryExecutor qe = QueryExecutor.getInstance();
         try {
-            qe.clearLeftoverFiles();
+            qe.execute("virustotal_ex", false);
+            qe.execute("tor_ex", false);
 
-            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                Result r = qe.execute(c, false);
-            }
-            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
-//                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
-                Result r = qe.execute(c, false);
-            }
+//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                Result r = qe.execute(c, false);
+//            }
+//            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
+////                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
+//                Result r = qe.execute(c, false);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

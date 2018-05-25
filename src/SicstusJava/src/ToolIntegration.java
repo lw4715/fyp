@@ -48,7 +48,6 @@ public class ToolIntegration {
     private int geolocCount;
 
     public ToolIntegration() {
-        Utils.clearFile(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE);
         this.virustotalFinishedScanningIP = new ArrayList<>();
         ToolIntegration.geolocatedIPs = new HashSet<>();
     }

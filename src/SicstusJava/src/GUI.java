@@ -236,8 +236,8 @@ class GUI {
 
         JPanel topPanel = defaultJPanel();
         topPanel.add(toolIntegrationBtn);
-        topPanel.add(prefDiagBtn);
         topPanel.add(userInsertRuleBtn);
+        topPanel.add(prefDiagBtn);
         topPanel.add(ruleSearchBtn);
 
         mainFrame.add(topPanel);
