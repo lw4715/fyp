@@ -10,7 +10,7 @@ public class Utils {
     static final String CASE_USER_F = "case_user_f";
     static final String P_USER_ = "p_user_";
 
-    static final String BACKGROUNDGORGIAS_PL = "backgroundgorgias_renumbered.pl";
+    static final String BACKGROUNDGORGIAS_PL = "bg.pl";
     static final String USER_EVIDENCE_FILENAME = "user_evidence.pl";
     static final String VISUALLOG = "visual.log";
     static final String TECH = "tech_rules.pl";
@@ -481,7 +481,7 @@ public class Utils {
     private static String getAllPreds() {
         BufferedReader br;
         Set<String> preds = new HashSet<>();
-        String[] files = {Utils.TECH, Utils.OP, Utils.STR, "backgroundgorgias_renumbered.pl"};
+        String[] files = {Utils.TECH, Utils.OP, Utils.STR, Utils.BACKGROUNDGORGIAS_PL};
         try {
             for (String f : files) {
                 br = new BufferedReader(new FileReader(f));
@@ -493,7 +493,7 @@ public class Utils {
                             if (b.startsWith(",")) {
                                 b = b.replaceFirst(",", "");
                             }
-                            preds.add(b.trim() + ")");
+                            preds.add(b.trim().split("\\(")[0]);
                         }
                     }
                 });
@@ -553,6 +553,10 @@ public class Utils {
             sb.append("}\n");
         }
         return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getAllPreds());
     }
 
 }

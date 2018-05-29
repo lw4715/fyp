@@ -89,7 +89,7 @@ def renumberRules(filename):
         else:
             r += line
 
-    f_w = open(filename + '_renumbered.pl', 'w')
+    f_w = open('bg.pl', 'w')
     f_w.write(r)
 
 def extract_port_number_info(filename):

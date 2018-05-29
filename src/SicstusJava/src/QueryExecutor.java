@@ -81,16 +81,6 @@ public class QueryExecutor {
                 executeQueryString(queryString, 200);
 
                 // op
-//                if (!culpritsList.isEmpty()) {
-//                    for (String c : culpritsList) {
-//                        String s = String.format("hasCapability(%s,%s, D)", c, caseName);
-//                        String s1 = String.format("hasCapability(%s,%s)", c, caseName);
-//                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
-//                        s = String.format("hasMotive(%s,%s, D)", c, caseName);
-//                        s1 = String.format("hasMotive(%s,%s)", c, caseName);
-//                        executeQueryString(String.format("%s;(\\+ %s, writeNonResultsToFile(%s))", s, s, s1), 20);
-//                    }
-//                }
                 queryString = String.format("goal_all(%s, X1, D1, D2, D3, D4, D5)", caseName);
                 executeQueryString(queryString, 200);
 
@@ -432,16 +422,16 @@ public class QueryExecutor {
     public static void main(String[] args) {
         QueryExecutor qe = QueryExecutor.getInstance();
         try {
-            qe.execute("virustotal_ex", false);
-            qe.execute("tor_ex", false);
+//            qe.execute("virustotal_ex", false);
+//            qe.execute("tor_ex", false);
 
-//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                Result r = qe.execute(c, false);
-//            }
-//            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
-////                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
-//                Result r = qe.execute(c, false);
-//            }
+            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                Result r = qe.execute(c, false);
+            }
+            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
+//                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
+                Result r = qe.execute(c, false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

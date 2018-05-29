@@ -44,13 +44,16 @@ abducible(contextOfAttack(economic,_Att),[]).
 
 rule(r_op_hasResources1(X),hasResources(X),[gci_tier(X,leading)]).
 rule(r_op_hasResources2(X),hasResources(X),[cybersuperpower(X)]).
+rule(r_op_hasNoResources(X,Att), hasNoResources(X)),[gci_tier(X,initiating)]).
 
 % more than one country targetted
 rule(r_op_notTargetted(Att),neg(specificTarget(Att)),[targetCountry(T1,Att),targetCountry(T2,Att),T1 \= T2]). 
 
 rule(r_op_hasCapability1(X,Att),hasCapability(X,Att),[neg(requireHighResource(Att))]).
 rule(r_op_hasCapability2(X,Att),hasCapability(X,Att),[requireHighResource(Att),hasResources(X)]).
-rule(r_op_noCapability(X,Att),neg(hasCapability(X,Att)),[requireHighResource(Att),neg(hasResources(X))]).
+rule(r_op_noCapability1(X,Att),neg(hasCapability(X,Att)),[requireHighResource(Att),neg(hasResources(X))]).
+rule(r_op_noCapability2(X,Att),neg(hasCapability(X,Att)),[hasNoResources(X)]).
+
 
 rule(r_op_ecMotive(C,T),	hasMotive(C,Att),		 [target(T,Att),industry(T),contextOfAttack(economic,Att),hasEconomicMotive(C,T),specificTarget(Att)]).
 rule(r_op_pMotive(C,T),   	hasMotive(C,Att),		 [targetCountry(T,Att),attackPeriod(Att,Date1),contextOfAttack(political,Att),hasPoliticalMotive(C,T,Date2),dateApplicable(Date1,Date2),specificTarget(Att)]).
@@ -99,9 +102,10 @@ rule(p3a_op(),prefer(r_op_conflict1(C,T),r_op_nonGeopolitics1(C,T)),[]).
 rule(p3b_op(),prefer(r_op_conflict1(C,T),r_op_nonGeopolitics2(C,T)),[]).
 rule(p4a_op(),prefer(r_op_pMotive(C,T),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4b_op(),prefer(r_op_pMotive(C,T),r_op_nonGeopolitics2(C,T)),[]).
-rule(p4c_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics1(C,T)),[]).
-rule(p4d_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics2(C,T)),[]).
+%% rule(p4c_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics1(C,T)),[]).
+%% rule(p4d_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics2(C,T)),[]).
 rule(p5_op(),prefer(r_op_claimResp1(X,A),r_op_claimResp0(X,A)),[]).
+rule(p6_op(),prefer(r_op_noCapability2(X,Att), r_op_hasCapability1(X, Att)), []).
 
 goal_all(A, X, D, D1, D2, D3, D4) :-
   writeToFilesPos(hasCapability(X,A), hasCapability(X,A,D)),

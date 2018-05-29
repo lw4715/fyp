@@ -41,7 +41,7 @@ rule(p4b_op(),prefer(r_op_pMotive(C,T),r_op_nonGeopolitics2(C,T)),[]).
 rule(p4c_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics1(C,T)),[]).
 rule(p4d_op(),prefer(r_op_pMotive1(C,T,_D),r_op_nonGeopolitics2(C,T)),[]).
 rule(p5_op(),prefer(r_op_claimResp1(X,Att),r_op_claimResp0(X,Att)),[]).
-
+rule(p6_op(),prefer(r_op_noCapability2(X,Att), r_op_hasCapability1(X, Att)), []).
 
 % pref
 rule(p0a(),prefer(r_str__claimedResp(X,Att),r_str__noEvidence(X,Att)),[]). %With any evidence,we prefer to attribute the culprit accordingly
@@ -64,7 +64,6 @@ rule(p9(),prefer(r_str__noCapability(X,Att), r_str__motiveAndLocation(X,Att)),[]
 rule(p10(),prefer(r_str__noCapability(X,Att), r_str__loc(X,Att)),[]).  
 rule(p11(),prefer(r_str__noCapability(X,Att),r_str__social(X,Att)),[]). % social evidences e.g. twitter posts/ emails can be easily forged
 rule(p12(),prefer(r_str__noCapability(X,Att),r_str__linkedMalware(X,Att)),[]).
-rule(p13(),prefer(r_str__lowGciTier(X,Att),  r_str__linkedMalware(X,Att)),[]).  
 
 rule(p18(),prefer(r_str__linkedMalware(X,Att),r_str__negAttackOrigin(X,Att)),[]).
 

@@ -2,7 +2,7 @@
 :- compile('../gorgias-src-0.6d-Visual-20Feb2018/lib/gorgias.pl').
 :- compile('../gorgias-src-0.6d-Visual-20Feb2018/ext/lpwnf.pl').
 :- compile('evidence.pl').
-:- compile('backgroundgorgias_renumbered.pl').
+:- compile('bg.pl').
 ?- set_prolog_flag(answer_write_options,[max_depth(0)]).
 
 initFile(Filename) :- open(Filename, write, Stream),

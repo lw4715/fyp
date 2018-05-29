@@ -56,7 +56,7 @@ rule(r_str__noMotive(X,Att),            neg(isCulprit(X,Att)),[neg(hasMotive(X,A
 rule(r_str__weakAttack(X,Att),          neg(isCulprit(X,Att)),[hasResources(X),neg(requireHighResource(Att))]).
 rule(r_str__targetItself1(X,Att),       neg(isCulprit(X,Att)),[target(X,Att)]).
 rule(r_str__targetItself2(X,Att),       neg(isCulprit(X,Att)),[targetCountry(X,Att)]).
-rule(r_str__lowGciTier(X,Att),          neg(isCulprit(X,Att)),[gci_tier(X,initiating)]).
+%% rule(r_str__lowGciTier(X,Att),          neg(isCulprit(X,Att)),[hasNoResources(X)]).
 %% rule(r_str_oneCulprit(X,Att),    neg(isCulprit(X,Att,_)),[isCulprit(Y,Att,_),X \= Y]).
 
 
@@ -84,7 +84,7 @@ rule(p9(),prefer(r_str__noCapability(X,A), r_str__motiveAndLocation(X,A)),[]).
 rule(p10(),prefer(r_str__noCapability(X,A), r_str__loc(X,A)),[]).  
 rule(p11(),prefer(r_str__noCapability(X,A),r_str__social(X,A)),[]). % social evidences e.g. twitter posts/ emails can be easily forged
 rule(p12(),prefer(r_str__noCapability(X,A),r_str__linkedMalware(X,A)),[]).
-rule(p13(),prefer(r_str__lowGciTier(X,A),  r_str__linkedMalware(X,A)),[]).  
+%% rule(p13(),prefer(r_str__lowGciTier(X,A),  r_str__linkedMalware(X,A)),[]).  
 
 rule(p18(),prefer(r_str__linkedMalware(X,A),r_str__negAttackOrigin(X,A)),[]).
 
