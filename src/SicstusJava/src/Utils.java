@@ -39,9 +39,9 @@ public class Utils {
     }
 
     private static int getScore(String deltaString) {
-        if (deltaString.contains("case")) {
-            return 2;
-        } else if (deltaString.contains("bg")) {
+        if (deltaString.startsWith("case")) {
+            return 3;
+        } else if (deltaString.startsWith("bg")) {
             return 1;
         }
         return 0;

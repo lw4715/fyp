@@ -47,7 +47,7 @@ rule(bg16(),prominentGroup(fancyBear),[]).
 rule(bg17(),groupOrigin(fancyBear ,russian_federation),[]).
 rule(bg18(),pastMotives(fancyBear ,[ espionage,doxing ]),[]).
 rule(bg19(),pastTargets(fancyBear ,[georgia,france,jordan,united_states,hungary,world_antidoping_agency, nato,ukraine,belgium,pakistan,asia_pacific_economic_cooperation,osce,united_kingdom, germany,poland,european_commission]),[]). 
-rule(bg20(),targetCategory(fancyBear,government,military),[]).
+
 
 rule(bg21(),prominentGroup(cozyBear),[]).
 rule(bg22(),groupOrigin(cozyBear,russian_federation),[]).
@@ -78,7 +78,6 @@ rule(bg36(),prominentGroup(deepPanda),[]).
 rule(bg37(),groupOrigin(deepPanda ,china),[]).
 rule(bg38(),groupAttackMethods(deepPanda ,[ zeroday ,wateringHole ,customMalware ]),[]).
 rule(bg39(),pastTargets(deepPanda ,[united_states]),[]).
-rule(bg40(),targetCategory(deepPanda ,[ aerospace ,energy ,healthcare,military,privateSector ]),[]).
 rule(bg41(),pastMotives(deepPanda ,[ cyberespionage ]),[]).
 
 rule(bg42(),prominentGroup(butterfly),[]).

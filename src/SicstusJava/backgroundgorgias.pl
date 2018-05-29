@@ -14,9 +14,6 @@ attackMechanismList([zeroday,exploits,priviledgeEscalation,evasion,blended]).
 
 natoCountriesList([belgium,canada,denmark,france,iceland,italy,luxembourg,netherlands,norway,portugal,united_kingdom,united_states,greece,turkey,spain]).
 euCountriesList([austria,belgium,bulgaria,croatia,cyprus,czech_republic,denmark,estonia,finland,france,germany,greece,hungary,ireland,italy,latvia,lithuania,luxembourg,malta,netherlands,poland,portugal,romania,slovakia,slovenia,spain,sweden,united_kingdom]).
-%% https://brilliantmaps.com/us-allies-enemies/
-%% https://www.msn.com/en-gb/news/photos/which-countries-are-allies-and-which-are-enemies/ss-BBBNVNJ
-%% https://today.yougov.com/topics/politics/articles-reports/2017/02/02/americas-friends-and-enemies
 poorRelationList(united_states,[north_korea,iran,syria,iraq,afghanistan,russian_federation,libya,somalia,pakistan,palestine]).
 poorRelationList(north_korea,[united_states,south_korea]).
 rule(bg3,poorRelation(X,Y),[]) :- poorRelationList(X,L),member(Y,L).
@@ -48,7 +45,7 @@ rule(bg_2_2,sha256(goldenEye,'027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b
 
 rule(bg2,prominentGroup(fancyBear),[]).
 rule(bg3,groupOrigin(fancyBear ,russian_federation),[]).
-rule(bg4,pastMotives(fancyBear ,[ espionage,doxing ]),[]).
+%% rule(bg4,pastMotives(fancyBear ,[ espionage,doxing ]),[]).
 rule(bg5,pastTargets(fancyBear ,[georgia,france,jordan,united_states,hungary,world_antidoping_agency,
 	nato,ukraine,belgium,pakistan,asia_pacific_economic_cooperation,osce,united_kingdom,
 	germany,poland,european_commission]),[]).
@@ -84,14 +81,14 @@ rule(bg29,groupOrigin(deepPanda ,china),[]).
 rule(bg30,groupAttackMethods(deepPanda ,[ zeroday ,wateringHole ,customMalware ]),[]).
 rule(bg31,pastTargets(deepPanda ,[united_states]),[]).
 rule(bg31,targetCategory(deepPanda ,[ aerospace ,energy ,healthcare,military,privateSector ]),[]).
-rule(bg32,pastMotives(deepPanda ,[ cyberespionage ]),[]).
+%% rule(bg32,pastMotives(deepPanda ,[ cyberespionage ]),[]).
 
 rule(bg34,prominentGroup(butterfly),[]).
 rule(bg35,groupOrigin(butterfly ,china),[]).
 rule(bg36,groupAttackMethods(butterfly ,[ zeroday ,customMalware ]),[]).
 rule(bg37,pastTargets(butterfly ,[ twitter ,facebook ,apple ,microsoft ,pharmaceutical,
 	technology ,law ,oil ,preciousMetalMining ]),[]).
-rule(bg38,pastMotives(butterfly ,[ cyberespionage ,undergroundBusiness ]),[]).
+%% rule(bg38,pastMotives(butterfly ,[ cyberespionage ,undergroundBusiness ]),[]).
 
 rule(bg41,prominentGroup(dragonfly),[]).
 rule(bg42,groupOrigin(dragonfly ,eastEurope),[]).
@@ -107,18 +104,18 @@ rule(bg50,pastTargets(govRAT ,[united_states,taiwan,united_kingdom,singapore,ind
 	japan,indonesia,hong_kong,united_nations,south_korea,switzerland,vietnam,germany,
 	international_olympic_committee]),[]).
 rule(bg51,targetCategory([ govOfficials ,militaryOfficials ,enterprises ]),[]).
-rule(bg52,pastMotives(govRAT ,[ cyberespionage ]),[]).
+%% rule(bg52,pastMotives(govRAT ,[ cyberespionage ]),[]).
 
 
 rule(bg53,prominentGroup(pawnStorm),[]).
 rule(bg54,groupAttackMethods(pawnStorm ,[ spearphishing ,phishingWebsites ,ios ,exploits ,zeroday ]),[]).
 rule(bg55,pastTargets(pawnStorm ,[ nato ,govOfficials ,militaryOfficials ,russian_federation ,ukraine ]),[]).
-rule(bg56,pastMotives(pawnStorm ,[ cyberespionage ]),[]).
+%% rule(bg56,pastMotives(pawnStorm ,[ cyberespionage ]),[]).
 
 rule(bg58,prominentGroup(waterbug),[]).
 rule(bg59,groupAttackMethods(waterbug ,[ zeroday ,email ,stolenCertificates ,wateringHole ]),[]).
 rule(bg60,pastTargets(waterbug ,[ govInstitutions ,embassies ,education ,research ]),[]).
-rule(bg61,pastMotives(waterbug ,[ cyberespionage ,spy ,intelligenceGathering ]),[]).
+%% rule(bg61,pastMotives(waterbug ,[ cyberespionage ,spy ,intelligenceGathering ]),[]).
 
 
 

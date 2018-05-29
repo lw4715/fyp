@@ -60,9 +60,6 @@ rule(r_str__targetItself2(X,Att),       neg(isCulprit(X,Att)),[targetCountry(X,A
 %% rule(r_str_oneCulprit(X,Att),    neg(isCulprit(X,Att,_)),[isCulprit(Y,Att,_),X \= Y]).
 
 
-%% rule(r_str_grpPastTargets,hasMotive(Group,Att),[target(T,Att),prominentGroup(Group),pastTargets(Group,Ts),member(T,Ts)]). %WEAK RULE
-
-
 % pref
 rule(p0a(),prefer(r_str__claimedResp(X,A),r_str__noEvidence(X,A)),[]). %With any evidence,we prefer to attribute the culprit accordingly
 rule(p0b(),prefer(r_str__motiveAndCapability(X,A),r_str__noEvidence(X,A)),[]).
