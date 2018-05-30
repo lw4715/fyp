@@ -468,10 +468,11 @@ class GUI {
             btnPanel.add(viewDiagBtn);
             btnPanel.add(viewTreeBtn);
 
-            if (rs.size() > 1) {
+            String others = executeResult.getDerivationsWithDiffStrRule(SEPARATOR, i);
+            if (rs.size() > 1 && others.length() > 9) {
                 JButton addPrefBtn = defaultJButton("Add rule preference",
                         PREF_TYPE + 1 + ADD_PREF + rs.get(i).snd.fst + "*"
-                                + executeResult.getDerivationsWithDiffStrRule(SEPARATOR, i));
+                                + others);
                 btnPanel.add(addPrefBtn);
             }
 

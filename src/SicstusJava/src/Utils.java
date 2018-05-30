@@ -18,13 +18,13 @@ public class Utils {
     static final String STR = "str_rules.pl";
     static final String EVIDENCE_PL = "evidence.pl";
 
-    //counter is index of latest (already written) rule
-    private int counter;
+    //userRuleCounter is index of latest (already written) rule
+    private int userRuleCounter;
     private int prefCount;
     private String allStrRules;
 
     Utils() {
-        counter = 0;
+        userRuleCounter = 0;
         prefCount = 0;
         clearFile(USER_EVIDENCE_FILENAME);
     }
@@ -67,19 +67,19 @@ public class Utils {
         if (evidence.length() == 0) {
             return;
         }
-        this.counter++;
+        this.userRuleCounter++;
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(Utils.USER_EVIDENCE_FILENAME, true));
-            bw.write(String.format("rule(%s%d(), %s, []).\n", Utils.CASE_USER_F, this.counter, evidence));
+            bw.write(String.format("rule(%s%d(), %s, []).\n", Utils.CASE_USER_F, this.userRuleCounter, evidence));
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // counter is index of latest rule
+    // userRuleCounter is index of latest rule
     String getCurrentUserEvidenceRulename() {
-        return Utils.CASE_USER_F + this.counter + "()";
+        return Utils.CASE_USER_F + this.userRuleCounter + "()";
     }
 
     void addRulesWithoutChange(String rule) {
@@ -109,13 +109,13 @@ public class Utils {
         }
     }
 
-    // counter is index of latest rule
+    // userRuleCounter is index of latest rule
     void addRules(String rule) {
         if (rule.length() == 0) {
             return;
         }
-        this.counter++;
-        this.addRuleWithRulename(rule, Utils.CASE_USER_F + this.counter);
+        this.userRuleCounter++;
+        this.addRuleWithRulename(rule, Utils.CASE_USER_F + this.userRuleCounter);
     }
 
     static void clearFile(String f) {
@@ -553,10 +553,6 @@ public class Utils {
             sb.append("}\n");
         }
         return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getAllPreds());
     }
 
 }

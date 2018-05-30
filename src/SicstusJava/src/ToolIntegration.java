@@ -279,7 +279,7 @@ public class ToolIntegration {
         }
     }
 
-    // returns true is year/month is after currYear/currMonth
+    // returns true is year /month is after currYear/currMonth
     private boolean dateExceeded(int year, int month, int currYear, int currMonth) {
         return year > currYear || year == currYear && month > currMonth;
     }
@@ -468,6 +468,13 @@ public class ToolIntegration {
             return matcher.group();
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+            Map<String, String> m = new HashMap();
+        m.put("key", "val");
+        m.put("key1", "val1");
+        System.out.println(m);
     }
 
 }

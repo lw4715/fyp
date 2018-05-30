@@ -11,6 +11,7 @@ public class Result {
     private final Map<String, List<String>> abducedMap;
     private final Map<String, Set<List<String>>> negMap;
     private final Object[] trees;
+
     //derivations = fst: fullString snd: {fst1: derivation, snd1: culprit}
     private List<Pair<String, Pair<List<String>, String>>> derivations;
     private final Map<String, LinkedHashSet<List<String>>> resultMap;
@@ -99,7 +100,8 @@ public class Result {
             // filter derivations
             List<Pair<String, Pair<List<String>, String>>> filteredDerivations = new ArrayList<>();
 
-            for (int i = this.derivations.size() - 1; i >=0 ; i--) {
+//            for (int i = this.derivations.size() - 1; i >=0 ; i--) {
+            for (int i = 0; i < derivations.size(); i++) {
                 List<String> d = this.derivations.get(i).snd.fst;
                 boolean found = false;
                 for (String nonpreferredStrRule : this.nonpreferredStrRules) {

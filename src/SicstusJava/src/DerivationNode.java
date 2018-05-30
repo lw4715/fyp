@@ -183,7 +183,7 @@ public class DerivationNode {
         return this.result.hashCode() * this.rulename.hashCode() - this.args.hashCode();
     }
 
-    // TODO: time and then create to make more efficient and time again
+
     public static List<DerivationNode> createDerivationNode(List<String> names, List<List<String>> args) {
         Deque<DerivationNode> st = new ArrayDeque<>();
         List<DerivationNode> prefs = new ArrayList<>();
@@ -301,7 +301,6 @@ public class DerivationNode {
         return new DerivationNode("str result (isCulprit)", "strategic rulename", l, 2, es2);
     }
 
-    //FIXME
     static String getDiagramFilename(String derivation) {
         return String.format("%s.svg", Utils.alphabetNumericalOfString(derivation).hashCode());
     }
