@@ -215,7 +215,13 @@ public class Result {
         this.numDs.clear();
         this.filteredTrees.clear();
         this.processCulpritInfo();
-        String s = String.format("\n%s\nCulprit(s): %s\nTree:\n%s", this.attack, this.culprits, this.trees);
+
+        StringBuilder derivationString = new StringBuilder();
+        for (Pair<String, Pair<List<String>, String>> derivation : derivations) {
+            derivationString.append(derivation.fst + "\n\n");
+        }
+
+        String s = String.format("\n%s\nCulprit(s): %s\nDerivations:\n%s", this.attack, this.culprits, derivationString);
         if (this.abducedMap.isEmpty()) {
             return s;
         } else {
@@ -309,9 +315,4 @@ public class Result {
         }
         return r;
     }
-
-    public static void main(String[] args) {
-        System.out.println(Result.getFinalRule("[p4a_t(), case_autogen_geolocation_0(), case_example2b_f9(), r_t_srcIP1(china, example2b), r_t_attackOrigin(china, example2b), bg67(), r_str__loc(china, example2b)]"));
-    }
-
 }

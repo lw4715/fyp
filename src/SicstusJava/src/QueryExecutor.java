@@ -427,12 +427,12 @@ public class QueryExecutor {
 
             for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
                 Result r = qe.execute(c, false);
-                System.out.println("SUMMARY:\n" + r.getCulpritsSummary());
+                System.out.println(r);
             }
             for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
 //                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
                 Result r = qe.execute(c, false);
-                System.out.println(r.getCulpritsSummary());
+                System.out.println(r);
             }
         } catch (Exception e) {
             e.printStackTrace();
