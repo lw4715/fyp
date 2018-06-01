@@ -111,7 +111,7 @@ class GUI {
             "groupOrigin()", "malwareLinkedTo()", "gci_tier()"};
 
     private static final String[] evidencePredicates = {"hijackCorporateClouds(Att)",
-            "malwareUsedInAttack(M,Att)", "notForBlackMarketUse(M)", "stolenValidSignedCertificates(Att)",
+            "malwareUsedInAttack(M,Att)", "notFromBlackMarket(M)", "stolenValidSignedCertificates(Att)",
             "highSecurity(T)", "target(T,Att)", "highVolumeAttack(Att)", "longDurationAttack(Att)",
             "majorityIpOrigin(X,Att)", "attackPeriod(Att,D1)", "attackSourceIP(IP,Att)", "targetServerIP(TargetServerIP,Att)",
             "sysLanguage(L,Att)", "languageInCode(L,Att)", "infraUsed(Infra,Att)",

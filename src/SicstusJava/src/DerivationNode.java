@@ -59,13 +59,6 @@ public class DerivationNode {
     public DerivationNode(String result) {
         this.result = result;
         this.children = new HashSet<>();
-//        if (Utils.isStrRule(rulename)) {
-//            type = 2;
-//        } else if (Utils.isOpRule(rulename)) {
-//            type = 1;
-//        } else {
-//            type = 0;
-//        }
         this.type = 0;
         args = new ArrayList<>();
         rulename = "";

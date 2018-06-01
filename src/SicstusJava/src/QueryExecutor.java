@@ -422,25 +422,25 @@ public class QueryExecutor {
 
     public static void main(String[] args) {
 //        DerivationNode.createPNGDiagram("img/_sample.png", DerivationNode.getExampleNode(), new ArrayList<>());
-        DerivationNode.createPNGDiagram("img/_sample_arg.png", DerivationNode.getExampleArgNode(), new ArrayList<>());
-//        QueryExecutor qe = QueryExecutor.getInstance();
-//        try {
-////            qe.execute("virustotal_ex", false);
-////            qe.execute("tor_ex", false);
-////            qe.execute("ex", false);
-//
-//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-//                Result r = qe.execute(c, false);
-//                System.out.println(r);
-//            }
+//        DerivationNode.createPNGDiagram("img/_sample_arg.png", DerivationNode.getExampleArgNode(), new ArrayList<>());
+        QueryExecutor qe = QueryExecutor.getInstance();
+        try {
+//            qe.execute("virustotal_ex", false);
+//            qe.execute("tor_ex", false);
+//            qe.execute("ex", false);
+
+            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+                Result r = qe.execute(c, false);
+                System.out.println(r);
+            }
 //            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
 ////                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
 //                Result r = qe.execute(c, false);
 //                System.out.println(r);
 //            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //
 //        System.out.println("Mean total runtime: " + Utils.mean(qe.timings));
     }
