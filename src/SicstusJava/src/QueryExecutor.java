@@ -37,7 +37,7 @@ public class QueryExecutor {
         abduced = new HashSet<>();
         ti = new ToolIntegration();
         clearLeftoverFiles();
-        loadFiles();
+        loadStaticFiles();
     }
 
     // after executing query, call this method to get argumentation trees
@@ -55,7 +55,6 @@ public class QueryExecutor {
                 String s = split[i];
                 set.add(s);
             }
-//            System.out.println("Size of visual tree=" + set.size());
             return set;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -133,7 +132,7 @@ public class QueryExecutor {
         String query = String.format("prove([%s], D)", queryList);
         System.out.println("Executing custom query: " + query);
         try {
-            loadFiles();
+            loadDynamicFiles();
             return formatQueryOutput(executeQueryString(query, 20));
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,22 +156,18 @@ public class QueryExecutor {
         return dList;
     }
 
-//    // prove all predicates
-//    public Result executeAll(String caseName, List<String> culpritsList) {
-//        abduced.clear();
-//        Map<String, Term>[] maps = this.executeQuery(caseName, verbose, true, culpritsList);
-//        return null;
-//    }
 
     // prove([isCulprit(X, caseName)], D)
     public Result execute(String caseName, boolean reload) throws Exception {
-        loadFiles();
+        loadDynamicFiles();
         abduced.clear();
         System.out.println(String.format("---------\nStart %s derivation", caseName));
 
         double time = System.nanoTime();
         int count = 0;
         Map<String, Term>[] maps = this.executeQuery(caseName, verbose, false);
+
+        System.err.println("!!! EXECUTION TIME " + caseName + ": " + (System.nanoTime() - time)/pow(10, 9) );
         Map<String, LinkedHashSet<List<String>>> resultMap = new HashMap<>();
         Map<String, Set<List<String>>> negMap = new HashMap<>();
         Set<String> culprits = new HashSet<>();
@@ -249,7 +244,18 @@ public class QueryExecutor {
         Utils.clearFile(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE);
     }
 
-    private void loadFiles() {
+    private void loadDynamicFiles() {
+        ti.torIntegration();
+        try {
+            executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.TOR_IP_FILE), 1);
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.AUTOMATED_GEOLOCATION_PL), 1);
+            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.VIRUS_TOTAL_PROLOG_FILE), 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadStaticFiles() {
         allFiles = new ArrayList<>();
         allFiles.add("utils.pl");
         allFiles.add("evidence.pl");
@@ -261,12 +267,6 @@ public class QueryExecutor {
             executeQueryString(String.format(CONSULT_STRING, Utils.TECH), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.OP), 1);
             executeQueryString(String.format(CONSULT_STRING, Utils.STR), 1);
-
-            ti.torIntegration();
-            executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
-            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.TOR_IP_FILE), 1);
-            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.AUTOMATED_GEOLOCATION_PL), 1);
-            executeQueryString(String.format(CONSULT_STRING, ToolIntegration.VIRUS_TOTAL_PROLOG_FILE), 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,6 +280,8 @@ public class QueryExecutor {
             String key;
             if (isAbducibles) {
                 key = pred.substring(4, pred.length() - 1).split("\\(")[0];
+            } else if (!pred.contains("(")) {
+                break; // not predicate
             } else {
                 key = pred.substring(0, pred.lastIndexOf("("));
             }
@@ -360,8 +362,7 @@ public class QueryExecutor {
 
         if (bsList.size() == 0) return ret;
 
-//        String b = bsList.get(0);
-//        int i = 0;
+
         for (String b : bsList) {
             if (b.length() > 0) {
                 b = Utils.removeLeadingNonAlpha(b);
@@ -420,25 +421,28 @@ public class QueryExecutor {
     }
 
     public static void main(String[] args) {
-        QueryExecutor qe = QueryExecutor.getInstance();
-        try {
-//            qe.execute("virustotal_ex", false);
-//            qe.execute("tor_ex", false);
-
-            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                Result r = qe.execute(c, false);
-                System.out.println(r);
-            }
-            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
-//                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
-                Result r = qe.execute(c, false);
-                System.out.println(r);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Mean total runtime: " + Utils.mean(qe.timings));
+//        DerivationNode.createPNGDiagram("img/_sample.png", DerivationNode.getExampleNode(), new ArrayList<>());
+        DerivationNode.createPNGDiagram("img/_sample_arg.png", DerivationNode.getExampleArgNode(), new ArrayList<>());
+//        QueryExecutor qe = QueryExecutor.getInstance();
+//        try {
+////            qe.execute("virustotal_ex", false);
+////            qe.execute("tor_ex", false);
+////            qe.execute("ex", false);
+//
+//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                Result r = qe.execute(c, false);
+//                System.out.println(r);
+//            }
+//            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
+////                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
+//                Result r = qe.execute(c, false);
+//                System.out.println(r);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println("Mean total runtime: " + Utils.mean(qe.timings));
     }
 
 

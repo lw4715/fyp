@@ -17,6 +17,7 @@ public class Utils {
     static final String OP = "op_rules.pl";
     static final String STR = "str_rules.pl";
     static final String EVIDENCE_PL = "evidence.pl";
+    static final String R_OP_ = "r_op_";
 
     //userRuleCounter is index of latest (already written) rule
     private int userRuleCounter;
@@ -47,12 +48,14 @@ public class Utils {
         return 0;
     }
 
+    // returns list of rules with pred (without any args) as head
     static List<String> scanFileForPredicate(String filename, String pred) {
         List<String> r = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             br.lines().forEach(line -> {
-                if (line.contains("rule(") && !line.contains("abducible(") && line.charAt(0) != '%' &&
+                line = line.split("%")[0];
+                if (line.startsWith("rule(") && !line.startsWith("abducible(") &&
                         Utils.getHeadOfLine(line).contains(pred)) {
                     r.add(line.replace("\t",""));
                 }
@@ -171,6 +174,10 @@ public class Utils {
         return s.startsWith(Utils.R_STR_);
     }
 
+    public static boolean isOpRule(String rulename) {
+        return rulename.startsWith(R_OP_);
+    }
+
     static boolean isFinalStrRule(String s) {
         return s.startsWith(Utils.R_STR__);
     }
@@ -184,6 +191,7 @@ public class Utils {
         return r.startsWith("p") || r.startsWith("ass(neg(prefer(");
     }
 
+    // get head given rule name
     static String getHead(String name, List<String> args) {
         name = name.trim();
         boolean isInstantiated = name.startsWith("case") || name.startsWith("bg") || Utils.isPreference(name);
@@ -345,8 +353,16 @@ public class Utils {
     }
 
 
-    private static String[] getBodiesOfLine(String line) {
-        return Utils.getBodyOfLine(line).split("\\)");
+    static Set<String> getBodiesOfLine(String line) {
+        String[] s = Utils.getBodyOfLine(line).split("\\)");
+        Set<String> set = new HashSet<>();
+        for (String s1 : s) {
+            s1 = removeLeadingNonAlpha(s1);
+            if (s1.length() > 0) {
+                set.add(s1);
+            }
+        }
+        return set;
     }
 
     static String getHeadOfLine(String line) {
@@ -415,6 +431,58 @@ public class Utils {
             return this.allStrRules;
         }
     }
+//
+//    public static List<String> getAllStrRuleList() {
+//        List<String> strRulenames = new ArrayList<>();
+//        try {
+//            BufferedReader br = new BufferedReader(new FileReader(Utils.STR));
+//            br.lines().forEach(x -> {
+//                if (x.startsWith("rule(r_str__")) {
+//                    strRulenames.add(x);
+//                }
+//            });
+//
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//
+//        }
+//        return strRulenames;
+//    }
+//
+//    public static DerivationNode getRuleListOfBodyPreds(Set<String> bs, DerivationNode parent, Map<String, List<String>> predRulesMap, Map<String, DerivationNode> rulenameNodeMap) {
+//        rulenameNodeMap.put(parent.getRulename(), parent);
+//
+//        if (bs.size() > 0) {
+//            System.out.println(predRulesMap.size() + " " + rulenameNodeMap.size() + " " + parent.getResult());
+////            System.out.println("bs: " + bs + " size: " + bs.size());
+//            for (String b : bs) {
+//                if (b.contains("(")) {
+//                    if (predRulesMap.get(b) == null) {
+//                        List<String> bList = new ArrayList<>();
+//                        bList.add(b);
+//                        b = b.substring(0, b.lastIndexOf("("));
+//                        predRulesMap.put(b, QueryExecutor.getPredMap(bList, false).get(b));
+//                    }
+//
+//                    List<String> rules = predRulesMap.get(b);
+//                    for (String rule : rules) {
+//                        String head = getHeadOfLine(rule);
+//                        DerivationNode child = rulenameNodeMap.get(head);
+//                        if (child == null) {
+//                            child = new DerivationNode(head);
+//                            parent.addChild(child);
+//                            child = getRuleListOfBodyPreds(getBodiesOfLine(rule), child, predRulesMap, rulenameNodeMap);
+//                        } else {
+//                            parent.addChild(child);
+//                            System.out.println("TERMINATE early for " + head);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return parent;
+//    }
+
 
     public static String getHeadPredicateOfPrologRule(String prologRule) {
         String head = prologRule.split(":-")[0].trim();
@@ -488,11 +556,12 @@ public class Utils {
                 br.lines().forEach(line -> {
                     line = line.split("%")[0];
                     if (line.startsWith("rule(") && line.contains("[")) {
-                        String[] body = Utils.getBodiesOfLine(line);
+                        Set<String> body = Utils.getBodiesOfLine(line);
                         for (String b : body) {
-                            if (b.startsWith(",")) {
-                                b = b.replaceFirst(",", "");
-                            }
+//                            if (b.startsWith(",")) {
+//                                b = b.replaceFirst(",", "");
+//                            }
+                            b = removeLeadingNonAlpha(b);
                             preds.add(b.trim().split("\\(")[0]);
                         }
                     }
@@ -554,5 +623,6 @@ public class Utils {
         }
         return sb.toString();
     }
+
 
 }

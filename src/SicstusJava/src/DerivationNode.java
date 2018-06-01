@@ -55,6 +55,22 @@ public class DerivationNode {
         this.type = type;
     }
 
+    // for visualising
+    public DerivationNode(String result) {
+        this.result = result;
+        this.children = new HashSet<>();
+//        if (Utils.isStrRule(rulename)) {
+//            type = 2;
+//        } else if (Utils.isOpRule(rulename)) {
+//            type = 1;
+//        } else {
+//            type = 0;
+//        }
+        this.type = 0;
+        args = new ArrayList<>();
+        rulename = "";
+    }
+
     public List<String> getArgs() {
         return args;
     }
@@ -71,6 +87,11 @@ public class DerivationNode {
         return this.level;
     }
 
+    // for visualising rules
+    public int getDepth() {
+        return type;
+    }
+
     static String getPref(String derivation) {
         String[] s = derivation.split("\\)");
         for (String s1 : s) {
@@ -83,7 +104,7 @@ public class DerivationNode {
         return "";
     }
 
-    private void addChild(DerivationNode child) {
+    void addChild(DerivationNode child) {
         children.add(child);
     }
 
@@ -95,6 +116,18 @@ public class DerivationNode {
                 .width(100).render(Format.SVG).toFile(new File(filename));
 
             DerivationNode.rewriteTransparentStroke(filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return prefs;
+    }
+
+    static List<DerivationNode> createPNGDiagram(String filename, DerivationNode mainNode, List<DerivationNode> prefs) {
+        try {
+            Graph g = graph(filename).directed()
+                    .with(mainNode.createNode());
+            Graphviz.fromGraph(g)
+                    .width(500).render(Format.PNG).toFile(new File(filename));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,10 +150,10 @@ public class DerivationNode {
             case 1: // op
                 typeColour = Color.LIGHTYELLOW;
                 break;
-            case 2: // str
+            case 2: // str or attack
                 typeColour = Color.SALMON;
                 break;
-            case 3:
+            case 3: // defense
                 typeColour = Color.GREENYELLOW;
                 break;
             default: // evidence
@@ -283,6 +316,21 @@ public class DerivationNode {
         }
     }
 
+    static DerivationNode getExampleArgNode() {
+        List<String> l = new ArrayList<>();
+        DerivationNode defense21 = new DerivationNode("{id:D21} Defense argument to {A12}", 2, 3);
+        DerivationNode defense22 = new DerivationNode("{id:D22} Defense argument to {A12}", 2, 3);
+        DerivationNode attack11 = new DerivationNode("{id:A11} Attack argument to {D0}", 1, 2);
+        DerivationNode attack12 = new DerivationNode("{id:A12} Attack argument to {D0}", 1, 2);
+        DerivationNode root = new DerivationNode("{id:D0} Concl-usion argument", 0, 3);
+        attack12.addChild(defense21);
+        attack12.addChild(defense22);
+        root.addChild(attack11);
+        root.addChild(attack12);
+        return root;
+    }
+
+
     static DerivationNode getExampleNode() {
         List<String> l = new ArrayList<>();
         DerivationNode e1 = new DerivationNode("evidence1", "evidence1 id", l, -1);
@@ -377,6 +425,31 @@ public class DerivationNode {
             e.printStackTrace();
         }
     }
+
+//    public static void drawVisualisationDiagram() throws IOException {
+//        DerivationNode root = new DerivationNode("root");
+//        for (String strRuleLine : Utils.getAllStrRuleList()) {
+//            Set<String> bs = Utils.getBodiesOfLine(strRuleLine);
+//            DerivationNode n = new DerivationNode(Utils.getHeadOfLine(strRuleLine));
+//            n = Utils.getRuleListOfBodyPreds(Utils.getBodiesOfLine(strRuleLine), n,
+//                    new HashMap<String, List<String>>(), new HashMap<String, DerivationNode>());
+//            root.addChild(n);
+//        }
+//        String filename = "visualization.png";
+//        Graph g = graph(filename).directed()
+//                .with(root.createNode());
+//        Graphviz.fromGraph(g)
+//                .width(2000).render(Format.PNG).toFile(new File(filename));
+//        DerivationNode.rewriteTransparentStroke(filename);
+//    }
+//
+//    public static void main(String[] args) {
+//        try {
+//            drawVisualisationDiagram();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
 
