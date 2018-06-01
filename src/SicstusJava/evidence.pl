@@ -53,7 +53,6 @@ rule(case4_f0(),industry(nuclear,iranian_org),[]).
 rule(case4_f1(),target(iranian_org,stuxnetattack),[]).
 rule(case4_f2(),infectionMethod(usb,stuxnetattack),[]).
 rule(case4_f3(),spreadingMechanism(localNetwork,stuxnetattack),[]).
-rule(case4_f4(),stolenValidSignedCertificates(stuxnetattack),[]).
 rule(case4_f6(),targetCountry(iran,stuxnetattack),[]).
 rule(case4_f7(),usesZeroDayVulnerabilities(stuxnet),[]).
 rule(case4_f8(),news(nuclear,iran,ongoing),[]).

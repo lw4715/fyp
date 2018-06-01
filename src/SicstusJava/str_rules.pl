@@ -3,7 +3,7 @@
 
 %% input
 %% tech:
-%% notForBlackMarketUse 
+%% notFromBlackMarket 
 %% similar
 %% requireHighResource
 
@@ -30,7 +30,7 @@
 
 
 
-abducible(notForBlackMarketUse(_), []).
+abducible(notFromBlackMarket(_), []).
 
 %% complement(isCulprit(X, Att), isCulprit(Y, Att)) :- X \= Y.
 
@@ -45,7 +45,7 @@ rule(r_str__motive(C, Att),               isCulprit(C, Att),    [prominentGroup(
 rule(r_str__motiveAndLocation(C, Att),    isCulprit(C, Att),    [hasMotive(C, Att), attackOrigin(C, Att), country(C)]).
 rule(r_str__loc(C, Att),                  isCulprit(C, Att),    [attackOrigin(C, Att), country(C)]).
 rule(r_str__social(C, Att),               isCulprit(C, Att),    [governmentLinked(P, C), country(C), identifiedIndividualInAttack(P, Att)]).
-rule(r_str__linkedMalware(X, A1),         isCulprit(X, A1),     [malwareUsedInAttack(M1, A1), similar(M1, M2), malwareLinkedTo(M2, X), notForBlackMarketUse(M1), notForBlackMarketUse(M2)]).
+rule(r_str__linkedMalware(X, A1),         isCulprit(X, A1),     [malwareUsedInAttack(M1, A1), similar(M1, M2), malwareLinkedTo(M2, X), notFromBlackMarket(M1), notFromBlackMarket(M2)]).
 
 %% GUI: analyst add rules and preferences
 rule(r_str__noEvidence(X, Att),           neg(isCulprit(X, Att)), []).

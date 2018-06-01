@@ -4,7 +4,7 @@
 %% evidence:
 %% hijackCorporateClouds(Att)
 %% malwareUsedInAttack(M, Att)
-%% notForBlackMarketUse(M)
+%% notFromBlackMarket(M)
 %% stolenValidSignedCertificates(Att)
 %% highSecurity(T)
 %% target(T, Att)
@@ -60,13 +60,14 @@
 
 rule(r_t_neghighSkill(Att), neg(highLevelSkill(Att)),     []).
 rule(r_t_highSkill1(Att), highLevelSkill(Att),     	[hijackCorporateClouds(Att)]).
-rule(r_t_highSkill2(Att), highLevelSkill(Att),     	[malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
-rule(r_t_highSkill3(Att), neg(highLevelSkill(Att)), 	[malwareUsedInAttack(M, Att), neg(notForBlackMarketUse(M))]).
-rule(r_t_highSkill4(Att), highLevelSkill(Att),     	[stolenValidSignedCertificates(Att)]).
+rule(r_t_highSkill2(Att), highLevelSkill(Att),     	[malwareUsedInAttack(M, Att), usesZeroDayVulnerabilities(M)]).
+rule(r_t_highSkill3(Att), neg(highLevelSkill(Att)), 	[malwareUsedInAttack(M, Att), neg(notFromBlackMarket(M))]).
+rule(r_t_highSkill4(Att), highLevelSkill(Att),     	[malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
+
 
 rule(r_t_highResource0(Att), neg(requireHighResource(Att)), 	[neg(highLevelSkill(Att))]).
 rule(r_t_highResource1(Att), requireHighResource(Att), 		[highLevelSkill(Att)]).
-rule(r_t_highResource2(Att), requireHighResource(Att), 		[highSecurity(T), target(T, Att)]).
+rule(r_t_highResource2(Att), requireHighResource(Att), 		[target(T, Att), highSecurity(T)]).
 rule(r_t_highResource3(Att), requireHighResource(Att), 		[highVolumeAttack(Att), longDurationAttack(Att)]).
 
 
@@ -98,7 +99,7 @@ rule(r_t_attackOrigin(X, Att), attackOrigin(X, Att),              	[attackPossib
 rule(r_t_conflictingOrigin(X, Y, Att), neg(attackOrigin(X, Att)),    [attackPossibleOrigin(X, Att), attackPossibleOrigin(Y, Att), country(X), country(Y), X \= Y]).
 rule(r_t_nonOrigin(X, Att), neg(attackOrigin(X, Att)),   			[neg(attackPossibleOrigin(X, Att))]).
 
-rule(r_t_bm(M), notForBlackMarketUse(M), [infectionMethod(usb, M), commandAndControlEasilyFingerprinted(M)]). 
+rule(r_t_bm(M), notFromBlackMarket(M), [infectionMethod(usb, M), commandAndControlEasilyFingerprinted(M)]). 
 
 rule(r_t_similarDefault(M1, M2), neg(similar(M1, M2)),  []).
 rule(r_t_similar(M1, M2), similar(M1, M2),        [similarCCServer(M1, M2), M1 \= M2]).
@@ -113,7 +114,7 @@ rule(r_t_similar3(M1, M2), similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 rule(r_t_similar4(M1, M2), similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMalware(C2, M2), similarFileChara(C1, C2)]).
 
 rule(r_t_targetted(Att), specificTarget(Att),      [malwareUsedInAttack(M, Att), specificConfigInMalware(M)]).
-rule(r_t_zeroday(M),   sophisticatedMalware(M),    [usesZeroDayVulnerabilities(M)]).
+%% rule(r_t_zeroday(M),   sophisticatedMalware(M),    [usesZeroDayVulnerabilities(M)]).
 
 rule(r_t_similarFileChara1(C1, C2), similarFileChara(C1, C2), [fileChara(Filename, _, _, _, _, _, C1), fileChara(Filename, _, _, _, _, _, C2)]).
 rule(r_t_similarFileChara2(C1, C2), similarFileChara(C1, C2), [fileChara(_, MD5, _, _, _, _, C1), fileChara(_, MD5, _, _, _, _, C2)]).
@@ -138,7 +139,6 @@ rule(p9b_t(), prefer(r_t_spoofIP(X, Att), r_t_srcIP2(X, Att)), []).
 rule(p10a_t(), prefer(r_t_highSkill1(Att), r_t_neghighSkill(Att)), []).
 rule(p10b_t(), prefer(r_t_highSkill2(Att), r_t_neghighSkill(Att)), []).
 rule(p10c_t(), prefer(r_t_highSkill4(Att), r_t_neghighSkill(Att)), []).
-rule(p11a_t(), prefer(r_t_highSkill3(Att), r_t_highSkill1(Att)), []).
 rule(p11b_t(), prefer(r_t_highSkill3(Att), r_t_highSkill2(Att)), []).
 rule(p11c_t(), prefer(r_t_highSkill3(Att), r_t_highSkill4(Att)), []).
 rule(p12a_t(), prefer(r_t_highResource1(Att), r_t_highResource0(Att)), []).
@@ -171,13 +171,13 @@ goal_all(A,  X,  M,  M2,  M3,  D1,  D2,  D3,  D4,  D5) :-
   cleanFile('results.pl'),  cleanFile('non_results.pl'), 
   writeToFilesAll(requireHighResource(A),  requireHighResource(A,  D1)), 
   writeToFilesAll(attackOrigin(X, A),  attackOrigin(X, A, D2)), 
-  writeToFilesAll(notForBlackMarketUse(M),  notForBlackMarketUse(M,  D3)), 
+  writeToFilesAll(notFromBlackMarket(M),  notFromBlackMarket(M,  D3)), 
   writeToFilesAll(specificTarget(A),  specificTarget(A,  D4)), 
   writeToFilesAll(similar(M2,  M3),  similar(M2,  M3,  A,  D5)).
 
 
 requireHighResource(A,  D) :- prove([requireHighResource(A)],  D).
 attackOrigin(X,  A,  D) :- prove([attackOrigin(X,  A)],  D).
-notForBlackMarketUse(M,  D) :- prove([notForBlackMarketUse(M)],  D).
+notFromBlackMarket(M,  D) :- prove([notFromBlackMarket(M)],  D).
 similar(M1,  M2,  A,  D) :- prove([malwareUsedInAttack(M1,  A),  similar(M1,  M2)],  D).
 specificTarget(A,  D) :- prove([specificTarget(A)],  D). % abducible

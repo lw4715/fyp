@@ -58,8 +58,8 @@ rule(r_op_noCapability2(X, Att), neg(hasCapability(X, Att)), [hasNoResources(X)]
 rule(r_op_ecMotive(C, T), 	hasMotive(C, Att), 		 [target(T, Att), industry(T), contextOfAttack(economic, Att), hasEconomicMotive(C, T), specificTarget(Att)]).
 rule(r_op_pMotive(C, T),    	hasMotive(C, Att), 		 [targetCountry(T, Att), attackPeriod(Att, Date1), contextOfAttack(political, Att), hasPoliticalMotive(C, T, Date2), dateApplicable(Date1, Date2), specificTarget(Att)]).
 rule(r_op_pMotive1(C, T, Date), hasPoliticalMotive(C, T, Date), [imposedSanctions(T, C, Date)]).
-rule(r_op_conflict(X, T), 	hasMotive(X, Att), 		 [targetCountry(T, Att), attackPeriod(Att, Date1), news(News, T, Date2), dateApplicable(Date1, Date2), causeOfConflict(X, T, News), specificTarget(Att)]).
-rule(r_op_conflict1(X, T),   	hasMotive(X, Att), 		 [target(T, Att), attackPeriod(Att, Date1), news(News, T, Date2), dateApplicable(Date1, Date2), causeOfConflict(X, T, News), specificTarget(Att)]).
+rule(r_op_conflict(X, T), 	hasMotive(X, Att), 		 [targetCountry(T, Att), attackPeriod(Att, Date1), news(Event, T, Date2), dateApplicable(Date1, Date2), causeOfConflict(X, T, Event), specificTarget(Att)]).
+rule(r_op_conflict1(X, T),   	hasMotive(X, Att), 		 [target(T, Att), attackPeriod(Att, Date1), news(Event, T, Date2), dateApplicable(Date1, Date2), causeOfConflict(X, T, Event), specificTarget(Att)]).
 rule(r_op_geopolitics1(C, T), 	hasMotive(C, Att), 	 [target(T, Att), country(T), country(C), poorRelation(C, T)]).
 rule(r_op_geopolitics2(C, T), 	hasMotive(C, Att), 	 [target(T, Att), country(T), country(C), poorRelation(T, C)]).
 rule(r_op_nonGeopolitics1(C, T), 	neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C, T)]).
@@ -81,19 +81,12 @@ rule(r_op_context(political, Att),  contextOfAttack(political, Att),  [target(T,
 rule(r_op_context1(political, Att),  contextOfAttack(political, Att),  [target(T, Att),  industry(Ind, T),  politicalIndustry(Ind)]).
 
 
-%% TODO: editing
-
-%% rule(r_op_context(socio_cultural, Att),  contextOfAttack(socio_cultural, Att),  [target(T, Att),  industry(Ind, T),  politicalIndustry(Ind)]).
-
-%% END
-
-
 %% Auxilliary rules
-%% Y2 M2 is before Y1 M1 but recent enough (within 2 years)
+%% Y2 M2 is before Y1 M1 but recent enough (within 1 year)
 rule(r_op_date(ongoing), dateApplicable(_, ongoing), []).
 rule(r_op_date1(Y, M), dateApplicable([Y, M], [Y, M]), []).
 rule(r_op_date2(Y, M1, M2), dateApplicable([Y, M1], [Y, M2]), [M2 < M1]).
-rule(r_op_date3(Y1, Y2), dateApplicable([Y1, _], [Y2, _]), [Y2 < Y1, Y2 > (Y1 - 3)]).
+rule(r_op_date3(Y1, Y2), dateApplicable([Y1, _], [Y2, _]), [Y2 < Y1, Y2 > (Y1 - 2)]).
 
 
 % prefer
