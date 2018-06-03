@@ -42,7 +42,7 @@ rule(r_str__claimedResp(X, Att),          isCulprit(X, Att),    [existingGroupCl
 
 rule(r_str__motiveAndCapability(C, Att),  isCulprit(C, Att),    [hasMotive(C, Att), hasCapability(C, Att)]).
 rule(r_str__motive(C, Att),               isCulprit(C, Att),    [prominentGroup(Group), groupOrigin(Group, C), country(C), isCulprit(Group, Att), hasMotive(C, Att)]).
-rule(r_str__motiveAndLocation(C, Att),    isCulprit(C, Att),    [hasMotive(C, Att), attackOrigin(C, Att), country(C)]).
+rule(r_str__motiveAndLocation(C, Att),    isCulprit(C, Att),    [attackOrigin(C, Att), hasMotive(C, Att), country(C)]).
 rule(r_str__loc(C, Att),                  isCulprit(C, Att),    [attackOrigin(C, Att), country(C)]).
 rule(r_str__social(C, Att),               isCulprit(C, Att),    [governmentLinked(P, C), country(C), identifiedIndividualInAttack(P, Att)]).
 rule(r_str__linkedMalware(X, A1),         isCulprit(X, A1),     [malwareUsedInAttack(M1, A1), similar(M1, M2), malwareLinkedTo(M2, X), notFromBlackMarket(M1), notFromBlackMarket(M2)]).

@@ -60,10 +60,10 @@ rule(r_op_pMotive(C, T),    	hasMotive(C, Att), 		 [targetCountry(T, Att), attac
 rule(r_op_pMotive1(C, T, Date), hasPoliticalMotive(C, T, Date), [imposedSanctions(T, C, Date)]).
 rule(r_op_conflict(X, T), 	hasMotive(X, Att), 		 [targetCountry(T, Att), attackPeriod(Att, Date1), news(Event, T, Date2), dateApplicable(Date1, Date2), causeOfConflict(X, T, Event), specificTarget(Att)]).
 rule(r_op_conflict1(X, T),   	hasMotive(X, Att), 		 [target(T, Att), attackPeriod(Att, Date1), news(Event, T, Date2), dateApplicable(Date1, Date2), causeOfConflict(X, T, Event), specificTarget(Att)]).
-rule(r_op_geopolitics1(C, T), 	hasMotive(C, Att), 	 [target(T, Att), country(T), country(C), poorRelation(C, T)]).
-rule(r_op_geopolitics2(C, T), 	hasMotive(C, Att), 	 [target(T, Att), country(T), country(C), poorRelation(T, C)]).
-rule(r_op_nonGeopolitics1(C, T), 	neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(C, T)]).
-rule(r_op_nonGeopolitics2(C, T), 	neg(hasMotive(C, Att)), [target(T, Att), country(T), country(C), goodRelation(T, C)]).
+rule(r_op_geopolitics1(C, T), 	hasMotive(C, Att), 	 [targetCountry(T, Att), country(T), country(C), poorRelation(C, T)]).
+rule(r_op_geopolitics2(C, T), 	hasMotive(C, Att), 	 [targetCountry(T, Att), country(T), country(C), poorRelation(T, C)]).
+rule(r_op_nonGeopolitics1(C, T), 	neg(hasMotive(C, Att)), [targetCountry(T, Att), country(T), country(C), goodRelation(C, T)]).
+rule(r_op_nonGeopolitics2(C, T), 	neg(hasMotive(C, Att)), [targetCountry(T, Att), country(T), country(C), goodRelation(T, C)]).
 
 rule(r_op_grpPastTargets(Group,  Att), hasMotive(Group, Att), [target(T, Att), prominentGroup(Group), pastTargets(Group, Ts), member(T, Ts)]). %WEAK RULE
 
