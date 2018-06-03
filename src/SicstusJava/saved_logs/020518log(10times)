@@ -95,7 +95,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc, M2) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc ,  backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc ,  wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer , lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc ,  backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc ,  wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer , lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc, M2) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc ,  backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc ,  wannacryattack) (case6_f2)	
@@ -113,8 +113,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
-ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( gowin7 , flame) (bg79)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( gowin7 , flame) (bg79)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
@@ -123,8 +123,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
-ccServer(secuurity ,  gauss) (case3_f17)	ccServer( secuurity , flame) (bg80)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity ,  gauss) (case3_f17)	ccServer( secuurity , flame) (bg80)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
@@ -133,8 +133,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -143,8 +143,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -153,8 +153,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -163,8 +163,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 ,  gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -173,8 +173,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -183,8 +183,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity ,  adolph_dybevek ,  prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -193,8 +193,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 ,  adolph_dybevek ,  prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -203,8 +203,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity ,  gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss , gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb , gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -860,7 +860,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc, M2) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer , lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer , lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc, M2) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -878,8 +878,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 , flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 , flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
@@ -888,8 +888,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity , flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity , flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
@@ -898,8 +898,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -908,8 +908,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -918,8 +918,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -928,8 +928,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity , flame) (bg80)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity , adolph_dybevek , prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -938,8 +938,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -948,8 +948,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 , flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 , adolph_dybevek , prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame, equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -958,8 +958,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -968,8 +968,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1259,7 +1259,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1, M2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1, M2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -1575,7 +1575,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc, M2) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc, M2) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -1593,8 +1593,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
@@ -1603,8 +1603,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC1){2}
@@ -1613,8 +1613,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1623,8 +1623,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1633,8 +1633,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1643,8 +1643,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1653,8 +1653,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1663,8 +1663,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1673,8 +1673,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1683,8 +1683,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss, M2) (r_t_similar){1}
 similarCCServer(gauss, M2) (r_t_simCC2){4}
@@ -1974,7 +1974,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -2290,7 +2290,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -2308,8 +2308,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -2318,8 +2318,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -2328,8 +2328,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2338,8 +2338,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2348,8 +2348,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2358,8 +2358,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2368,8 +2368,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2378,8 +2378,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2388,8 +2388,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2398,8 +2398,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -2689,7 +2689,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -3005,7 +3005,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -3023,8 +3023,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -3033,8 +3033,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -3043,8 +3043,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3053,8 +3053,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3063,8 +3063,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3073,8 +3073,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3083,8 +3083,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3093,8 +3093,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3103,8 +3103,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3113,8 +3113,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3404,7 +3404,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -3720,7 +3720,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -3738,8 +3738,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -3748,8 +3748,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -3758,8 +3758,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3768,8 +3768,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3778,8 +3778,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3788,8 +3788,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3798,8 +3798,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3808,8 +3808,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3818,8 +3818,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -3828,8 +3828,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4119,7 +4119,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -4435,7 +4435,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -4453,8 +4453,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -4463,8 +4463,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -4473,8 +4473,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4483,8 +4483,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4493,8 +4493,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4503,8 +4503,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4513,8 +4513,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4523,8 +4523,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4533,8 +4533,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4543,8 +4543,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -4834,7 +4834,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -5150,7 +5150,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -5168,8 +5168,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -5178,8 +5178,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -5188,8 +5188,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5198,8 +5198,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5208,8 +5208,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5218,8 +5218,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5228,8 +5228,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5238,8 +5238,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5248,8 +5248,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5258,8 +5258,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5549,7 +5549,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -5865,7 +5865,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -5883,8 +5883,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -5893,8 +5893,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -5903,8 +5903,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5913,8 +5913,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5923,8 +5923,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5933,8 +5933,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5943,8 +5943,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5953,8 +5953,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5963,8 +5963,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -5973,8 +5973,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6264,7 +6264,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	
@@ -6580,7 +6580,7 @@ goal(wannacryattack,X,D0)
 wannacryattack_lazarusGrp0.png: ass,ass,bg26,case6_f3,r_t_similar3,case6_f2,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
-malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notForBlackMarketUse(trojanAlphanc)) (ass), ass(notForBlackMarketUse(backdoorDuuzer)) (ass)]
+malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	, malwareLinkedTo( backdoorDuuzer ,lazarusGrp) (bg26), ass(notFromBlackMarket(trojanAlphanc)) (ass), ass(notFromBlackMarket(backdoorDuuzer)) (ass)]
 node: isCulprit(lazarusGrp,wannacryattack) (r_str_linkedMalware){2}
 similar(trojanAlphanc,backdoorDuuzer) (r_t_similar3){1}
 malwareModifiedFrom(trojanAlphanc , backdoorDuuzer) (case6_f3)		malwareUsedInAttack(trojanAlphanc , wannacryattack) (case6_f2)	
@@ -6598,8 +6598,8 @@ gaussattack_equationGrp0.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg79,case3_f16
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( gowin7 ,flame) (bg79)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -6608,8 +6608,8 @@ gaussattack_equationGrp1.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg80,case3_f17
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( secuurity ,flame) (bg80)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC1){2}
@@ -6618,8 +6618,8 @@ gaussattack_equationGrp2.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6628,8 +6628,8 @@ gaussattack_equationGrp3.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,case3_f18
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6638,8 +6638,8 @@ gaussattack_equationGrp4.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f19,bg81
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6648,8 +6648,8 @@ gaussattack_equationGrp5.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg82,bg81,bg80
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(gowin7 , gauss) (case3_f16)	ccServer( secuurity ,flame) (bg80)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6658,8 +6658,8 @@ gaussattack_equationGrp6.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,case
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6668,8 +6668,8 @@ gaussattack_equationGrp7.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,case3_f19
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails(secuurity , adolph_dybevek , prinsen_gate_6) (case3_f19)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6678,8 +6678,8 @@ gaussattack_equationGrp8.png: ass,case3_f13,case3_f12,r_t_bm,bg76,case3_f18,bg82
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails(gowin7 , adolph_dybevek , prinsen_gate_6) (case3_f18)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6688,8 +6688,8 @@ gaussattack_equationGrp9.png: ass,case3_f13,case3_f12,r_t_bm,bg76,bg81,bg82,bg79
 Not finished popping! 4 [isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
-ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notForBlackMarketUse(gauss) (r_t_bm){2}
-infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notForBlackMarketUse(flame)) (ass)]
+ccServer(secuurity , gauss) (case3_f17)	ccServer( gowin7 ,flame) (bg79)	domainRegisteredDetails( secuurity ,adolph_dybevek ,prinsen_gate_6) (bg82)	domainRegisteredDetails( gowin7 ,adolph_dybevek ,prinsen_gate_6) (bg81)			malwareUsedInAttack(gauss ,gaussattack) (case3_f2)	, notFromBlackMarket(gauss) (r_t_bm){2}
+infectionMethod(usb ,gauss) (case3_f12)	commandAndControlEasilyFingerprinted(gauss) (case3_f13)	, malwareLinkedTo(flame,equationGrp) (bg76), ass(notFromBlackMarket(flame)) (ass)]
 node: isCulprit(equationGrp,gaussattack) (r_str_linkedMalware){2}
 similar(gauss,flame) (r_t_similar){1}
 similarCCServer(gauss,flame) (r_t_simCC2){4}
@@ -6979,7 +6979,7 @@ attackSourceIP(example1_ip,example1) (case_example1_f9)	ipGeoloc(yourCountry,exa
 example1_yourCountry6.png: ass,ass,case_example1_f5,case_example1_f4,r_t_similar1,case_example1_f3,r_str_linkedMalware
 Not finished popping! 4 [isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
-simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notForBlackMarketUse(example1_m1)) (ass), ass(notForBlackMarketUse(example1_m2)) (ass)]
+simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	, malwareLinkedTo(example1_m2,yourCountry) (case_example1_f5), ass(notFromBlackMarket(example1_m1)) (ass), ass(notFromBlackMarket(example1_m2)) (ass)]
 node: isCulprit(yourCountry,example1) (r_str_linkedMalware){2}
 similar(example1_m1,example1_m2) (r_t_similar1){1}
 simlarCodeObfuscation(example1_m1,example1_m2) (case_example1_f4)		malwareUsedInAttack(example1_m1,example1) (case_example1_f3)	

@@ -1082,7 +1082,7 @@ class GUI {
 
     public static void main(String args[]) {
         GUI awt = new GUI();
-        displayHelpPage();
+//        displayHelpPage();
     }
 
 }

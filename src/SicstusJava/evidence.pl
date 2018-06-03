@@ -113,13 +113,13 @@ rule(case_example0_f1(),claimedResponsibility(randomGroup,example0),[]).
 %% expected: 
 %% randomGroup (claimResp)
 %% countryX (motive and location,linkedMalware)
-rule(case_example1_f1(),claimedResponsibility(randomGroup,example1),[]).
-rule(case_example1_f2(),malwareUsedInAttack(example1_m1,example1),[]).
-rule(case_example1_f3(),simlarCodeObfuscation(example1_m1,example1_m2),[]).
-rule(case_example1_f4(),malwareLinkedTo(example1_m2,countryX),[]).
-rule(case_example1_f5(),hasMotive(countryX,example1),[]).
-rule(case_example1_f6(),attackSourceIP([123,123,123,102],example1),[]).
-rule(case_example1_f7(),ipGeoloc(countryX,[123,123,123,102]),[]).
+rule(case_example1_f1(),claimedResponsibility(randomGroup, example1),[]).
+rule(case_example1_f2(),malwareUsedInAttack(example1_m1, example1),[]).
+rule(case_example1_f3(),simlarCodeObfuscation(example1_m1, example1_m2),[]).
+rule(case_example1_f4(),malwareLinkedTo(example1_m2, countryX),[]).
+rule(case_example1_f5(),hasMotive(countryX, example1),[]).
+rule(case_example1_f6(),attackSourceIP([123,123,123,102], example1),[]).
+rule(case_example1_f7(),ipGeoloc(countryX, [123,123,123,102]),[]).
 %% rule(case_example1_f1(),claimedResponsibility(randomGroup,example1),[]).
 %% rule(case_example1_f1a(),malwareUsedInAttack(example1m,example1),[]).
 %% rule(case_example1_f2(),targetCountry(countryY,example1),[]).
@@ -189,18 +189,26 @@ rule(case_example2b_f9(),targetCountry(countryY, example2b),[]).
 
 %% example3
 %% expected:
-%% fancyBear
+%% fancyBear (claimResp)
+%% russian_federation (APT group link to origin country, has motive and capability)
 rule(case_example3_f1(),claimedResponsibility(fancyBear,example3),[]).
-rule(case_example3_f2(),target(united_states,example3),[]).
+rule(case_example3_f2(),targetCountry(countryX,example3),[]).
+rule(case_example3_f3(),attackPeriod(example3, [2018,6]),[]).
+rule(case_example3_f4(),malwareUsedInAttack(example3_m1,example3),[]).
+rule(case_example3_f5(),imposedSanctions(countryX, russian_federation, ongoing),[]).
+rule(case_example3_f6(),sophisticatedMalware(example3_m1),[]).
 
 
-%% example3
+%% example3b
 %% expected:
-%% 
+%% fancyBear (claimResp)
 rule(case_example3b_f1(),claimedResponsibility(fancyBear,example3b),[]).
-rule(case_example3b_f2(),targetCountry(united_states,example3b),[]).
-rule(case_example3b_f3(),malwareUsedInAttack(example3b_m1,example3b),[]).
-rule(case_example3b_f4(),sophisticatedMalware(example3b_m1),[]).
+rule(case_example3b_f2(),targetCountry(countryX,example3b),[]).
+rule(case_example3b_f3(),attackPeriod(example3b, [2018,6]),[]).
+rule(case_example3b_f4(),malwareUsedInAttack(example3b_m1,example3b),[]).
+rule(case_example3b_f5(),imposedSanctions(countryX, russian_federation, ongoing),[]).
+
+
 
 
 %% example3

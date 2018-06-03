@@ -71,7 +71,7 @@ Abduced: [ass(neg(prefer(noLocEvidence(china, apt1), srcIP(china, apt1)))), ass(
 
 Possible additional evidences needed:
 neg: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
 	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
 	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
@@ -115,18 +115,18 @@ lazarusGrp [Highest score: 5, D: 1]
 X = lazarusGrp [Score: 5] 
 Derivation:
  
-[ass(notForBlackMarketUse(backdoorDuuzer)), ass(notForBlackMarketUse(trojanAlphanc)), bg26, case6_f3, similar3, case6_f2, linkedMalware(lazarusGrp,wannacryattack)]  {DEFENSE}
+[ass(notFromBlackMarket(backdoorDuuzer)), ass(notFromBlackMarket(trojanAlphanc)), bg26, case6_f3, similar3, case6_f2, linkedMalware(lazarusGrp,wannacryattack)]  {DEFENSE}
 
 
 
 
 
-Abduced: [ass(notForBlackMarketUse(trojanAlphanc)), ass(notForBlackMarketUse(backdoorDuuzer))]
+Abduced: [ass(notFromBlackMarket(trojanAlphanc)), ass(notFromBlackMarket(backdoorDuuzer))]
 
 Possible additional evidences needed:
-notForBlackMarketUse: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
-	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+notFromBlackMarket: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
+	rule(bm, notFromBlackMarket(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
 
 ---------
 Start gaussattack derivation
@@ -148,54 +148,54 @@ equationGrp [Highest score: 14, D: 10]
 X = equationGrp [Score: 10] 
 Derivation:
  
-[ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg79, case3_f16, simCC1, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+[ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, bg79, case3_f16, simCC1, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 10] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg80, case3_f17, simCC1, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, bg80, case3_f17, simCC1, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 14] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f19, case3_f18, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, case3_f19, case3_f18, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 13] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg82, case3_f18, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, bg82, case3_f18, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 13] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f19, bg81, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, case3_f19, bg81, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 12] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg82, bg81, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, bg82, bg81, bg80, case3_f16, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 14] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f18, case3_f19, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, case3_f18, case3_f19, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 13] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg81, case3_f19, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, bg81, case3_f19, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 13] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, case3_f18, bg82, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, case3_f18, bg82, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 ,X = equationGrp [Score: 12] 
 Derivation:
- [ass(notForBlackMarketUse(flame)), case3_f13, case3_f12, bm, bg76, bg81, bg82, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
+ [ass(notFromBlackMarket(flame)), case3_f13, case3_f12, bm, bg76, bg81, bg82, bg79, case3_f17, simCC2, similar, case3_f2, linkedMalware(equationGrp,gaussattack)]  {DEFENSE}
 
 
 
 
 
-Abduced: [ass(notForBlackMarketUse(flame))]
+Abduced: [ass(notFromBlackMarket(flame))]
 
 Possible additional evidences needed:
-notForBlackMarketUse: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
-	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+notFromBlackMarket: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
+	rule(bm, notFromBlackMarket(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
 
 ---------
 Start stuxnetattack derivation
@@ -295,7 +295,7 @@ Abduced: [ass(specificTarget(sonyhack)), ass(neg(prefer(noLocEvidence(northkorea
 
 Possible additional evidences needed:
 neg: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
 	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
 	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
@@ -455,11 +455,11 @@ Derivation:
 
 
 
-Abduced: [ass(notForBlackMarketUse(dummy1_m1)), ass(neg(prefer(noLocEvidence(yourCountry, dummy1), srcIP(yourCountry, dummy1)))), ass(notForBlackMarketUse(dummy1_m2))]
+Abduced: [ass(notFromBlackMarket(dummy1_m1)), ass(neg(prefer(noLocEvidence(yourCountry, dummy1), srcIP(yourCountry, dummy1)))), ass(notFromBlackMarket(dummy1_m2))]
 
 Possible additional evidences needed:
 neg: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
 	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
 	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
@@ -482,9 +482,9 @@ neg: {
 	rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
 	rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
 	rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).}
-notForBlackMarketUse: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
-	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+notFromBlackMarket: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
+	rule(bm, notFromBlackMarket(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
 
 ---------
 Start dummy2 derivation
@@ -566,11 +566,11 @@ Derivation:
 
 
 
-Abduced: [ass(notForBlackMarketUse(dummy2b_m1)), ass(notForBlackMarketUse(dummy2b_m2)), ass(neg(prefer(targetItself(yourCountry, dummy2b), loc(yourCountry, dummy2b)))), ass(neg(prefer(targetItself(yourCountry, dummy2b), motiveAndLocation(yourCountry, dummy2b)))), ass(neg(prefer(targetItself(yourCountry, dummy2b), linkedMalware(yourCountry, dummy2b))))]
+Abduced: [ass(notFromBlackMarket(dummy2b_m1)), ass(notFromBlackMarket(dummy2b_m2)), ass(neg(prefer(targetItself(yourCountry, dummy2b), loc(yourCountry, dummy2b)))), ass(neg(prefer(targetItself(yourCountry, dummy2b), motiveAndLocation(yourCountry, dummy2b)))), ass(neg(prefer(targetItself(yourCountry, dummy2b), linkedMalware(yourCountry, dummy2b))))]
 
 Possible additional evidences needed:
 neg: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
 	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
 	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).
@@ -593,9 +593,9 @@ neg: {
 	rule(lowGciTier(X,Att), 	neg(isCulprit(X,Att)), [gci_tier(X,initiating)]).
 	rule(p18, prefer(linkedMalware(X,A), negAttackOrigin(X,A)), []).
 	rule(p19, prefer(negAttackOrigin(X,A),  motive(X,A)), []).}
-notForBlackMarketUse: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
-	rule(bm, notForBlackMarketUse(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
+notFromBlackMarket: {
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
+	rule(bm, notFromBlackMarket(M), [infectionMethod(usb,M),controlAndCommandEasilyFingerprinted(M)]). }
 
 ---------
 Start dummy3 derivation
@@ -675,7 +675,7 @@ Abduced: [ass(neg(prefer(noLocEvidence(yourCountry, dummy4), srcIP(yourCountry, 
 
 Possible additional evidences needed:
 neg: {
-	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notForBlackMarketUse(M))]).
+	rule(highSkill3, neg(highLevelSkill(Att)),[malwareUsedInAttack(M,Att), neg(notFromBlackMarket(M))]).
 	rule(highResource0, neg(requireHighResource(Att)), [neg(highLevelSkill(Att))]).
 	rule(noLocEvidence(X,Att), neg(attackPossibleOrigin(X,Att)), []).
 	rule(spoofIP(X,Att), neg(attackPossibleOrigin(X,Att)), [attackSourceIP(IP, Att), spoofedIp(IP), ipGeoloc(X, IP)]).

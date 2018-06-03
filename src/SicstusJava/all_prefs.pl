@@ -46,7 +46,7 @@ rule(p6_op(),prefer(r_op_noCapability2(X,Att), r_op_hasCapability1(X, Att)), [])
 % pref
 rule(p0a(),prefer(r_str__claimedResp(X,Att),r_str__noEvidence(X,Att)),[]). %With any evidence,we prefer to attribute the culprit accordingly
 rule(p0b(),prefer(r_str__motiveAndCapability(X,Att),r_str__noEvidence(X,Att)),[]).
-rule(p0c(),prefer(r_str__motive(X,Att),r_str__noEvidence(X,Att)),[]).
+rule(p0c(),prefer(r_str__aptGroupMotive(X,Att),r_str__noEvidence(X,Att)),[]).
 rule(p0d(),prefer(r_str__motiveAndLocation(X,Att),r_str__noEvidence(X,Att)),[]).
 rule(p0e(),prefer(r_str__loc(X,Att),r_str__noEvidence(X,Att)),[]).
 rule(p0f(),prefer(r_str__social(X,Att),r_str__noEvidence(X,Att)),[]).
@@ -54,12 +54,12 @@ rule(p0g(),prefer(r_str__linkedMalware(X,Att),r_str__noEvidence(X,Att)),[]).
 
 rule(p1a(),prefer(r_str__motiveAndCapability(_X,Att),r_str__claimedResp(_Y,Att)),[]).   
 rule(p1b(),prefer(r_str__motiveAndLocation(_X,Att),r_str__claimedResp(_Y,Att)),[]). 
-rule(p1c(),prefer(r_str__motive(_X,Att),       r_str__claimedResp(_Y,Att)),[]). 
+rule(p1c(),prefer(r_str__aptGroupMotive(_X,Att),       r_str__claimedResp(_Y,Att)),[]). 
 rule(p1d(),prefer(r_str__social(_X,Att),       r_str__claimedResp(_Y,Att)),[]). 
 rule(p1e(),prefer(r_str__linkedMalware(_X,Att),r_str__claimedResp(_Y,Att)),[]). %group claiming responsibility might just be facade e.g. guardians of peace sonyhack
 
 rule(p6(),prefer(r_str__noCapability(X,Att), r_str__claimedResp(X,Att)),[]). % hacker group might claim responsibility for attack backed by nation state
-rule(p8(),prefer(r_str__noCapability(X,Att), r_str__motive(X,Att)),[]).    
+rule(p8(),prefer(r_str__noCapability(X,Att), r_str__aptGroupMotive(X,Att)),[]).    
 rule(p9(),prefer(r_str__noCapability(X,Att), r_str__motiveAndLocation(X,Att)),[]).    
 rule(p10(),prefer(r_str__noCapability(X,Att), r_str__loc(X,Att)),[]).  
 rule(p11(),prefer(r_str__noCapability(X,Att),r_str__social(X,Att)),[]). % social evidences e.g. twitter posts/ emails can be easily forged
@@ -67,12 +67,12 @@ rule(p12(),prefer(r_str__noCapability(X,Att),r_str__linkedMalware(X,Att)),[]).
 
 rule(p18(),prefer(r_str__linkedMalware(X,Att),r_str__negAttackOrigin(X,Att)),[]).
 
-rule(p19(),prefer(r_str__negAttackOrigin(X,Att), r_str__motive(X,Att)),[]).
-rule(p20(),prefer(r_str__weakAttack(X,Att),      r_str__motive(X,Att)),[]).
+rule(p19(),prefer(r_str__negAttackOrigin(X,Att), r_str__aptGroupMotive(X,Att)),[]).
+rule(p20(),prefer(r_str__weakAttack(X,Att),      r_str__aptGroupMotive(X,Att)),[]).
 
 rule(p21a(),prefer(r_str__targetItself1(X,Att),r_str__claimedResp(X,Att)),        [specificTarget(Att)]).
 rule(p21b(),prefer(r_str__targetItself1(X,Att),r_str__motiveAndCapability(X,Att)),[specificTarget(Att)]).
-rule(p21c(),prefer(r_str__targetItself1(X,Att),r_str__motive(X,Att)),             [specificTarget(Att)]).
+rule(p21c(),prefer(r_str__targetItself1(X,Att),r_str__aptGroupMotive(X,Att)),             [specificTarget(Att)]).
 rule(p21d(),prefer(r_str__targetItself1(X,Att),r_str__motiveAndLocation(X,Att)),  [specificTarget(Att)]).
 rule(p21e(),prefer(r_str__targetItself1(X,Att),r_str__loc(X,Att)),                [specificTarget(Att)]).
 rule(p21f(),prefer(r_str__targetItself1(X,Att),r_str__social(X,Att)),             [specificTarget(Att)]).
@@ -80,7 +80,7 @@ rule(p21g(),prefer(r_str__targetItself1(X,Att),r_str__linkedMalware(X,Att)),    
 
 rule(p22a(),prefer(r_str__targetItself2(X,Att),r_str__claimedResp(X,Att)),        [specificTarget(Att)]).
 rule(p22b(),prefer(r_str__targetItself2(X,Att),r_str__motiveAndCapability(X,Att)),[specificTarget(Att)]).
-rule(p22c(),prefer(r_str__targetItself2(X,Att),r_str__motive(X,Att)),             [specificTarget(Att)]).
+rule(p22c(),prefer(r_str__targetItself2(X,Att),r_str__aptGroupMotive(X,Att)),             [specificTarget(Att)]).
 rule(p22d(),prefer(r_str__targetItself2(X,Att),r_str__motiveAndLocation(X,Att)),  [specificTarget(Att)]).
 rule(p22e(),prefer(r_str__targetItself2(X,Att),r_str__loc(X,Att)),                [specificTarget(Att)]).
 rule(p22f(),prefer(r_str__targetItself2(X,Att),r_str__social(X,Att)),             [specificTarget(Att)]).

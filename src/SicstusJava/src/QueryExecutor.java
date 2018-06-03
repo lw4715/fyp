@@ -89,7 +89,7 @@ public class QueryExecutor {
             } else {
                 executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
                 queryString = String.format("goal(%s,X,D0)", caseName);
-                queryMap = executeQueryString(queryString, 10);
+                queryMap = executeQueryString(queryString, 100);
                 executeQueryString("told", 1);
                 return queryMap;
             }
@@ -429,15 +429,16 @@ public class QueryExecutor {
 //            qe.execute("tor_ex", false);
 //            qe.execute("ex", false);
 
-            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                Result r = qe.execute(c, false);
-                System.out.println(r);
-            }
-//            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
-////                for (String c : new String[]{"example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
+//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
 //                Result r = qe.execute(c, false);
 //                System.out.println(r);
 //            }
+//            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example3b", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
+            for (String c : new String[]{"example1", "example2", "example2b", "example3", "example3b",}) {
+                Result r = qe.execute(c, false);
+                System.out.println(r);
+            }
+//            System.out.println(qe.execute("example3", false));
         } catch (Exception e) {
             e.printStackTrace();
         }
