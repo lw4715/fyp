@@ -304,10 +304,3 @@ rule(case_snort_ex_f2(),ip([8,8,8,8]),[]).
 
 %% https://en.wikipedia.org/wiki/Global_surveillance_disclosures_(2013%E2%80%93present)#Disclosures
 %% https://en.wikipedia.org/wiki/Office_of_Personnel_Management_data_breach
-
-
-
-rule(f0, country(country1), []).
-rule(f1, country(country1), []).
-rule(f2, attackOrigin(country1, attack), []).
-rule(f3, attackOrigin(country2, attack), []).
