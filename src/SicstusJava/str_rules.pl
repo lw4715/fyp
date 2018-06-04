@@ -91,7 +91,7 @@ rule(p20(), prefer(r_str__weakAttack(X, A),       r_str__motiveAndCapability(X, 
 
 rule(p21a(), prefer(r_str__targetItself1(X, Att), r_str__claimedResp(X, Att)),         [specificTarget(Att)]).
 rule(p21b(), prefer(r_str__targetItself1(X, Att), r_str__motiveAndCapability(X, Att)), [specificTarget(Att)]).
-rule(p21c(), prefer(r_str__targetItself1(X, Att), r_str__aptGroupMotive(X, Att)),              [specificTarget(Att)]).
+rule(p21c(), prefer(r_str__targetItself1(X, Att), r_str__aptGroupMotive(X, Att)),      [specificTarget(Att)]).
 rule(p21d(), prefer(r_str__targetItself1(X, Att), r_str__motiveAndLocation(X, Att)),   [specificTarget(Att)]).
 rule(p21e(), prefer(r_str__targetItself1(X, Att), r_str__loc(X, Att)),                 [specificTarget(Att)]).
 rule(p21f(), prefer(r_str__targetItself1(X, Att), r_str__social(X, Att)),              [specificTarget(Att)]).
@@ -99,7 +99,7 @@ rule(p21g(), prefer(r_str__targetItself1(X, Att), r_str__linkedMalware(X, Att)),
 
 rule(p22a(), prefer(r_str__targetItself2(X, Att), r_str__claimedResp(X, Att)),         [specificTarget(Att)]).
 rule(p22b(), prefer(r_str__targetItself2(X, Att), r_str__motiveAndCapability(X, Att)), [specificTarget(Att)]).
-rule(p22c(), prefer(r_str__targetItself2(X, Att), r_str__aptGroupMotive(X, Att)),              [specificTarget(Att)]).
+rule(p22c(), prefer(r_str__targetItself2(X, Att), r_str__aptGroupMotive(X, Att)),      [specificTarget(Att)]).
 rule(p22d(), prefer(r_str__targetItself2(X, Att), r_str__motiveAndLocation(X, Att)),   [specificTarget(Att)]).
 rule(p22e(), prefer(r_str__targetItself2(X, Att), r_str__loc(X, Att)),                 [specificTarget(Att)]).
 rule(p22f(), prefer(r_str__targetItself2(X, Att), r_str__social(X, Att)),              [specificTarget(Att)]).

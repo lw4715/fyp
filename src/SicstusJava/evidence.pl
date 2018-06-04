@@ -23,7 +23,6 @@ rule(case2_f5(),infraUsed(apt1_infra,apt1),[]).
 rule(case2_f6(),hasEconomicMotive(china,infocomm),[]).
 rule(case2_f7(),industry(infocomm,victims),[]).
 rule(case2_f8(),target(victims,apt1),[]).
-rule(case2_f9(),largeNumberOfVictims(apt1),[]).
 rule(case2_f10(),highVolumeAttack(apt1),[]).
 rule(case2_f11(),longDurationAttack(apt1),[]).
 rule(case2_f12(),geolocatedInGovFacility(superhard,china),[]).
@@ -272,14 +271,12 @@ rule(case_example7_f5(),malwareLinkedTo(example7_m2,countryX),[]).
 
 %% auto geolocation example
 %% expected: hong_kong (loc)
-rule(case_autogeoloc_ex_f0(),malwareUsedInAttack(autogeoloc_ex_malware, autogeoloc_ex),[]).
 rule(case_autogeoloc_ex_f1(),attackSourceIP([103,234,220,195],autogeoloc_ex),[]).
 rule(case_autogeoloc_ex_f3(),ip([103,234,220,195]),[]).
 %% rule(case_autogeoloc_ex_f4(),claimedResponsibility(countryX, autogeoloc_ex),[]).
 
 %% tor_ex
 %% expected: no culprit (spoof)
-rule(case_tor_ex_f1(), malwareUsedInAttack(tor_ex_malware,tor_ex),[]).
 rule(case_tor_ex_f2(), attackSourceIP([103,234,220,195],tor_ex),[]).
 rule(case_tor_ex_f3(), ip([103,234,220,195]),[]).
 rule(case_tor_ex_f4(), targetServerIP([72,111,1,30], tor_ex),[]).
@@ -287,7 +284,9 @@ rule(case_tor_ex_f4(), targetServerIP([72,111,1,30], tor_ex),[]).
 
 
 %% virustotal_ex
-%% expected: us (loc)
+%% expected: 
+%% us (loc)
+%% countryY (linkedMalware)
 rule(case_virustotal_ex_f0(),malwareUsedInAttack(virustotal_ex_malware, virustotal_ex),[]).
 rule(case_virustotal_ex_f1(),attackSourceIP([8,8,8,8],virustotal_ex),[]).
 rule(case_virustotal_ex_f2(),ip([8,8,8,8],[2018,5]),[]). % ip([IP],[YYYY,MM]) for auto resolution using virustotal
