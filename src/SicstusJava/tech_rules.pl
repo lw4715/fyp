@@ -61,7 +61,7 @@
 rule(r_t_neghighSkill(Att), neg(highLevelSkill(Att)),     []).
 rule(r_t_highSkill1(Att), highLevelSkill(Att),     	[hijackCorporateClouds(Att)]).
 rule(r_t_highSkill2(Att), highLevelSkill(Att),     	[malwareUsedInAttack(M, Att), usesZeroDayVulnerabilities(M)]).
-rule(r_t_highSkill3(Att), neg(highLevelSkill(Att)), 	[malwareUsedInAttack(M, Att), neg(notFromBlackMarket(M))]).
+rule(r_t_highSkill3(Att), neg(highLevelSkill(Att)), [malwareUsedInAttack(M, Att), neg(notFromBlackMarket(M))]).
 rule(r_t_highSkill4(Att), highLevelSkill(Att),     	[malwareUsedInAttack(M, Att), sophisticatedMalware(M)]).
 
 
