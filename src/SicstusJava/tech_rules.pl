@@ -107,7 +107,7 @@ rule(r_t_simCC2(M1, M2), similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2
 rule(r_t_simCC3(M1, M2), similarCCServer(M1, M2), [ccServer(S1, M1), ccServer(S2, M2), S1 \= S2, domainRegisteredDetails(S1, Name, _), domainRegisteredDetails(S2, Name, _)]).
 
 %% rule(r_t_ccServerAddrType(Server, Type), ccServerAddrType(Server, Type), [domainRegisteredDetails(Server, _, Addr), addressType(Addr, Type)]). 
-rule(r_t_similar1(M1, M2), similar(M1, M2), [simlarCodeObfuscation(M1, M2)]).
+rule(r_t_similar1(M1, M2), similar(M1, M2), [similarCodeObfuscation(M1, M2)]).
 rule(r_t_similar2(M1, M2), similar(M1, M2), [sharedCode(M1, M2)]).
 rule(r_t_similar3(M1, M2), similar(M1, M2), [malwareModifiedFrom(M1, M2)]).
 rule(r_t_similar4(M1, M2), similar(M1, M2), [M1 \= M2, fileCharaMalware(C1, M1), fileCharaMalware(C2, M2), similarFileChara(C1, C2)]).
@@ -153,30 +153,30 @@ rule(p14d_t(), prefer(r_t_simCC3(M1, M2), r_t_similarDefault(M1, M2)), []).
 
 
 
-%% TODO: do more stuff with IP?
-%% rule(externalIP, isExternalIP(_IP), []).
-%% rule(externalIP1, neg(isExternalIP(IP)), [isInternalIP(IP)]).
-%% rule(internalIP1, isInternalIP([192, 168, _, _]), []).
-%% rule(internalIP2, isInternalIP([172, N, _, _]), [N>=16, N<32]).
-%% rule(internalIP3, isInternalIP([10, _, _, _]), []).
-%% rule(sameIPsubnet, similarIPSubnet([H1, H2, _, _], [H1, H2, _, _]), []).
-%% rule(validIP, validIP([N1, N2, N3, N4]), [N1>=0, N2>=0, N3>=0, N4>=0, N1<256, N2<256, N3<256, N4<256]).
+%% %% TODO: do more stuff with IP?
+%% %% rule(externalIP, isExternalIP(_IP), []).
+%% %% rule(externalIP1, neg(isExternalIP(IP)), [isInternalIP(IP)]).
+%% %% rule(internalIP1, isInternalIP([192, 168, _, _]), []).
+%% %% rule(internalIP2, isInternalIP([172, N, _, _]), [N>=16, N<32]).
+%% %% rule(internalIP3, isInternalIP([10, _, _, _]), []).
+%% %% rule(sameIPsubnet, similarIPSubnet([H1, H2, _, _], [H1, H2, _, _]), []).
+%% %% rule(validIP, validIP([N1, N2, N3, N4]), [N1>=0, N2>=0, N3>=0, N4>=0, N1<256, N2<256, N3<256, N4<256]).
 
-%% rule(spoofedIP1, spoofedIp(IP), [connection(IP, in), isInternalIP(IP), validIP(IP)]).
-%% rule(spoofedIP2, spoofedIp(IP), [connection(IP, out), isExternalIP(IP), validIP(IP)]).
-%% rule(abnormalIP, abnormalIP(IP), [domainName(IP, Domain), domainCountry(Domain, C1), ipGeoloc(IP, C2), C1 \= C2]).
+%% %% rule(spoofedIP1, spoofedIp(IP), [connection(IP, in), isInternalIP(IP), validIP(IP)]).
+%% %% rule(spoofedIP2, spoofedIp(IP), [connection(IP, out), isExternalIP(IP), validIP(IP)]).
+%% %% rule(abnormalIP, abnormalIP(IP), [domainName(IP, Domain), domainCountry(Domain, C1), ipGeoloc(IP, C2), C1 \= C2]).
 
-goal_all(A,  X,  M,  M2,  M3,  D1,  D2,  D3,  D4,  D5) :-
-  cleanFile('results.pl'),  cleanFile('non_results.pl'), 
-  writeToFilesAll(requireHighResource(A),  requireHighResource(A,  D1)), 
-  writeToFilesAll(attackOrigin(X, A),  attackOrigin(X, A, D2)), 
-  writeToFilesAll(notFromBlackMarket(M),  notFromBlackMarket(M,  D3)), 
-  writeToFilesAll(specificTarget(A),  specificTarget(A,  D4)), 
-  writeToFilesAll(similar(M2,  M3),  similar(M2,  M3,  A,  D5)).
+%% goal_all(A,  X,  M,  M2,  M3,  D1,  D2,  D3,  D4,  D5) :-
+%%   cleanFile('results.pl'),  cleanFile('non_results.pl'), 
+%%   writeToFilesAll(requireHighResource(A),  requireHighResource(A,  D1)), 
+%%   writeToFilesAll(attackOrigin(X, A),  attackOrigin(X, A, D2)), 
+%%   writeToFilesAll(notFromBlackMarket(M),  notFromBlackMarket(M,  D3)), 
+%%   writeToFilesAll(specificTarget(A),  specificTarget(A,  D4)), 
+%%   writeToFilesAll(similar(M2,  M3),  similar(M2,  M3,  A,  D5)).
 
 
-requireHighResource(A,  D) :- prove([requireHighResource(A)],  D).
-attackOrigin(X,  A,  D) :- prove([attackOrigin(X,  A)],  D).
-notFromBlackMarket(M,  D) :- prove([notFromBlackMarket(M)],  D).
-similar(M1,  M2,  A,  D) :- prove([malwareUsedInAttack(M1,  A),  similar(M1,  M2)],  D).
-specificTarget(A,  D) :- prove([specificTarget(A)],  D). % abducible
+%% requireHighResource(A,  D) :- prove([requireHighResource(A)],  D).
+%% attackOrigin(X,  A,  D) :- prove([attackOrigin(X,  A)],  D).
+%% notFromBlackMarket(M,  D) :- prove([notFromBlackMarket(M)],  D).
+%% similar(M1,  M2,  A,  D) :- prove([malwareUsedInAttack(M1,  A),  similar(M1,  M2)],  D).
+%% specificTarget(A,  D) :- prove([specificTarget(A)],  D). % abducible

@@ -50,8 +50,8 @@ rule(case3_f20(),attackPeriod(gaussattack,[2011,9]),[]).
 %% expected: united_states,israel (hasMotive,hasCapability)
 rule(case4_f0(),industry(nuclear,iranian_org),[]).
 rule(case4_f1(),target(iranian_org,stuxnetattack),[]).
-rule(case4_f2(),infectionMethod(usb,stuxnetattack),[]).
-rule(case4_f3(),spreadingMechanism(localNetwork,stuxnetattack),[]).
+%% rule(case4_f2(),infectionMethod(usb,stuxnetattack),[]).
+%% rule(case4_f3(),spreadingMechanism(localNetwork,stuxnetattack),[]).
 rule(case4_f6(),targetCountry(iran,stuxnetattack),[]).
 rule(case4_f7(),usesZeroDayVulnerabilities(stuxnet),[]).
 rule(case4_f8(),news(nuclear,iran,ongoing),[]).
@@ -130,104 +130,104 @@ rule(case_example1_f7(),ipGeoloc(countryX, [123,123,123,102]),[]).
 %% rule(case_example1_f10(),ipGeoloc(countryX,[123,123,123,102]),[]).
 %% rule(case_example1_f11(),ip([123,123,123,102]),[]).
 
-%% example2
+%% example1b
 %% expected: 
 %% randomGroup (claimResp)
 %% countryX is the only target,assume attacker won't target itself 
-rule(case_example2_f1(),claimedResponsibility(randomGroup,example2),[]).
-rule(case_example2_f2(),malwareUsedInAttack(example2_m1,example2),[]).
-rule(case_example2_f3(),simlarCodeObfuscation(example2_m1,example2_m2),[]).
-rule(case_example2_f4(),malwareLinkedTo(example2_m2,countryX),[]).
-rule(case_example2_f5(),hasMotive(countryX,example2),[]).
-rule(case_example2_f6(),attackSourceIP([123,123,123,102],example2),[]).
-rule(case_example2_f7(),ipGeoloc(countryX,[123,123,123,102]),[]).
+rule(case_example1b_f1(),claimedResponsibility(randomGroup,example1b),[]).
+rule(case_example1b_f2(),malwareUsedInAttack(example1b_m1,example1b),[]).
+rule(case_example1b_f3(),simlarCodeObfuscation(example1b_m1,example1b_m2),[]).
+rule(case_example1b_f4(),malwareLinkedTo(example1b_m2,countryX),[]).
+rule(case_example1b_f5(),hasMotive(countryX,example1b),[]).
+rule(case_example1b_f6(),attackSourceIP([123,123,123,102],example1b),[]).
+rule(case_example1b_f7(),ipGeoloc(countryX,[123,123,123,102]),[]).
 %% added evidence
-rule(case_example2_f8(),targetCountry(countryX,example2),[]).
+rule(case_example1b_f8(),targetCountry(countryX,example1b),[]).
 
 %% rule(case_example1_f7(),ipGeoloc(countryX,[123,123,123,102]),[]).
+%% rule(case_example1b_f1(),claimedResponsibility(randomGroup,example1b),[]).
+%% rule(case_example1b_f1a(),malwareUsedInAttack(example1bm,example1b),[]).
+%% rule(case_example1b_f2(),targetCountry(countryX,example1b),[]).
+%% rule(case_example1b_f3(),malwareUsedInAttack(example1b_m1,example1b),[]).
+%% rule(case_example1b_f4(),simlarCodeObfuscation(example1b_m1,example1b_m2),[]).
+%% rule(case_example1b_f5(),malwareLinkedTo(example1b_m2,countryX),[]).
+%% rule(case_example1b_f8(),hasMotive(countryX,example1b),[]).
+%% rule(case_example1b_f9(),attackSourceIP([123,123,123,100],example1b),[]).
+%% rule(case_example1b_f10(),ipGeoloc(countryX,[123,123,123,100]),[]).
+%% rule(case_example1b_f11(),ip([123,123,123,100]),[]).
+
+%% example1c
+%% expected: 
+%% randomGroup (claimResp)
+%% countryX
+%% (countryX is not the only target => not specific attack => countryX might be culprit) 
+rule(case_example1c_f1(),claimedResponsibility(randomGroup, example1c),[]).
+rule(case_example1c_f2(),malwareUsedInAttack(example1c_m1, example1c),[]).
+rule(case_example1c_f3(),simlarCodeObfuscation(example1c_m1, example1c_m2),[]).
+rule(case_example1c_f4(),malwareLinkedTo(example1c_m2, countryX),[]).
+rule(case_example1c_f5(),hasMotive(countryX, example1c),[]).
+rule(case_example1c_f6(),attackSourceIP([123,123,123,102], example1c),[]).
+rule(case_example1c_f7(),ipGeoloc(countryX,[123,123,123,102]),[]).
+rule(case_example1c_f8(),targetCountry(countryX, example1c),[]).
+% added evidence
+rule(case_example1c_f9(),targetCountry(countryY, example1c),[]).
+
+
+%% rule(case_example1c_f1(),claimedResponsibility(randomGroup,example1c),[]).
+%% rule(case_example1c_f1a(),malwareUsedInAttack(example1cm,example1c),[]).
+%% rule(case_example1c_f2(),targetCountry(countryX,example1c),[]).
+%% rule(case_example1c_f2b(),targetCountry(countryY,example1c),[]).
+%% rule(case_example1c_f3(),malwareUsedInAttack(example1c_m1,example1c),[]).
+%% rule(case_example1c_f4(),simlarCodeObfuscation(example1c_m1,example1c_m2),[]).
+%% rule(case_example1c_f5(),malwareLinkedTo(example1c_m2,countryX),[]).
+%% rule(case_example1c_f8(),hasMotive(countryX,example1c),[]).
+%% rule(case_example1c_f9(),attackSourceIP([123,123,123,125],example1c),[]).
+%% rule(case_example1c_f10(),ipGeoloc(countryX,[123,123,123,125]),[]).
+%% rule(case_example1c_f11(),ip([123,123,123,125]),[]).
+
+
+%% example2
+%% expected:
+%% fancyBear (claimResp)
+%% russian_federation (APT group link to origin country, has motive and capability)
+rule(case_example2_f1(),claimedResponsibility(fancyBear,example2),[]).
+rule(case_example2_f2(),targetCountry(countryX,example2),[]).
+rule(case_example2_f3(),attackPeriod(example2, [2018,6]),[]).
+rule(case_example2_f4(),malwareUsedInAttack(example2_m1,example2),[]).
+rule(case_example2_f5(),imposedSanctions(countryX, russian_federation, ongoing),[]).
+rule(case_example2_f6(),sophisticatedMalware(example2_m1),[]).
+
+
+%% example2b
+%% expected:
+%% fancyBear (claimResp)
+rule(case_example2b_f1(),claimedResponsibility(fancyBear,example2b),[]).
+rule(case_example2b_f2(),targetCountry(countryX,example2b),[]).
+rule(case_example2b_f3(),attackPeriod(example2b, [2018,6]),[]).
+rule(case_example2b_f4(),malwareUsedInAttack(example2b_m1,example2b),[]).
+rule(case_example2b_f5(),imposedSanctions(countryX, russian_federation, ongoing),[]).
+
+
+
+
+%% example2
+%% %% expected: 
+%% %% randomGroup (claimResp)
+%% %% targetItself is preferred over linkedMalware
+%% %% more than one ipgeolocation doesnt give location information about attack 
 %% rule(case_example2_f1(),claimedResponsibility(randomGroup,example2),[]).
-%% rule(case_example2_f1a(),malwareUsedInAttack(example2m,example2),[]).
+%% rule(case_example2_f1(),malwareUsedInAttack(example2m,example2),[]).
 %% rule(case_example2_f2(),targetCountry(countryX,example2),[]).
 %% rule(case_example2_f3(),malwareUsedInAttack(example2_m1,example2),[]).
 %% rule(case_example2_f4(),simlarCodeObfuscation(example2_m1,example2_m2),[]).
 %% rule(case_example2_f5(),malwareLinkedTo(example2_m2,countryX),[]).
 %% rule(case_example2_f8(),hasMotive(countryX,example2),[]).
-%% rule(case_example2_f9(),attackSourceIP([123,123,123,100],example2),[]).
-%% rule(case_example2_f10(),ipGeoloc(countryX,[123,123,123,100]),[]).
-%% rule(case_example2_f11(),ip([123,123,123,100]),[]).
-
-%% example2b
-%% expected: 
-%% randomGroup (claimResp)
-%% countryX
-%% (countryX is not the only target => not specific attack => countryX might be culprit) 
-rule(case_example2b_f1(),claimedResponsibility(randomGroup, example2b),[]).
-rule(case_example2b_f2(),malwareUsedInAttack(example2b_m1, example2b),[]).
-rule(case_example2b_f3(),simlarCodeObfuscation(example2b_m1, example2b_m2),[]).
-rule(case_example2b_f4(),malwareLinkedTo(example2b_m2, countryX),[]).
-rule(case_example2b_f5(),hasMotive(countryX, example2b),[]).
-rule(case_example2b_f6(),attackSourceIP([123,123,123,102], example2b),[]).
-rule(case_example2b_f7(),ipGeoloc(countryX,[123,123,123,102]),[]).
-rule(case_example2b_f8(),targetCountry(countryX, example2b),[]).
-% added evidence
-rule(case_example2b_f9(),targetCountry(countryY, example2b),[]).
-
-
-%% rule(case_example2b_f1(),claimedResponsibility(randomGroup,example2b),[]).
-%% rule(case_example2b_f1a(),malwareUsedInAttack(example2bm,example2b),[]).
-%% rule(case_example2b_f2(),targetCountry(countryX,example2b),[]).
-%% rule(case_example2b_f2b(),targetCountry(countryY,example2b),[]).
-%% rule(case_example2b_f3(),malwareUsedInAttack(example2b_m1,example2b),[]).
-%% rule(case_example2b_f4(),simlarCodeObfuscation(example2b_m1,example2b_m2),[]).
-%% rule(case_example2b_f5(),malwareLinkedTo(example2b_m2,countryX),[]).
-%% rule(case_example2b_f8(),hasMotive(countryX,example2b),[]).
-%% rule(case_example2b_f9(),attackSourceIP([123,123,123,125],example2b),[]).
-%% rule(case_example2b_f10(),ipGeoloc(countryX,[123,123,123,125]),[]).
-%% rule(case_example2b_f11(),ip([123,123,123,125]),[]).
-
-
-%% example3
-%% expected:
-%% fancyBear (claimResp)
-%% russian_federation (APT group link to origin country, has motive and capability)
-rule(case_example3_f1(),claimedResponsibility(fancyBear,example3),[]).
-rule(case_example3_f2(),targetCountry(countryX,example3),[]).
-rule(case_example3_f3(),attackPeriod(example3, [2018,6]),[]).
-rule(case_example3_f4(),malwareUsedInAttack(example3_m1,example3),[]).
-rule(case_example3_f5(),imposedSanctions(countryX, russian_federation, ongoing),[]).
-rule(case_example3_f6(),sophisticatedMalware(example3_m1),[]).
-
-
-%% example3b
-%% expected:
-%% fancyBear (claimResp)
-rule(case_example3b_f1(),claimedResponsibility(fancyBear,example3b),[]).
-rule(case_example3b_f2(),targetCountry(countryX,example3b),[]).
-rule(case_example3b_f3(),attackPeriod(example3b, [2018,6]),[]).
-rule(case_example3b_f4(),malwareUsedInAttack(example3b_m1,example3b),[]).
-rule(case_example3b_f5(),imposedSanctions(countryX, russian_federation, ongoing),[]).
-
-
-
-
-%% example3
-%% %% expected: 
-%% %% randomGroup (claimResp)
-%% %% targetItself is preferred over linkedMalware
-%% %% more than one ipgeolocation doesnt give location information about attack 
-%% rule(case_example3_f1(),claimedResponsibility(randomGroup,example3),[]).
-%% rule(case_example3_f1(),malwareUsedInAttack(example3m,example3),[]).
-%% rule(case_example3_f2(),targetCountry(countryX,example3),[]).
-%% rule(case_example3_f3(),malwareUsedInAttack(example3_m1,example3),[]).
-%% rule(case_example3_f4(),simlarCodeObfuscation(example3_m1,example3_m2),[]).
-%% rule(case_example3_f5(),malwareLinkedTo(example3_m2,countryX),[]).
-%% rule(case_example3_f8(),hasMotive(countryX,example3),[]).
-%% rule(case_example3_f9(),attackSourceIP([123,123,123,123],example3),[]).
-%% rule(case_example3_f10(),ipGeoloc(countryX,[123,123,123,123]),[]).
-%% rule(case_example3_f12(),attackSourceIP([103,1,206,109],example3),[]).
-%% rule(case_example3_f13(),ipGeoloc(hisCountry,[103,1,206,109]),[]).
-%% %% rule(case_example3_f14(),ip([123,123,123,123]),[]).
-%% %% rule(case_example3_f15(),ip([103,1,206,109]),[]).
+%% rule(case_example2_f9(),attackSourceIP([123,123,123,123],example2),[]).
+%% rule(case_example2_f10(),ipGeoloc(countryX,[123,123,123,123]),[]).
+%% rule(case_example2_f12(),attackSourceIP([103,1,206,109],example2),[]).
+%% rule(case_example2_f13(),ipGeoloc(hisCountry,[103,1,206,109]),[]).
+%% %% rule(case_example2_f14(),ip([123,123,123,123]),[]).
+%% %% rule(case_example2_f15(),ip([103,1,206,109]),[]).
 
 
 
@@ -303,3 +303,7 @@ rule(case_snort_ex_f2(),ip([8,8,8,8]),[]).
 
 %% https://en.wikipedia.org/wiki/Global_surveillance_disclosures_(2013%E2%80%93present)#Disclosures
 %% https://en.wikipedia.org/wiki/Office_of_Personnel_Management_data_breach
+rule(f1(),attackPossibleOrigin(country1, attack),[]).
+rule(f2(),attackPossibleOrigin(country2, attack),[]).
+rule(f3(),country(country1),[]).
+rule(f4(),country(country2),[]).
