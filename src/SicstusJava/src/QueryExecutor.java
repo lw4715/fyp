@@ -429,12 +429,12 @@ public class QueryExecutor {
 //            qe.execute("tor_ex", false);
 //            qe.execute("ex", false);
 
-            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
-                Result r = qe.execute(c, false);
-                System.out.println(r);
-            }
+//            for (String c : new String[]{"apt1", "wannacryattack", "gaussattack", "stuxnetattack", "sonyhack", "usbankhack"}) {
+//                Result r = qe.execute(c, false);
+//                System.out.println(r);
+//            }
 //            for (String c : new String[]{"example0", "example1", "example2", "example2b", "example3", "example3b", "example4", "example5", "example7", "autogeoloc_ex", "tor_ex", "virustotal_ex", "ex"}) {
-            for (String c : new String[]{"example1", "example2", "example2b", "example3", "example3b"}) {
+            for (String c : new String[]{"example1", "example1b", "example1c", "example2", "example2b", "autogeoloc_ex", "tor_ex", "virustotal_ex"}) {
                 Result r = qe.execute(c, false);
                 System.out.println(r);
             }

@@ -194,10 +194,9 @@ class GUI {
         attackName.setColumns(15);
 
         JComboBox existsingAttacks = new JComboBox(new String[]{"Select predefined attacks",
-                "ex",
                 "usbankhack", "apt1", "gaussattack", "stuxnetattack", "sonyhack", "wannacryattack",
                 "autogeoloc_ex", "tor_ex", "virustotal_ex",
-                "example0", "example1", "example2", "example2b", "example3", "example4"});
+                "example0", "example1", "example1b", "example1c", "example2", "example2b"});
         existsingAttacks.addItemListener(arg0 -> {
             resetColours();
             status.setText("\t\tSelected attack: " + existsingAttacks.getSelectedItem());
@@ -1034,51 +1033,6 @@ class GUI {
         defaultJFrameActions(f);
     }
 
-    static void displayHelpPage() {
-        JFrame helpFrame = new JFrame("Introduction to ABR");
-        String introText = "<h1>Introduction/Help page</h1>\n" +
-                "<h2>ABR is an Argumentation-Based Reasoner which hopes to help solve the attribution problem in cyber security. </h2>\n" +
-                "<h3>Prolog:</h3>\n" +
-                "For simplicity sake, users can add rules and facts in the Prolog syntax.<br>\n" +
-                "<b>Prolog rule:</b><br>\n" +
-                "<i>Head :- Body.</i><br>\n" +
-                "<i>Head(X,...) :- Body1(X1,...), ...</i><br>\n" +
-                "Such rules are read as: if all the Body predicates are true, then the Head is true.<br>\n" +
-                "<br>\n" +
-                "<b>Prolog fact:</b><br>\n" +
-                "<i>Fact.</i><br>\n" +
-                "A Prolog fact is simply a Head without any Body predicates.<br>\n" +
-                "<hr>\n" +
-                "<h3>Gorgias:</h3>\n" +
-                "ABR runs on the Gorgias framework. Below we give a quick summary of Gorgias rules.<br>\n" +
-                "\n" +
-                "Gorgias rules have a Label (rule name), a Head (as in Prolog), and a list of Body predicates (as in Prolog).<br>\n" +
-                "<b>Gorgias rule:</b><br>\n" +
-                "<i>rule(Label, Head, [Body1, Body2,...]).</i><br>\n" +
-                "<br>\n" +
-                "The Gorgias framework is a preference-based argumentation framework. When faced with conflicting arguments (complementary conclusions), the Gorgias framework resolves it using preferences.<br>\n" +
-                "<br>\n" +
-                "<b>Gorgias preference:</b> (where r1 and r2 are rule names)<br>\n" +
-                "<i>rule(Label, prefer(r1, r2), []).</i><br>\n" +
-                "<hr>\n" +
-                "<h3>Derivation diagram:</h3><br>\n" +
-                "A derivation diagram shows how we arrived at a conclusion. It dissects the argument and shows its constituent facts.\n" +
-                "The rectangles are the results (Head of rules) and the ellipses are rule names (Labels). They are also colour-coded, according to what kind of evidence they are. Red means <i>strategic</i> layer, Yellow means <i>operational</i> layer, Blue means <i>technical</i> layer. <br>\n" +
-                "<img src='file:img/_sample.png'>\n" +
-                "<hr>\n" +
-                "<h3>Argumentation tree:</h3><br>\n" +
-                "An argumentation tree shows the attack and defense relationship between the winning argument and other counter-arguments. The top green box is the conclusion argument that won. The red boxes are attacking arguments against the conclusion argument and the other green boxes are defense arguments against the attacking arguments.<br>\n" +
-                "<img src='file:img/_sample_arg.png'>";
-
-        JEditorPane jep = new JEditorPane();
-        jep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        jep.setContentType("text/html");
-        jep.setText(introText);
-        JScrollPane scrollPane = new JScrollPane(jep);
-
-        helpFrame.add(scrollPane);
-        defaultJFrameActions(helpFrame);
-    }
 
     public static void main(String args[]) {
         GUI awt = new GUI();
