@@ -41,7 +41,7 @@ rule(r_str_prominentGrpHasCap(X, Att),    hasCapability(X, Att),        [promine
 rule(r_str__claimedResp(X, Att),          isCulprit(X, Att),    [existingGroupClaimedResponsibility(X, Att)]).
 
 rule(r_str__motiveAndCapability(C, Att),  isCulprit(C, Att),    [hasMotive(C, Att), hasCapability(C, Att)]).
-rule(r_str__aptGroupMotive(C, Att),       isCulprit(C, Att),    [prominentGroup(Group), groupOrigin(Group, C), country(C), isCulprit(Group, Att), hasMotive(C, Att)]).
+rule(r_str__aptGroupMotive(C, Att),       isCulprit(C, Att),    [prominentGroup(Group), isCulprit(Group, Att), groupOrigin(Group, C), country(C), hasMotive(C, Att)]).
 rule(r_str__motiveAndLocation(C, Att),    isCulprit(C, Att),    [attackOrigin(C, Att), hasMotive(C, Att), country(C)]).
 rule(r_str__loc(C, Att),                  isCulprit(C, Att),    [attackOrigin(C, Att), country(C)]).
 rule(r_str__social(C, Att),               isCulprit(C, Att),    [governmentLinked(P, C), country(C), identifiedIndividualInAttack(P, Att)]).

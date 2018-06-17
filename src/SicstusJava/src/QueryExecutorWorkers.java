@@ -145,7 +145,6 @@ public class QueryExecutorWorkers {
         }
 
         public TryToProveWorker(String rule, String attackName, String headWithConst, JFrame f) {
-
             this.rule = rule;
             this.attackName = attackName;
             this.headWithConst = headWithConst;
@@ -157,9 +156,9 @@ public class QueryExecutorWorkers {
         protected Pair<List<String>, List<String>> doInBackground() throws Exception {
             Pair<List<String>, List<String>> ret;
             if (this.headWithConst == null) {
-                ret = QueryExecutor.tryToProve(this.rule, this.attackName);
+                ret = qe.tryToProve(this.rule, this.attackName);
             } else {
-                ret = QueryExecutor.tryToProve(this.rule, this.attackName, this.headWithConst);
+                ret = qe.tryToProve(this.rule, this.attackName, this.headWithConst);
             }
             this.f.setCursor(Cursor.getDefaultCursor());
             return ret;

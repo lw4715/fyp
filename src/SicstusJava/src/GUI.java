@@ -517,6 +517,7 @@ class GUI {
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         container.add(new JLabel("All strategic rules:"));
+        QueryExecutor.getInstance().loadDynamicFiles();
 
         try {
             for (String strRule : strRules) {
@@ -553,6 +554,7 @@ class GUI {
             executeAllFrame.add(instr);
             executeAllFrame.add(sp);
             defaultJFrameActions(executeAllFrame);
+            executeAllFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         } catch (Exception e) {
             e.printStackTrace();
         }

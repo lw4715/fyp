@@ -245,7 +245,7 @@ public class QueryExecutor {
         Utils.clearFile(ToolIntegration.VIRUS_TOTAL_PROLOG_FILE);
     }
 
-    private void loadDynamicFiles() {
+    void loadDynamicFiles() {
         ti.torIntegration();
         try {
             executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
@@ -331,7 +331,7 @@ public class QueryExecutor {
     }
 
         // try to prove given gorgiasRule, return pair containing proved predicates (key) and not proved predicates (value)
-    public static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName, String givenHead) throws Exception {
+    public Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName, String givenHead) throws Exception {
         Map<String, String> argMap = new HashMap<>();
         String head = Utils.getHeadOfLine(gorgiasRule);
         if (givenHead.length() > 0) {
@@ -387,7 +387,7 @@ public class QueryExecutor {
                 }
 
                 String q = String.format("prove([%s], D)", formattedB);
-                Map<String, Term>[] m = getInstance().executeQueryString(q, 10);
+                Map<String, Term>[] m = executeQueryString(q, 10);
 
                 List<String> s1 = Utils.regexMatch("\\(.*\\)", formattedB);
                 if (s1.size() > 0) {
@@ -417,7 +417,7 @@ public class QueryExecutor {
     }
 
     //returns Pair<(proved), (not proved)>
-    static Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
+    Pair<List<String>, List<String>> tryToProve(String gorgiasRule, String attackName) throws Exception {
         return tryToProve(gorgiasRule, attackName, "");
     }
 
