@@ -268,7 +268,8 @@ class GUI {
         mainFrame.add(panel6);
         mainFrame.add(status);
         defaultJFrameActions(mainFrame);
-        mainFrame.setSize(1200, 700);
+//        mainFrame.setSize(1200, 700);
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         System.out.println("Ready!");
     }
 
@@ -344,6 +345,7 @@ class GUI {
         prefFrame = new JFrame("Set new pref");
         prefFrame.add(prefSP);
         defaultJFrameActions(prefFrame);
+        prefFrame.setSize(1000, 300);
     }
 
     private void openToolIntegrationWindow() {
@@ -421,6 +423,10 @@ class GUI {
     }
 
     private void displayExecutionResult(Result executeResult) {
+        if (executeResult == null) {
+            System.out.println("Re executing");
+            executeResult = QueryExecutorWorkers.execute(attackName.getText(), true, mainFrame);
+        }
         reloadResult = executeResult;
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
@@ -501,6 +507,7 @@ class GUI {
         executeResultFrame = new JFrame("Execution Result for " + attackName.getText());
         executeResultFrame.add(scrollPane);
         defaultJFrameActions(executeResultFrame);
+        executeResultFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void displayAllResults() {
@@ -816,9 +823,13 @@ class GUI {
                     evidencePopup.pack();
                     break;
                 case CLEAR:
+                    if (!displayOnlyStrRulePrefs.isEmpty()) {
+                        reloadResult = null;
+                    }
                     strRulePrefs.clear();
                     displayOnlyStrRulePrefs.clear();
                     utils.clearUserPrefs();
+                    currentEvidences.setText(utils.getCurrentEvidence());
                     executeResultFrame.dispose();
                     displayExecutionResult(reloadResult);
                     break;
@@ -862,7 +873,6 @@ class GUI {
                             panel.add(new JLabel("Possible rules:"));
                             panel.add(possibleRulesTA);
                             JScrollPane scrollPane = new JScrollPane(panel);
-//                            scrollPane.getViewport().setViewPosition(new Point(0,0));
 
                             JFrame frame = new JFrame("Details");
                             frame.add(new JLabel("Rule:"));

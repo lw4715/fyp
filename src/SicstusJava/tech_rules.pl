@@ -166,17 +166,17 @@ rule(p14d_t(), prefer(r_t_simCC3(M1, M2), r_t_similarDefault(M1, M2)), []).
 %% %% rule(spoofedIP2, spoofedIp(IP), [connection(IP, out), isExternalIP(IP), validIP(IP)]).
 %% %% rule(abnormalIP, abnormalIP(IP), [domainName(IP, Domain), domainCountry(Domain, C1), ipGeoloc(IP, C2), C1 \= C2]).
 
-%% goal_all(A,  X,  M,  M2,  M3,  D1,  D2,  D3,  D4,  D5) :-
-%%   cleanFile('results.pl'),  cleanFile('non_results.pl'), 
-%%   writeToFilesAll(requireHighResource(A),  requireHighResource(A,  D1)), 
-%%   writeToFilesAll(attackOrigin(X, A),  attackOrigin(X, A, D2)), 
-%%   writeToFilesAll(notFromBlackMarket(M),  notFromBlackMarket(M,  D3)), 
-%%   writeToFilesAll(specificTarget(A),  specificTarget(A,  D4)), 
-%%   writeToFilesAll(similar(M2,  M3),  similar(M2,  M3,  A,  D5)).
+goal_all(A,  X,  M,  M2,  M3,  D1,  D2,  D3,  D4,  D5) :-
+  cleanFile('results.pl'),  cleanFile('non_results.pl'), 
+  writeToFilesAll(requireHighResource(A),  requireHighResource(A,  D1)), 
+  writeToFilesAll(attackOrigin(X, A),  attackOrigin(X, A, D2)), 
+  writeToFilesAll(notFromBlackMarket(M),  notFromBlackMarket(M,  D3)), 
+  writeToFilesAll(specificTarget(A),  specificTarget(A,  D4)), 
+  writeToFilesAll(similar(M2,  M3),  similar(M2,  M3,  A,  D5)).
 
 
-%% requireHighResource(A,  D) :- prove([requireHighResource(A)],  D).
-%% attackOrigin(X,  A,  D) :- prove([attackOrigin(X,  A)],  D).
-%% notFromBlackMarket(M,  D) :- prove([notFromBlackMarket(M)],  D).
-%% similar(M1,  M2,  A,  D) :- prove([malwareUsedInAttack(M1,  A),  similar(M1,  M2)],  D).
-%% specificTarget(A,  D) :- prove([specificTarget(A)],  D). % abducible
+requireHighResource(A,  D) :- prove([requireHighResource(A)],  D).
+attackOrigin(X,  A,  D) :- prove([attackOrigin(X,  A)],  D).
+notFromBlackMarket(M,  D) :- prove([notFromBlackMarket(M)],  D).
+similar(M1,  M2,  A,  D) :- prove([malwareUsedInAttack(M1,  A),  similar(M1,  M2)],  D).
+specificTarget(A,  D) :- prove([specificTarget(A)],  D). % abducible

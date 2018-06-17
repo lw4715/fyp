@@ -89,6 +89,7 @@ public class QueryExecutor {
             } else {
                 executeQueryString(String.format("tell('%s')", Utils.VISUALLOG), 1);
                 queryString = String.format("goal(%s,X,D0)", caseName);
+                System.out.println("Standard execute: " + queryString);
                 queryMap = executeQueryString(queryString, 100);
                 executeQueryString("told", 1);
                 return queryMap;

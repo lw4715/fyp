@@ -22,6 +22,7 @@ public class Result {
     private final List<Integer> numDs;
     private final List<Object> filteredTrees;
     private HashSet<String> nonpreferredStrRules;
+//    private Map<String, Set<List<String>>> filteredNegMap;
 
 
     public Result(String attack, Map<String, LinkedHashSet<List<String>>> resultMap,

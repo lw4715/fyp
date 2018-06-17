@@ -81,11 +81,9 @@ rule(p9(), prefer(r_str__noCapability(X, A),  r_str__motiveAndLocation(X, A)), [
 rule(p10(), prefer(r_str__noCapability(X, A),  r_str__loc(X, A)), []).  
 rule(p11(), prefer(r_str__noCapability(X, A), r_str__social(X, A)), []). % social evidences e.g. twitter posts/ emails can be easily forged
 rule(p12(), prefer(r_str__noCapability(X, A), r_str__linkedMalware(X, A)), []).
-%% rule(p13(), prefer(r_str__lowGciTier(X, A),   r_str__linkedMalware(X, A)), []).  
 
-rule(p18(), prefer(r_str__linkedMalware(X, A), r_str__negAttackOrigin(X, A)), []).
+%% rule(p18(), prefer(r_str__linkedMalware(X, A), r_str__negAttackOrigin(X, A)), []).
 
-%% rule(p19(), prefer(r_str__negAttackOrigin(X, A),  r_str__aptGroupMotive(X, A)), []).
 rule(p19(), prefer(r_str__weakAttack(X, A),       r_str__aptGroupMotive(X, A)), []).
 rule(p20(), prefer(r_str__weakAttack(X, A),       r_str__motiveAndCapability(X, A)), []).
 
@@ -112,12 +110,12 @@ rule(p23d(), prefer(r_str__linkedMalware(X, A), r_str__weakAttack(X, A)), []).
 
 %% rule(r_str_p30, prefer(p8, p2), []).
 
-%% goal(A, X, D) :- visual_prove([isCulprit(X, A)], D, []).
-%% neg_goal(A, X, D) :- prove([neg(isCulprit(X, A))], D).
+goal(A, X, D) :- visual_prove([isCulprit(X, A)], D, []).
+neg_goal(A, X, D) :- prove([neg(isCulprit(X, A))], D).
 
-%% goal_all(A, X, D) :-
-%%   writeToFilesPos(isCulprit(X, A),  isCulprit(X, A, D)).
+goal_all(A, X, D) :-
+  writeToFilesPos(isCulprit(X, A),  isCulprit(X, A, D)).
 
-%% isCulprit(X, A, D) :- prove([isCulprit(X, A)], D).
+isCulprit(X, A, D) :- prove([isCulprit(X, A)], D).
 
 
