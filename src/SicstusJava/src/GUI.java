@@ -99,6 +99,8 @@ class GUI {
     private List<Pair<String, String>> displayOnlyStrRulePrefs;
     private List<Pair<String, String>> strRulePrefs;
     private Result reloadResult;
+    private Map<String, Pair<List<String>, List<String>>> verboseExecResultMap;
+
 
     private final JFileChooser fileChooser = new JFileChooser();
 
@@ -518,6 +520,7 @@ class GUI {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         container.add(new JLabel("All strategic rules:"));
         QueryExecutor.getInstance().loadDynamicFiles();
+        verboseExecResultMap = new HashMap<>();
 
         try {
             for (String strRule : strRules) {
@@ -525,6 +528,8 @@ class GUI {
                     JTextArea ta = defaultTextArea(strRule, 90);
 
                     Pair<List<String>, List<String>> r = QueryExecutorWorkers.tryToProve(strRule, attackName.getText(), mainFrame);
+                    verboseExecResultMap.put(strRule, r);
+
                     for (String proven : r.fst) {
                         String provenPred = proven.substring(0, proven.lastIndexOf("(") + 1);
                         highlightWordInTextArea(provenPred, ta, Color.green, false);
@@ -846,12 +851,12 @@ class GUI {
                         // details page for execute all
                         String strRule = command.split(DISPLAY_RESULTS)[1];
                         try {
-                            Pair<List<String>, List<String>> r = QueryExecutorWorkers.tryToProve(strRule, attackName.getText(), executeAllFrame);
+                            Pair<List<String>, List<String>> verboseExecResult = verboseExecResultMap.get(strRule);
 
-                            Map<String, List<String>> allRules = QueryExecutorWorkers.getPredMap(r.snd, false, executeAllFrame);
+                            Map<String, List<String>> allRules = QueryExecutorWorkers.getPredMap(verboseExecResult.snd, false, executeAllFrame);
                             JTextArea possibleRulesTA = defaultTextArea(Utils.formatMap(allRules), 110);
                             for (String head : allRules.keySet()) {
-                                String headWithConst = returnMatchingPredicate(head, r.snd);
+                                String headWithConst = returnMatchingPredicate(head, verboseExecResult.snd);
                                 List<String> rules = allRules.get(head);
                                 for (String rule : rules) {
                                     Pair<List<String>, List<String>> pair = QueryExecutorWorkers.tryToProve(rule, attackName.getText(), headWithConst, executeAllFrame);
@@ -869,9 +874,9 @@ class GUI {
                             JPanel panel = new JPanel();
                             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
                             panel.add(new JLabel("Proven:"));
-                            panel.add(defaultTextArea(String.valueOf(r.fst), 110));
+                            panel.add(defaultTextArea(String.valueOf(verboseExecResult.fst), 110));
                             panel.add(new JLabel("Not proven:"));
-                            panel.add(defaultTextArea(String.valueOf(r.snd), 110));
+                            panel.add(defaultTextArea(String.valueOf(verboseExecResult.snd), 110));
                             panel.add(new JLabel("Possible rules:"));
                             panel.add(possibleRulesTA);
                             JScrollPane scrollPane = new JScrollPane(panel);
@@ -882,6 +887,7 @@ class GUI {
                             frame.add(defaultJButton("Add evidence", ADD_EVIDENCE_POPUP));
                             frame.add(scrollPane);
                             defaultJFrameActions(frame);
+                            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
                         } catch (Exception e1) {
                             e1.printStackTrace();

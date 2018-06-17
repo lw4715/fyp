@@ -387,7 +387,7 @@ public class QueryExecutor {
                 }
 
                 String q = String.format("prove([%s], D)", formattedB);
-                Map<String, Term>[] m = executeQueryString(q, 10);
+                Map<String, Term>[] m = executeQueryString(q, 1);
 
                 List<String> s1 = Utils.regexMatch("\\(.*\\)", formattedB);
                 if (s1.size() > 0) {
