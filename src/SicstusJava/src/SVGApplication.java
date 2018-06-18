@@ -22,6 +22,7 @@ public class SVGApplication {
         SVGApplication.f.getContentPane().add(app.createComponents(filename));
         SVGApplication.f.setSize(1200, 800);
         SVGApplication.f.setVisible(true);
+        SVGApplication.f.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public SVGApplication(JFrame f) {

@@ -61,8 +61,6 @@ rule(case4_f11(),attackPeriod(stuxnetattack,[2010,7]),[]).
 rule(case4_f12(),malwareUsedInAttack(stuxnet, stuxnetattack),[]).
 rule(case4_f13(),specificConfigInMalware(stuxnet),[]).
 rule(case4_f14(),infectionMethod(usb,stuxnet),[]).
-rule(case4_f15(),target(iran_nuclear_facilities, stuxnetattack),[]).
-rule(case4_f16(),industry(nuclear, iran_nuclear_facilities),[]).
 
 
 %  sony 
