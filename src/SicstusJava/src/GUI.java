@@ -467,7 +467,7 @@ class GUI {
             String filename = DerivationNode.getDiagramFilename(rs.get(i).snd.fst.toString());
 
             JButton viewDiagBtn = defaultJButton("View Diagram", filename);
-            JButton viewTreeBtn = defaultJButton("View Argumentation Tree",
+            JButton viewTreeBtn = defaultJButton("View Argument Tree",
                     ARG_TREE + "arg_tree_" + i + ".svg:" + executeResult.getTree(i));
 
             JPanel btnPanel = defaultJPanel();

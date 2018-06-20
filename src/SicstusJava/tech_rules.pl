@@ -96,7 +96,7 @@ rule(r_t_recent3(Y1, Y2, M1, M2),  recent([Y1, M1], [Y2, M2]),  [Y2 is Y1 - 1, M
 rule(r_t_attackOriginDefault(X, Att), neg(attackOrigin(X, Att)), []).
 rule(r_t_attackOrigin(X, Att), attackOrigin(X, Att),              	[attackPossibleOrigin(X, Att)]).
 rule(r_t_conflictingOrigin(X, Y, Att), neg(attackOrigin(X, Att)),    [attackPossibleOrigin(X, Att), attackPossibleOrigin(Y, Att), country(X), country(Y), X \= Y]).
-%% rule(r_t_nonOrigin(X, Att), neg(attackOrigin(X, Att)),   			[neg(attackPossibleOrigin(X, Att))]).
+rule(r_t_nonOrigin(X, Att), neg(attackOrigin(X, Att)),   			[neg(attackPossibleOrigin(X, Att))]).
 
 rule(r_t_bm(M), notFromBlackMarket(M), [infectionMethod(usb, M), commandAndControlEasilyFingerprinted(M)]). 
 
@@ -126,7 +126,7 @@ rule(r_t_similarFileChara4(C1, C2), similarFileChara(C1, C2), [fileChara(_, _, S
 rule(p1_t(), prefer(r_t_attackOrigin(X, Att), r_t_attackOriginDefault(X, Att)), []).
 %% rule(p2a_t(), prefer(r_t_conflictingOrigin(X, _Y, Att), r_t_attackOrigin(X, Att)), []).
 %% rule(p2b_t(), prefer(r_t_conflictingOrigin(_Y, X, Att), r_t_attackOrigin(X, Att)), []).
-%% rule(p3_t(), prefer(r_t_nonOrigin(X, Att), r_t_attackOrigin(X, Att)), []).
+rule(p3_t(), prefer(r_t_nonOrigin(X, Att), r_t_attackOrigin(X, Att)), []).
 rule(p4a_t(), prefer(r_t_srcIP1(X, Att), r_t_noLocEvidence(X, Att)), []).
 rule(p4b_t(), prefer(r_t_srcIP2(X, Att), r_t_noLocEvidence(X, Att)), []).
 rule(p5_t(), prefer(r_t_lang1(X, Att), r_t_noLocEvidence(X, Att)), []).

@@ -1,9 +1,8 @@
 :- multifile rule/3.
 
 %% for examples
-rule(bg0(),country(myCountry),[]).
-rule(bg1(),country(yourCountry),[]).
-rule(bg2(),country(hisCountry),[]).
+rule(bg0(),country(countryX),[]).
+rule(bg1(),country(countryY),[]).
 
 attackTypeList([ddos,espionage,defacement,data_destruction,sabotage,doxing]).
 malwareTypeList([bot,ransomware,rootkit,spyware,trojan,virus,worm,keyloggers,grayware]).

@@ -112,7 +112,7 @@ rule(case_example0_f1(),claimedResponsibility(randomGroup,example0),[]).
 %% countryX (motive and location,linkedMalware)
 rule(case_example1_f1(),claimedResponsibility(randomGroup, example1),[]).
 rule(case_example1_f2(),malwareUsedInAttack(example1_m1, example1),[]).
-rule(case_example1_f3(),simlarCodeObfuscation(example1_m1, example1_m2),[]).
+rule(case_example1_f3(),similarCodeObfuscation(example1_m1, example1_m2),[]).
 rule(case_example1_f4(),malwareLinkedTo(example1_m2, countryX),[]).
 rule(case_example1_f5(),hasMotive(countryX, example1),[]).
 rule(case_example1_f6(),attackSourceIP([123,123,123,102], example1),[]).
@@ -134,7 +134,7 @@ rule(case_example1_f7(),ipGeoloc(countryX, [123,123,123,102]),[]).
 %% countryX is the only target,assume attacker won't target itself 
 rule(case_example1b_f1(),claimedResponsibility(randomGroup,example1b),[]).
 rule(case_example1b_f2(),malwareUsedInAttack(example1b_m1,example1b),[]).
-rule(case_example1b_f3(),simlarCodeObfuscation(example1b_m1,example1b_m2),[]).
+rule(case_example1b_f3(),similarCodeObfuscation(example1b_m1,example1b_m2),[]).
 rule(case_example1b_f4(),malwareLinkedTo(example1b_m2,countryX),[]).
 rule(case_example1b_f5(),hasMotive(countryX,example1b),[]).
 rule(case_example1b_f6(),attackSourceIP([123,123,123,102],example1b),[]).
@@ -161,7 +161,7 @@ rule(case_example1b_f8(),targetCountry(countryX,example1b),[]).
 %% (countryX is not the only target => not specific attack => countryX might be culprit) 
 rule(case_example1c_f1(),claimedResponsibility(randomGroup, example1c),[]).
 rule(case_example1c_f2(),malwareUsedInAttack(example1c_m1, example1c),[]).
-rule(case_example1c_f3(),simlarCodeObfuscation(example1c_m1, example1c_m2),[]).
+rule(case_example1c_f3(),similarCodeObfuscation(example1c_m1, example1c_m2),[]).
 rule(case_example1c_f4(),malwareLinkedTo(example1c_m2, countryX),[]).
 rule(case_example1c_f5(),hasMotive(countryX, example1c),[]).
 rule(case_example1c_f6(),attackSourceIP([123,123,123,102], example1c),[]).
@@ -257,7 +257,7 @@ rule(case_example5_f3(),attackSourceIP([103,1,206,100],example5),[]).
 rule(case_example7_f1a(),malwareUsedInAttack(example7m,example7),[]).
 rule(case_example7_f2b(),targetCountry(countryY,example7),[]).
 rule(case_example7_f3(),malwareUsedInAttack(example7_m1,example7),[]).
-rule(case_example7_f4(),simlarCodeObfuscation(example7_m1,example7_m2),[]).
+rule(case_example7_f4(),similarCodeObfuscation(example7_m1,example7_m2),[]).
 rule(case_example7_f5(),malwareLinkedTo(example7_m2,countryX),[]).
 
 %% %% example8
