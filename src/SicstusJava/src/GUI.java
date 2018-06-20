@@ -456,7 +456,7 @@ class GUI {
             p.add(defaultTextArea(executeResult.getAbducedInfo(), 50));
         }
 
-        JLabel label4 = new JLabel("Derivations:");
+        JLabel label4 = new JLabel("Positive results/derivations:");
         p.add(new JSeparator());
         p.add(label4);
 
@@ -490,7 +490,7 @@ class GUI {
 
         if (executeResult.hasNegDerivations()) {
             p.add(new JSeparator());
-            p.add(new JLabel("Negative Derivations: " + executeResult.getNumNegDerivations()));
+            p.add(new JLabel("Negative results/derivations: " + executeResult.getNumNegDerivations()));
         }
 
         for (String culprit : executeResult.getCulprits()) {
