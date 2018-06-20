@@ -1053,6 +1053,7 @@ class GUI {
 
 
     public static void main(String args[]) {
+        System.out.println(System.getProperty("java.library.path"));
         GUI awt = new GUI();
 //        displayHelpPage();
     }
