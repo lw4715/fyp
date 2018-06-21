@@ -20,9 +20,10 @@ public class SVGApplication {
         SVGApplication.f.setLayout(new BoxLayout(SVGApplication.f.getContentPane(), BoxLayout.Y_AXIS));
         SVGApplication app = new SVGApplication(SVGApplication.f);
         SVGApplication.f.getContentPane().add(app.createComponents(filename));
-        SVGApplication.f.setSize(1200, 800);
+        SVGApplication.f.setSize(1200, 600);
+//        SVGApplication.f.setSize(200, 400);
+//        SVGApplication.f.setExtendedState(JFrame.MAXIMIZED_BOTH);
         SVGApplication.f.setVisible(true);
-        SVGApplication.f.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public SVGApplication(JFrame f) {

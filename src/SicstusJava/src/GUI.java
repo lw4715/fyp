@@ -161,6 +161,9 @@ class GUI {
     GUI() {
         QueryExecutor.getInstance(); // run this at start to clear files
         utils = new Utils();
+
+        UIManager.getLookAndFeelDefaults()
+                .put("defaultFont", new Font("Arial", Font.LAYOUT_LEFT_TO_RIGHT, 50));
         prepareGUI();
         addButtonsToPanel();
 
