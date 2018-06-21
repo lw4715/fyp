@@ -108,7 +108,7 @@ public class DerivationNode {
             Graphviz.fromGraph(g)
                 .width(100).render(Format.SVG).toFile(new File(filename));
 
-            DerivationNode.rewriteTransparentStroke(filename);
+            DerivationNode.svgPostpreocess(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,10 +127,15 @@ public class DerivationNode {
         return prefs;
     }
 
-    static void rewriteTransparentStroke(String filename) throws IOException {
+    static void svgPostpreocess(String filename) throws IOException {
         Path path = Paths.get(filename);
         List<String> fileContent = new ArrayList<>(Files.readAllLines(path, StandardCharsets.UTF_8));
         fileContent.set(4, fileContent.get(4).replace("transparent", "#FFFFFF"));
+
+        for (int i = 0; i < fileContent.size(); i++) {
+            fileContent.set(i, fileContent.get(i).replace("font-size=\"14.00\"", "font-size=\"12.00\""));
+        }
+
         Files.write(path, fileContent, StandardCharsets.UTF_8);
     }
 
@@ -413,7 +418,7 @@ public class DerivationNode {
                     .with(st.pop().createNode());
             Graphviz.fromGraph(g)
                     .width(100).render(Format.SVG).toFile(new File(filename));
-            DerivationNode.rewriteTransparentStroke(filename);
+            DerivationNode.svgPostpreocess(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -433,7 +438,7 @@ public class DerivationNode {
 //                .with(root.createNode());
 //        Graphviz.fromGraph(g)
 //                .width(2000).render(Format.PNG).toFile(new File(filename));
-//        DerivationNode.rewriteTransparentStroke(filename);
+//        DerivationNode.svgPospreocess(filename);
 //    }
 //
 //    public static void main(String[] args) {
