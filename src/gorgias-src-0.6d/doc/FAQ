@@ -1,9 +1,0 @@
-Frequently Asked Questions
-==========================
-
-
-1. How should I choose the variables of a label?
-
-   The safe way is to include all variables of a rule in the label. However,
-   you may restrict yourself to those variables that might be used in the
-   definition of priorities/preferences.
