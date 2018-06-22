@@ -218,15 +218,15 @@ public class ToolIntegration {
     void getVirustotalReportAndProcess(String ip, Integer year, Integer month) {
         System.out.println("Processing " + ip + " : " + year + "," + month);
         File virusTotalReportFile = new File(ToolIntegration.virusTotalLogFileTemplate + ip);
-        if (!this.virustotalFinishedScanningIP.contains(ip)) {
+//        if (!this.virustotalFinishedScanningIP.contains(ip)) {
             List<Pair<Pair<Integer, Integer>, String>> res = GetIPAddressReport.getIPResolution(ip);
             if (res != null) {
                 this.processVirusTotalFile(res, ip, year, month);
                 this.virustotalFinishedScanningIP.add(ip);
             }
-        } else {
-            System.out.println(virusTotalReportFile + " already exists.");
-        }
+//        } else {
+//            System.out.println(virusTotalReportFile + " already exists.");
+//        }
     }
 
     public static Comparator<Pair<Pair<Integer, Integer>, String>> PairComparator
@@ -311,6 +311,7 @@ public class ToolIntegration {
 
                 br.lines().forEach(line -> {
                     if (line.split("%")[0].contains("ip([")) {
+                        System.out.println("ip found in file: " + f);
                         String head = Utils.getHeadOfLine(line);
                         String ip = head.substring(head.indexOf('['), head.indexOf(']') + 1);
                         String date = head.substring(head.lastIndexOf('['), head.lastIndexOf(']') + 1);

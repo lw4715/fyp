@@ -357,7 +357,7 @@ class GUI {
         logAttackname = new JTextField();
         virusTotalIPPred = new JTextField();
         toolIntegrationStatus = new JLabel();
-        JLabel descLabel = new JLabel();
+        JLabel descLabel = new JLabel(toolDescMap.get("ip([IP])"));
         JComboBox dropdown = new JComboBox(new String[] {"ip([IP])", "ip([IP], [YYYY,MM])", "targetServerIP([IP],<attackName>"});
         dropdown.addItemListener(arg0 -> {
             String pred = dropdown.getSelectedItem().toString();
@@ -1058,7 +1058,6 @@ class GUI {
     public static void main(String args[]) {
         System.out.println(System.getProperty("java.library.path"));
         GUI awt = new GUI();
-//        displayHelpPage();
     }
 
 }
