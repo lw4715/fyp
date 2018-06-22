@@ -133,7 +133,7 @@ public class DerivationNode {
         fileContent.set(4, fileContent.get(4).replace("transparent", "#FFFFFF"));
 
         for (int i = 0; i < fileContent.size(); i++) {
-            fileContent.set(i, fileContent.get(i).replace("font-size=\"14.00\"", "font-size=\"12.00\""));
+            fileContent.set(i, fileContent.get(i).replace("font-size=\"14.00\"", "font-size=\"11.00\""));
         }
 
         Files.write(path, fileContent, StandardCharsets.UTF_8);
