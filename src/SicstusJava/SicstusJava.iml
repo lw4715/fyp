@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -17,9 +17,6 @@
         <jarDirectory url="file:///Applications/sicstus4.3.5/bin/sp-4.3.5/sp-4.3.5/sicstus-4.3.5/bin" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="ch.qos.logback:logback-classic:1.2.3" level="project" />
-    <orderEntry type="library" name="guru.nidi:graphviz-java:0.4.0" level="project" />
-    <orderEntry type="library" name="org.apache.xmlgraphics:batik-swing:1.9" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -66,6 +63,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="Virustotal-Public-API-V2.0-Client" />
-    <orderEntry type="library" name="jpl-7.0.1" level="project" />
+    <orderEntry type="library" name="guru.nidi:graphviz-java:0.5.2" level="project" />
+    <orderEntry type="library" name="jpl:jpl:7.4.0" level="project" />
+    <orderEntry type="library" name="org.apache.xmlgraphics:batik-swing:1.10" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../Virustotal-Public-API-V2.0-Client/examples/Virustotal-Public-API-V2.0-ClientExamples/src" />
+          <root url="file://$MODULE_DIR$/../../Virustotal-Public-API-V2.0-Client/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

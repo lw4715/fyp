@@ -247,6 +247,7 @@ public class QueryExecutor {
 
     void loadDynamicFiles() {
         ti.torIntegration();
+        ti.preprocessFiles(allFiles);
         try {
             executeQueryString(String.format(CONSULT_STRING, Utils.USER_EVIDENCE_FILENAME), 1);
             executeQueryString(String.format(CONSULT_STRING, ToolIntegration.TOR_IP_FILE), 1);

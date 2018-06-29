@@ -161,6 +161,9 @@ class GUI {
     GUI() {
         QueryExecutor.getInstance(); // run this at start to clear files
         utils = new Utils();
+
+        UIManager.getLookAndFeelDefaults()
+                .put("defaultFont", new Font("Arial", Font.LAYOUT_LEFT_TO_RIGHT, 50));
         prepareGUI();
         addButtonsToPanel();
 
@@ -354,7 +357,7 @@ class GUI {
         logAttackname = new JTextField();
         virusTotalIPPred = new JTextField();
         toolIntegrationStatus = new JLabel();
-        JLabel descLabel = new JLabel();
+        JLabel descLabel = new JLabel(toolDescMap.get("ip([IP])"));
         JComboBox dropdown = new JComboBox(new String[] {"ip([IP])", "ip([IP], [YYYY,MM])", "targetServerIP([IP],<attackName>"});
         dropdown.addItemListener(arg0 -> {
             String pred = dropdown.getSelectedItem().toString();
@@ -456,7 +459,7 @@ class GUI {
             p.add(defaultTextArea(executeResult.getAbducedInfo(), 50));
         }
 
-        JLabel label4 = new JLabel("Derivations:");
+        JLabel label4 = new JLabel("Positive results/derivations:");
         p.add(new JSeparator());
         p.add(label4);
 
@@ -490,7 +493,7 @@ class GUI {
 
         if (executeResult.hasNegDerivations()) {
             p.add(new JSeparator());
-            p.add(new JLabel("Negative Derivations: " + executeResult.getNumNegDerivations()));
+            p.add(new JLabel("Negative results/derivations: " + executeResult.getNumNegDerivations()));
         }
 
         for (String culprit : executeResult.getCulprits()) {
@@ -1055,7 +1058,6 @@ class GUI {
     public static void main(String args[]) {
         System.out.println(System.getProperty("java.library.path"));
         GUI awt = new GUI();
-//        displayHelpPage();
     }
 
 }

@@ -129,7 +129,7 @@ public class PrefDiagramNode {
         try {
             Graphviz.fromGraph(g.graphAttr().with(RankDir.LEFT_TO_RIGHT))
                     .render(Format.SVG).toFile(new File(filename));
-            DerivationNode.rewriteTransparentStroke(filename);
+            DerivationNode.svgPostpreocess(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }

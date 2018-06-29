@@ -1,1 +1,2 @@
 :- multifile rule/3.
+
